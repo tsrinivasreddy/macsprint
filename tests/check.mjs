@@ -236,6 +236,47 @@ check('waitlistHonestWithoutEndpoint', async (b) => {
   assert(external.length === 0, 'unexpected network requests: ' + external.join(','));
 });
 
+/* ---------- Task 5: responsive, dark, a11y ---------- */
+check('narrowPhoneSidebarScrolls', async (b) => {
+  const p = await open(b, { width: 320, height: 700 });
+  const ov = await p.evaluate(() => getComputedStyle(document.querySelector('#explorer [role=tablist]')).overflowX);
+  assert(ov === 'auto' || ov === 'scroll', 'tablist overflow-x is ' + ov);
+  for (const id of ['images', 'ocr', 'windows', 'cleanup', 'downloads']) {
+    await p.evaluate((h) => { location.hash = h; }, '#explore/' + id);
+    await p.waitForTimeout(100);
+    const [sw, iw] = await p.evaluate(() => [document.documentElement.scrollWidth, window.innerWidth]);
+    assert(sw <= iw, `overflow at 320 on ${id}: ${sw} > ${iw}`);
+  }
+});
+
+check('darkModeBackground', async (b) => {
+  const p = await open(b, { scheme: 'dark' });
+  const lum = await p.evaluate(() => {
+    const [r, g, bl] = getComputedStyle(document.body).backgroundColor.match(/\d+/g).map(Number);
+    return (0.2126 * r + 0.7152 * g + 0.0722 * bl) / 255;
+  });
+  assert(lum < 0.2, 'dark body luminance too high: ' + lum);
+});
+
+check('controlsHaveAccessibleNames', async (b) => {
+  const p = await open(b);
+  const tabs = p.locator('#explorer [role=tab]');
+  const unnamed = [];
+  for (let i = 0; i < 16; i++) {
+    await tabs.nth(i).click();
+    const bad = await p.evaluate(() => [...document.querySelectorAll('button, input, [role=tab], a[href]')]
+      .filter((el) => el.offsetParent !== null)
+      .filter((el) => {
+        const label = el.getAttribute('aria-label') || el.textContent.trim() || el.getAttribute('title') ||
+          (el.id && document.querySelector(`label[for="${el.id}"]`)?.textContent.trim()) ||
+          el.closest('label')?.textContent.trim() || el.getAttribute('placeholder');
+        return !label;
+      }).map((el) => el.outerHTML.slice(0, 80)));
+    unnamed.push(...bad);
+  }
+  assert(unnamed.length === 0, 'unnamed controls: ' + [...new Set(unnamed)].slice(0, 5).join(' || '));
+});
+
 /* ---------- runner ---------- */
 const filter = process.argv[2];
 const server = await startServer();

@@ -87,7 +87,7 @@ export function selectFeature(id, { focus = false, updateHash = true } = {}) {
     pane.querySelector('.ex-pane-badge').innerHTML = `<span class="${badgeClass(f.release)}">${esc(badgeLabel(f.release))}</span>`;
     pane.querySelector('.ex-headline').textContent = f.headline;
     pane.querySelector('.ex-points').innerHTML = f.points.map((p) => `<li>${esc(p)}</li>`).join('');
-    pane.querySelector('.ex-source').textContent = f.source.includes('Homy') ? 'Inspired by Homy · ' + f.source : '';
+    pane.querySelector('.ex-source').textContent = f.source === 'Homy' ? 'Inspired by Homy' : f.source.includes('Homy') ? 'Combines ideas from MacMate and Homy' : '';
 
     const i = FEATURES.indexOf(f);
     const prev = FEATURES[(i - 1 + FEATURES.length) % FEATURES.length];
