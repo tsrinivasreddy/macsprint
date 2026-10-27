@@ -391,6 +391,53 @@ check('contentVisibleAtRestAndThemeToggle', async (b) => {
   await ctx.close();
 });
 
+/* ---------- Homy-style home ---------- */
+const seg = (p) => p.textContent('#explorer .demo-library .d-seg [aria-pressed=true]');
+
+check('homeGreetingAndSections', async (b) => {
+  const p = await open(b, { hash: '#feature-home' });
+  assert(/Good (morning|afternoon|evening)/.test(await p.textContent('#explorer .hm-greet')), 'greeting missing');
+  assert(await p.locator('#explorer .hm-folder').count() === 6, 'expected 6 library folders');
+  assert(await p.locator('#explorer .hm-clean').count() === 4, 'expected 4 clean-up cards');
+  assert(await p.locator('#explorer .hm-src').count() === 5, 'expected 5 downloaded-from cards');
+  assert(!/unused/i.test(await p.textContent('#explorer .ex-demo')), 'home uses "unused" wording');
+});
+
+check('homeFolderOpensLibraryFiltered', async (b) => {
+  const p = await open(b, { hash: '#feature-home' });
+  await p.locator('#explorer .hm-folder', { hasText: 'Videos' }).click();
+  assert((await paneTitle(p)).trim() === 'Visual Library', 'folder did not open Visual Library');
+  assert((await seg(p)).trim() === 'Videos', 'library not filtered to Videos');
+  const shown = await p.locator('#explorer .d-lib figure:visible').count();
+  const vids = await p.locator('#explorer .d-lib figure[data-k="Videos"]:visible').count();
+  assert(shown > 0 && shown === vids, 'non-video items visible');
+});
+
+check('homeCleanupCardsOpenFeatures', async (b) => {
+  const p = await open(b, { hash: '#feature-home' });
+  await p.locator('#explorer .hm-clean', { hasText: 'Duplicates' }).click();
+  assert((await paneTitle(p)).trim() === 'Duplicate Finder', 'duplicates card wrong target');
+  await p.evaluate(() => { location.hash = '#feature-home'; });
+  await p.waitForTimeout(100);
+  await p.locator('#explorer .hm-clean', { hasText: 'Large Files' }).click();
+  assert((await paneTitle(p)).trim() === 'Storage Intelligence', 'large files card wrong target');
+});
+
+check('sidebarLocationsAndMetrics', async (b) => {
+  const p = await open(b);
+  assert((await p.textContent('#tab-cleanup .ex-tab-meta')).trim() === '14.1 GB', 'cleanup metric missing');
+  assert((await p.textContent('#tab-storage .ex-tab-meta')).trim() === '10', 'large-files badge missing');
+  await p.locator('#explorer .ex-loc', { hasText: 'Downloads' }).click();
+  assert((await paneTitle(p)).trim() === 'Visual Library', 'location did not open library');
+  assert((await p.textContent('#explorer .demo-library')).includes('In Downloads'), 'location filter chip missing');
+});
+
+check('toolbarSearchOpensPalette', async (b) => {
+  const p = await open(b);
+  await p.locator('#explorer .ex-search').click();
+  assert(await p.locator('#palette').isVisible(), 'toolbar search did not open palette');
+});
+
 /* ---------- runner ---------- */
 const filter = process.argv[2];
 const server = await startServer();

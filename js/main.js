@@ -2,6 +2,7 @@
 import { initExplorer } from './explorer.js';
 import { DEMOS } from './demos.js';
 import { initProblems, initRoadmap, initWaitlist } from './sections.js';
+import { heroWindowMarkup } from './home.js';
 
 function initReveal() {
   const els = document.querySelectorAll('.reveal');
@@ -20,6 +21,7 @@ function initReveal() {
   });
 }
 
+document.getElementById('hero-window').innerHTML = heroWindowMarkup();
 initExplorer(document.getElementById('explorer'), DEMOS);
 initProblems(document.getElementById('problem-grid'));
 initRoadmap(document.getElementById('roadmap-grid'));

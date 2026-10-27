@@ -19,30 +19,43 @@ function sidebarHtml() {
         <button type="button" role="tab" id="tab-${f.id}" data-id="${f.id}" aria-selected="false" aria-controls="ex-pane" tabindex="-1">
           <span class="ex-tab-icon">${iconSvg(f.icon)}</span>
           <span class="ex-tab-text">${esc(f.title)}</span>
-          ${f.release === 'At launch' ? '' : `<span class="ex-tab-rel">${esc(f.release.split(' ')[0])}</span>`}
+          ${f.release !== 'At launch' ? `<span class="ex-tab-rel">${esc(f.release.split(' ')[0])}</span>`
+            : f.meta ? `<span class="ex-tab-meta${f.meta.tone ? ' is-' + f.meta.tone : ''}"${f.meta.label ? ` aria-label="${esc(f.meta.label)}"` : ''}>${esc(f.meta.text)}</span>` : ''}
         </button>`).join('')}
     </div>`).join('');
 }
 
+const LOCATIONS = ['Desktop', 'Documents', 'Downloads', 'Pictures', 'Movies', 'Music'];
+const SEARCH_ICON = '<circle cx="10.5" cy="10.5" r="6.5"/><path d="m20 20-4.8-4.8"/>';
+const FOLDER_ICON = '<path d="M3 7.5V18a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V9.5a2 2 0 0 0-2-2h-7L10 5H5a2 2 0 0 0-2 2.5Z"/>';
+
 function render(root) {
   root.innerHTML = `
     <div class="mac-window ex-window">
-      <div class="mac-titlebar">
-        <i></i><i></i><i></i>
-        <span class="ex-title">MacMate AI</span>
-        <button type="button" class="ex-kbd-btn" data-open-palette aria-label="Jump to a feature (Command K)">
-          ${iconSvg('<circle cx="10.5" cy="10.5" r="6.5"/><path d="m20 20-4.8-4.8"/>', 14)}<span>Jump to…</span><kbd>⌘K</kbd>
-        </button>
-      </div>
-      <div class="ex-body">
-        <aside class="ex-side">
-          <label class="ex-filter">
-            <span class="visually-hidden">Filter features</span>
-            <input type="search" placeholder="Filter features" autocomplete="off">
-          </label>
-          <div class="ex-tablist" role="tablist" aria-label="MacMate features" aria-orientation="vertical">${sidebarHtml()}</div>
-          <p class="ex-nomatch" hidden>No features match</p>
-        </aside>
+      <aside class="ex-side">
+        <div class="ex-lights" aria-hidden="true"><i></i><i></i><i></i></div>
+        <div class="ex-brand"><span class="brand-mark" aria-hidden="true"></span><span>MacMate</span>
+          <span class="ex-side-icon" aria-hidden="true">${iconSvg('<rect x="3" y="4.5" width="18" height="15" rx="2.5"/><path d="M9 4.5v15"/>', 17)}</span>
+        </div>
+        <label class="ex-filter">
+          <span class="visually-hidden">Filter features</span>
+          <input type="search" placeholder="Filter features" autocomplete="off">
+        </label>
+        <div class="ex-tablist" role="tablist" aria-label="MacMate features" aria-orientation="vertical">${sidebarHtml()}</div>
+        <p class="ex-nomatch" hidden>No features match</p>
+        <div class="ex-locs">
+          <p class="ex-group-label">Locations</p>
+          ${LOCATIONS.map((l) => `<button type="button" class="ex-loc" data-loc="${l}"><span class="ex-loc-icon">${iconSvg(FOLDER_ICON, 17)}</span>${l}</button>`).join('')}
+        </div>
+      </aside>
+      <div class="ex-main">
+        <div class="ex-toolbar">
+          <button type="button" class="ex-search" data-open-palette aria-label="Jump to a feature (Command K)">
+            ${iconSvg(SEARCH_ICON, 16)}<span>Jump to a feature, or try “duplicates”…</span><kbd>⌘</kbd><kbd>K</kbd>
+          </button>
+          <span class="ex-libsize">Library size <b>30.19 GB</b></span>
+          <span class="ex-inspector" aria-hidden="true">${iconSvg('<rect x="3" y="4.5" width="18" height="15" rx="2.5"/><path d="M15 4.5v15"/>', 17)}</span>
+        </div>
         <p class="visually-hidden" role="status" id="ex-status"></p>
         <section class="ex-pane" id="ex-pane" role="tabpanel" tabindex="-1">
           <header class="ex-pane-head">
@@ -66,7 +79,7 @@ function render(root) {
     </div>`;
 }
 
-export function selectFeature(id, { focus = false, updateHash = true } = {}) {
+export function selectFeature(id, { focus = false, updateHash = true, param = null } = {}) {
   const f = byId.get(id) || byId.get(DEFAULT_ID);
   const { root } = state;
   if (!root) return;
@@ -76,7 +89,7 @@ export function selectFeature(id, { focus = false, updateHash = true } = {}) {
     input.value = '';
     input.dispatchEvent(new Event('input'));
   }
-  if (state.current !== f.id) {
+  if (state.current !== f.id || param) {
     if (typeof state.cleanup === 'function') state.cleanup();
     state.cleanup = null;
     state.current = f.id;
@@ -87,6 +100,7 @@ export function selectFeature(id, { focus = false, updateHash = true } = {}) {
       t.tabIndex = on ? 0 : -1;
     }
     const pane = root.querySelector('.ex-pane');
+    pane.scrollTop = 0;
     pane.setAttribute('aria-labelledby', 'tab-' + f.id);
     pane.querySelector('.ex-pane-icon').innerHTML = iconSvg(f.icon, 26);
     pane.querySelector('h3').textContent = f.title;
@@ -112,7 +126,7 @@ export function selectFeature(id, { focus = false, updateHash = true } = {}) {
     demoEl.innerHTML = '';
     demoEl.className = 'ex-demo demo-' + f.id;
     const demo = state.demos[f.id];
-    if (demo) state.cleanup = demo(demoEl) || null;
+    if (demo) state.cleanup = demo(demoEl, param, { go: (to, p) => selectFeature(to, { param: p }) }) || null;
   }
   if (updateHash && location.hash !== HASH_PREFIX + f.id) history.replaceState(null, '', HASH_PREFIX + f.id);
   syncTabStops();
@@ -273,6 +287,7 @@ export function initExplorer(root, demos = {}) {
     t.addEventListener('click', () => selectFeature(t.dataset.id));
     t.addEventListener('keydown', onTabKey);
   }
+  root.querySelectorAll('.ex-loc').forEach((b) => b.addEventListener('click', () => selectFeature('library', { param: { loc: b.dataset.loc } })));
   root.querySelectorAll('.ex-nav').forEach((b) => b.addEventListener('click', () => selectFeature(b.dataset.target, { focus: true })));
   initFilter(root);
   initPalette();

@@ -2,6 +2,8 @@
 // Each demo renders into its pane element and may return a cleanup function.
 // All file names and numbers are fictional sample data.
 
+import { homeMarkup, bindHome } from './home.js';
+
 const reduceMotion = () => matchMedia('(prefers-reduced-motion: reduce)').matches;
 const ph = (h, extra = '') => `<span class="ph" style="--h:${h}" ${extra}></span>`;
 const esc = (s) => String(s).replace(/[&<>"]/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]));
@@ -25,62 +27,49 @@ const ICON = {
 function bindAll(el, sel, evt, fn) { el.querySelectorAll(sel).forEach((n) => n.addEventListener(evt, fn)); }
 
 /* ---------------- Home ---------------- */
-function home(el) {
-  const cats = [['Images', 34, 'img'], ['Videos', 22, 'vid'], ['Documents', 14, 'doc'], ['Archives', 9, 'arc'], ['Other', 7, 'oth']];
-  el.innerHTML = `
-    <div class="d-dash">
-      <div class="d-card d-ring-card">
-        <div class="d-ring" style="--p:67"><div><b>341 GB</b><small>of 512 GB used</small></div></div>
-        <ul class="d-legend">${cats.map(([n, w, c]) => `<li><i style="background:var(--c-${c})"></i>${n}<span>${w}%</span></li>`).join('')}</ul>
-      </div>
-      <div class="d-card">
-        <p class="d-card-label">Suggestions</p>
-        <ul class="d-list">
-          <li><span>14 large files</span><b>38.2 GB</b></li>
-          <li><span>312 files not modified in a year</span><b>21.7 GB</b></li>
-          <li><span>27 exact duplicate groups</span><b>4.1 GB</b></li>
-        </ul>
-      </div>
-      <div class="d-card">
-        <p class="d-card-label">Status</p>
-        <ul class="d-list">
-          <li><span>Indexed</span><b>48,210 files · 6 folders</b></li>
-          <li><span>Text in images</span><b class="d-progress"><i style="width:72%"></i>72%</b></li>
-          <li><span>On-device AI</span><b class="d-ok">Available</b></li>
-        </ul>
-      </div>
-      <div class="d-card d-actions">
-        <p class="d-card-label">Quick actions</p>
-        <div><button type="button" data-go="search">Search files</button><button type="button" data-go="storage">Review old files</button><button type="button" data-go="images">Browse screenshots</button><button type="button" data-go="duplicates">Find duplicates</button></div>
-      </div>
-    </div>`;
-  bindAll(el, '[data-go]', 'click', (e) => { location.hash = '#feature-' + e.currentTarget.dataset.go; });
+function home(el, _param, { go }) {
+  el.innerHTML = homeMarkup();
+  bindHome(el, go);
 }
 
 /* ---------------- Visual Library ---------------- */
 const LIB = [
-  ['Images', 'Beach-sunset.heic', 200], ['Videos', 'Birthday-party.mov', 330], ['Documents', 'Lease-agreement.pdf'],
-  ['Screenshots', 'Screenshot 2026-03-14.png', 220], ['Music', 'Morning-playlist.m4a'], ['Apps', 'Pages.app'],
-  ['Images', 'Mountain-trail.jpg', 120], ['Documents', 'Resume-2026.docx'], ['Videos', 'Product-demo.mp4', 10],
-  ['Images', 'Coffee-shop.webp', 30], ['Screenshots', 'Error-dialog.png', 260], ['Apps', 'Keynote.app'],
-  ['Music', 'Podcast-ep42.mp3'], ['Images', 'City-lights.png', 280], ['Documents', 'Tax-return-2025.pdf'], ['Screenshots', 'Receipt.png', 160],
+  ['Images', 'Beach-sunset.heic', 'Pictures', 200], ['Videos', 'Birthday-party.mov', 'Movies', 330], ['Documents', 'Lease-agreement.pdf', 'Documents'],
+  ['Screenshots', 'Screenshot 2026-03-14.png', 'Desktop', 220], ['Music', 'Morning-playlist.m4a', 'Music'], ['Apps', 'Pages.app', 'Downloads'],
+  ['Images', 'Mountain-trail.jpg', 'Pictures', 120], ['Archives', 'fonts-pack.zip', 'Downloads'], ['Videos', 'Product-demo.mp4', 'Downloads', 10],
+  ['Images', 'Coffee-shop.webp', 'Downloads', 30], ['Screenshots', 'Error-dialog.png', 'Desktop', 260], ['Documents', 'Resume-2026.docx', 'Documents'],
+  ['Music', 'Podcast-ep42.mp3', 'Downloads'], ['Images', 'City-lights.png', 'Pictures', 280], ['Archives', 'project-backup.zip', 'Documents'],
+  ['Documents', 'Tax-return-2025.pdf', 'Downloads'], ['Videos', 'Drone-flight.mov', 'Movies', 150], ['Apps', 'Keynote.app', 'Desktop'],
 ];
-function library(el) {
-  const kinds = ['All', 'Images', 'Videos', 'Music', 'Documents', 'Apps', 'Screenshots'];
-  const icon = { Documents: ICON.doc, Music: ICON.music, Apps: ICON.app };
+function library(el, param) {
+  const kinds = ['All', 'Images', 'Videos', 'Music', 'Documents', 'Archives', 'Apps', 'Screenshots'];
+  const icon = { Documents: ICON.doc, Music: ICON.music, Apps: ICON.app, Archives: ICON.zip };
+  let kind = kinds.includes(param?.kind) ? param.kind : 'All';
+  let loc = param?.loc || null;
   el.innerHTML = `
-    <div class="d-seg" role="group" aria-label="Filter by kind">${kinds.map((k, i) => `<button type="button" aria-pressed="${i === 0}" data-k="${k}">${k}</button>`).join('')}</div>
-    <div class="d-lib">${LIB.map(([k, n, h]) => `
-      <figure data-k="${k}">
+    <div class="d-seg" role="group" aria-label="Filter by kind">${kinds.map((k) => `<button type="button" data-k="${k}">${k}</button>`).join('')}</div>
+    <p class="d-locchip" hidden><span></span> <button type="button" class="d-locclear" aria-label="Show all locations">×</button></p>
+    <div class="d-lib">${LIB.map(([k, n, l, h]) => `
+      <figure data-k="${k}" data-loc="${l}">
         ${h !== undefined ? `<span class="ph" style="--h:${h}">${k === 'Videos' ? `<em class="d-play">${svg(ICON.play, 14)}</em>` : ''}</span>` : `<span class="d-file-thumb d-k-${k.toLowerCase()}">${svg(icon[k], 30)}</span>`}
         <figcaption>${esc(n)}</figcaption>
-      </figure>`).join('')}</div>`;
-  bindAll(el, '[data-k]', 'click', (e) => {
-    if (e.currentTarget.tagName !== 'BUTTON') return;
-    const k = e.currentTarget.dataset.k;
-    el.querySelectorAll('.d-seg button').forEach((b) => b.setAttribute('aria-pressed', String(b.dataset.k === k)));
-    el.querySelectorAll('.d-lib figure').forEach((f) => { f.hidden = k !== 'All' && f.dataset.k !== k; });
-  });
+      </figure>`).join('')}</div>
+    <p class="d-muted d-libempty" hidden>Nothing of this kind here</p>`;
+  const draw = () => {
+    el.querySelectorAll('.d-seg button').forEach((b) => b.setAttribute('aria-pressed', String(b.dataset.k === kind)));
+    let shown = 0;
+    el.querySelectorAll('.d-lib figure').forEach((f) => {
+      f.hidden = (kind !== 'All' && f.dataset.k !== kind) || (loc && f.dataset.loc !== loc);
+      if (!f.hidden) shown++;
+    });
+    el.querySelector('.d-libempty').hidden = shown > 0;
+    const chip = el.querySelector('.d-locchip');
+    chip.hidden = !loc;
+    chip.querySelector('span').textContent = loc ? `In ${loc}` : '';
+  };
+  bindAll(el, '.d-seg button', 'click', (e) => { kind = e.currentTarget.dataset.k; draw(); });
+  el.querySelector('.d-locclear').addEventListener('click', () => { loc = null; draw(); });
+  draw();
 }
 
 /* ---------------- Smart Image Viewer ---------------- */

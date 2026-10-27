@@ -42,17 +42,18 @@ export const FEATURES = [
     ],
   },
   {
-    id: 'library', group: 'Discover', icon: I.library, release: 'At launch', source: 'Homy',
+    id: 'library', group: 'Discover', icon: I.library, release: 'At launch', source: 'Homy', meta: { text: '2,880' },
     title: 'Visual Library', short: 'Your whole Mac as big thumbnails',
     headline: 'Everything on your Mac, sorted by what it is.',
     points: [
       'Browse Images, Videos, Music, Documents, Apps and Screenshots as large, clear thumbnails.',
       'Covers every folder you choose — not just one window at a time.',
+      'Groups downloads by where they came from — Safari, Mail, Slack and more.',
       'Works alongside Finder, not instead of it.',
     ],
   },
   {
-    id: 'images', group: 'Discover', icon: I.images, release: 'At launch', source: 'MacMate',
+    id: 'images', group: 'Discover', icon: I.images, release: 'At launch', source: 'MacMate', meta: { text: '2,280' },
     title: 'Smart Image Viewer', short: 'Open one image, browse the folder',
     headline: 'Open one photo. Press → for the next.',
     points: [
@@ -74,7 +75,7 @@ export const FEATURES = [
     ],
   },
   {
-    id: 'ocr', group: 'Discover', icon: I.ocr, release: 'At launch', source: 'MacMate + Homy',
+    id: 'ocr', group: 'Discover', icon: I.ocr, release: 'At launch', source: 'MacMate + Homy', meta: { text: '589' },
     title: 'Text in Images', short: 'Search words inside screenshots',
     headline: 'Find the screenshot by what it says.',
     points: [
@@ -86,7 +87,7 @@ export const FEATURES = [
   },
   // ---------- Clean up ----------
   {
-    id: 'storage', group: 'Clean up', icon: I.storage, release: 'At launch', source: 'MacMate',
+    id: 'storage', group: 'Clean up', icon: I.storage, release: 'At launch', source: 'MacMate', meta: { text: '10', tone: 'alert', label: '10 large files' },
     title: 'Storage Intelligence', short: 'See what fills your disk',
     headline: 'See exactly where your space went.',
     points: [
@@ -97,7 +98,7 @@ export const FEATURES = [
     ],
   },
   {
-    id: 'cleanup', group: 'Clean up', icon: I.cleanup, release: 'At launch', source: 'MacMate',
+    id: 'cleanup', group: 'Clean up', icon: I.cleanup, release: 'At launch', source: 'MacMate', meta: { text: '14.1 GB', tone: 'good', label: 'up to 14.1 GB to review' },
     title: 'Safe Cleanup', short: 'Preview, confirm, move to Trash',
     headline: 'Nothing disappears without your say‑so.',
     points: [
