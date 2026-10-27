@@ -90,13 +90,13 @@ check('explorerArrowKeys', async (b) => {
 });
 
 check('explorerHashDeepLinks', async (b) => {
-  let p = await open(b, { hash: '#explore/duplicates' });
+  let p = await open(b, { hash: '#feature-duplicates' });
   assert((await paneTitle(p)).trim() === 'Duplicate Finder', 'deep link to duplicates failed');
-  p = await open(b, { hash: '#explore/nope' });
+  p = await open(b, { hash: '#feature-nope' });
   assert((await paneTitle(p)).trim() === 'Home Dashboard', 'unknown hash did not fall back to home');
   assert(p.errors.length === 0, 'errors: ' + p.errors.join(' | '));
   await p.locator('#explorer [role=tab]', { hasText: 'Clipboard History' }).click();
-  assert(await p.evaluate(() => location.hash) === '#explore/clipboard', 'hash not mirrored');
+  assert(await p.evaluate(() => location.hash) === '#feature-clipboard', 'hash not mirrored');
 });
 
 check('explorerCommandPalette', async (b) => {
@@ -144,7 +144,7 @@ check('demosCoverEveryFeature', async (b) => {
 });
 
 check('demoImageViewerArrows', async (b) => {
-  const p = await open(b, { hash: '#explore/images' });
+  const p = await open(b, { hash: '#feature-images' });
   assert((await demoText(p)).includes('15 of 120'), 'counter should start at 15 of 120');
   await p.fill('#explorer .ex-filter input', 'x');
   await p.focus('#explorer .ex-filter input');
@@ -160,14 +160,14 @@ check('demoImageViewerArrows', async (b) => {
 });
 
 check('demoOcrHighlight', async (b) => {
-  const p = await open(b, { hash: '#explore/ocr' });
+  const p = await open(b, { hash: '#feature-ocr' });
   assert((await demoText(p)).includes('IMG_2048.png'), 'IMG_2048.png missing');
   const marks = await p.locator('#explorer .ex-demo mark').allTextContents();
   assert(marks.some((m) => m.toLowerCase().includes('connection timed out')), 'no highlighted phrase');
 });
 
 check('demoOrganizerNeedsReview', async (b) => {
-  const p = await open(b, { hash: '#explore/organizer' });
+  const p = await open(b, { hash: '#feature-organizer' });
   assert((await demoText(p)).includes('182 proposed moves'), '182 proposed moves missing');
   const approve = p.locator('#explorer .ex-demo button', { hasText: 'Approve' });
   assert(await approve.isDisabled(), 'Approve should be disabled before review');
@@ -176,7 +176,7 @@ check('demoOrganizerNeedsReview', async (b) => {
 });
 
 check('demoStorageHonestLabels', async (b) => {
-  const p = await open(b, { hash: '#explore/storage' });
+  const p = await open(b, { hash: '#feature-storage' });
   const t = await demoText(p);
   assert(t.includes('Not modified for 18 months'), 'honest old-file label missing');
   assert(!/\bunused\b|not accessed/i.test(t), 'demo uses unsupported "unused"/"not accessed" wording');
@@ -242,7 +242,7 @@ check('narrowPhoneSidebarScrolls', async (b) => {
   const ov = await p.evaluate(() => getComputedStyle(document.querySelector('#explorer [role=tablist]')).overflowX);
   assert(ov === 'auto' || ov === 'scroll', 'tablist overflow-x is ' + ov);
   for (const id of ['images', 'ocr', 'windows', 'cleanup', 'downloads']) {
-    await p.evaluate((h) => { location.hash = h; }, '#explore/' + id);
+    await p.evaluate((h) => { location.hash = h; }, '#feature-' + id);
     await p.waitForTimeout(100);
     const [sw, iw] = await p.evaluate(() => [document.documentElement.scrollWidth, window.innerWidth]);
     assert(sw <= iw, `overflow at 320 on ${id}: ${sw} > ${iw}`);
@@ -288,7 +288,7 @@ check('filterKeepsKeyboardPath', async (b) => {
 });
 
 check('paneNotLiveAndSearchCyclePausable', async (b) => {
-  const p = await open(b, { hash: '#explore/search' });
+  const p = await open(b, { hash: '#feature-search' });
   assert(await p.getAttribute('#ex-pane', 'aria-live') === null, '#ex-pane must not be a live region');
   const btn = p.locator('#explorer .demo-search .d-cycle');
   assert(await btn.count() === 1, 'pause/play control for auto-cycling missing');
@@ -297,7 +297,7 @@ check('paneNotLiveAndSearchCyclePausable', async (b) => {
 
 check('textContrastAA', async (b) => {
   for (const scheme of ['light', 'dark']) {
-    const p = await open(b, { scheme, hash: '#explore/search' });
+    const p = await open(b, { scheme, hash: '#feature-search' });
     const bad = await p.evaluate(() => {
       const rgb = (c) => c.match(/[\d.]+/g).slice(0, 4).map(Number);
       const lum = ([r, g, b]) => [r, g, b].map((v) => { v /= 255; return v <= 0.03928 ? v / 12.92 : ((v + 0.055) / 1.055) ** 2.4; })
@@ -329,7 +329,7 @@ check('textContrastAA', async (b) => {
       return fails;
     });
     assert(bad.length === 0, `${scheme}: low contrast: ` + bad.join(', '));
-    for (const [hash, sel] of [['#explore/duplicates', '.ex-pane .badge-soon'], ['#explore/windows', '.ex-pane .badge-later']]) {
+    for (const [hash, sel] of [['#feature-duplicates', '.ex-pane .badge-soon'], ['#feature-windows', '.ex-pane .badge-later']]) {
       await p.evaluate((h) => { location.hash = h; }, hash);
       await p.waitForTimeout(100);
       const r = await p.evaluate((s) => {
@@ -348,12 +348,12 @@ check('textContrastAA', async (b) => {
 });
 
 check('sampleResultsNotCalledReal', async (b) => {
-  const p = await open(b, { hash: '#explore/search' });
+  const p = await open(b, { hash: '#feature-search' });
   assert(!(await p.textContent('#explorer .ex-demo')).includes('Real files'), 'sample results labelled as real files');
 });
 
 check('roadmapLinkToCurrentFeatureScrolls', async (b) => {
-  const p = await open(b, { hash: '#explore/images' });
+  const p = await open(b, { hash: '#feature-images' });
   await p.locator('#roadmap a', { hasText: 'Smart Image Viewer' }).scrollIntoViewIfNeeded();
   await p.locator('#roadmap a', { hasText: 'Smart Image Viewer' }).click();
   await p.waitForTimeout(200);
@@ -362,7 +362,7 @@ check('roadmapLinkToCurrentFeatureScrolls', async (b) => {
 });
 
 check('mobileSelectedPillVisible', async (b) => {
-  const p = await open(b, { width: 320, height: 700, hash: '#explore/windows' });
+  const p = await open(b, { width: 320, height: 700, hash: '#feature-windows' });
   await p.waitForTimeout(200);
   const [tl, tr, bl, br] = await p.evaluate(() => {
     const t = document.querySelector('#tab-windows').getBoundingClientRect();
@@ -376,6 +376,19 @@ check('trustCopyConsistentWithFaq', async (b) => {
   const p = await open(b);
   const t = await p.textContent('#trust');
   assert(!/search, storage and cleanup work fully/.test(t), 'trust note claims AI-less search fully works, contradicting FAQ');
+});
+
+/* ---------- Artifact publishing ---------- */
+check('contentVisibleAtRestAndThemeToggle', async (b) => {
+  const ctx = await b.newContext({ viewport: { width: 1440, height: 900 } }); // motion allowed
+  const p = await ctx.newPage();
+  await p.goto(URL);
+  const hidden = await p.evaluate(() => [...document.querySelectorAll('.reveal')].filter((el) => getComputedStyle(el).opacity === '0').length);
+  assert(hidden === 0, hidden + ' sections start invisible');
+  await p.evaluate(() => document.documentElement.setAttribute('data-theme', 'dark'));
+  const bg = await p.evaluate(() => getComputedStyle(document.body).backgroundColor);
+  assert(bg === 'rgb(0, 0, 0)', 'data-theme=dark not applied, body bg ' + bg);
+  await ctx.close();
 });
 
 /* ---------- runner ---------- */

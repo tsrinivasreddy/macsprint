@@ -1,8 +1,8 @@
 // Feature Explorer: a Mac-style window whose sidebar navigates every feature,
-// plus a ⌘K command palette. Selection is mirrored to #explore/<id>.
+// plus a ⌘K command palette. Selection is mirrored to #feature-<id>.
 import { FEATURES, iconSvg, badgeClass, badgeLabel } from './features.js';
 
-const HASH_PREFIX = '#explore/';
+const HASH_PREFIX = '#feature-';
 const DEFAULT_ID = 'home';
 const byId = new Map(FEATURES.map((f) => [f.id, f]));
 

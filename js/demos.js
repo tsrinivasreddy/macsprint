@@ -54,7 +54,7 @@ function home(el) {
         <div><button type="button" data-go="search">Search files</button><button type="button" data-go="storage">Review old files</button><button type="button" data-go="images">Browse screenshots</button><button type="button" data-go="duplicates">Find duplicates</button></div>
       </div>
     </div>`;
-  bindAll(el, '[data-go]', 'click', (e) => { location.hash = '#explore/' + e.currentTarget.dataset.go; });
+  bindAll(el, '[data-go]', 'click', (e) => { location.hash = '#feature-' + e.currentTarget.dataset.go; });
 }
 
 /* ---------------- Visual Library ---------------- */

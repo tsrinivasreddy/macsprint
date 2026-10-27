@@ -32,7 +32,7 @@ export function initRoadmap(grid) {
       <article class="roadmap-col reveal">
         <p class="roadmap-rel">${r.id === 'At launch' ? 'At launch' : r.id}</p>
         <h3>${r.name}</h3>
-        <ul>${items.map((f) => `<li><a href="#explore/${f.id}" data-id="${f.id}">${iconSvg(f.icon, 16)}<span>${f.title}</span></a></li>`).join('')}</ul>
+        <ul>${items.map((f) => `<li><a href="#feature-${f.id}" data-id="${f.id}">${iconSvg(f.icon, 16)}<span>${f.title}</span></a></li>`).join('')}</ul>
       </article>`;
   }).join('');
   grid.addEventListener('click', (e) => {

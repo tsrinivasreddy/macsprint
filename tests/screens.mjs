@@ -18,7 +18,7 @@ for (const [w, h, tag] of [[1440, 900, 'desktop'], [390, 844, 'mobile']]) {
     await p.goto('http://localhost:8766/');
     await p.screenshot({ path: `screenshots/${tag}-${scheme}.png`, fullPage: true });
     for (const id of extra) {
-      await p.goto(`http://localhost:8766/#explore/${id}`);
+      await p.goto(`http://localhost:8766/#feature-${id}`);
       await p.waitForTimeout(300);
       await p.locator('#explorer').screenshot({ path: `screenshots/explore-${id}-${tag}-${scheme}.png` });
     }

@@ -19,7 +19,7 @@ python3 -m http.server 8000
 
 - Click any feature in the Explorer sidebar, or use ↑/↓ when the sidebar has focus.
 - Press **⌘K** (Ctrl+K on Windows/Linux) to jump to any feature from anywhere on the page.
-- Deep-link to a feature with `#explore/<id>`, e.g. `/#explore/images`.
+- Deep-link to a feature with `#feature-<id>`, e.g. `/#feature-images`.
 - The problem cards near the top open the matching feature.
 
 ## Files
@@ -37,7 +37,7 @@ python3 -m http.server 8000
 
 ### Add or change a feature
 
-1. Edit its entry in `FEATURES` in `js/features.js` (title, points, `release`: `At launch`, `1.1`, `1.2` or `2.0`).
+1. Edit its entry in `FEATURES` in `js/features.js` (title, points, `release`: `At launch`, `1.1`, `1.2`, `2.0`, or a combined value like `1.2 · 2.0`).
 2. Add or update its demo in `DEMOS` in `js/demos.js` using the same `id`.
 
 The sidebar, palette, roadmap and release badges update automatically.
