@@ -1,4 +1,6 @@
 // Page bootstrap: scroll-reveal and section wiring.
+import { initExplorer } from './explorer.js';
+
 function initReveal() {
   const els = document.querySelectorAll('.reveal');
   if (!('IntersectionObserver' in window) || matchMedia('(prefers-reduced-motion: reduce)').matches) {
@@ -11,4 +13,5 @@ function initReveal() {
   els.forEach((el) => io.observe(el));
 }
 
+initExplorer(document.getElementById('explorer'));
 initReveal();
