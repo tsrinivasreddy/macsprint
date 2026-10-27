@@ -277,6 +277,107 @@ check('controlsHaveAccessibleNames', async (b) => {
   assert(unnamed.length === 0, 'unnamed controls: ' + [...new Set(unnamed)].slice(0, 5).join(' || '));
 });
 
+/* ---------- Final review fixes ---------- */
+check('filterKeepsKeyboardPath', async (b) => {
+  const p = await open(b);
+  await p.fill('#explorer .ex-filter input', 'clip');
+  await p.focus('#explorer .ex-filter input');
+  await p.keyboard.press('Tab');
+  const id = await p.evaluate(() => document.activeElement.id);
+  assert(id === 'tab-clipboard', 'Tab from filter should reach first visible match, got #' + id);
+});
+
+check('paneNotLiveAndSearchCyclePausable', async (b) => {
+  const p = await open(b, { hash: '#explore/search' });
+  assert(await p.getAttribute('#ex-pane', 'aria-live') === null, '#ex-pane must not be a live region');
+  const btn = p.locator('#explorer .demo-search .d-cycle');
+  assert(await btn.count() === 1, 'pause/play control for auto-cycling missing');
+  assert(await btn.getAttribute('aria-pressed') !== null, 'cycle control needs aria-pressed');
+});
+
+check('textContrastAA', async (b) => {
+  for (const scheme of ['light', 'dark']) {
+    const p = await open(b, { scheme, hash: '#explore/search' });
+    const bad = await p.evaluate(() => {
+      const rgb = (c) => c.match(/[\d.]+/g).slice(0, 4).map(Number);
+      const lum = ([r, g, b]) => [r, g, b].map((v) => { v /= 255; return v <= 0.03928 ? v / 12.92 : ((v + 0.055) / 1.055) ** 2.4; })
+        .reduce((a, v, i) => a + v * [0.2126, 0.7152, 0.0722][i], 0);
+      const bgOf = (el) => {
+        const layers = [];
+        for (let n = el; n; n = n.parentElement) {
+          const c = rgb(getComputedStyle(n).backgroundColor);
+          if ((c[3] ?? 1) > 0) { layers.push(c); if ((c[3] ?? 1) >= 1) break; }
+        }
+        let out = [255, 255, 255];
+        for (const c of layers.reverse()) { const a = c[3] ?? 1; out = out.map((v, i) => v * (1 - a) + c[i] * a); }
+        return out;
+      };
+      const ratio = (el) => {
+        const fg = rgb(getComputedStyle(el).color), bg = bgOf(el);
+        const a = fg[3] ?? 1; const f = fg.slice(0, 3).map((v, i) => v * a + bg[i] * (1 - a));
+        const [l1, l2] = [lum(f), lum(bg)].sort((x, y) => y - x);
+        return (l1 + 0.05) / (l2 + 0.05);
+      };
+      const sels = ['.ex-demo-note', '.ex-group-label', '.ex-tab-rel', '.d-label', '.badge-launch', '.btn', '[role=tab][aria-selected=true]', '.d-results mark'];
+      const fails = [];
+      for (const s of sels) {
+        const el = document.querySelector(s);
+        if (!el) { fails.push(s + ' (missing)'); continue; }
+        const r = ratio(el);
+        if (r < 4.5) fails.push(`${s} ${r.toFixed(2)}`);
+      }
+      return fails;
+    });
+    assert(bad.length === 0, `${scheme}: low contrast: ` + bad.join(', '));
+    for (const [hash, sel] of [['#explore/duplicates', '.ex-pane .badge-soon'], ['#explore/windows', '.ex-pane .badge-later']]) {
+      await p.evaluate((h) => { location.hash = h; }, hash);
+      await p.waitForTimeout(100);
+      const r = await p.evaluate((s) => {
+        const el = document.querySelector(s);
+        const rgb = (c) => c.match(/[\d.]+/g).map(Number);
+        const lum = ([r, g, b]) => [r, g, b].map((v) => { v /= 255; return v <= 0.03928 ? v / 12.92 : ((v + 0.055) / 1.055) ** 2.4; }).reduce((a, v, i) => a + v * [0.2126, 0.7152, 0.0722][i], 0);
+        const pane = rgb(getComputedStyle(document.querySelector('.ex-window')).backgroundColor);
+        const bgc = rgb(getComputedStyle(el).backgroundColor); const a = bgc[3] ?? 1;
+        const bg = pane.slice(0, 3).map((v, i) => v * (1 - a) + bgc[i] * a);
+        const [l1, l2] = [lum(rgb(getComputedStyle(el).color)), lum(bg)].sort((x, y) => y - x);
+        return (l1 + 0.05) / (l2 + 0.05);
+      }, sel);
+      assert(r >= 4.5, `${scheme}: ${sel} contrast ${r.toFixed(2)}`);
+    }
+  }
+});
+
+check('sampleResultsNotCalledReal', async (b) => {
+  const p = await open(b, { hash: '#explore/search' });
+  assert(!(await p.textContent('#explorer .ex-demo')).includes('Real files'), 'sample results labelled as real files');
+});
+
+check('roadmapLinkToCurrentFeatureScrolls', async (b) => {
+  const p = await open(b, { hash: '#explore/images' });
+  await p.locator('#roadmap a', { hasText: 'Smart Image Viewer' }).scrollIntoViewIfNeeded();
+  await p.locator('#roadmap a', { hasText: 'Smart Image Viewer' }).click();
+  await p.waitForTimeout(200);
+  const top = await p.evaluate(() => document.getElementById('explore').getBoundingClientRect().top);
+  assert(Math.abs(top) < 120, 'roadmap link did not scroll to explorer, top=' + top);
+});
+
+check('mobileSelectedPillVisible', async (b) => {
+  const p = await open(b, { width: 320, height: 700, hash: '#explore/windows' });
+  await p.waitForTimeout(200);
+  const [tl, tr, bl, br] = await p.evaluate(() => {
+    const t = document.querySelector('#tab-windows').getBoundingClientRect();
+    const l = document.querySelector('#explorer [role=tablist]').getBoundingClientRect();
+    return [t.left, t.right, l.left, l.right];
+  });
+  assert(tl >= bl - 1 && tr <= br + 1, `selected pill outside tablist: ${tl}-${tr} vs ${bl}-${br}`);
+});
+
+check('trustCopyConsistentWithFaq', async (b) => {
+  const p = await open(b);
+  const t = await p.textContent('#trust');
+  assert(!/search, storage and cleanup work fully/.test(t), 'trust note claims AI-less search fully works, contradicting FAQ');
+});
+
 /* ---------- runner ---------- */
 const filter = process.argv[2];
 const server = await startServer();

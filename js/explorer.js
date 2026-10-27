@@ -43,7 +43,8 @@ function render(root) {
           <div class="ex-tablist" role="tablist" aria-label="MacMate features" aria-orientation="vertical">${sidebarHtml()}</div>
           <p class="ex-nomatch" hidden>No features match</p>
         </aside>
-        <section class="ex-pane" id="ex-pane" role="tabpanel" tabindex="-1" aria-live="polite">
+        <p class="visually-hidden" role="status" id="ex-status"></p>
+        <section class="ex-pane" id="ex-pane" role="tabpanel" tabindex="-1">
           <header class="ex-pane-head">
             <span class="ex-pane-icon"></span>
             <div class="ex-pane-titles"><h3></h3><p class="ex-pane-short"></p></div>
@@ -69,6 +70,12 @@ export function selectFeature(id, { focus = false, updateHash = true } = {}) {
   const f = byId.get(id) || byId.get(DEFAULT_ID);
   const { root } = state;
   if (!root) return;
+  const target = root.querySelector('#tab-' + f.id);
+  if (target.hidden) {
+    const input = root.querySelector('.ex-filter input');
+    input.value = '';
+    input.dispatchEvent(new Event('input'));
+  }
   if (state.current !== f.id) {
     if (typeof state.cleanup === 'function') state.cleanup();
     state.cleanup = null;
@@ -98,6 +105,9 @@ export function selectFeature(id, { focus = false, updateHash = true } = {}) {
     pb.dataset.target = prev.id;
     nb.dataset.target = next.id;
 
+    root.querySelector('#ex-status').textContent = 'Showing ' + f.title;
+    revealTab(root.querySelector('#tab-' + f.id));
+
     const demoEl = pane.querySelector('.ex-demo');
     demoEl.innerHTML = '';
     demoEl.className = 'ex-demo demo-' + f.id;
@@ -105,10 +115,26 @@ export function selectFeature(id, { focus = false, updateHash = true } = {}) {
     if (demo) state.cleanup = demo(demoEl) || null;
   }
   if (updateHash && location.hash !== HASH_PREFIX + f.id) history.replaceState(null, '', HASH_PREFIX + f.id);
-  if (focus) root.querySelector('#tab-' + f.id).focus();
+  syncTabStops();
+  if (focus) target.focus();
 }
 
 function visibleTabs() { return state.tabs.filter((t) => !t.hidden); }
+
+// Keep exactly one reachable tab: the selected one if visible, else the first visible match.
+function syncTabStops() {
+  const vis = visibleTabs();
+  const sel = vis.find((t) => t.getAttribute('aria-selected') === 'true');
+  const stop = sel || vis[0];
+  for (const t of state.tabs) t.tabIndex = t === stop ? 0 : -1;
+}
+
+// Scroll the horizontal pill bar (phones) so the tab is visible, without scrolling the page.
+function revealTab(tab) {
+  const list = tab.closest('[role=tablist]');
+  if (list.scrollWidth <= list.clientWidth) return;
+  list.scrollLeft = tab.offsetLeft - list.clientWidth / 2 + tab.offsetWidth / 2;
+}
 
 function onTabKey(e) {
   const tabs = visibleTabs();
@@ -138,6 +164,14 @@ function initFilter(root) {
     }
     root.querySelectorAll('.ex-group').forEach((g) => { g.hidden = !g.querySelector('[role=tab]:not([hidden])'); });
     none.hidden = shown > 0;
+    syncTabStops();
+  });
+  input.addEventListener('keydown', (e) => {
+    if (e.key !== 'Enter' && e.key !== 'ArrowDown') return;
+    const first = visibleTabs()[0];
+    if (!first) return;
+    e.preventDefault();
+    selectFeature(first.dataset.id, { focus: true });
   });
 }
 

@@ -160,11 +160,14 @@ function search(el) {
   let idx = 0, timer = null;
   el.innerHTML = `
     <div class="d-search">
-      <label class="d-searchbox">${svg('<circle cx="10.5" cy="10.5" r="6.5"/><path d="m20 20-4.8-4.8"/>')}<span class="visually-hidden">Example search</span><output class="d-q"></output></label>
+      <div class="d-search-top">
+        <label class="d-searchbox">${svg('<circle cx="10.5" cy="10.5" r="6.5"/><path d="m20 20-4.8-4.8"/>')}<span class="visually-hidden">Example search</span><output class="d-q"></output></label>
+        <button type="button" class="d-cycle" aria-pressed="false">Pause examples</button>
+      </div>
       <div class="d-chips" role="group" aria-label="Try an example">${QUERIES.map((x, i) => `<button type="button" data-i="${i}">${esc(x.q)}</button>`).join('')}</div>
       <p class="d-label">Understood as</p>
       <div class="d-filters"></div>
-      <p class="d-label">Real files from your index</p>
+      <p class="d-label">Matching files</p>
       <ul class="d-results"></ul>
     </div>`;
   const draw = () => {
@@ -175,11 +178,30 @@ function search(el) {
     el.querySelector('.d-results').innerHTML = x.results.map(([n, p, s]) => `
       <li><span class="d-res-icon">${svg(ICON.doc, 18)}</span><div><b>${esc(n)}</b><small>${esc(p)}</small><p>${s}</p></div></li>`).join('');
   };
-  const stop = () => { clearInterval(timer); timer = null; };
-  bindAll(el, '.d-chips button', 'click', (e) => { stop(); idx = +e.currentTarget.dataset.i; draw(); });
+  // Auto-cycles through examples only while visible, not paused, and not focused/hovered.
+  const cycleBtn = el.querySelector('.d-cycle');
+  let paused = reduceMotion(), visible = true, engaged = false;
+  const tick = () => { idx = (idx + 1) % QUERIES.length; draw(); };
+  const update = () => {
+    const run = !paused && visible && !engaged;
+    if (run && !timer) timer = setInterval(tick, 4500);
+    if (!run && timer) { clearInterval(timer); timer = null; }
+    cycleBtn.setAttribute('aria-pressed', String(paused));
+    cycleBtn.textContent = paused ? 'Play examples' : 'Pause examples';
+  };
+  const setPaused = (v) => { paused = v; update(); };
+  cycleBtn.addEventListener('click', () => setPaused(!paused));
+  bindAll(el, '.d-chips button', 'click', (e) => { idx = +e.currentTarget.dataset.i; draw(); setPaused(true); });
+  const engage = (v) => () => { engaged = v; update(); };
+  el.addEventListener('focusin', engage(true));
+  el.addEventListener('focusout', engage(false));
+  el.addEventListener('mouseenter', engage(true));
+  el.addEventListener('mouseleave', engage(false));
+  const io = 'IntersectionObserver' in window ? new IntersectionObserver(([e]) => { visible = e.isIntersecting; update(); }) : null;
+  if (io) io.observe(el);
   draw();
-  if (!reduceMotion()) timer = setInterval(() => { idx = (idx + 1) % QUERIES.length; draw(); }, 4500);
-  return stop;
+  update();
+  return () => { clearInterval(timer); timer = null; if (io) io.disconnect(); };
 }
 
 /* ---------------- Text in Images (OCR) ---------------- */

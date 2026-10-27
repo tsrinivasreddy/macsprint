@@ -32,9 +32,17 @@ export function initRoadmap(grid) {
       <article class="roadmap-col reveal">
         <p class="roadmap-rel">${r.id === 'At launch' ? 'At launch' : r.id}</p>
         <h3>${r.name}</h3>
-        <ul>${items.map((f) => `<li><a href="#explore/${f.id}">${iconSvg(f.icon, 16)}<span>${f.title}</span></a></li>`).join('')}</ul>
+        <ul>${items.map((f) => `<li><a href="#explore/${f.id}" data-id="${f.id}">${iconSvg(f.icon, 16)}<span>${f.title}</span></a></li>`).join('')}</ul>
       </article>`;
   }).join('');
+  grid.addEventListener('click', (e) => {
+    const a = e.target.closest('a[data-id]');
+    if (!a) return;
+    e.preventDefault();
+    selectFeature(a.dataset.id);
+    document.getElementById('explore').scrollIntoView({ block: 'start' });
+    document.getElementById('tab-' + a.dataset.id).focus({ preventScroll: true });
+  });
 }
 
 export function initWaitlist(form, status) {
