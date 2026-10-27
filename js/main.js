@@ -1,5 +1,6 @@
 // Page bootstrap: scroll-reveal and section wiring.
 import { initExplorer } from './explorer.js';
+import { DEMOS } from './demos.js';
 
 function initReveal() {
   const els = document.querySelectorAll('.reveal');
@@ -13,5 +14,5 @@ function initReveal() {
   els.forEach((el) => io.observe(el));
 }
 
-initExplorer(document.getElementById('explorer'));
+initExplorer(document.getElementById('explorer'), DEMOS);
 initReveal();

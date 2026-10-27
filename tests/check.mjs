@@ -124,6 +124,64 @@ check('explorerSidebarFilter', async (b) => {
   assert(visible === 1, 'filter should leave 1 visible tab, got ' + visible);
 });
 
+/* ---------- Task 3: demos ---------- */
+const demoText = (p) => p.textContent('#explorer .ex-demo');
+
+check('demosCoverEveryFeature', async (b) => {
+  const p = await open(b);
+  const missing = await p.evaluate(async () => {
+    const { FEATURES } = await import('/js/features.js');
+    const { DEMOS } = await import('/js/demos.js');
+    return FEATURES.filter((f) => typeof DEMOS[f.id] !== 'function').map((f) => f.id);
+  });
+  assert(missing.length === 0, 'features without demo: ' + missing.join(','));
+  const tabs = p.locator('#explorer [role=tab]');
+  for (let i = 0; i < 16; i++) {
+    await tabs.nth(i).click();
+    assert((await demoText(p)).trim().length > 0, 'empty demo at tab ' + i);
+  }
+  assert(p.errors.length === 0, 'errors: ' + p.errors.join(' | '));
+});
+
+check('demoImageViewerArrows', async (b) => {
+  const p = await open(b, { hash: '#explore/images' });
+  assert((await demoText(p)).includes('15 of 120'), 'counter should start at 15 of 120');
+  await p.fill('#explorer .ex-filter input', 'x');
+  await p.focus('#explorer .ex-filter input');
+  await p.keyboard.press('ArrowRight');
+  assert((await demoText(p)).includes('15 of 120'), 'ArrowRight in filter input moved the viewer');
+  await p.fill('#explorer .ex-filter input', '');
+  await p.focus('#explorer .demo-images .iv-stage');
+  await p.keyboard.press('ArrowRight');
+  assert((await demoText(p)).includes('16 of 120'), 'ArrowRight on viewer did not advance');
+  await p.keyboard.press('ArrowLeft');
+  await p.keyboard.press('ArrowLeft');
+  assert((await demoText(p)).includes('14 of 120'), 'ArrowLeft did not go back');
+});
+
+check('demoOcrHighlight', async (b) => {
+  const p = await open(b, { hash: '#explore/ocr' });
+  assert((await demoText(p)).includes('IMG_2048.png'), 'IMG_2048.png missing');
+  const marks = await p.locator('#explorer .ex-demo mark').allTextContents();
+  assert(marks.some((m) => m.toLowerCase().includes('connection timed out')), 'no highlighted phrase');
+});
+
+check('demoOrganizerNeedsReview', async (b) => {
+  const p = await open(b, { hash: '#explore/organizer' });
+  assert((await demoText(p)).includes('182 proposed moves'), '182 proposed moves missing');
+  const approve = p.locator('#explorer .ex-demo button', { hasText: 'Approve' });
+  assert(await approve.isDisabled(), 'Approve should be disabled before review');
+  await p.locator('#explorer .ex-demo button', { hasText: 'Review' }).click();
+  assert(!(await approve.isDisabled()), 'Approve should enable after review');
+});
+
+check('demoStorageHonestLabels', async (b) => {
+  const p = await open(b, { hash: '#explore/storage' });
+  const t = await demoText(p);
+  assert(t.includes('Not modified for 18 months'), 'honest old-file label missing');
+  assert(!/\bunused\b|not accessed/i.test(t), 'demo uses unsupported "unused"/"not accessed" wording');
+});
+
 /* ---------- runner ---------- */
 const filter = process.argv[2];
 const server = await startServer();

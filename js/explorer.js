@@ -50,6 +50,7 @@ function render(root) {
             <span class="ex-pane-badge"></span>
           </header>
           <div class="ex-demo"></div>
+          <p class="ex-demo-note">Interactive preview with sample files — not your data.</p>
           <div class="ex-info">
             <p class="ex-headline"></p>
             <ul class="ex-points"></ul>
