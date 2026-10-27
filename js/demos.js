@@ -154,8 +154,8 @@ function search(el) {
         <button type="button" class="d-cycle" aria-pressed="false">Pause examples</button>
       </div>
       <div class="d-chips" role="group" aria-label="Try an example">${QUERIES.map((x, i) => `<button type="button" data-i="${i}">${esc(x.q)}</button>`).join('')}</div>
-      <p class="d-label">Understood as</p>
-      <div class="d-filters"></div>
+      <div class="d-understood"><span class="d-label">Understood as</span><div class="d-filters"></div></div>
+      <div class="d-filterbar" role="group" aria-label="Filters"></div>
       <p class="d-label">Matching files</p>
       <ul class="d-results"></ul>
     </div>`;
@@ -164,6 +164,10 @@ function search(el) {
     el.querySelector('.d-q').textContent = x.q;
     el.querySelectorAll('.d-chips button').forEach((b) => b.setAttribute('aria-pressed', String(+b.dataset.i === idx)));
     el.querySelector('.d-filters').innerHTML = x.filters.map(([k, v]) => `<span class="d-filter"><b>${k}</b> ${esc(v)}</span>`).join('');
+    // The same interpretation as editable filters, the way the app shows it.
+    const val = (...keys) => (x.filters.find(([k]) => keys.includes(k)) || [])[1];
+    const bar = [['From', val('Folder', 'Source') || 'Anywhere'], ['Kind', val('Kind') || 'All'], ['Date', val('Date', 'Modified') || 'Any'], ['Size', val('Size') || 'Any'], ['Sort', val('Sort') || 'Relevance']];
+    el.querySelector('.d-filterbar').innerHTML = bar.map(([k, v]) => `<span class="d-fb">${k}: <b>${esc(v)}</b></span>`).join('');
     el.querySelector('.d-results').innerHTML = x.results.map(([n, p, s]) => `
       <li><span class="d-res-icon">${svg(ICON.doc, 18)}</span><div><b>${esc(n)}</b><small>${esc(p)}</small><p>${s}</p></div></li>`).join('');
   };
@@ -394,7 +398,7 @@ function downloads(el) {
   ];
   el.innerHTML = `
     <div class="d-mb">
-      <div class="d-menubar"><span class="d-mb-left">Finder&nbsp;&nbsp; File&nbsp;&nbsp; Edit&nbsp;&nbsp; View</span><span class="d-mb-right"><button type="button" class="d-mb-icon" aria-expanded="true" aria-label="MacMate recent downloads">${svg(ICON.folder, 14)}</button><span>Tue 9:41</span></span></div>
+      <div class="d-menubar"><span class="d-mb-left">Finder&nbsp;&nbsp; File&nbsp;&nbsp; Edit&nbsp;&nbsp; View</span><span class="d-mb-right"><button type="button" class="d-mb-icon" aria-expanded="true" aria-label="MacSprint recent downloads">${svg(ICON.folder, 14)}</button><span>Tue 9:41</span></span></div>
       <div class="d-mb-menu">
         <p class="d-label">Recent Downloads</p>
         <ul>${items.map(([n, s, t, h]) => `<li draggable="true" data-name="${esc(n)}">${h !== null ? ph(h, 'aria-hidden="true"') : `<span class="d-mb-file">${svg(ICON.doc, 16)}</span>`}<span>${esc(n)}<small>${s} · ${t}</small></span></li>`).join('')}</ul>
@@ -417,7 +421,7 @@ function finder(el) {
         <li>${svg(ICON.doc, 16)} Budget.numbers</li>
         <li>${svg(ICON.folder, 16)} Archive</li>
       </ul>
-      <ul class="d-menu" role="menu" aria-label="MacMate actions for Plan.md">
+      <ul class="d-menu" role="menu" aria-label="MacSprint actions for Plan.md">
         <li role="none"><button type="button" role="menuitem" data-t="Copied /Users/you/Documents/Plan.md">Copy Full Path</button></li>
         <li role="none"><button type="button" role="menuitem" data-t="Created “Untitled.txt” in Documents">New Text File</button></li>
         <li role="none"><button type="button" role="menuitem" data-t="Moved Plan.md to Favorites ▸ Work">Move to Favorite ▸ Work</button></li>

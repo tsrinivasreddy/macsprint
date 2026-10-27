@@ -1,4 +1,4 @@
-// Single source of truth for MacMate features. The Explorer, ⌘K palette,
+// Single source of truth for MacSprint features. The Explorer, ⌘K palette,
 // problem cards and roadmap are all generated from these arrays.
 
 export const RELEASES = [
@@ -31,7 +31,7 @@ const I = {
 export const FEATURES = [
   // ---------- Discover ----------
   {
-    id: 'home', group: 'Discover', icon: I.home, release: 'At launch', source: 'MacMate',
+    id: 'home', group: 'Discover', icon: I.home, release: 'At launch', source: 'MacSprint',
     title: 'Home Dashboard', short: 'Storage, scans and quick actions',
     headline: 'Your Mac at a glance — measured, never guessed.',
     points: [
@@ -53,7 +53,7 @@ export const FEATURES = [
     ],
   },
   {
-    id: 'images', group: 'Discover', icon: I.images, release: 'At launch', source: 'MacMate', meta: { text: '2,280' },
+    id: 'images', group: 'Discover', icon: I.images, release: 'At launch', source: 'MacSprint', meta: { text: '2,280' },
     title: 'Smart Image Viewer', short: 'Open one image, browse the folder',
     headline: 'Open one photo. Press → for the next.',
     points: [
@@ -64,7 +64,7 @@ export const FEATURES = [
     ],
   },
   {
-    id: 'search', group: 'Discover', icon: I.search, release: 'At launch', source: 'MacMate + Homy',
+    id: 'search', group: 'Discover', icon: I.search, release: 'At launch', source: 'MacSprint + Homy',
     title: 'AI Search', short: 'Find files by describing them',
     headline: 'Type what you mean. Get real files.',
     points: [
@@ -75,7 +75,7 @@ export const FEATURES = [
     ],
   },
   {
-    id: 'ocr', group: 'Discover', icon: I.ocr, release: 'At launch', source: 'MacMate + Homy', meta: { text: '589' },
+    id: 'ocr', group: 'Discover', icon: I.ocr, release: 'At launch', source: 'MacSprint + Homy', meta: { text: '589' },
     title: 'Text in Images', short: 'Search words inside screenshots',
     headline: 'Find the screenshot by what it says.',
     points: [
@@ -87,7 +87,7 @@ export const FEATURES = [
   },
   // ---------- Clean up ----------
   {
-    id: 'storage', group: 'Clean up', icon: I.storage, release: 'At launch', source: 'MacMate', meta: { text: '10', tone: 'alert', label: '10 large files' },
+    id: 'storage', group: 'Clean up', icon: I.storage, release: 'At launch', source: 'MacSprint', meta: { text: '10', tone: 'alert', label: '10 large files' },
     title: 'Storage Intelligence', short: 'See what fills your disk',
     headline: 'See exactly where your space went.',
     points: [
@@ -98,7 +98,7 @@ export const FEATURES = [
     ],
   },
   {
-    id: 'cleanup', group: 'Clean up', icon: I.cleanup, release: 'At launch', source: 'MacMate', meta: { text: '14.1 GB', tone: 'good', label: 'up to 14.1 GB to review' },
+    id: 'cleanup', group: 'Clean up', icon: I.cleanup, release: 'At launch', source: 'MacSprint', meta: { text: '14.1 GB', tone: 'good', label: 'up to 14.1 GB to review' },
     title: 'Safe Cleanup', short: 'Preview, confirm, move to Trash',
     headline: 'Nothing disappears without your say‑so.',
     points: [
@@ -109,7 +109,7 @@ export const FEATURES = [
     ],
   },
   {
-    id: 'duplicates', group: 'Clean up', icon: I.duplicates, release: '1.1', source: 'MacMate + Homy',
+    id: 'duplicates', group: 'Clean up', icon: I.duplicates, release: '1.1', source: 'MacSprint + Homy',
     title: 'Duplicate Finder', short: 'Exact copies, grouped for review',
     headline: 'Same file, saved three times? Keep one.',
     points: [
@@ -119,7 +119,7 @@ export const FEATURES = [
     ],
   },
   {
-    id: 'organizer', group: 'Clean up', icon: I.organizer, release: '1.1', source: 'MacMate',
+    id: 'organizer', group: 'Clean up', icon: I.organizer, release: '1.1', source: 'MacSprint',
     title: 'Smart File Organizer', short: 'Tidy Downloads with a preview',
     headline: 'A tidy Downloads folder, on your approval.',
     points: [
@@ -130,7 +130,7 @@ export const FEATURES = [
   },
   // ---------- Everyday ----------
   {
-    id: 'quicksearch', group: 'Everyday', icon: I.quicksearch, release: '1.2', source: 'Homy + MacMate',
+    id: 'quicksearch', group: 'Everyday', icon: I.quicksearch, release: '1.2', source: 'Homy + MacSprint',
     title: 'Quick Search & Command Panel', short: 'A shortcut away, from any app',
     headline: 'One shortcut. Any file, any action.',
     points: [
@@ -151,7 +151,7 @@ export const FEATURES = [
     ],
   },
   {
-    id: 'finder', group: 'Everyday', icon: I.finder, release: '1.2', source: 'MacMate',
+    id: 'finder', group: 'Everyday', icon: I.finder, release: '1.2', source: 'MacSprint',
     title: 'Finder Tools', short: 'Copy path, new file, favorites',
     headline: 'The Finder shortcuts you always wanted.',
     points: [
@@ -161,7 +161,7 @@ export const FEATURES = [
     ],
   },
   {
-    id: 'clipboard', group: 'Everyday', icon: I.clipboard, release: '1.2', source: 'MacMate',
+    id: 'clipboard', group: 'Everyday', icon: I.clipboard, release: '1.2', source: 'MacSprint',
     title: 'Clipboard History', short: 'Never lose a copied item',
     headline: 'Everything you copied, searchable.',
     points: [
@@ -172,7 +172,7 @@ export const FEATURES = [
     ],
   },
   {
-    id: 'screenshots', group: 'Everyday', icon: I.screenshots, release: '1.2 · 2.0', source: 'MacMate',
+    id: 'screenshots', group: 'Everyday', icon: I.screenshots, release: '1.2 · 2.0', source: 'MacSprint',
     title: 'Screenshot Toolkit', short: 'Capture, mark up, blur, copy',
     headline: 'Capture, blur, annotate — done.',
     points: [
@@ -182,7 +182,7 @@ export const FEATURES = [
     ],
   },
   {
-    id: 'windows', group: 'Everyday', icon: I.windows, release: '2.0', source: 'MacMate',
+    id: 'windows', group: 'Everyday', icon: I.windows, release: '2.0', source: 'MacSprint',
     title: 'Window Manager', short: 'Snap layouts and workspaces',
     headline: 'Windows exactly where you want them.',
     points: [
@@ -192,7 +192,7 @@ export const FEATURES = [
     ],
   },
   {
-    id: 'similar', group: 'Everyday', icon: I.similar, release: '2.0', source: 'MacMate',
+    id: 'similar', group: 'Everyday', icon: I.similar, release: '2.0', source: 'MacSprint',
     title: 'Similar Images', short: 'Near-duplicates and visual search',
     headline: 'Find the best shot among near-identical ones.',
     points: [
@@ -225,3 +225,9 @@ export const iconSvg = (inner, size = 18) =>
 export const badgeClass = (release) =>
   release === 'At launch' ? 'badge badge-launch' : release.startsWith('2') ? 'badge badge-later' : 'badge badge-soon';
 export const badgeLabel = (release) => (release === 'At launch' ? 'At launch' : 'Coming in ' + release);
+
+export const SHORTCUTS = [
+  { group: 'Find', items: [['Quick Search, from any app', ['⌥', 'Space']], ['Search in MacSprint', ['⌘', 'F']], ['Command panel', ['⌘', 'K']], ['Copy text from images', ['⇧', '⌘', 'C']], ['Downloaded From', ['⇧', '⌘', 'J']]] },
+  { group: 'View', items: [['Next / previous image', ['←', '→']], ['Grid view', ['⌘', '1']], ['List view', ['⌘', '2']], ['Quick Look', ['Space']], ['Inspector', ['⌘', 'I']]] },
+  { group: 'Tidy', items: [['Duplicates', ['⇧', '⌘', 'D']], ['Clean Up', ['⇧', '⌘', 'K']], ['Clipboard history', ['⇧', '⌘', 'V']], ['Snap window left', ['⌃', '⌥', '←']], ['Move to Trash', ['⌘', '⌫']]] },
+];

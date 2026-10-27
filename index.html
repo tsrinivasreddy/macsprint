@@ -3,8 +3,8 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>MacMate AI</title>
-  <meta name="description" content="MacMate AI — one private, native Mac app to find, view, organize and clean up your files. Smarter search, a better image viewer, safe storage cleanup and everyday tools, with on-device AI.">
+  <title>MacSprint AI</title>
+  <meta name="description" content="MacSprint AI — one private, native Mac app to find, view, organize and clean up your files. Smarter search, a better image viewer, safe storage cleanup and everyday tools, with on-device AI.">
   <meta name="theme-color" content="#ffffff" media="(prefers-color-scheme: light)">
   <meta name="theme-color" content="#000000" media="(prefers-color-scheme: dark)">
   <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='8' fill='%230071e3'/%3E%3Cpath d='M8 22V10l8 7 8-7v12' fill='none' stroke='white' stroke-width='3' stroke-linejoin='round' stroke-linecap='round'/%3E%3C/svg%3E">
@@ -15,19 +15,21 @@
 
   <header class="globalnav" id="top">
     <nav class="globalnav-inner" aria-label="Main">
-      <a class="brand" href="#overview" aria-label="MacMate AI home">
+      <a class="brand" href="#overview" aria-label="MacSprint AI home">
         <span class="brand-mark" aria-hidden="true"></span>
-        <span>MacMate AI</span>
+        <span>MacSprint AI</span>
       </a>
       <ul class="nav-links">
         <li><a href="#overview">Overview</a></li>
         <li><a href="#explore">Features</a></li>
+        <li><a href="#compare">vs Finder</a></li>
+        <li><a href="#shortcuts">Shortcuts</a></li>
         <li><a href="#privacy">Privacy</a></li>
         <li><a href="#roadmap">Roadmap</a></li>
         <li><a href="#pricing">Pricing</a></li>
         <li><a href="#faq">FAQ</a></li>
       </ul>
-      <a class="btn btn-small" href="#waitlist">Join the waitlist</a>
+      <a class="btn btn-small btn-ink" href="#waitlist">Join the waitlist</a>
     </nav>
   </header>
 
@@ -35,24 +37,23 @@
     <!-- Hero -->
     <section id="overview" class="hero">
       <div class="container hero-copy reveal">
-        <p class="eyebrow">Coming soon for Mac</p>
-        <h1>MacMate AI</h1>
-        <p class="tagline">Your Mac. Smarter, Faster, Cleaner.</p>
-        <p class="lede">One native app to find anything, browse every photo in a folder, see what's filling your disk and tidy up safely — with private, on‑device AI.</p>
+        <p class="eyebrow-pill"><b>Coming soon</b> One app for your files, photos and space</p>
+        <h1><span class="h1-brand">MacSprint AI</span><span class="h1-tag">Your Mac. <em>Smarter</em>, Faster, Cleaner.</span></h1>
+        <p class="lede">See everything you have, find anything by describing it, and clear out what you don’t need. Private, on‑device, and calm to use.</p>
         <div class="cta-row">
-          <a class="btn" href="#waitlist">Join the waitlist</a>
-          <a class="link-arrow" href="#explore">Explore all features</a>
+          <a class="btn btn-lg" href="#waitlist">Join the waitlist</a>
+          <a class="btn btn-lg btn-quiet" href="#explore">Explore features</a>
         </div>
-        <ul class="hero-pills" aria-label="Highlights">
-          <li>On‑device AI</li>
-          <li>No account needed</li>
-          <li>One‑time purchase</li>
+        <ul class="trust" aria-label="Promises">
+          <li>No account, nothing uploaded</li>
+          <li>iCloud-only files never downloaded</li>
+          <li>Files go to Trash, never erased</li>
           <li>Apple silicon &amp; Intel</li>
         </ul>
       </div>
 
       <div class="container hero-visual reveal" aria-hidden="true">
-        <div class="mac-window hero-window" id="hero-window" inert></div>
+        <div class="stage"><div class="mac-window hero-window" id="hero-window" inert></div></div>
       </div>
     </section>
 
@@ -60,7 +61,7 @@
     <section id="problems" class="section section-alt">
       <div class="container">
         <header class="section-head reveal">
-          <p class="eyebrow">Why MacMate</p>
+          <p class="eyebrow">Why MacSprint</p>
           <h2>Thirteen everyday frustrations.<br>One app.</h2>
           <p class="section-sub">Each card opens the feature that fixes it.</p>
         </header>
@@ -80,18 +81,53 @@
       </div>
     </section>
 
+    <!-- vs Finder -->
+    <section id="compare" class="section section-alt">
+      <div class="container">
+        <header class="section-head reveal">
+          <p class="eyebrow">vs Finder</p>
+          <h2>MacSprint, or Finder?</h2>
+          <p class="section-sub">Finder is great for opening a folder. Here’s what it leaves to you. MacSprint works alongside it — “Show in Finder” is always one click away.</p>
+        </header>
+        <div class="versus reveal" role="table" aria-label="MacSprint compared with Finder">
+          <div class="vrow vrow-head" role="row"><span role="columnheader">Everyday job</span><span role="columnheader">MacSprint</span><span role="columnheader">Finder</span></div>
+          <div class="vrow vrow-item" role="row"><b role="rowheader">Seeing what you have</b><span class="us" role="cell">Images, videos, music, documents, archives and apps, each on its own shelf</span><span class="them" role="cell">Folder by folder, the way you filed things</span></div>
+          <div class="vrow vrow-item" role="row"><b role="rowheader">Opening one photo</b><span class="us" role="cell">Press → for the next image in the same folder</span><span class="them" role="cell">Preview may only show the file you opened</span></div>
+          <div class="vrow vrow-item" role="row"><b role="rowheader">Searching in plain English</b><span class="us" role="cell">“pdfs from last week” becomes filters you can edit</span><span class="them" role="cell">Add search rules one at a time</span></div>
+          <div class="vrow vrow-item" role="row"><b role="rowheader">Text inside screenshots</b><span class="us" role="cell">Search it, highlight it, copy it</span><span class="them" role="cell">Copy it one image at a time in Preview</span></div>
+          <div class="vrow vrow-item" role="row"><b role="rowheader">Where a download came from</b><span class="us" role="cell">Downloads grouped by source: Safari, Mail, Slack…</span><span class="them" role="cell">A “Where from” line in Get Info, one file at a time</span></div>
+          <div class="vrow vrow-item" role="row"><b role="rowheader">Duplicate files</b><span class="us" role="cell">Exact copies grouped, with the space you’ll get back</span><span class="them" role="cell">Nothing built in</span></div>
+          <div class="vrow vrow-item" role="row"><b role="rowheader">Freeing up space</b><span class="us" role="cell">Clean Up cards for old downloads, screenshots and large files</span><span class="them" role="cell">In System Settings, away from your files</span></div>
+        </div>
+        <p class="fine-print">Compared with Finder in current macOS. MacSprint is not made by or affiliated with Apple.</p>
+      </div>
+    </section>
+
+    <!-- Shortcuts -->
+    <section id="shortcuts" class="section">
+      <div class="container">
+        <header class="section-head reveal">
+          <p class="eyebrow">Shortcuts</p>
+          <h2>A shortcut for everything.</h2>
+          <p class="section-sub">Quick with a mouse. Quicker without one.</p>
+        </header>
+        <div class="keys" id="keys-grid"></div>
+        <p class="fine-print">Planned shortcuts. Quick Search’s shortcut can be changed in Settings.</p>
+      </div>
+    </section>
+
     <!-- Privacy -->
     <section id="privacy" class="section section-dark">
       <div class="container">
         <header class="section-head reveal">
           <p class="eyebrow">Privacy</p>
           <h2>Your files stay yours.</h2>
-          <p class="section-sub">MacMate does its work on your Mac. No account, no cloud processing, no peeking.</p>
+          <p class="section-sub">MacSprint does its work on your Mac. No account, no cloud processing, no peeking.</p>
         </header>
         <div class="privacy-grid">
           <article class="p-card reveal"><span class="p-icon" aria-hidden="true">⌂</span><h3>On-device by design</h3><p>Search, text recognition and AI run locally using Apple frameworks. File contents are never uploaded.</p></article>
           <article class="p-card reveal"><span class="p-icon" aria-hidden="true">✓</span><h3>No account. Ever.</h3><p>Download, open, use. There is nothing to sign up for.</p></article>
-          <article class="p-card reveal"><span class="p-icon" aria-hidden="true">⌘</span><h3>Only folders you choose</h3><p>You pick which folders MacMate can see. System and app folders stay off-limits by default.</p></article>
+          <article class="p-card reveal"><span class="p-icon" aria-hidden="true">⌘</span><h3>Only folders you choose</h3><p>You pick which folders MacSprint can see. System and app folders stay off-limits by default.</p></article>
           <article class="p-card reveal"><span class="p-icon" aria-hidden="true">◎</span><h3>No snooping analytics</h3><p>No telemetry collects your file names, paths or contents.</p></article>
           <article class="p-card reveal"><span class="p-icon" aria-hidden="true">↯</span><h3>Works offline</h3><p>Every core feature works without an internet connection.</p></article>
           <article class="p-card reveal"><span class="p-icon" aria-hidden="true">⟲</span><h3>Reset anytime</h3><p>Clear the local index, clipboard history and action logs from Settings in one click.</p></article>
@@ -196,11 +232,11 @@
           </details>
           <details>
             <summary>Are my files uploaded anywhere?</summary>
-            <p>No. Indexing, text recognition and AI all run on your Mac. MacMate has no cloud processing and needs no account. If a future feature ever needs the internet, it will be clearly labelled and optional.</p>
+            <p>No. Indexing, text recognition and AI all run on your Mac. MacSprint has no cloud processing and needs no account. If a future feature ever needs the internet, it will be clearly labelled and optional.</p>
           </details>
           <details>
-            <summary>What can MacMate see on my Mac?</summary>
-            <p>Only the folders you choose. You can add or remove folders at any time, and Settings shows exactly what MacMate has access to. Some tools ask for macOS permissions (Screen Recording for screenshots, Accessibility for window management) only when you turn them on.</p>
+            <summary>What can MacSprint see on my Mac?</summary>
+            <p>Only the folders you choose. You can add or remove folders at any time, and Settings shows exactly what MacSprint has access to. Some tools ask for macOS permissions (Screen Recording for screenshots, Accessibility for window management) only when you turn them on.</p>
           </details>
           <details>
             <summary>Will it delete my files?</summary>
@@ -208,7 +244,7 @@
           </details>
           <details>
             <summary>Does it replace Finder?</summary>
-            <p>No. MacMate works alongside Finder — a visual library, smarter search and handy shortcuts, without changing how Finder works.</p>
+            <p>No. MacSprint works alongside Finder — a visual library, smarter search and handy shortcuts, without changing how Finder works.</p>
           </details>
           <details>
             <summary>Which Macs are supported?</summary>
@@ -220,7 +256,7 @@
           </details>
           <details>
             <summary>When can I get it?</summary>
-            <p>MacMate AI is in development. Join the waitlist and we’ll email you once — when it’s ready.</p>
+            <p>MacSprint AI is in development. Join the waitlist and we’ll email you once — when it’s ready.</p>
           </details>
         </div>
       </div>
@@ -230,7 +266,7 @@
     <section id="waitlist" class="section">
       <div class="container waitlist reveal">
         <span class="brand-mark brand-mark-lg" aria-hidden="true"></span>
-        <h2>Be first to try MacMate AI.</h2>
+        <h2>Be first to try MacSprint AI.</h2>
         <p class="section-sub">One email when it’s ready. No spam, no sharing.</p>
         <!-- To collect sign-ups, set data-endpoint to a form service URL (e.g. https://formspree.io/f/xxxx). See README. -->
         <form class="waitlist-form" data-endpoint="" novalidate>
@@ -245,11 +281,11 @@
 
   <footer class="footer">
     <div class="container footer-inner">
-      <p class="footer-brand"><span class="brand-mark" aria-hidden="true"></span> MacMate AI — Your Mac. Smarter, Faster, Cleaner.</p>
+      <p class="footer-brand"><span class="brand-mark" aria-hidden="true"></span> MacSprint AI — Your Mac. Smarter, Faster, Cleaner.</p>
       <nav aria-label="Footer">
         <a href="#explore">Features</a><a href="#privacy">Privacy</a><a href="#roadmap">Roadmap</a><a href="#pricing">Pricing</a><a href="#faq">FAQ</a>
       </nav>
-      <p class="footer-fine">Feature previews use sample files. Mac, macOS, Finder and Apple Intelligence are trademarks of Apple Inc. MacMate AI is an independent product and is not affiliated with Apple.</p>
+      <p class="footer-fine">Feature previews use sample files. Mac, macOS, Finder and Apple Intelligence are trademarks of Apple Inc. MacSprint AI is an independent product and is not affiliated with Apple.</p>
     </div>
   </footer>
 

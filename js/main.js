@@ -1,7 +1,7 @@
 // Page bootstrap: scroll-reveal and section wiring.
 import { initExplorer } from './explorer.js';
 import { DEMOS } from './demos.js';
-import { initProblems, initRoadmap, initWaitlist } from './sections.js';
+import { initProblems, initRoadmap, initWaitlist, initShortcuts } from './sections.js';
 import { heroWindowMarkup } from './home.js';
 
 function initReveal() {
@@ -25,5 +25,6 @@ document.getElementById('hero-window').innerHTML = heroWindowMarkup();
 initExplorer(document.getElementById('explorer'), DEMOS);
 initProblems(document.getElementById('problem-grid'));
 initRoadmap(document.getElementById('roadmap-grid'));
+initShortcuts(document.getElementById('keys-grid'));
 initWaitlist(document.querySelector('.waitlist-form'), document.querySelector('.waitlist-status'));
 initReveal();

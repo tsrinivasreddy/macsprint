@@ -1,0 +1,297 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>MacMate Style Sample</title>
+<style>
+/* Layout: centered editorial column; app window floats on a soft accent glow. Graphite & Glass. */
+:root {
+  --bg: #fbfbfd; --surface: #ffffff; --surface-2: #f3f3f6; --glass: rgba(255,255,255,.72);
+  --text: #16161a; --text-2: #5f6068; --text-3: #6f7079; --line: rgba(20,20,30,.09); --line-2: rgba(20,20,30,.14);
+  --accent: #3b5bdb; --accent-2: #2f4bc4; --accent-soft: rgba(59,91,219,.10); --glow: rgba(59,91,219,.20);
+  --good: #1f7a4d; --alert: #c4223b;
+  --fold-base: #c9ccd6; --fold-back: #b4b8c4; --paper: #ffffff;
+  --shadow-1: 0 1px 2px rgba(16,18,27,.05), 0 8px 24px -12px rgba(16,18,27,.12);
+  --shadow-win: 0 2px 6px rgba(16,18,27,.05), 0 40px 90px -30px rgba(30,40,90,.35), 0 0 0 1px rgba(20,20,30,.07);
+  --font: -apple-system, BlinkMacSystemFont, "SF Pro Display", "SF Pro Text", "Helvetica Neue", "Segoe UI", sans-serif;
+  --mono: ui-monospace, "SF Mono", Menlo, Consolas, monospace;
+  --ease: cubic-bezier(.22,.8,.24,1);
+  color-scheme: light;
+}
+@media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) {
+  --bg: #0e0f12; --surface: #17181c; --surface-2: #1e1f24; --glass: rgba(24,25,30,.72);
+  --text: #ececf0; --text-2: #a3a4ad; --text-3: #8c8d96; --line: rgba(255,255,255,.08); --line-2: rgba(255,255,255,.14);
+  --accent: #8399ff; --accent-2: #4a63e0; --accent-soft: rgba(131,153,255,.14); --glow: rgba(90,115,255,.28);
+  --good: #4cd38a; --alert: #e0435c;
+  --fold-base: #3b3e48; --fold-back: #2c2e36; --paper: #d9dbe3;
+  --shadow-1: 0 1px 2px rgba(0,0,0,.4), 0 10px 26px -12px rgba(0,0,0,.6);
+  --shadow-win: 0 2px 6px rgba(0,0,0,.4), 0 40px 100px -30px rgba(0,0,0,.85), 0 0 0 1px rgba(255,255,255,.08);
+  color-scheme: dark; } }
+:root[data-theme="dark"] {
+  --bg: #0e0f12; --surface: #17181c; --surface-2: #1e1f24; --glass: rgba(24,25,30,.72);
+  --text: #ececf0; --text-2: #a3a4ad; --text-3: #8c8d96; --line: rgba(255,255,255,.08); --line-2: rgba(255,255,255,.14);
+  --accent: #8399ff; --accent-2: #4a63e0; --accent-soft: rgba(131,153,255,.14); --glow: rgba(90,115,255,.28);
+  --good: #4cd38a; --alert: #e0435c;
+  --fold-base: #3b3e48; --fold-back: #2c2e36; --paper: #d9dbe3;
+  --shadow-1: 0 1px 2px rgba(0,0,0,.4), 0 10px 26px -12px rgba(0,0,0,.6);
+  --shadow-win: 0 2px 6px rgba(0,0,0,.4), 0 40px 100px -30px rgba(0,0,0,.85), 0 0 0 1px rgba(255,255,255,.08);
+  color-scheme: dark; }
+
+* { box-sizing: border-box; }
+body { margin: 0; background: var(--bg); color: var(--text); font: 17px/1.5 var(--font); letter-spacing: -0.015em; -webkit-font-smoothing: antialiased; overflow-x: hidden; }
+h1, h2, h3, h4, p { margin: 0; }
+button { font: inherit; color: inherit; cursor: pointer; }
+kbd { font: 600 11px/1 var(--mono); padding: 4px 6px; border-radius: 6px; border: 1px solid var(--line-2); background: var(--surface); color: var(--text-2); box-shadow: 0 1px 0 var(--line-2); }
+.wrap { max-width: 1120px; margin: 0 auto; padding-left: max(24px, env(safe-area-inset-left, 0px)); padding-right: max(24px, env(safe-area-inset-right, 0px)); }
+
+/* nav */
+.nav { position: sticky; top: 0; z-index: 20; background: var(--glass); -webkit-backdrop-filter: saturate(180%) blur(22px); backdrop-filter: saturate(180%) blur(22px); border-bottom: 1px solid var(--line); }
+.nav .wrap { display: flex; align-items: center; gap: 28px; height: 52px; }
+.brand { display: flex; align-items: center; gap: 9px; font-weight: 650; font-size: 15px; letter-spacing: -0.02em; }
+.mark { width: 24px; height: 24px; border-radius: 7px; background: linear-gradient(160deg, #6f86ff, var(--accent-2)); position: relative; box-shadow: inset 0 1px 0 rgba(255,255,255,.35); }
+.mark::after { content: ""; position: absolute; inset: 7px 6px 6px; border: 2px solid #fff; border-top: 0; border-radius: 0 0 4px 4px; }
+.nav ul { display: flex; gap: 26px; list-style: none; margin: 0 auto; padding: 0; font-size: 13px; color: var(--text-2); }
+.pill-btn { border: 0; background: var(--text); color: var(--bg); font-size: 13px; font-weight: 600; padding: 7px 14px; border-radius: 999px; }
+
+/* hero */
+.hero { padding: 96px 0 0; text-align: center; position: relative; }
+.eyebrow { display: inline-flex; align-items: center; gap: 8px; font-size: 13px; font-weight: 600; color: var(--text-2); padding: 6px 12px 6px 6px; border-radius: 999px; border: 1px solid var(--line); background: var(--surface); }
+.eyebrow b { background: var(--accent-soft); color: var(--accent); padding: 2px 8px; border-radius: 999px; font-size: 12px; }
+h1 { font-size: clamp(48px, 8.4vw, 92px); font-weight: 700; letter-spacing: -0.05em; line-height: 1.02; margin-top: 22px; text-wrap: balance; }
+h1 em { font-style: normal; color: var(--accent); }
+.lede { max-width: 620px; margin: 22px auto 0; font-size: clamp(18px, 2.2vw, 21px); color: var(--text-2); text-wrap: balance; }
+.ctas { display: flex; gap: 12px; justify-content: center; margin-top: 34px; flex-wrap: wrap; }
+.btn { border: 0; border-radius: 999px; padding: 13px 24px; font-size: 16px; font-weight: 600; transition: transform .3s var(--ease), box-shadow .3s var(--ease); }
+.btn-primary { background: var(--accent-2); color: #fff; box-shadow: 0 8px 22px -10px var(--accent-2); }
+.btn-primary:hover { transform: translateY(-1px); box-shadow: 0 14px 30px -12px var(--accent-2); }
+.btn-quiet { background: var(--surface); border: 1px solid var(--line-2); }
+.trust { display: flex; flex-wrap: wrap; justify-content: center; gap: 10px 26px; margin: 30px auto 0; padding: 0; list-style: none; font-size: 13px; color: var(--text-2); }
+.trust li { display: inline-flex; align-items: center; gap: 7px; }
+.trust li::before { content: ""; width: 6px; height: 6px; border-radius: 50%; background: var(--good); }
+
+/* stage */
+.stage { position: relative; margin-top: 72px; padding-bottom: 40px; }
+.stage::before { content: ""; position: absolute; left: 50%; top: 8%; width: 86%; height: 80%; transform: translateX(-50%); background: radial-gradient(closest-side, var(--glow), transparent 75%); filter: blur(30px); animation: drift 14s ease-in-out infinite alternate; pointer-events: none; }
+@keyframes drift { to { transform: translateX(-46%) translateY(3%) scale(1.06); } }
+
+.win { position: relative; display: grid; grid-template-columns: 236px minmax(0,1fr); border-radius: 20px; overflow: hidden; background: var(--surface); box-shadow: var(--shadow-win); text-align: left; }
+.side { background: var(--glass); -webkit-backdrop-filter: blur(24px); backdrop-filter: blur(24px); border-right: 1px solid var(--line); padding: 16px 12px; font-size: 13.5px; }
+.lights { display: flex; gap: 8px; padding: 0 6px 18px; }
+.lights i { width: 12px; height: 12px; border-radius: 50%; background: #ff5f57; } .lights i:nth-child(2) { background: #febc2e; } .lights i:nth-child(3) { background: #28c840; }
+.side .brand { padding: 0 6px 14px; font-size: 17px; }
+.nav-list { position: relative; display: grid; gap: 2px; }
+.indicator { position: absolute; left: 0; right: 0; height: 34px; border-radius: 10px; background: var(--surface); box-shadow: var(--shadow-1), 0 0 0 1px var(--line); transition: transform .45s var(--ease); z-index: 0; }
+.item { position: relative; z-index: 1; display: flex; align-items: center; gap: 10px; height: 34px; padding: 0 10px; border: 0; background: transparent; border-radius: 10px; text-align: left; color: var(--text-2); transition: color .3s; }
+.item[aria-current="true"] { color: var(--text); font-weight: 600; }
+.item[aria-current="true"] svg { color: var(--accent); }
+.item svg { flex: none; color: var(--text-3); }
+.item span { flex: 1; }
+.item em { font-style: normal; font-size: 12px; color: var(--text-3); font-variant-numeric: tabular-nums; }
+.item em.good { color: var(--good); font-weight: 600; }
+.item em.alert { color: #fff; background: var(--alert); font-weight: 700; font-size: 11px; padding: 2px 8px; border-radius: 999px; }
+.sep { height: 1px; background: var(--line); margin: 10px 8px; }
+.label { font-size: 11px; font-weight: 600; letter-spacing: .02em; color: var(--text-3); padding: 4px 10px; }
+.loc { display: flex; align-items: center; gap: 10px; height: 32px; padding: 0 10px; color: var(--text-2); }
+.loc i { width: 16px; height: 12px; border-radius: 3px; background: var(--fold-base); box-shadow: inset 0 -5px 0 color-mix(in oklab, var(--fold-base) 70%, var(--text)); }
+
+.main { min-width: 0; display: flex; flex-direction: column; }
+.toolbar { display: flex; align-items: center; gap: 16px; padding: 14px 26px; border-bottom: 1px solid var(--line); }
+.search { flex: 1; max-width: 460px; display: flex; align-items: center; gap: 10px; padding: 9px 12px; border-radius: 12px; background: var(--surface-2); color: var(--text-3); font-size: 14px; border: 1px solid transparent; transition: border-color .3s, background .3s, box-shadow .3s; }
+.search:hover { background: var(--surface); border-color: var(--line-2); box-shadow: 0 0 0 4px var(--accent-soft); }
+.search span { flex: 1; }
+.libsize { margin-left: auto; font-size: 13px; color: var(--text-2); }
+.libsize b { color: var(--text); font-variant-numeric: tabular-nums; }
+.content { padding: 28px 30px 32px; display: grid; gap: 30px; }
+.greet { display: flex; justify-content: space-between; align-items: flex-end; gap: 16px; }
+.greet h3 { font-size: 30px; letter-spacing: -0.04em; font-weight: 700; }
+.greet p { font-size: 13px; color: var(--text-2); margin-top: 4px; }
+.ghost { border: 1px solid var(--line-2); background: var(--surface); border-radius: 10px; padding: 6px 12px; font-size: 13px; color: var(--text-2); }
+.sec-head { display: flex; align-items: center; gap: 10px; margin-bottom: 16px; }
+.sec-head h4 { font-size: 19px; letter-spacing: -0.025em; font-weight: 650; }
+.count { font: 600 11px/1 var(--mono); padding: 4px 8px; border-radius: 999px; background: var(--surface-2); color: var(--text-2); }
+.tag-good { font-size: 12px; font-weight: 600; color: var(--good); background: color-mix(in oklab, var(--good) 13%, transparent); padding: 4px 10px; border-radius: 999px; }
+.see { margin-left: auto; font-size: 13px; color: var(--text-2); }
+
+/* macOS-style folders */
+.folders { display: grid; grid-template-columns: repeat(6, minmax(0,1fr)); gap: 18px; }
+.folder { border: 0; background: transparent; padding: 10px 6px 8px; border-radius: 16px; text-align: center; transition: background .3s var(--ease); }
+.folder:hover { background: var(--surface-2); }
+.folder:hover .fd-papers { transform: translateY(-5px); }
+.fd { position: relative; width: 100%; max-width: 104px; aspect-ratio: 1.22; margin: 0 auto 10px; }
+.fd-back { position: absolute; inset: 9% 0 0; border-radius: 9px; background: color-mix(in oklab, var(--tint) 16%, var(--fold-back)); }
+.fd-tab { position: absolute; left: 0; top: 0; width: 42%; height: 22%; border-radius: 8px 10px 0 0; background: color-mix(in oklab, var(--tint) 16%, var(--fold-back)); }
+.fd-papers { position: absolute; left: 11%; right: 11%; top: 15%; height: 52%; transition: transform .45s var(--ease); }
+.fd-papers i { position: absolute; inset: 0; border-radius: 4px; background: var(--paper); box-shadow: 0 1px 2px rgba(0,0,0,.12); }
+.fd-papers i:nth-child(1) { transform: rotate(-5deg) translateX(-6%); opacity: .8; }
+.fd-papers i:nth-child(2) { transform: rotate(4deg) translateX(5%); background: linear-gradient(135deg, hsl(var(--h) 70% 62%), hsl(calc(var(--h) + 50) 65% 48%)); }
+.fd-front { position: absolute; left: 0; right: 0; bottom: 0; height: 64%; border-radius: 6px 6px 11px 11px; background: linear-gradient(180deg, color-mix(in oklab, var(--tint) 18%, var(--fold-base)), color-mix(in oklab, var(--tint) 22%, var(--fold-back))); box-shadow: inset 0 1px 0 rgba(255,255,255,.35), 0 6px 14px -8px rgba(0,0,0,.35); }
+.folder b { display: block; font-size: 14px; font-weight: 600; }
+.folder small { display: block; font-size: 12px; color: var(--text-3); font-variant-numeric: tabular-nums; margin-top: 1px; }
+
+/* clean up */
+.cleans { display: grid; grid-template-columns: repeat(4, minmax(0,1fr)); gap: 14px; }
+.clean { border: 1px solid var(--line); background: var(--surface); border-radius: 16px; padding: 16px; text-align: left; display: grid; gap: 12px; box-shadow: var(--shadow-1); transition: transform .4s var(--ease), box-shadow .4s var(--ease), border-color .3s; }
+.clean:hover { transform: translateY(-3px); border-color: var(--line-2); }
+.clean-top { display: flex; justify-content: space-between; align-items: center; }
+.clean-ico { width: 32px; height: 32px; border-radius: 9px; display: grid; place-items: center; background: var(--surface-2); color: var(--text-2); }
+.stack { display: flex; } .stack i { width: 20px; height: 20px; border-radius: 6px; margin-left: -6px; box-shadow: 0 0 0 2px var(--surface); background: linear-gradient(135deg, hsl(var(--h) 70% 62%), hsl(calc(var(--h) + 50) 65% 46%)); }
+.clean p { font-size: 13px; color: var(--text-2); }
+.clean strong { display: block; font-size: 26px; letter-spacing: -0.04em; font-weight: 700; font-variant-numeric: tabular-nums; }
+.clean small { font-size: 12px; color: var(--text-3); }
+
+/* search understanding */
+.understood { display: grid; gap: 12px; padding: 16px; border-radius: 16px; background: var(--surface-2); }
+.q { display: flex; align-items: center; gap: 10px; font-size: 15px; }
+.q b { font-weight: 600; }
+.chips { display: flex; gap: 8px; flex-wrap: wrap; align-items: center; font-size: 12.5px; color: var(--text-2); }
+.chip { padding: 5px 10px; border-radius: 999px; background: var(--surface); border: 1px solid var(--line); color: var(--text); }
+.chip.ai { background: var(--accent-soft); border-color: transparent; color: var(--accent); font-weight: 600; }
+.filters { display: flex; gap: 8px; flex-wrap: wrap; }
+.filter { font-size: 12.5px; padding: 6px 10px; border-radius: 9px; border: 1px solid var(--line-2); background: var(--surface); color: var(--text-2); }
+.filter b { color: var(--text); font-weight: 600; }
+
+/* sections */
+.section { padding: 110px 0; }
+.section h2 { font-size: clamp(34px, 5vw, 54px); letter-spacing: -0.045em; line-height: 1.05; font-weight: 700; text-align: center; text-wrap: balance; }
+.section .sub { text-align: center; color: var(--text-2); font-size: 19px; margin: 14px auto 0; max-width: 560px; }
+.versus { margin: 48px auto 0; max-width: 860px; border-radius: 20px; background: var(--surface); box-shadow: var(--shadow-1); border: 1px solid var(--line); overflow: hidden; }
+.vrow { display: grid; grid-template-columns: 1.1fr 1.4fr 1.2fr; gap: 20px; padding: 18px 24px; border-top: 1px solid var(--line); font-size: 15px; align-items: start; }
+.vrow:first-child { border-top: 0; font-size: 12px; font-weight: 600; letter-spacing: .04em; text-transform: uppercase; color: var(--text-3); padding-block: 14px; }
+.vrow b { font-weight: 600; }
+.vrow .us { color: var(--text); } .vrow .them { color: var(--text-3); }
+.vrow .us::before { content: "✓"; color: var(--good); font-weight: 700; margin-right: 8px; }
+.keys { display: grid; grid-template-columns: repeat(3, minmax(0,1fr)); gap: 16px; margin-top: 48px; }
+.keygroup { border: 1px solid var(--line); border-radius: 18px; padding: 20px; background: var(--surface); }
+.keygroup h3 { font-size: 13px; color: var(--text-3); font-weight: 600; letter-spacing: .04em; text-transform: uppercase; margin-bottom: 12px; }
+.krow { display: flex; justify-content: space-between; align-items: center; padding: 9px 0; border-top: 1px solid var(--line); font-size: 15px; }
+.krow:first-of-type { border-top: 0; }
+.krow span:last-child { display: inline-flex; gap: 4px; }
+.alt { background: color-mix(in oklab, var(--surface-2) 60%, var(--bg)); }
+.toggle { position: fixed; right: 20px; bottom: 20px; z-index: 30; border: 1px solid var(--line-2); background: var(--glass); -webkit-backdrop-filter: blur(16px); backdrop-filter: blur(16px); border-radius: 999px; padding: 9px 14px; font-size: 13px; font-weight: 600; box-shadow: var(--shadow-1); }
+
+@media (max-width: 960px) {
+  .win { grid-template-columns: 1fr; } .side { display: none; }
+  .folders { grid-template-columns: repeat(3, minmax(0,1fr)); }
+  .cleans { grid-template-columns: repeat(2, minmax(0,1fr)); }
+  .keys { grid-template-columns: 1fr; }
+  .nav ul { display: none; } .nav .wrap { justify-content: space-between; }
+}
+@media (max-width: 560px) {
+  .content { padding: 20px 16px; } .toolbar { padding: 12px 14px; } .libsize { display: none; }
+  .vrow { grid-template-columns: 1fr; gap: 4px; } .vrow:first-child { display: none; }
+  .cleans { grid-template-columns: 1fr; }
+}
+@media (prefers-reduced-motion: reduce) { *, *::before { animation: none !important; transition: none !important; } }
+</style>
+</head>
+<body>
+<header class="nav"><div class="wrap">
+  <span class="brand"><span class="mark"></span>MacMate AI</span>
+  <ul><li>Overview</li><li>Features</li><li>vs Finder</li><li>Shortcuts</li><li>Privacy</li><li>Pricing</li></ul>
+  <button class="pill-btn">Join the waitlist</button>
+</div></header>
+
+<section class="hero"><div class="wrap">
+  <span class="eyebrow"><b>Coming soon</b> One app for your files, photos and space</span>
+  <h1>Your Mac.<br><em>Smarter</em>, faster, cleaner.</h1>
+  <p class="lede">See everything you have, find anything by describing it, and clear out what you don’t need. Private, on‑device, and calm to use.</p>
+  <div class="ctas"><button class="btn btn-primary">Join the waitlist</button><button class="btn btn-quiet">Explore features</button></div>
+  <ul class="trust"><li>No account, nothing uploaded</li><li>iCloud-only files never downloaded</li><li>Files go to Trash, never erased</li><li>Apple silicon &amp; Intel</li></ul>
+
+  <div class="stage">
+    <div class="win">
+      <aside class="side">
+        <div class="lights"><i></i><i></i><i></i></div>
+        <div class="brand"><span class="mark"></span>MacMate</div>
+        <div class="nav-list" id="navlist">
+          <span class="indicator" id="indicator"></span>
+          <button class="item" aria-current="true"><svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M3 11.5 12 4l9 7.5M5.5 10v9.5h13V10"/></svg><span>Home</span></button>
+          <button class="item"><svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="3" y="4.5" width="18" height="15" rx="2.5"/><circle cx="8.5" cy="9.5" r="1.8"/><path d="m21 16-5-5-9 8.5"/></svg><span>Images</span><em>2,280</em></button>
+          <button class="item"><svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="10.5" cy="10.5" r="6.5"/><path d="m20 20-4.8-4.8"/></svg><span>AI Search</span></button>
+          <button class="item"><svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M4 8V5.5A1.5 1.5 0 0 1 5.5 4H8M16 4h2.5A1.5 1.5 0 0 1 20 5.5V8M20 16v2.5a1.5 1.5 0 0 1-1.5 1.5H16M8 20H5.5A1.5 1.5 0 0 1 4 18.5V16"/><path d="M8 10h8M8 14h5"/></svg><span>Text in Images</span><em>589</em></button>
+          <div class="sep"></div>
+          <button class="item"><svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><ellipse cx="12" cy="6" rx="8" ry="3"/><path d="M4 6v12c0 1.7 3.6 3 8 3s8-1.3 8-3V6"/></svg><span>Large Files</span><em class="alert">10</em></button>
+          <button class="item"><svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="8" y="8" width="12" height="12" rx="2.5"/><path d="M16 8V5.5A1.5 1.5 0 0 0 14.5 4h-9A1.5 1.5 0 0 0 4 5.5v9A1.5 1.5 0 0 0 5.5 16H8"/></svg><span>Duplicates</span><em class="good">44.8 MB</em></button>
+          <button class="item"><svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M4 7h16M9 7V4.5h6V7M6 7l1 13h10l1-13"/></svg><span>Clean Up</span><em class="good">14.1 GB</em></button>
+        </div>
+        <div class="sep"></div>
+        <p class="label">Locations</p>
+        <div class="loc"><i></i>Desktop</div><div class="loc"><i></i>Documents</div><div class="loc"><i></i>Downloads</div><div class="loc"><i></i>Pictures</div>
+      </aside>
+      <div class="main">
+        <div class="toolbar">
+          <div class="search"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="10.5" cy="10.5" r="6.5"/><path d="m20 20-4.8-4.8"/></svg><span>Search, or try “pdfs from last week”</span><kbd>⌘</kbd><kbd>F</kbd></div>
+          <span class="libsize">Library size <b>30.19 GB</b></span>
+        </div>
+        <div class="content">
+          <div class="greet"><div><h3>Good afternoon</h3><p>2,880 files · 30.19 GB across your Mac</p></div><button class="ghost">Refresh</button></div>
+
+          <div>
+            <div class="sec-head"><h4>Library</h4><span class="count">6</span></div>
+            <div class="folders">
+              <button class="folder" style="--tint:#5b7cfa;--h:215"><div class="fd"><span class="fd-tab"></span><span class="fd-back"></span><span class="fd-papers"><i></i><i></i></span><span class="fd-front"></span></div><b>Images</b><small>2,280 · 2.81 GB</small></button>
+              <button class="folder" style="--tint:#a46bf5;--h:275"><div class="fd"><span class="fd-tab"></span><span class="fd-back"></span><span class="fd-papers"><i></i><i></i></span><span class="fd-front"></span></div><b>Videos</b><small>162 · 11.2 GB</small></button>
+              <button class="folder" style="--tint:#f2647e;--h:345"><div class="fd"><span class="fd-tab"></span><span class="fd-back"></span><span class="fd-papers"><i></i><i></i></span><span class="fd-front"></span></div><b>Music</b><small>34 · 82.7 MB</small></button>
+              <button class="folder" style="--tint:#f0a23b;--h:35"><div class="fd"><span class="fd-tab"></span><span class="fd-back"></span><span class="fd-papers"><i></i><i></i></span><span class="fd-front"></span></div><b>Documents</b><small>201 · 1.16 GB</small></button>
+              <button class="folder" style="--tint:#3fb985;--h:150"><div class="fd"><span class="fd-tab"></span><span class="fd-back"></span><span class="fd-papers"><i></i><i></i></span><span class="fd-front"></span></div><b>Archives</b><small>93 · 630 MB</small></button>
+              <button class="folder" style="--tint:#3aa7d9;--h:195"><div class="fd"><span class="fd-tab"></span><span class="fd-back"></span><span class="fd-papers"><i></i><i></i></span><span class="fd-front"></span></div><b>Apps</b><small>110 · 14.3 GB</small></button>
+            </div>
+          </div>
+
+          <div>
+            <div class="sec-head"><h4>Clean Up</h4><span class="tag-good">Free up to 14.1 GB</span><span class="see">See all →</span></div>
+            <div class="cleans">
+              <button class="clean"><span class="clean-top"><span class="clean-ico"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="8" y="8" width="12" height="12" rx="2.5"/><path d="M16 8V5.5A1.5 1.5 0 0 0 14.5 4h-9A1.5 1.5 0 0 0 4 5.5v9A1.5 1.5 0 0 0 5.5 16H8"/></svg></span><span class="stack"><i style="--h:30"></i><i style="--h:200"></i><i style="--h:280"></i></span></span><span><p>Duplicates</p><strong>44.8 MB</strong><small>24 extra copies</small></span></button>
+              <button class="clean"><span class="clean-top"><span class="clean-ico"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="12" cy="12" r="9"/><path d="M12 7.5v9M8.5 13l3.5 3.5 3.5-3.5"/></svg></span><span class="stack"><i style="--h:250"></i><i style="--h:10"></i><i style="--h:120"></i></span></span><span><p>Old Downloads</p><strong>11.5 GB</strong><small>1,227 items</small></span></button>
+              <button class="clean"><span class="clean-top"><span class="clean-ico"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M4 8V5.5A1.5 1.5 0 0 1 5.5 4H8M16 4h2.5A1.5 1.5 0 0 1 20 5.5V8M20 16v2.5a1.5 1.5 0 0 1-1.5 1.5H16M8 20H5.5A1.5 1.5 0 0 1 4 18.5V16"/><circle cx="12" cy="12" r="3"/></svg></span><span class="stack"><i style="--h:180"></i><i style="--h:330"></i><i style="--h:60"></i></span></span><span><p>Old Screenshots</p><strong>321 MB</strong><small>480 items</small></span></button>
+              <button class="clean"><span class="clean-top"><span class="clean-ico"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><ellipse cx="12" cy="6" rx="8" ry="3"/><path d="M4 6v12c0 1.7 3.6 3 8 3s8-1.3 8-3V6"/></svg></span><span class="stack"><i style="--h:300"></i><i style="--h:90"></i><i style="--h:220"></i></span></span><span><p>Large Files</p><strong>2.2 GB</strong><small>10 items</small></span></button>
+            </div>
+          </div>
+
+          <div class="understood">
+            <div class="q"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="10.5" cy="10.5" r="6.5"/><path d="m20 20-4.8-4.8"/></svg><b>pdfs from last week over 5 mb</b></div>
+            <div class="chips">Understood as <span class="chip ai">PDF</span><span class="chip ai">Last week</span><span class="chip ai">&gt; 5 MB</span></div>
+            <div class="filters"><span class="filter">From: <b>Anywhere</b></span><span class="filter">Kind: <b>PDF</b></span><span class="filter">Date: <b>Last week</b></span><span class="filter">Size: <b>&gt; 5 MB</b></span><span class="filter">Sort: <b>Date modified</b></span></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div></section>
+
+<section class="section alt"><div class="wrap">
+  <h2>MacMate, or Finder?</h2>
+  <p class="sub">Finder is great for opening a folder. Here’s what it leaves to you.</p>
+  <div class="versus">
+    <div class="vrow"><span>Everyday job</span><span>MacMate</span><span>Finder</span></div>
+    <div class="vrow"><b>Seeing what you have</b><span class="us">Every image, video, document and app on its own shelf</span><span class="them">Folder by folder</span></div>
+    <div class="vrow"><b>Searching in plain English</b><span class="us">“pdfs from last week” becomes filters you can edit</span><span class="them">Add search rules one at a time</span></div>
+    <div class="vrow"><b>Duplicate files</b><span class="us">Exact copies grouped, with the space you’ll get back</span><span class="them">Nothing built in</span></div>
+  </div>
+</div></section>
+
+<section class="section"><div class="wrap">
+  <h2>A shortcut for everything.</h2>
+  <p class="sub">Quick with a mouse. Quicker without one.</p>
+  <div class="keys">
+    <div class="keygroup"><h3>Find</h3><div class="krow"><span>Quick Search, from any app</span><span><kbd>⌥</kbd><kbd>Space</kbd></span></div><div class="krow"><span>Search in MacMate</span><span><kbd>⌘</kbd><kbd>F</kbd></span></div><div class="krow"><span>Copy text from images</span><span><kbd>⇧</kbd><kbd>⌘</kbd><kbd>C</kbd></span></div></div>
+    <div class="keygroup"><h3>View</h3><div class="krow"><span>Next image</span><span><kbd>→</kbd></span></div><div class="krow"><span>Grid / List</span><span><kbd>⌘</kbd><kbd>1</kbd> <kbd>⌘</kbd><kbd>2</kbd></span></div><div class="krow"><span>Quick Look</span><span><kbd>Space</kbd></span></div></div>
+    <div class="keygroup"><h3>Tidy</h3><div class="krow"><span>Duplicates</span><span><kbd>⇧</kbd><kbd>⌘</kbd><kbd>D</kbd></span></div><div class="krow"><span>Clean Up</span><span><kbd>⇧</kbd><kbd>⌘</kbd><kbd>K</kbd></span></div><div class="krow"><span>Move to Trash</span><span><kbd>⌘</kbd><kbd>⌫</kbd></span></div></div>
+  </div>
+</div></section>
+
+<button class="toggle" id="toggle">Switch light / dark</button>
+<script>
+  const list = document.getElementById('navlist'), ind = document.getElementById('indicator');
+  const move = (el) => { ind.style.transform = `translateY(${el.offsetTop}px)`; };
+  const items = [...list.querySelectorAll('.item')];
+  items.forEach((b) => b.addEventListener('click', () => { items.forEach((x) => x.removeAttribute('aria-current')); b.setAttribute('aria-current', 'true'); move(b); }));
+  move(items[0]);
+  document.getElementById('toggle').addEventListener('click', () => {
+    const r = document.documentElement, dark = r.dataset.theme ? r.dataset.theme === 'dark' : matchMedia('(prefers-color-scheme: dark)').matches;
+    r.dataset.theme = dark ? 'light' : 'dark';
+  });
+</script>
+</body>
+</html>

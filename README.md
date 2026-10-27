@@ -1,8 +1,8 @@
-# MacMate AI — website
+# MacSprint AI — website
 
-A single-page, Apple-style marketing site for **MacMate AI** ("Your Mac. Smarter, Faster, Cleaner.").
+A single-page, Apple-style marketing site for **MacSprint AI** ("Your Mac. Smarter, Faster, Cleaner.").
 Its centerpiece is the **Feature Explorer**: a Mac-style app window where every one of the 16 features
-(from the MacMate product brief plus the unique ideas from Homy) can be explored from one interface.
+(from the MacSprint product brief plus the unique ideas from Homy) can be explored from one interface.
 
 Plain HTML, CSS and JavaScript modules. No build step, no dependencies, no external requests.
 

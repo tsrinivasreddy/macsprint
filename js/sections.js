@@ -1,5 +1,5 @@
 // Generated page sections: problem cards, roadmap, and the waitlist form.
-import { FEATURES, PROBLEMS, RELEASES, iconSvg } from './features.js';
+import { FEATURES, PROBLEMS, RELEASES, SHORTCUTS, iconSvg } from './features.js';
 import { selectFeature } from './explorer.js';
 
 const byId = new Map(FEATURES.map((f) => [f.id, f]));
@@ -71,7 +71,7 @@ export function initWaitlist(form, status) {
         body: JSON.stringify({ email: input.value }),
       });
       if (!res.ok) throw new Error(String(res.status));
-      status.textContent = "You're on the list. We'll email you once, when MacMate AI is ready.";
+      status.textContent = "You're on the list. We'll email you once, when MacSprint AI is ready.";
       status.classList.add('is-ok');
       form.reset();
     } catch {
@@ -81,4 +81,12 @@ export function initWaitlist(form, status) {
       btn.disabled = false;
     }
   });
+}
+
+export function initShortcuts(grid) {
+  grid.innerHTML = SHORTCUTS.map((g) => `
+    <article class="keygroup reveal">
+      <h3>${g.group}</h3>
+      ${g.items.map(([label, keys]) => `<div class="krow"><span>${label}</span><span class="kcaps">${keys.map((k) => `<kbd>${k}</kbd>`).join('')}</span></div>`).join('')}
+    </article>`).join('');
 }

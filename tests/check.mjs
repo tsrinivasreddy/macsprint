@@ -1,4 +1,4 @@
-// Browser checks for the MacMate site. Run: node tests/check.mjs [name-filter]
+// Browser checks for the MacSprint site. Run: node tests/check.mjs [name-filter]
 import { createRequire } from 'node:module';
 import { spawn } from 'node:child_process';
 import { fileURLToPath } from 'node:url';
@@ -51,11 +51,11 @@ check('noHorizontalOverflow', async (b) => {
 check('heroHasTaglineAndCta', async (b) => {
   const p = await open(b);
   const h1 = await p.textContent('h1');
-  assert(h1 && h1.includes('MacMate AI'), 'h1 missing MacMate AI: ' + h1);
+  assert(h1 && h1.includes('MacSprint AI'), 'h1 missing MacSprint AI: ' + h1);
   const body = await p.textContent('body');
   assert(body.includes('Your Mac. Smarter, Faster, Cleaner.'), 'tagline missing');
   assert(await p.locator('#overview a[href="#waitlist"]').count() > 0, 'hero CTA to #waitlist missing');
-  for (const id of ['overview', 'problems', 'explore', 'privacy', 'trust', 'roadmap', 'pricing', 'faq', 'waitlist']) {
+  for (const id of ['overview', 'problems', 'explore', 'compare', 'shortcuts', 'privacy', 'trust', 'roadmap', 'pricing', 'faq', 'waitlist']) {
     assert(await p.locator('#' + id).count() === 1, 'missing section #' + id);
   }
 });
@@ -387,7 +387,7 @@ check('contentVisibleAtRestAndThemeToggle', async (b) => {
   assert(hidden === 0, hidden + ' sections start invisible');
   await p.evaluate(() => document.documentElement.setAttribute('data-theme', 'dark'));
   const bg = await p.evaluate(() => getComputedStyle(document.body).backgroundColor);
-  assert(bg === 'rgb(0, 0, 0)', 'data-theme=dark not applied, body bg ' + bg);
+  assert(bg === 'rgb(14, 15, 18)', 'data-theme=dark not applied, body bg ' + bg);
   await ctx.close();
 });
 
@@ -436,6 +436,56 @@ check('toolbarSearchOpensPalette', async (b) => {
   const p = await open(b);
   await p.locator('#explorer .ex-search').click();
   assert(await p.locator('#palette').isVisible(), 'toolbar search did not open palette');
+});
+
+/* ---------- MacSprint: Graphite & Glass ---------- */
+check('noOldBrandName', async (b) => {
+  const p = await open(b);
+  const t = await p.evaluate(() => document.body.innerText + document.title);
+  assert(!/MacMate/.test(t), 'old name MacMate still visible');
+  assert(t.includes('MacSprint'), 'MacSprint missing');
+});
+
+check('heroTrustStrip', async (b) => {
+  const p = await open(b);
+  const t = await p.textContent('#overview .trust');
+  for (const s of ['No account', 'iCloud-only files never downloaded', 'Trash']) assert(t.includes(s), 'trust strip missing ' + s);
+});
+
+check('compareTableRows', async (b) => {
+  const p = await open(b);
+  assert(await p.locator('#compare .vrow-item').count() >= 6, 'expected at least 6 comparison rows');
+  assert((await p.textContent('#compare')).includes('Finder'), 'compare must mention Finder');
+});
+
+check('shortcutsSection', async (b) => {
+  const p = await open(b);
+  assert(await p.locator('#shortcuts .keygroup').count() === 3, 'expected 3 shortcut groups');
+  assert(await p.locator('#shortcuts kbd').count() >= 15, 'expected keycaps');
+});
+
+check('sidebarIndicatorFollowsSelection', async (b) => {
+  const p = await open(b);
+  await p.locator('#tab-clipboard').click();
+  await p.waitForTimeout(600);
+  const [it, tt] = await p.evaluate(() => {
+    const i = document.querySelector('#explorer .ex-indicator').getBoundingClientRect();
+    const t = document.querySelector('#tab-clipboard').getBoundingClientRect();
+    return [Math.round(i.top), Math.round(t.top)];
+  });
+  assert(Math.abs(it - tt) <= 2, `indicator at ${it}, tab at ${tt}`);
+});
+
+check('searchDemoFilterBar', async (b) => {
+  const p = await open(b, { hash: '#feature-search' });
+  const t = await p.textContent('#explorer .demo-search .d-filterbar');
+  for (const k of ['Kind:', 'Date:', 'Sort:']) assert(t.includes(k), 'filter bar missing ' + k);
+  assert((await p.textContent('#explorer .demo-search')).includes('Understood as'), 'Understood as missing');
+});
+
+check('libraryFoldersAreFolderIcons', async (b) => {
+  const p = await open(b, { hash: '#feature-home' });
+  assert(await p.locator('#explorer .hm-folder .fd-front').count() === 6, 'folders should use macOS folder icon');
 });
 
 /* ---------- runner ---------- */

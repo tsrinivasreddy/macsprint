@@ -34,14 +34,14 @@ function render(root) {
     <div class="mac-window ex-window">
       <aside class="ex-side">
         <div class="ex-lights" aria-hidden="true"><i></i><i></i><i></i></div>
-        <div class="ex-brand"><span class="brand-mark" aria-hidden="true"></span><span>MacMate</span>
+        <div class="ex-brand"><span class="brand-mark" aria-hidden="true"></span><span>MacSprint</span>
           <span class="ex-side-icon" aria-hidden="true">${iconSvg('<rect x="3" y="4.5" width="18" height="15" rx="2.5"/><path d="M9 4.5v15"/>', 17)}</span>
         </div>
         <label class="ex-filter">
           <span class="visually-hidden">Filter features</span>
           <input type="search" placeholder="Filter features" autocomplete="off">
         </label>
-        <div class="ex-tablist" role="tablist" aria-label="MacMate features" aria-orientation="vertical">${sidebarHtml()}</div>
+        <div class="ex-tablist" role="tablist" aria-label="MacSprint features" aria-orientation="vertical"><span class="ex-indicator" aria-hidden="true"></span>${sidebarHtml()}</div>
         <p class="ex-nomatch" hidden>No features match</p>
         <div class="ex-locs">
           <p class="ex-group-label">Locations</p>
@@ -101,6 +101,9 @@ export function selectFeature(id, { focus = false, updateHash = true, param = nu
     }
     const pane = root.querySelector('.ex-pane');
     pane.scrollTop = 0;
+    pane.classList.remove('ex-enter');
+    void pane.offsetWidth; // restart the enter animation
+    pane.classList.add('ex-enter');
     pane.setAttribute('aria-labelledby', 'tab-' + f.id);
     pane.querySelector('.ex-pane-icon').innerHTML = iconSvg(f.icon, 26);
     pane.querySelector('h3').textContent = f.title;
@@ -108,7 +111,7 @@ export function selectFeature(id, { focus = false, updateHash = true, param = nu
     pane.querySelector('.ex-pane-badge').innerHTML = `<span class="${badgeClass(f.release)}">${esc(badgeLabel(f.release))}</span>`;
     pane.querySelector('.ex-headline').textContent = f.headline;
     pane.querySelector('.ex-points').innerHTML = f.points.map((p) => `<li>${esc(p)}</li>`).join('');
-    pane.querySelector('.ex-source').textContent = f.source === 'Homy' ? 'Inspired by Homy' : f.source.includes('Homy') ? 'Combines ideas from MacMate and Homy' : '';
+    pane.querySelector('.ex-source').textContent = f.source === 'Homy' ? 'Inspired by Homy' : f.source.includes('Homy') ? 'Combines ideas from MacSprint and Homy' : '';
 
     const i = FEATURES.indexOf(f);
     const prev = FEATURES[(i - 1 + FEATURES.length) % FEATURES.length];
@@ -130,6 +133,7 @@ export function selectFeature(id, { focus = false, updateHash = true, param = nu
   }
   if (updateHash && location.hash !== HASH_PREFIX + f.id) history.replaceState(null, '', HASH_PREFIX + f.id);
   syncTabStops();
+  placeIndicator();
   if (focus) target.focus();
 }
 
@@ -141,6 +145,18 @@ function syncTabStops() {
   const sel = vis.find((t) => t.getAttribute('aria-selected') === 'true');
   const stop = sel || vis[0];
   for (const t of state.tabs) t.tabIndex = t === stop ? 0 : -1;
+}
+
+// Slide the highlight behind the selected tab (vertical sidebar or phone pill bar).
+function placeIndicator() {
+  const ind = state.root && state.root.querySelector('.ex-indicator');
+  if (!ind) return;
+  const tab = state.tabs.find((t) => t.getAttribute('aria-selected') === 'true');
+  ind.hidden = !tab || tab.hidden;
+  if (ind.hidden) return;
+  ind.style.width = tab.offsetWidth + 'px';
+  ind.style.height = tab.offsetHeight + 'px';
+  ind.style.transform = `translate(${tab.offsetLeft}px, ${tab.offsetTop}px)`;
 }
 
 // Scroll the horizontal pill bar (phones) so the tab is visible, without scrolling the page.
@@ -179,6 +195,7 @@ function initFilter(root) {
     root.querySelectorAll('.ex-group').forEach((g) => { g.hidden = !g.querySelector('[role=tab]:not([hidden])'); });
     none.hidden = shown > 0;
     syncTabStops();
+    placeIndicator();
   });
   input.addEventListener('keydown', (e) => {
     if (e.key !== 'Enter' && e.key !== 'ArrowDown') return;
@@ -290,6 +307,7 @@ export function initExplorer(root, demos = {}) {
   root.querySelectorAll('.ex-loc').forEach((b) => b.addEventListener('click', () => selectFeature('library', { param: { loc: b.dataset.loc } })));
   root.querySelectorAll('.ex-nav').forEach((b) => b.addEventListener('click', () => selectFeature(b.dataset.target, { focus: true })));
   initFilter(root);
+  if ('ResizeObserver' in window) new ResizeObserver(placeIndicator).observe(root.querySelector('.ex-tablist'));
   initPalette();
 
   const fromHash = readHash();

@@ -23,16 +23,16 @@ const G = {
 
 const dot = (inner) => `<i class="hm-dot">${inner}</i>`;
 const phDot = (h) => `<i class="hm-dot ph" style="--h:${h}"></i>`;
-const glyphDot = (g, tone) => `<i class="hm-dot hm-dot-g" style="--dot:var(--${tone})">${svg(G[g], 12)}</i>`;
+const glyphDot = (g, tone) => `<i class="hm-dot hm-dot-g" style="--dot:var(--${tone})">${svg(G[g], 11)}</i>`;
 const more = (n) => `<i class="hm-dot hm-more">+${n}</i>`;
 
 export const FOLDERS = [
-  { kind: 'Images', tint: 'lav', items: '2,280', size: '2.81 GB', dots: phDot(210) + phDot(30) + phDot(150) + more(99) },
-  { kind: 'Videos', tint: 'blue', items: '162', size: '11.21 GB', dots: phDot(330) + phDot(190) + phDot(20) + more(99) },
-  { kind: 'Music', tint: 'peach', items: '34', size: '82.7 MB', dots: glyphDot('music', 'c-aud') + glyphDot('music', 'c-aud') + glyphDot('music', 'c-aud') + more(31) },
-  { kind: 'Documents', tint: 'mint', items: '201', size: '1.16 GB', dots: glyphDot('doc', 'c-doc') + glyphDot('doc', 'c-img') + glyphDot('doc', 'c-arc') + more(99) },
-  { kind: 'Archives', tint: 'butter', items: '93', size: '630.3 MB', dots: glyphDot('zip', 'c-doc') + glyphDot('zip', 'c-doc') + glyphDot('zip', 'c-doc') + more(90) },
-  { kind: 'Apps', tint: 'pink', items: '110', size: '14.31 GB', dots: glyphDot('app', 'c-dev') + glyphDot('app', 'c-arc') + glyphDot('app', 'c-img') + more(99) },
+  { kind: 'Images', tint: '#5b7cfa', h: 215, items: '2,280', size: '2.81 GB', dots: phDot(210) + phDot(30) + phDot(150) + more(99) },
+  { kind: 'Videos', tint: '#a46bf5', h: 275, items: '162', size: '11.21 GB', dots: phDot(330) + phDot(190) + phDot(20) + more(99) },
+  { kind: 'Music', tint: '#f2647e', h: 345, items: '34', size: '82.7 MB', dots: glyphDot('music', 'c-aud') + glyphDot('music', 'c-aud') + glyphDot('music', 'c-aud') + more(31) },
+  { kind: 'Documents', tint: '#f0a23b', h: 35, items: '201', size: '1.16 GB', dots: glyphDot('doc', 'c-doc') + glyphDot('doc', 'c-img') + glyphDot('doc', 'c-arc') + more(99) },
+  { kind: 'Archives', tint: '#3fb985', h: 150, items: '93', size: '630.3 MB', dots: glyphDot('zip', 'c-doc') + glyphDot('zip', 'c-doc') + glyphDot('zip', 'c-doc') + more(90) },
+  { kind: 'Apps', tint: '#3aa7d9', h: 195, items: '110', size: '14.31 GB', dots: glyphDot('app', 'c-dev') + glyphDot('app', 'c-arc') + glyphDot('app', 'c-img') + more(99) },
 ];
 
 const CLEAN = [
@@ -66,21 +66,20 @@ export function homeMarkup({ compact = false } = {}) {
 
       <div class="hm-head"><h4>Library</h4><span class="hm-count">6</span></div>
       <div class="hm-folders">${folders.map((f) => `
-        <button type="button" class="hm-folder" style="--tint:var(--t-${f.tint});--tab:var(--t-${f.tint}-2)" data-kind="${f.kind}" aria-label="${f.kind}: ${f.items} items, ${f.size}">
-          <span class="hm-folder-tab" aria-hidden="true"></span>
-          <span class="hm-folder-face">
-            <span class="hm-folder-row"><span class="hm-mono">${f.kind}</span><span class="hm-kebab">${svg(G.dots, 14)}</span></span>
-            <span class="hm-folder-row hm-folder-foot"><span class="hm-dots">${f.dots}</span><span class="hm-meta">${f.items} items${compact ? '' : ' · ' + f.size}</span></span>
-          </span>
+        <button type="button" class="hm-folder" style="--tint:${f.tint};--h:${f.h}" data-kind="${f.kind}" aria-label="${f.kind}: ${f.items} items, ${f.size}">
+          <span class="fd" aria-hidden="true"><span class="fd-tab"></span><span class="fd-back"></span><span class="fd-papers"><i></i><i></i></span><span class="fd-front"></span></span>
+          <b>${f.kind}</b>
+          <small>${f.items}${compact ? '' : ' · ' + f.size}</small>
         </button>`).join('')}
       </div>
 
       <div class="hm-head"><h4>Clean Up</h4><span class="hm-pill">Free up to 14.1 GB</span></div>
       <div class="hm-cleans">${CLEAN.map((c) => `
-        <button type="button" class="hm-clean" style="--tint:var(--t-${c.tint});--tab:var(--t-${c.tint}-2)" data-go="${c.go}" aria-label="${c.label}: ${c.big}, ${c.sub}">
-          <span class="hm-folder-row"><span class="hm-clean-icon">${svg(G[c.icon], 16)}</span><span class="hm-dots">${c.dots}</span></span>
-          <span class="hm-mono">${c.label}</span>
-          <span class="hm-folder-row hm-clean-foot"><b class="hm-big">${c.big}</b><span class="hm-meta">${c.sub} ›</span></span>
+        <button type="button" class="hm-clean" data-go="${c.go}" aria-label="${c.label}: ${c.big}, ${c.sub}">
+          <span class="hm-clean-top"><span class="hm-clean-icon">${svg(G[c.icon], 16)}</span><span class="hm-dots">${c.dots}</span></span>
+          <span class="hm-clean-label">${c.label}</span>
+          <b class="hm-big">${c.big}</b>
+          <span class="hm-meta">${c.sub}</span>
         </button>`).join('')}
       </div>
 
@@ -88,7 +87,7 @@ export function homeMarkup({ compact = false } = {}) {
       <div class="hm-head"><h4>Downloaded From</h4><span class="hm-count">129</span><button type="button" class="hm-seeall" data-go="library">See all →</button></div>
       <div class="hm-srcs">${SOURCES.map((s) => `
         <button type="button" class="hm-src" data-go="library" aria-label="Downloaded from ${s.name}: ${s.files}, ${s.size}">
-          <span class="hm-src-icon" style="--tint:var(--t-${s.tint}-2)">${svg(G[s.icon], 18)}</span>
+          <span class="hm-src-icon">${svg(G[s.icon], 18)}</span>
           <span class="hm-src-text"><b>${s.name}</b><small>${s.files} · ${s.size}</small></span>
           <span class="hm-dots">${s.dots}</span>
         </button>`).join('')}
@@ -114,7 +113,7 @@ export function heroWindowMarkup() {
   return `
     <aside class="hw-side">
       <div class="hw-lights"><i></i><i></i><i></i></div>
-      <div class="ex-brand"><span class="brand-mark"></span><span>MacMate</span></div>
+      <div class="ex-brand"><span class="brand-mark"></span><span>MacSprint</span></div>
       <ul>${side.map(row).join('')}</ul>
       <ul class="hw-sep">${tools.map(row).join('')}</ul>
       <p class="hw-label">Locations</p>
