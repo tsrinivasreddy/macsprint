@@ -182,6 +182,60 @@ check('demoStorageHonestLabels', async (b) => {
   assert(!/\bunused\b|not accessed/i.test(t), 'demo uses unsupported "unused"/"not accessed" wording');
 });
 
+/* ---------- Task 4: content sections ---------- */
+check('problemCardsOpenFeatures', async (b) => {
+  const p = await open(b);
+  const cards = p.locator('#problems .problem-card');
+  assert(await cards.count() === 13, 'expected 13 problem cards, got ' + await cards.count());
+  await p.locator('#problems .problem-card', { hasText: 'Copying one thing erases the last' }).click();
+  await p.waitForTimeout(200);
+  assert((await paneTitle(p)).trim() === 'Clipboard History', 'card I did not open clipboard');
+  const top = await p.evaluate(() => document.getElementById('explore').getBoundingClientRect().top);
+  assert(Math.abs(top) < 120, 'did not scroll to explorer, top=' + top);
+});
+
+check('trustPipelineHasEightSteps', async (b) => {
+  const p = await open(b);
+  assert(await p.locator('#trust .pipeline > li').count() === 8, 'pipeline should have 8 steps');
+  assert((await p.textContent('#trust')).includes('never deletes, moves or renames'), 'safety promise missing');
+});
+
+check('roadmapListsAllFeatures', async (b) => {
+  const p = await open(b);
+  const features = await getFeatures(p);
+  const cols = p.locator('#roadmap .roadmap-col');
+  assert(await cols.count() === 4, 'expected 4 roadmap columns');
+  const text = await p.textContent('#roadmap');
+  for (const label of ['At launch', '1.1', '1.2', '2.0']) assert(text.includes(label), 'missing release ' + label);
+  for (const f of features) assert(text.includes(f.title), 'roadmap missing ' + f.title);
+});
+
+check('pricingAndFaq', async (b) => {
+  const p = await open(b);
+  assert((await p.textContent('#pricing')).includes('Price coming soon'), 'price copy missing');
+  const first = p.locator('#faq details').first();
+  assert(await p.locator('#faq details').count() >= 6, 'expected at least 6 FAQ items');
+  await first.locator('summary').click();
+  assert(await first.evaluate((d) => d.open), 'FAQ did not open');
+});
+
+check('waitlistHonestWithoutEndpoint', async (b) => {
+  const p = await open(b);
+  const external = [];
+  p.on('request', (r) => { if (!r.url().startsWith('http://localhost')) external.push(r.url()); });
+  const email = p.locator('#waitlist input[type=email]');
+  await email.fill('bad');
+  await p.locator('#waitlist button[type=submit]').click();
+  assert(await email.evaluate((e) => !e.validity.valid), 'invalid email should fail validation');
+  await email.fill('person@example.com');
+  await p.locator('#waitlist button[type=submit]').click();
+  await p.waitForTimeout(200);
+  const status = await p.textContent('#waitlist [role=status]');
+  assert(status.includes("Waitlist isn't connected yet"), 'honest not-connected message missing: ' + status);
+  assert(!/you're on the list|thanks for joining/i.test(status), 'fake success shown');
+  assert(external.length === 0, 'unexpected network requests: ' + external.join(','));
+});
+
 /* ---------- runner ---------- */
 const filter = process.argv[2];
 const server = await startServer();

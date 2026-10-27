@@ -99,37 +99,175 @@
 
     <!-- Privacy -->
     <section id="privacy" class="section section-dark">
-      <div class="container"></div>
+      <div class="container">
+        <header class="section-head reveal">
+          <p class="eyebrow">Privacy</p>
+          <h2>Your files stay yours.</h2>
+          <p class="section-sub">MacMate does its work on your Mac. No account, no cloud processing, no peeking.</p>
+        </header>
+        <div class="privacy-grid">
+          <article class="p-card reveal"><span class="p-icon" aria-hidden="true">⌂</span><h3>On-device by design</h3><p>Search, text recognition and AI run locally using Apple frameworks. File contents are never uploaded.</p></article>
+          <article class="p-card reveal"><span class="p-icon" aria-hidden="true">✓</span><h3>No account. Ever.</h3><p>Download, open, use. There is nothing to sign up for.</p></article>
+          <article class="p-card reveal"><span class="p-icon" aria-hidden="true">⌘</span><h3>Only folders you choose</h3><p>You pick which folders MacMate can see. System and app folders stay off-limits by default.</p></article>
+          <article class="p-card reveal"><span class="p-icon" aria-hidden="true">◎</span><h3>No snooping analytics</h3><p>No telemetry collects your file names, paths or contents.</p></article>
+          <article class="p-card reveal"><span class="p-icon" aria-hidden="true">↯</span><h3>Works offline</h3><p>Every core feature works without an internet connection.</p></article>
+          <article class="p-card reveal"><span class="p-icon" aria-hidden="true">⟲</span><h3>Reset anytime</h3><p>Clear the local index, clipboard history and action logs from Settings in one click.</p></article>
+        </div>
+      </div>
     </section>
 
     <!-- AI you can trust -->
     <section id="trust" class="section">
-      <div class="container"></div>
+      <div class="container">
+        <header class="section-head reveal">
+          <p class="eyebrow">AI you can trust</p>
+          <h2>Smart suggestions.<br>Your final say.</h2>
+          <p class="section-sub">AI never deletes, moves or renames files on its own. Every change goes through a plan you can read and approve.</p>
+        </header>
+        <ol class="pipeline reveal">
+          <li><b>You ask</b><span>“Organize my Downloads folder.”</span></li>
+          <li><b>AI interprets</b><span>On-device model reads the intent.</span></li>
+          <li><b>Typed plan</b><span>Turned into a list of concrete actions.</span></li>
+          <li><b>Validated</b><span>Paths, permissions and conflicts checked by code.</span></li>
+          <li><b>You review</b><span>Every move and its destination, listed.</span></li>
+          <li><b>You approve</b><span>Nothing happens until you click.</span></li>
+          <li><b>Executed</b><span>Safe system APIs. Trash, never erase.</span></li>
+          <li><b>Logged</b><span>Results and errors recorded in history.</span></li>
+        </ol>
+        <div class="trust-notes reveal">
+          <p><b>Grounded results.</b> Search answers come from your real index — the AI never invents files.</p>
+          <p><b>Graceful without AI.</b> On Macs without Apple Intelligence, search, storage and cleanup work fully.</p>
+          <p><b>No shell commands.</b> Model output is never run as a command.</p>
+        </div>
+      </div>
     </section>
 
     <!-- Roadmap -->
     <section id="roadmap" class="section section-alt">
-      <div class="container"></div>
+      <div class="container">
+        <header class="section-head reveal">
+          <p class="eyebrow">Roadmap</p>
+          <h2>Useful on day one.<br>Better with every release.</h2>
+          <p class="section-sub">Each feature ships only when it’s tested and ready.</p>
+        </header>
+        <div class="roadmap" id="roadmap-grid"></div>
+      </div>
     </section>
 
     <!-- Pricing -->
     <section id="pricing" class="section">
-      <div class="container"></div>
+      <div class="container">
+        <header class="section-head reveal">
+          <p class="eyebrow">Pricing</p>
+          <h2>Pay once. Own it.</h2>
+          <p class="section-sub">No subscription. No account. Start free and upgrade when you’re ready.</p>
+        </header>
+        <div class="pricing-grid">
+          <article class="plan reveal">
+            <h3>Free</h3>
+            <p class="plan-price">$0</p>
+            <p class="plan-note">Everything you need to get started.</p>
+            <ul>
+              <li>Smart Image Viewer with folder navigation</li>
+              <li>Visual Library for a limited set of folders</li>
+              <li>Storage overview</li>
+              <li>Manual large-file inspection</li>
+              <li>Basic text recognition in images</li>
+              <li>Basic file search</li>
+            </ul>
+            <a class="btn btn-ghost" href="#waitlist">Join the waitlist</a>
+          </article>
+          <article class="plan plan-pro reveal">
+            <p class="plan-flag">Best value</p>
+            <h3>Pro</h3>
+            <p class="plan-price plan-price-soon">Price coming soon</p>
+            <p class="plan-note">Price coming soon · one-time purchase, no subscription.</p>
+            <ul>
+              <li>Unlimited folder scanning</li>
+              <li>Advanced cleanup review &amp; history</li>
+              <li>Duplicate Finder &amp; Similar Images</li>
+              <li>Searchable text-in-images index</li>
+              <li>AI Search on supported Macs</li>
+              <li>Smart File Organizer</li>
+              <li>Quick Search, Menu-bar Downloads &amp; Finder Tools</li>
+              <li>Clipboard History, Screenshot Toolkit &amp; Window Manager as they ship</li>
+            </ul>
+            <a class="btn" href="#waitlist">Join the waitlist</a>
+          </article>
+        </div>
+        <p class="pricing-fine">Pro includes all 1.x updates. Major upgrades (such as 2.0) may be a discounted paid upgrade — we’ll announce terms before launch.</p>
+      </div>
     </section>
 
     <!-- FAQ -->
     <section id="faq" class="section section-alt">
-      <div class="container"></div>
+      <div class="container">
+        <header class="section-head reveal">
+          <p class="eyebrow">FAQ</p>
+          <h2>Questions, answered.</h2>
+        </header>
+        <div class="faq-list reveal">
+          <details>
+            <summary>Do I need Apple Intelligence?</summary>
+            <p>No. AI Search uses Apple’s on-device models when your Mac supports them. Everything else — the image viewer, storage analysis, cleanup, duplicates, text-in-images search and regular file search — works on any supported Mac.</p>
+          </details>
+          <details>
+            <summary>Are my files uploaded anywhere?</summary>
+            <p>No. Indexing, text recognition and AI all run on your Mac. MacMate has no cloud processing and needs no account. If a future feature ever needs the internet, it will be clearly labelled and optional.</p>
+          </details>
+          <details>
+            <summary>What can MacMate see on my Mac?</summary>
+            <p>Only the folders you choose. You can add or remove folders at any time, and Settings shows exactly what MacMate has access to. Some tools ask for macOS permissions (Screen Recording for screenshots, Accessibility for window management) only when you turn them on.</p>
+          </details>
+          <details>
+            <summary>Will it delete my files?</summary>
+            <p>Never automatically. Cleanup always shows a preview, asks for confirmation and moves files to the macOS Trash so you can restore them. AI suggestions are only suggestions until you approve.</p>
+          </details>
+          <details>
+            <summary>Does it replace Finder?</summary>
+            <p>No. MacMate works alongside Finder — a visual library, smarter search and handy shortcuts, without changing how Finder works.</p>
+          </details>
+          <details>
+            <summary>Which Macs are supported?</summary>
+            <p>Apple silicon and Intel Macs. AI Search requires a Mac with Apple Intelligence; all core features work without it. Exact macOS requirements will be announced before launch.</p>
+          </details>
+          <details>
+            <summary>How do updates work?</summary>
+            <p>Pro is a one-time purchase that includes every 1.x update. Major versions may be offered as a discounted upgrade; we’ll publish the terms before launch.</p>
+          </details>
+          <details>
+            <summary>When can I get it?</summary>
+            <p>MacMate AI is in development. Join the waitlist and we’ll email you once — when it’s ready.</p>
+          </details>
+        </div>
+      </div>
     </section>
 
     <!-- Waitlist -->
     <section id="waitlist" class="section">
-      <div class="container"></div>
+      <div class="container waitlist reveal">
+        <span class="brand-mark brand-mark-lg" aria-hidden="true"></span>
+        <h2>Be first to try MacMate AI.</h2>
+        <p class="section-sub">One email when it’s ready. No spam, no sharing.</p>
+        <!-- To collect sign-ups, set data-endpoint to a form service URL (e.g. https://formspree.io/f/xxxx). See README. -->
+        <form class="waitlist-form" data-endpoint="" novalidate>
+          <label for="wl-email" class="visually-hidden">Email address</label>
+          <input id="wl-email" type="email" name="email" required autocomplete="email" placeholder="you@example.com">
+          <button type="submit" class="btn">Join the waitlist</button>
+        </form>
+        <p class="waitlist-status" role="status" aria-live="polite"></p>
+      </div>
     </section>
   </main>
 
   <footer class="footer">
-    <div class="container"></div>
+    <div class="container footer-inner">
+      <p class="footer-brand"><span class="brand-mark" aria-hidden="true"></span> MacMate AI — Your Mac. Smarter, Faster, Cleaner.</p>
+      <nav aria-label="Footer">
+        <a href="#explore">Features</a><a href="#privacy">Privacy</a><a href="#roadmap">Roadmap</a><a href="#pricing">Pricing</a><a href="#faq">FAQ</a>
+      </nav>
+      <p class="footer-fine">Feature previews use sample files. Mac, macOS, Finder and Apple Intelligence are trademarks of Apple Inc. MacMate AI is an independent product and is not affiliated with Apple.</p>
+    </div>
   </footer>
 
   <script type="module" src="js/main.js"></script>

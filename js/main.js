@@ -1,6 +1,7 @@
 // Page bootstrap: scroll-reveal and section wiring.
 import { initExplorer } from './explorer.js';
 import { DEMOS } from './demos.js';
+import { initProblems, initRoadmap, initWaitlist } from './sections.js';
 
 function initReveal() {
   const els = document.querySelectorAll('.reveal');
@@ -15,4 +16,7 @@ function initReveal() {
 }
 
 initExplorer(document.getElementById('explorer'), DEMOS);
+initProblems(document.getElementById('problem-grid'));
+initRoadmap(document.getElementById('roadmap-grid'));
+initWaitlist(document.querySelector('.waitlist-form'), document.querySelector('.waitlist-status'));
 initReveal();
