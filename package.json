@@ -1,0 +1,6 @@
+{
+  "name": "macmate-site",
+  "private": true,
+  "type": "module",
+  "scripts": { "test": "node tests/check.mjs", "screens": "node tests/screens.mjs" }
+}
