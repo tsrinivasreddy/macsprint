@@ -59,7 +59,7 @@ header.top > p { color: var(--ink-2); font-size: 17px; max-width: 78ch; }
 .finalbox input { width: 17px; height: 17px; accent-color: var(--final); }
 .dec.is-final .finalbox { color: var(--final); background: var(--final-soft); }
 .opts { display: grid; grid-template-columns: repeat(auto-fill, minmax(120px, 1fr)); gap: 8px; }
-.opt { text-align: left; border: 1px solid var(--rule); background: var(--paper); border-radius: 12px; padding: 10px; display: grid; gap: 6px; align-content: start; min-width: 0; }
+.opt { text-align: left; border: 1px solid var(--rule); background: var(--paper); border-radius: 12px; padding: 10px; display: grid; grid-template-columns: minmax(0, 1fr); gap: 6px; align-content: start; min-width: 0; }
 .opt:hover { border-color: var(--pick); }
 .opt[aria-pressed=true] { border-color: var(--pick); box-shadow: 0 0 0 2px var(--pick); background: var(--sheet); }
 .opt b { font-size: 14.5px; line-height: 1.2; }
@@ -90,7 +90,7 @@ header.top > p { color: var(--ink-2); font-size: 17px; max-width: 78ch; }
 /* ===================== LIVE PREVIEW (driven by --p-* variables) ===================== */
 .pv { --p-s: 1; font-family: var(--p-font-body); color: var(--p-text); background: var(--p-page); border-radius: 16px; padding: 16px; display: grid; gap: 14px; min-width: 720px; }
 .pv svg { flex: none; }
-.pv .win { display: grid; grid-template-columns: 178px minmax(0, 1fr); height: 470px; background: var(--p-bg); border-radius: var(--p-r-win); overflow: hidden; box-shadow: 0 2px 6px rgba(0,0,0,.08), 0 24px 60px -26px rgba(20,30,80,.4), 0 0 0 1px var(--p-line); font-size: var(--p-body); }
+.pv .win { display: grid; grid-template-columns: 178px minmax(0, 1fr); height: 560px; background: var(--p-bg); border-radius: var(--p-r-win); overflow: hidden; box-shadow: 0 2px 6px rgba(0,0,0,.08), 0 24px 60px -26px rgba(20,30,80,.4), 0 0 0 1px var(--p-line); font-size: var(--p-body); }
 .pv .side { background: var(--p-side); border-right: 1px solid var(--p-line); padding: 10px 8px; display: flex; flex-direction: column; gap: 1px; overflow: hidden; }
 .pv .lights { display: flex; gap: 7px; padding: 2px 6px 12px; }
 .pv .lights i { width: 11px; height: 11px; border-radius: 50%; background: #ff5f57; } .pv .lights i:nth-child(2) { background: #febc2e; } .pv .lights i:nth-child(3) { background: #28c840; }
@@ -145,6 +145,57 @@ header.top > p { color: var(--ink-2); font-size: 17px; max-width: 78ch; }
 .pv .fcard { border-radius: var(--p-r-card); padding: 9px; text-align: left; background: color-mix(in oklab, var(--k) 14%, var(--p-bg)); border: 1px solid color-mix(in oklab, var(--k) 24%, transparent); display: grid; gap: 14px; }
 .pv .fcard svg { color: var(--k); }
 .pv .ftile { display: grid; justify-items: center; gap: 5px; }
+/* folder-card styles (inspired by tabbed pastel folders) */
+.pv .folders.cardish { grid-template-columns: repeat(3, minmax(0, 1fr)); gap: calc(12px * var(--p-s)) calc(10px * var(--p-s)); }
+.fx { position: relative; padding-top: 12px; text-align: left; min-width: 0; font-family: var(--p-font-body); }
+.fx .tab { position: absolute; top: 0; left: 0; width: 46%; height: 26px; border-radius: calc(var(--p-r-card) * .75) calc(var(--p-r-card) * .9) 0 0; }
+.fx .tab::after { content: ""; position: absolute; right: -14px; bottom: 0; width: 22px; height: 18px; background: inherit; clip-path: polygon(0 0, 25% 0, 100% 100%, 0 100%); }
+.fx .face { position: relative; border-radius: 5px var(--p-r-card) var(--p-r-card) var(--p-r-card); padding: 11px 12px; display: grid; grid-template-columns: minmax(0, 1fr); gap: 9px; overflow: hidden; }
+.fx .lab { display: flex; justify-content: space-between; align-items: center; gap: 6px; font-weight: 600; font-size: calc(var(--p-body) - .5px); color: var(--p-text); }
+.fx .kb { width: 20px; height: 20px; border-radius: 50%; display: grid; place-items: center; background: var(--p-bg); color: var(--p-text2); flex: none; font-size: 11px; line-height: 1; letter-spacing: -1px; }
+.fx .foot { display: flex; justify-content: space-between; align-items: center; gap: 6px; padding-top: 8px; font-size: 10px; color: var(--p-text2); white-space: nowrap; }
+.fx .foot > span:last-child { overflow: hidden; text-overflow: ellipsis; min-width: 0; }
+.fx .lab b { min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.fx .stk { display: inline-flex; flex: none; }
+.fx .stk i { width: 17px; height: 17px; border-radius: 50%; margin-left: -5px; box-shadow: 0 0 0 1.5px var(--p-bg); display: grid; place-items: center; font-style: normal; }
+.fx .stk i:first-child { margin-left: 0; }
+.fx .stk .more { width: 22px; border-radius: 99px; font-size: 7.5px; font-weight: 700; background: var(--p-bg); color: var(--p-text2); }
+.fx .stk .g { background: color-mix(in oklab, var(--k) 20%, var(--p-bg)); color: var(--k); }
+.fx .ph { background: radial-gradient(circle at 30% 30%, hsl(calc(var(--h) + 40) 90% 75% / .9), transparent 55%), linear-gradient(135deg, hsl(var(--h) 75% 58%), hsl(calc(var(--h) + 60) 70% 40%)); }
+/* 1. pastel: tinted folder, mono label, like the reference */
+.fx.pastel .tab { background: color-mix(in oklab, var(--k) 22%, var(--p-bg)); }
+.fx.pastel .face { background: linear-gradient(180deg, color-mix(in oklab, var(--k) 9%, var(--p-bg)), color-mix(in oklab, var(--k) 18%, var(--p-bg))); box-shadow: 0 0 0 1px color-mix(in oklab, var(--k) 22%, transparent), 0 10px 22px -16px color-mix(in oklab, var(--k) 70%, transparent); }
+.fx.pastel .lab b { font-family: ui-monospace, "SF Mono", Menlo, monospace; font-weight: 500; letter-spacing: 0; }
+.fx.pastel .foot { border-top: 1px solid color-mix(in oklab, var(--k) 25%, transparent); }
+/* 2. glass: frosted panel over a soft colour glow */
+.fx.glass::before { content: ""; position: absolute; inset: 14px 8% -4px; border-radius: 40%; background: radial-gradient(closest-side, color-mix(in oklab, var(--k) 85%, transparent), transparent); filter: blur(8px); }
+.fx.glass .tab { background: color-mix(in oklab, var(--p-bg) 62%, transparent); -webkit-backdrop-filter: blur(14px); backdrop-filter: blur(14px); box-shadow: inset 0 1px 0 rgba(255,255,255,.5); }
+.fx.glass .face { background: color-mix(in oklab, var(--p-bg) 50%, transparent); -webkit-backdrop-filter: blur(14px); backdrop-filter: blur(14px); box-shadow: inset 0 1px 0 rgba(255,255,255,.55), 0 0 0 1px color-mix(in oklab, var(--p-text) 8%, transparent), 0 10px 24px -14px rgba(0,0,0,.25); }
+.fx.glass .foot { border-top: 1px solid color-mix(in oklab, var(--p-text) 10%, transparent); }
+/* 3. outline: neutral card, coloured tab only */
+.fx.outline .tab { width: 34%; height: 18px; top: 6px; background: var(--k); }
+.fx.outline .face { background: var(--p-bg); box-shadow: 0 0 0 1px var(--p-line), 0 1px 2px rgba(0,0,0,.04); }
+.fx.outline .foot { border-top: 1px solid var(--p-line); }
+/* 4. peek: photos sticking out of the folder */
+.fx.peek { padding-top: 22px; }
+.fx.peek .tab { top: 10px; background: color-mix(in oklab, var(--k) 30%, var(--p-bg)); }
+.fx.peek .papers { position: absolute; left: 14%; right: 14%; top: 2px; height: 46px; z-index: 0; }
+.fx.peek .papers i { position: absolute; width: 46%; height: 100%; border-radius: 5px; box-shadow: 0 1px 3px rgba(0,0,0,.18); border: 2px solid #fff; }
+.fx.peek .papers i:nth-child(1) { left: 0; transform: rotate(-8deg); }
+.fx.peek .papers i:nth-child(2) { left: 27%; transform: rotate(2deg); top: -3px; }
+.fx.peek .papers i:nth-child(3) { right: 0; transform: rotate(9deg); }
+.fx.peek .papers .gi { display: grid; place-items: center; background: color-mix(in oklab, var(--k) 12%, #fff); color: var(--k); }
+.fx.peek .face { z-index: 1; margin-top: 12px; background: linear-gradient(180deg, color-mix(in oklab, var(--k) 16%, var(--p-bg)), color-mix(in oklab, var(--k) 24%, var(--p-bg))); box-shadow: inset 0 1px 0 rgba(255,255,255,.45), 0 0 0 1px color-mix(in oklab, var(--k) 24%, transparent); }
+/* 5. gradient: bold colour with a glossy top */
+.fx.bold .tab { background: color-mix(in oklab, var(--k) 78%, #000); }
+.fx.bold .face { background: linear-gradient(165deg, color-mix(in oklab, var(--k) 70%, #fff), var(--k) 55%, color-mix(in oklab, var(--k) 82%, #000)); color: #fff; }
+.fx.bold .face::before { content: ""; position: absolute; inset: 0 0 55% 0; background: linear-gradient(180deg, rgba(255,255,255,.28), rgba(255,255,255,.04)); pointer-events: none; }
+.fx.bold .lab { color: #fff; }
+.fx.bold .kb { background: rgba(255,255,255,.22); color: #fff; }
+.fx.bold .foot { color: rgba(255,255,255,.85); border-top: 1px solid rgba(255,255,255,.25); }
+.fx.bold .stk i { box-shadow: 0 0 0 1.5px color-mix(in oklab, var(--k) 70%, #000); }
+.fx.bold .stk .more { background: rgba(255,255,255,.25); color: #fff; }
+.fdemo { width: 100%; display: grid !important; grid-template-columns: minmax(0, 1fr); gap: 0 !important; overflow: hidden; }
 .pv .ftile span { width: 46px; height: 46px; border-radius: calc(var(--p-r-card) * .7); display: grid; place-items: center; background: color-mix(in oklab, var(--k) 16%, var(--p-bg)); color: var(--k); }
 /* cards */
 .pv .cards { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: calc(8px * var(--p-s)); }
@@ -202,7 +253,7 @@ header.top > p { color: var(--ink-2); font-size: 17px; max-width: 78ch; }
 .brandtiles > span { border-radius: 8px; padding: 8px 10px; display: flex; align-items: center; min-width: 0; overflow: hidden; }
 .brandtiles > .l { background: #ffffff; box-shadow: inset 0 0 0 1px rgba(0,0,0,.1); }
 .brandtiles > .d { background: #18191d; }
-#dec-word .opts, #dec-wcolor .opts { grid-template-columns: repeat(auto-fill, minmax(160px, 1fr)); }
+#dec-word .opts, #dec-wcolor .opts, #dec-folders .opts { grid-template-columns: repeat(auto-fill, minmax(160px, 1fr)); }
 .brandrow { display: flex; flex-wrap: wrap; gap: 12px; }
 .brandrow > span { border-radius: 12px; padding: 18px 22px; display: inline-flex; align-items: center; }
 .opt .wm { color: var(--ink); font-family: -apple-system, BlinkMacSystemFont, "Helvetica Neue", sans-serif; font-size: 15px; }
@@ -342,7 +393,7 @@ const NEUTRALS = {
   warm: { l: { page: '#f7f4ef', bg: '#fffdfa', side: '#f5f1ea', alt: '#efeae2', line: 'rgba(40,30,20,.11)', text: '#1f1b16', text2: '#675f55', fold: '#d3ccc1', fold2: '#bfb7ab' },
           d: { page: '#12100e', bg: '#1c1a17', side: '#24211d', alt: '#2b2823', line: 'rgba(255,245,230,.09)', text: '#f1ece4', text2: '#aaa196', fold: '#423d36', fold2: '#322e29' } },
 };
-const KINDS = [['Images', '#3a8dff', 215, 'photo', '2,280'], ['Videos', '#a46bf5', 275, 'film', '162'], ['Music', '#f2647e', 345, 'music', '34'], ['Documents', '#f0a23b', 35, 'doc', '201'], ['Archives', '#3fb985', 150, 'zip', '93'], ['Apps', '#3aa7d9', 195, 'app', '110']];
+const KINDS = [['Images', '#3a8dff', 215, 'photo', '2,280', '2.81 GB'], ['Videos', '#a46bf5', 275, 'film', '162', '11.21 GB'], ['Music', '#f2647e', 345, 'music', '34', '82.7 MB'], ['Documents', '#f0a23b', 35, 'doc', '201', '1.16 GB'], ['Archives', '#3fb985', 150, 'zip', '93', '630 MB'], ['Apps', '#3aa7d9', 195, 'app', '110', '14.31 GB']];
 
 const DECISIONS = [
   { id: 'word', title: 'Name style', why: 'No logo: the name is the brand, written Mac + SPRINT in capitals with Apple’s system font.', def: 'space',
@@ -378,7 +429,8 @@ const DECISIONS = [
   { id: 'icons', title: 'Sidebar icons', why: 'All are SF Symbols; this sets their style.', def: 'outline',
     opts: [['outline', 'Outline', 'Thin lines, quiet. Current.'], ['filled', 'Filled', 'Solid shapes, stronger.'], ['color', 'Colour-coded', 'Each kind in its own colour.']] },
   { id: 'folders', title: 'Library folders', why: 'How the six file kinds appear on Home.', def: 'mac',
-    opts: [['mac', 'macOS folders', 'Folder art with papers inside. Current.'], ['cards', 'Colour cards', 'Tinted cards with icons (Homy-like).'], ['tiles', 'Icon tiles', 'Simple rounded icon squares.']] },
+    opts: [['pastel', 'Pastel folders', 'Tabbed tinted folders, monospaced labels (like your reference).'], ['glass', 'Frosted glass', 'See-through panels over a soft colour glow.'], ['outline', 'Clean outline', 'White card with only the tab in colour. Quiet.'], ['peek', 'Photos peeking', 'Thumbnails sticking out of a tinted folder.'], ['bold', 'Glossy colour', 'Strong colour, white text, glossy top.'], ['mac', 'macOS folders', 'Small folder icons. Current.'], ['cards', 'Colour cards', 'Tinted cards with icons.'], ['tiles', 'Icon tiles', 'Simple rounded icon squares.']],
+    demo: (id) => `<span class="pv fdemo" style="${varStyle(false)}">${folderHtml(id, KINDS[0])}</span>` },
   { id: 'ai', title: 'AI search default', why: 'Whether the ✦ AI switch in the search field starts on.', def: 'on',
     opts: [['on', 'On by default', 'Plain-English search first.'], ['off', 'Off by default', 'File-name search first; AI when asked.']] },
 ];
@@ -433,11 +485,38 @@ function decisionHtml(d) {
     <div class="opts" role="group" aria-label="${esc(d.title)} options">${d.opts.map(([id, name, note]) => `<button type="button" class="opt" data-dec="${d.id}" data-opt="${id}" aria-pressed="${state.choices[d.id] === id}">${d.demo ? d.demo(id) : ''}<b>${esc(name)}</b><small>${esc(note)}</small>${id === d.def ? '<span class="cur">Current design</span>' : ''}</button>`).join('')}</div>
   </section>`;
 }
+const CARDISH = ['pastel', 'glass', 'outline', 'peek', 'bold'];
+function stackHtml(kind) {
+  const [k, col, h, icon] = kind;
+  const photos = k === 'Images' || k === 'Videos';
+  return `<span class="stk">${[0, 1, 2].map((i) => photos ? `<i class="ph" style="--h:${h + i * 40}"></i>` : `<i class="g">${ic(icon, 9)}</i>`).join('')}<i class="more">+99</i></span>`;
+}
+function folderHtml(style, kind) {
+  const [k, col, h, icon, n, size] = kind;
+  if (CARDISH.includes(style)) {
+    const papers = style === 'peek' ? `<span class="papers">${[0, 1, 2].map((i) => k === 'Images' || k === 'Videos' ? `<i class="ph" style="--h:${h + i * 35}"></i>` : `<i class="gi">${ic(icon, 14)}</i>`).join('')}</span>` : '';
+    return `<div class="fx ${style}" style="--k:${col};--h:${h}">${papers}<span class="tab"></span><div class="face"><div class="lab"><b>${k}</b><span class="kb">···</span></div><div class="foot">${stackHtml(kind)}<span>${n} items · ${size}</span></div></div></div>`;
+  }
+  if (style === 'cards') return `<div class="fcard" style="--k:${col}">${ic(icon, 16)}<div><b style="display:block;font-size:12px">${k}</b><small style="font-size:10px;color:var(--p-text2)">${n} items</small></div></div>`;
+  if (style === 'tiles') return `<div class="ftile" style="--k:${col}"><span>${ic(icon, 20)}</span><div class="fo"><b>${k}</b><small>${n}</small></div></div>`;
+  return `<div class="fo" style="--k:${col};--h:${h}"><div class="fd"><i class="t"></i><i class="b"></i><i class="p"></i><i class="f"></i></div><b>${k}</b><small>${n}</small></div>`;
+}
+function varsFor(dark) {
+  const c = state.choices, a = ACCENTS[c.accent], n = NEUTRALS[c.neutral][dark ? 'd' : 'l'], r = RADII[c.radius], sc = SCALES[c.scale], f = FONTS[c.font];
+  return {
+    '--p-accent': dark ? a.d : a.l, '--p-btn': dark ? a.db : a.lb,
+    '--p-soft': `color-mix(in oklab, ${dark ? a.d : a.l} ${dark ? 16 : 12}%, transparent)`,
+    '--p-good': dark ? '#4cd38a' : '#1f7a4d',
+    '--p-page': n.page, '--p-bg': n.bg, '--p-side': n.side, '--p-alt': n.alt, '--p-line': n.line, '--p-text': n.text, '--p-text2': n.text2, '--p-fold': n.fold, '--p-fold2': n.fold2,
+    '--p-r-win': r.win + 'px', '--p-r-card': r.card + 'px', '--p-r-btn': r.btn + 'px', '--p-r-field': r.field + 'px',
+    '--p-body': sc.body + 'px', '--p-small': sc.small + 'px', '--p-title': sc.title + 'px', '--p-h2': sc.h2 + 'px', '--p-big': sc.big + 'px',
+    '--p-font-body': f.body, '--p-font-title': f.title, '--p-s': SPACE[c.space],
+  };
+}
+const varStyle = (dark) => Object.entries(varsFor(dark)).map(([k, v]) => `${k}:${String(v).replace(/"/g, "'")}`).join(';') + ';min-width:0;padding:4px;background:transparent;border-radius:0';
 function previewHtml() {
   const c = state.choices, sb = [['house', 'Home', '', '#3a8dff', true], ['grid', 'Library', '2,880', '#6a6ff0'], ['photo', 'Images', '2,280', '#3a8dff'], ['search', 'AI Search', '', '#a46bf5'], ['text', 'Text in Images', '589', '#3fb985'], '-', ['drive', 'Storage', '10', '#f0a23b', false, 'alert'], ['trash', 'Clean Up', '14.1 GB', '#f2647e', false, 'good'], ['dup', 'Duplicates', '44.8 MB', '#3aa7d9', false, 'good'], ['folder', 'Organizer', '', '#f0a23b'], '-', ['clip', 'Clipboard', '', '#6a6ff0'], ['cam', 'Screenshots', '', '#3fb985']];
-  const folders = KINDS.map(([k, col, h, icon, n]) => c.folders === 'cards' ? `<div class="fcard" style="--k:${col}">${ic(icon, 16)}<div><b style="display:block;font-size:12px">${k}</b><small style="font-size:10px;color:var(--p-text2)">${n} items</small></div></div>`
-    : c.folders === 'tiles' ? `<div class="ftile" style="--k:${col}"><span>${ic(icon, 20)}</span><div class="fo"><b>${k}</b><small>${n}</small></div></div>`
-    : `<div class="fo" style="--k:${col};--h:${h}"><div class="fd"><i class="t"></i><i class="b"></i><i class="p"></i><i class="f"></i></div><b>${k}</b><small>${n}</small></div>`).join('');
+  const folders = KINDS.map((kind) => folderHtml(c.folders, kind)).join('');
   const aiOn = c.ai === 'on';
   return `<div class="win">
     <aside class="side"><div class="lights"><i></i><i></i><i></i></div><div class="brand">${wordmark(c.word, c.wcolor, mode === 'dark', 17)}</div>
@@ -447,7 +526,7 @@ function previewHtml() {
       <div class="content">
         <div class="head"><div><div class="greet">Good afternoon</div><div class="sub">2,880 files · 30.19 GB across your Mac</div></div><span class="b sec">${ic('refresh', 11)}Refresh</span></div>
         <div class="h2">Library <span class="count">6</span></div>
-        <div class="folders" style="${c.folders === 'cards' ? 'grid-template-columns:repeat(3,minmax(0,1fr))' : ''}">${folders}</div>
+        <div class="folders${CARDISH.includes(c.folders) ? ' cardish' : ''}" style="${c.folders === 'cards' ? 'grid-template-columns:repeat(3,minmax(0,1fr))' : ''}">${folders}</div>
         <div class="h2">Clean Up <span class="pill">Free up to 14.1 GB</span></div>
         <div class="cards">${[['dup', 'Duplicates', '44.8 MB', '24 extra copies'], ['down', 'Old Downloads', '11.5 GB', '1,227 items'], ['cam', 'Old Screenshots', '321 MB', '480 items'], ['drive', 'Large Files', '2.2 GB', '10 items']].map((s) => `<div class="card"><span>${ic(s[0], 11)}${s[1]}</span><b>${s[2]}</b><small>${s[3]}</small></div>`).join('')}</div>
       </div>
@@ -462,17 +541,9 @@ function previewHtml() {
   </div>`;
 }
 function applyVars() {
-  const c = state.choices, a = ACCENTS[c.accent], n = NEUTRALS[c.neutral][mode === 'dark' ? 'd' : 'l'], r = RADII[c.radius], sc = SCALES[c.scale], f = FONTS[c.font];
+  const c = state.choices;
   const pv = document.getElementById('pv');
-  const v = {
-    '--p-accent': mode === 'dark' ? a.d : a.l, '--p-btn': mode === 'dark' ? a.db : a.lb,
-    '--p-soft': `color-mix(in oklab, ${mode === 'dark' ? a.d : a.l} ${mode === 'dark' ? 16 : 12}%, transparent)`,
-    '--p-good': mode === 'dark' ? '#4cd38a' : '#1f7a4d',
-    '--p-page': n.page, '--p-bg': n.bg, '--p-side': n.side, '--p-alt': n.alt, '--p-line': n.line, '--p-text': n.text, '--p-text2': n.text2, '--p-fold': n.fold, '--p-fold2': n.fold2,
-    '--p-r-win': r.win + 'px', '--p-r-card': r.card + 'px', '--p-r-btn': r.btn + 'px', '--p-r-field': r.field + 'px',
-    '--p-body': sc.body + 'px', '--p-small': sc.small + 'px', '--p-title': sc.title + 'px', '--p-h2': sc.h2 + 'px', '--p-big': sc.big + 'px',
-    '--p-font-body': f.body, '--p-font-title': f.title, '--p-s': SPACE[c.space],
-  };
+  const v = varsFor(mode === 'dark');
   for (const [k, val] of Object.entries(v)) pv.style.setProperty(k, val);
   pv.style.colorScheme = mode;
   Object.assign(pv.dataset, { sidebar: c.sidebar, toolbar: c.toolbar, btn: c.btn, icons: c.icons, card: c.card });
@@ -501,7 +572,7 @@ document.getElementById('decisions').addEventListener('click', (e) => {
   const b = e.target.closest('.opt'); if (!b) return;
   state.choices[b.dataset.dec] = b.dataset.opt;
   b.closest('.opts').querySelectorAll('.opt').forEach((x) => x.setAttribute('aria-pressed', String(x === b)));
-  if (['accent', 'word', 'wcolor'].includes(b.dataset.dec)) renderAll(); else { renderPreview(); renderSummary(); }
+  if (['accent', 'word', 'wcolor', 'neutral', 'radius', 'font', 'scale'].includes(b.dataset.dec)) renderAll(); else { renderPreview(); renderSummary(); }
   save();
 });
 document.getElementById('decisions').addEventListener('change', (e) => {
