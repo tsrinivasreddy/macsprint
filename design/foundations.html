@@ -124,7 +124,7 @@ header.top > p { color: var(--ink-2); font-size: 17px; max-width: 78ch; }
 .pv .libsize { margin-left: auto; font-size: var(--p-small); color: var(--p-text2); white-space: nowrap; }
 .pv[data-toolbar=center] .libsize { margin-left: 0; }
 .pv .libsize b { color: var(--p-text); }
-.pv .content { flex: 1; overflow: visible; min-height: 0; padding: calc(14px * var(--p-s)) 18px; display: flex; flex-direction: column; gap: calc(11px * var(--p-s)); }
+.pv .content { flex: 1; overflow: hidden; padding: calc(14px * var(--p-s)) 18px; display: flex; flex-direction: column; gap: calc(11px * var(--p-s)); }
 .pv .greet { font-family: var(--p-font-title); font-size: var(--p-title); font-weight: 700; letter-spacing: -0.02em; line-height: 1.1; }
 .pv .sub { font-size: var(--p-small); color: var(--p-text2); }
 .pv .h2 { font-family: var(--p-font-title); font-size: var(--p-h2); font-weight: 700; display: flex; align-items: center; gap: 8px; }
@@ -227,63 +227,45 @@ header.top > p { color: var(--ink-2); font-size: 17px; max-width: 78ch; }
 .ns.lens .bk { top: 0; border-radius: 15px; background: linear-gradient(160deg, color-mix(in oklab, var(--k) 8%, #fff), color-mix(in oklab, var(--k) 20%, var(--p-fold2))); box-shadow: inset 0 0 0 1.5px rgba(255,255,255,.8), 0 6px 14px -6px rgba(0,0,0,.25); }
 .ns.lens .orb { left: 50%; top: 50%; width: 30px; height: 30px; margin: -15px 0 0 -15px; border-radius: 50%; display: grid; place-items: center; color: #fff; background: radial-gradient(circle at 35% 30%, color-mix(in oklab, var(--k) 40%, #fff), var(--k) 70%); box-shadow: 0 4px 10px -2px color-mix(in oklab, var(--k) 70%, transparent); }
 
-/* hover fan: the last five items arc around the folder, oldest left, newest right */
-.fw { position: relative; min-width: 0; border-radius: 12px; outline: none; cursor: default; --fy: 24px; --R: 80px; }
-.fw.cardfan { --fy: 40px; --R: 96px; }
-.fw > :first-child { position: relative; z-index: 2; transition: transform .35s cubic-bezier(.34,1.56,.64,1); }
-.fw.open > :first-child { transform: translateY(2px) scale(.96); }
-.fw:focus-visible { box-shadow: 0 0 0 2px var(--p-accent); }
-.fw.open { z-index: 20; }
-.fw.open::before { content: ""; position: absolute; left: calc(var(--R) * -1.2); right: calc(var(--R) * -1.2); top: calc(var(--R) * -1.25); bottom: 0; z-index: 0; }
-.fan { position: absolute; left: 50%; top: var(--fy); width: 0; height: 0; z-index: 1; }
-.fw:not(.cardfan):nth-child(6n+1) .fan, .fw.cardfan:nth-child(3n+1) .fan { left: calc(50% + 26px); }
-.fw:not(.cardfan):nth-child(6n) .fan, .fw.cardfan:nth-child(3n) .fan { left: calc(50% - 26px); }
-.fan button { all: unset; box-sizing: border-box; position: absolute; left: 0; top: 0; width: 46px; height: 56px; border-radius: 9px; padding: 3px; background: #fff; cursor: pointer;
-  box-shadow: 0 0 0 1px rgba(0,0,0,.08), 0 6px 14px -4px rgba(10,16,48,.35); opacity: 0; pointer-events: none;
-  transform: translate(-50%, -50%) scale(.35); transition: transform .42s cubic-bezier(.34,1.5,.64,1), opacity .2s ease, box-shadow .2s; transition-delay: calc((4 - var(--i)) * 18ms); }
-.fw.open .fan button { opacity: 1; pointer-events: auto; transition-delay: calc(var(--i) * 38ms);
-  transform: translate(calc(-50% + var(--ux) * var(--R)), calc(-50% + var(--uy) * var(--R))) rotate(var(--rot)); }
-.fw.open .fan button:hover, .fw.open .fan button:focus-visible { z-index: 3; transition-delay: 0s; box-shadow: 0 0 0 2px var(--p-accent), 0 10px 20px -6px rgba(10,16,48,.45);
-  transform: translate(calc(-50% + var(--ux) * var(--R) * 1.06), calc(-50% + var(--uy) * var(--R) * 1.06 - 4px)) rotate(0deg) scale(1.18); }
-.fan .th { display: grid; place-items: center; align-content: center; gap: 1px; height: 36px; border-radius: 5px; color: #fff; position: relative; overflow: hidden; }
-.fan .nm { display: block; font: 600 7.5px/1.2 var(--p-font-body); color: #3a3b42; margin-top: 3px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; text-align: center; }
+/* static card styles, built only from foundation tokens so light and dark both work */
+.lf { --lf-bg: var(--p-bg); min-width: 0; text-align: left; border-radius: var(--p-r-card); background: var(--lf-bg); box-shadow: 0 0 0 1px var(--p-line); font-family: var(--p-font-body); color: var(--p-text); }
+.pv[data-card=shadow] .lf { box-shadow: 0 0 0 1px var(--p-line), 0 1px 2px rgba(0,0,0,.05), 0 8px 20px -12px rgba(0,0,0,.25); }
+.pv[data-card=filled] .lf { --lf-bg: var(--p-alt); box-shadow: none; }
+.lf .gl { flex: none; width: 26px; height: 26px; border-radius: calc(var(--p-r-btn) * .6 + 3px); display: grid; place-items: center; color: var(--k); background: color-mix(in oklab, var(--k) 15%, var(--lf-bg)); }
+.lf .nm { min-width: 0; display: grid; }
+.lf .nm b { font-size: var(--p-body); font-weight: 600; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; line-height: 1.25; }
+.lf .nm small { font-size: 10.5px; color: var(--p-text2); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.lf .top { display: flex; align-items: center; gap: 8px; min-width: 0; }
+.lf .sz { margin-left: auto; font-size: 10.5px; font-weight: 600; color: var(--p-text2); white-space: nowrap; font-variant-numeric: tabular-nums; }
+.lf .th { display: grid; place-items: center; position: relative; overflow: hidden; color: #fff; }
+/* recents: header + a static row of the last five items, oldest left */
+.lf.recents { padding: 10px; display: grid; gap: 9px; }
+.lf.recents .row5 { display: grid; grid-template-columns: repeat(5, minmax(0, 1fr)); gap: 4px; }
+.lf.recents .row5 .th { aspect-ratio: 1; border-radius: 5px; }
+.lf.recents .row5 .th:last-child { box-shadow: 0 0 0 1.5px var(--p-accent); }
+/* mosaic: album cover from the four newest items */
+.lf.mosaic { background: none; box-shadow: none !important; display: grid; gap: 5px; }
+.lf.mosaic .m4 { display: grid; grid-template-columns: 1fr 1fr; gap: 2px; aspect-ratio: 1; border-radius: var(--p-r-card); overflow: hidden; box-shadow: 0 0 0 1px var(--p-line); }
+.lf.mosaic .m4 .th { border-radius: 0; height: 100%; }
+.lf.mosaic .nm { padding: 0 2px; }
+/* storage: what the kind costs on disk */
+.lf.storage { padding: 11px; display: grid; gap: 8px; }
+.lf.storage .big { font-size: var(--p-big); font-weight: 700; letter-spacing: -.03em; font-variant-numeric: tabular-nums; line-height: 1.1; }
+.lf.storage .meter { height: 5px; border-radius: 99px; background: color-mix(in oklab, var(--p-text) 9%, transparent); overflow: hidden; }
+.lf.storage .meter i { display: block; height: 100%; border-radius: inherit; background: var(--k); min-width: 4px; }
+.lf.storage .foot { display: flex; justify-content: space-between; gap: 8px; font-size: 10.5px; color: var(--p-text2); white-space: nowrap; min-width: 0; }
+.lf.storage .foot .lt { min-width: 0; overflow: hidden; text-overflow: ellipsis; }
+/* list: Finder-style rows */
+.lf.list { display: flex; align-items: center; gap: 9px; padding: 8px 10px; }
+.lf.list .chev { flex: none; color: var(--p-text2); opacity: .7; font-size: 15px; line-height: 1; }
+.pv .folders.f3 { grid-template-columns: repeat(3, minmax(0, 1fr)); gap: calc(10px * var(--p-s)); }
+.pv .folders.f2 { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: calc(6px * var(--p-s)) calc(10px * var(--p-s)); }
+.fdemo .lf.mosaic { max-width: 110px; margin: 0 auto; }
 .qthumb.photo { background: radial-gradient(circle at 70% 28%, hsl(calc(var(--h) + 40) 95% 82% / .95), transparent 30%), linear-gradient(160deg, hsl(var(--h) 75% 62%), hsl(calc(var(--h) + 55) 65% 42%)); }
 .qthumb.photo::after { content: ""; position: absolute; left: -10%; right: -10%; bottom: -20%; height: 55%; border-radius: 50% 50% 0 0; background: hsl(calc(var(--h) + 120) 40% 30% / .55); }
-.qthumb.file { background: color-mix(in oklab, var(--k) 16%, #fff); color: var(--k); }
+.qthumb.file { background: color-mix(in oklab, var(--k) 16%, var(--p-bg)); color: var(--k); }
 .qthumb .ext { font: 800 6px/1 var(--p-font-body); font-style: normal; letter-spacing: .3px; }
 .qthumb .play { position: absolute; z-index: 1; width: 0; height: 0; border-left: 7px solid #fff; border-top: 4.5px solid transparent; border-bottom: 4.5px solid transparent; filter: drop-shadow(0 1px 2px rgba(0,0,0,.4)); }
-.hint { font-family: var(--p-font-body); font-size: 10.5px; font-weight: 500; color: var(--p-text2); margin-left: auto; }
-.hint kbd { font: inherit; font-weight: 700; border: 1px solid var(--p-line); border-radius: 4px; padding: 0 4px; background: var(--p-bg); }
-
-/* Quick Look */
-.ql { position: fixed; inset: 0; z-index: 1000; display: grid; place-items: center; padding: 16px; background: rgba(8,10,20,.38); -webkit-backdrop-filter: blur(6px); backdrop-filter: blur(6px); }
-.ql[hidden] { display: none; }
-.ql .panel { width: min(620px, 100%); max-height: calc(100dvh - 32px); display: grid; grid-template-rows: auto minmax(0, 1fr) auto auto; border-radius: 18px; overflow: hidden; background: var(--p-bg); color: var(--p-text); font-family: var(--p-font-body); box-shadow: 0 0 0 1px var(--p-line), 0 30px 80px -20px rgba(0,0,0,.55); }
-.ql .qbar { display: flex; align-items: center; gap: 8px; padding: 10px 12px 10px 14px; }
-.ql .qx { all: unset; width: 13px; height: 13px; border-radius: 50%; background: #ff5f57; cursor: pointer; flex: none; box-shadow: inset 0 0 0 .5px rgba(0,0,0,.2); }
-.ql .qx:focus-visible, .ql .qnav:focus-visible, .ql .qopen:focus-visible { outline: 2px solid var(--p-accent); outline-offset: 2px; }
-.ql .qname { flex: 1; min-width: 0; font-weight: 600; font-size: 13.5px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
-.ql .qnav { all: unset; display: grid; place-items: center; width: 30px; height: 26px; border-radius: 7px; background: var(--p-alt); color: var(--p-accent); font-weight: 700; cursor: pointer; }
-.ql .qnav:disabled { opacity: .35; cursor: default; }
-.ql .qopen { all: unset; padding: 5px 12px; border-radius: var(--p-r-btn); background: var(--p-btn); color: #fff; font-weight: 600; font-size: 12.5px; cursor: pointer; }
-.ql .qview { position: relative; min-height: 220px; height: 340px; max-height: 52dvh; display: grid; place-items: center; overflow: hidden; }
-.ql .qview.photo::after { bottom: -30%; }
-.ql .qview .play { border-left-width: 26px; border-top-width: 16px; border-bottom-width: 16px; }
-.ql .page { width: 46%; max-width: 230px; aspect-ratio: 1 / 1.3; background: #fff; border-radius: 6px; box-shadow: 0 10px 30px -10px rgba(0,0,0,.35); padding: 8%; display: grid; align-content: start; gap: 7px; }
-.ql .page i { display: block; height: 5px; border-radius: 3px; background: #e3e4ea; }
-.ql .page i:first-child { height: 9px; width: 60%; background: var(--k); margin-bottom: 6px; }
-.ql .wave { display: flex; align-items: center; gap: 3px; height: 50%; }
-.ql .wave i { width: 5px; border-radius: 3px; background: var(--k); }
-.ql .bigic { width: 120px; height: 120px; border-radius: 28px; display: grid; place-items: center; color: #fff; background: linear-gradient(160deg, color-mix(in oklab, var(--k) 60%, #fff), var(--k)); box-shadow: 0 16px 36px -14px color-mix(in oklab, var(--k) 80%, transparent); }
-.ql .qinfo { display: flex; flex-wrap: wrap; gap: 4px 16px; padding: 10px 14px; font-size: 12px; color: var(--p-text2); border-top: 1px solid var(--p-line); }
-.ql .qinfo b { color: var(--p-text); font-weight: 600; }
-.ql .strip5 { display: flex; gap: 8px; padding: 0 14px 14px; overflow-x: auto; }
-.ql .strip5 button { all: unset; flex: none; width: 52px; height: 40px; border-radius: 7px; overflow: hidden; cursor: pointer; display: grid; position: relative; box-shadow: 0 0 0 1px var(--p-line); }
-.ql .strip5 button .th { height: 100%; border-radius: 0; display: grid; place-items: center; position: relative; overflow: hidden; }
-.ql .strip5 button[aria-current="true"] { box-shadow: 0 0 0 2.5px var(--p-accent); }
-.ql .strip5 button:focus-visible { outline: 2px solid var(--p-accent); outline-offset: 2px; }
-.ql .qtoast { position: absolute; left: 50%; bottom: 14px; transform: translateX(-50%); background: rgba(20,22,30,.86); color: #fff; font-size: 12px; padding: 6px 12px; border-radius: 99px; }
-@media (prefers-reduced-motion: reduce) { .fan button, .fw > :first-child { transition: opacity .15s !important; } .fw.open .fan button:hover { transform: translate(calc(-50% + var(--ux) * var(--R)), calc(-50% + var(--uy) * var(--R))); } }
 .pv .ftile span { width: 46px; height: 46px; border-radius: calc(var(--p-r-card) * .7); display: grid; place-items: center; background: color-mix(in oklab, var(--k) 16%, var(--p-bg)); color: var(--k); }
 /* cards */
 .pv .cards { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: calc(8px * var(--p-s)); }
@@ -517,7 +499,7 @@ const DECISIONS = [
   { id: 'icons', title: 'Sidebar icons', why: 'All are SF Symbols; this sets their style.', def: 'outline',
     opts: [['outline', 'Outline', 'Thin lines, quiet. Current.'], ['filled', 'Filled', 'Solid shapes, stronger.'], ['color', 'Colour-coded', 'Each kind in its own colour.']] },
   { id: 'folders', title: 'Library folders', why: 'How the six file kinds appear on Home.', def: 'mac',
-    opts: [['pastel', 'Pastel folders', 'Tabbed tinted folders, monospaced labels (like your reference).'], ['glass', 'Frosted glass', 'See-through panels over a soft colour glow.'], ['outline', 'Clean outline', 'White card with only the tab in colour. Quiet.'], ['peek', 'Photos peeking', 'Thumbnails sticking out of a tinted folder.'], ['bold', 'Glossy colour', 'Strong colour, white text, glossy top.'], ['vault', 'Vault', 'Smoked dark folder with a coloured edge glow. New.'], ['paper', 'Paper stack', 'Soft folder with paper sheets inside. New.'], ['aurora', 'Aurora', 'Two-tone gradient folder per kind. New.'], ['line', 'Line', 'Monoline outline in the kind colour. New.'], ['shelf', 'Shelf', 'Card showing the three newest thumbnails. New.'], ['lens', 'Lens tile', 'Rounded tile with a glossy colour orb. New.'], ['mac', 'macOS folders', 'Small folder icons. Current.'], ['cards', 'Colour cards', 'Tinted cards with icons.'], ['tiles', 'Icon tiles', 'Simple rounded icon squares.']],
+    opts: [['recents', 'Recents strip', 'Card with the last five items in a row, newest on the right. Static. New.'], ['mosaic', 'Album mosaic', 'Cover made from the four newest items, like Photos albums. New.'], ['storage', 'Storage card', 'Size first, with a bar for its share of the library. New.'], ['list', 'Finder list', 'Compact two-column rows, the most native and calm. New.'], ['pastel', 'Pastel folders', 'Tabbed tinted folders, monospaced labels (like your reference).'], ['glass', 'Frosted glass', 'See-through panels over a soft colour glow.'], ['outline', 'Clean outline', 'White card with only the tab in colour. Quiet.'], ['peek', 'Photos peeking', 'Thumbnails sticking out of a tinted folder.'], ['bold', 'Glossy colour', 'Strong colour, white text, glossy top.'], ['vault', 'Vault', 'Smoked dark folder with a coloured edge glow.'], ['paper', 'Paper stack', 'Soft folder with paper sheets inside.'], ['aurora', 'Aurora', 'Two-tone gradient folder per kind.'], ['line', 'Line', 'Monoline outline in the kind colour.'], ['shelf', 'Shelf', 'Card showing the three newest thumbnails.'], ['lens', 'Lens tile', 'Rounded tile with a glossy colour orb.'], ['mac', 'macOS folders', 'Small folder icons. Current.'], ['cards', 'Colour cards', 'Tinted cards with icons.'], ['tiles', 'Icon tiles', 'Simple rounded icon squares.']],
     demo: (id) => `<span class="pv fdemo" style="${varStyle(false)}">${folderHtml(id, KINDS[0])}</span>` },
   { id: 'ai', title: 'AI search default', why: 'Whether the ✦ AI switch in the search field starts on.', def: 'on',
     opts: [['on', 'On by default', 'Plain-English search first.'], ['off', 'Off by default', 'File-name search first; AI when asked.']] },
@@ -584,14 +566,23 @@ const RECENT = {
   Archives: [['Logs.zip', '22 MB', 'Mon 09:00'], ['Fonts.zip', '14 MB', 'Tue 13:25'], ['Assets.tar.gz', '310 MB', 'Yesterday 18:40'], ['Export.dmg', '96 MB', 'Today 07:58'], ['Backup.zip', '1.4 GB', 'Today 09:05']],
   Apps: [['Arc.app', '612 MB', 'Mon 10:10'], ['Raycast.app', '148 MB', 'Tue 08:44'], ['Notion.app', '402 MB', 'Yesterday 14:02'], ['Xcode.app', '11.2 GB', 'Today 07:40'], ['Figma.app', '510 MB', 'Today 09:20']],
 };
-const TYPE = { Images: 'Image', Videos: 'Movie', Music: 'Audio', Documents: 'Document', Archives: 'Archive', Apps: 'Application' };
-const FAN = [-76, -38, 0, 38, 76].map((a) => { const r = a * Math.PI / 180; return { ux: Math.sin(r).toFixed(3), uy: (-Math.cos(r)).toFixed(3), rot: (a * .32).toFixed(1) + 'deg' }; });
 function thumbHtml(kind, i, size = 13, nm = '') {
   const [k, col, h, icon] = kind, photo = k === 'Images' || k === 'Videos';
   return photo ? `<span class="th qthumb photo" style="--h:${h + i * 47}">${k === 'Videos' ? '<i class="play"></i>' : ''}</span>` : `<span class="th qthumb file" style="--k:${col}">${ic(icon, size)}${nm ? `<em class="ext">${esc(nm.split('.').pop().toUpperCase())}</em>` : ''}</span>`;
 }
-function fanHtml(kind, ki) {
-  return `<div class="fan">${RECENT[kind[0]].map(([nm], i) => `<button type="button" data-k="${ki}" data-i="${i}" aria-label="Quick Look ${esc(nm)}" style="--i:${i};--ux:${FAN[i].ux};--uy:${FAN[i].uy};--rot:${FAN[i].rot}">${thumbHtml(kind, i, 13, nm)}<span class="nm">${esc(nm)}</span></button>`).join('')}</div>`;
+const CARDSTYLES = { recents: 'f3', mosaic: '', storage: 'f3', list: 'f2' };
+const toMB = (t) => parseFloat(t) * (/GB/.test(t) ? 1024 : 1);
+function cardFolderHtml(style, kind) {
+  const [k, col, h, icon, n, size] = kind, items = RECENT[k];
+  const gl = `<span class="gl">${ic(icon, 14)}</span>`;
+  const nm = (sub) => `<span class="nm"><b>${k}</b><small>${sub}</small></span>`;
+  if (style === 'recents') return `<div class="lf recents" style="--k:${col};--h:${h}"><div class="top">${gl}${nm(n + ' items')}<span class="sz">${size}</span></div><div class="row5" aria-label="Last five items, newest on the right">${items.map((it, i) => thumbHtml(kind, i, 11, it[0]).replace('<span class="th', `<span title="${esc(it[0])}" class="th`)).join('')}</div></div>`;
+  if (style === 'mosaic') return `<div class="lf mosaic" style="--k:${col};--h:${h}"><div class="m4">${[4, 3, 2, 1].map((i) => thumbHtml(kind, i, 14, items[i][0])).join('')}</div>${nm(n + ' · ' + size)}</div>`;
+  if (style === 'storage') {
+    const total = KINDS.reduce((t, x) => t + toMB(x[5]), 0), pct = Math.round(toMB(size) / total * 100);
+    return `<div class="lf storage" style="--k:${col}"><div class="top">${gl}${nm(n + ' items')}</div><div class="big">${size}</div><div class="meter"><i style="width:${pct}%"></i></div><div class="foot"><span>${pct || '<1'}% of library</span><span class="lt">${esc(items[4][0])}</span></div></div>`;
+  }
+  return `<div class="lf list" style="--k:${col}">${gl}${nm(n + ' items')}<span class="sz">${size}</span><span class="chev">›</span></div>`;
 }
 function newFolderHtml(style, kind) {
   const [k, col, h, icon, n] = kind;
@@ -609,6 +600,7 @@ function stackHtml(kind) {
 function folderHtml(style, kind) {
   const [k, col, h, icon, n, size] = kind;
   if (NEWSTYLES.includes(style)) return newFolderHtml(style, kind);
+  if (style in CARDSTYLES) return cardFolderHtml(style, kind);
   if (CARDISH.includes(style)) {
     const papers = style === 'peek' ? `<span class="papers">${[0, 1, 2].map((i) => k === 'Images' || k === 'Videos' ? `<i class="ph" style="--h:${h + i * 35}"></i>` : `<i class="gi">${ic(icon, 14)}</i>`).join('')}</span>` : '';
     return `<div class="fx ${style}" style="--k:${col};--h:${h}">${papers}<span class="tab"></span><div class="face"><div class="lab"><b>${k}</b><span class="kb">···</span></div><div class="foot">${stackHtml(kind)}<span>${n} items · ${size}</span></div></div></div>`;
@@ -632,7 +624,7 @@ function varsFor(dark) {
 const varStyle = (dark) => Object.entries(varsFor(dark)).map(([k, v]) => `${k}:${String(v).replace(/"/g, "'")}`).join(';') + ';min-width:0;padding:4px;background:transparent;border-radius:0';
 function previewHtml() {
   const c = state.choices, sb = [['house', 'Home', '', '#3a8dff', true], ['grid', 'Library', '2,880', '#6a6ff0'], ['photo', 'Images', '2,280', '#3a8dff'], ['search', 'AI Search', '', '#a46bf5'], ['text', 'Text in Images', '589', '#3fb985'], '-', ['drive', 'Storage', '10', '#f0a23b', false, 'alert'], ['trash', 'Clean Up', '14.1 GB', '#f2647e', false, 'good'], ['dup', 'Duplicates', '44.8 MB', '#3aa7d9', false, 'good'], ['folder', 'Organizer', '', '#f0a23b'], '-', ['clip', 'Clipboard', '', '#6a6ff0'], ['cam', 'Screenshots', '', '#3fb985']];
-  const folders = KINDS.map((kind, ki) => `<div class="fw${CARDISH.includes(c.folders) ? ' cardfan' : ''}" tabindex="0" data-k="${ki}" aria-label="${kind[0]}, ${kind[4]} items. Hover to see the last five, Space for Quick Look">${folderHtml(c.folders, kind)}${fanHtml(kind, ki)}</div>`).join('');
+  const folders = KINDS.map((kind) => folderHtml(c.folders, kind)).join('');
   const aiOn = c.ai === 'on';
   return `<div class="win">
     <aside class="side"><div class="lights"><i></i><i></i><i></i></div><div class="brand">${wordmark(c.word, c.wcolor, mode === 'dark', 17)}</div>
@@ -641,8 +633,8 @@ function previewHtml() {
       <div class="tb"><span class="tbtitle">Home</span><div class="search">${ic(aiOn ? 'sparkles' : 'search', 12)}<span>${aiOn ? 'Ask anything, e.g. “pdfs from last week”' : 'Search file names'}</span><span class="kbd">⌘F</span><span class="ai${aiOn ? ' on' : ''}">${ic('sparkles', 10)}AI</span></div><span class="libsize">Library size <b>30.19 GB</b></span></div>
       <div class="content">
         <div class="head"><div><div class="greet">Good afternoon</div><div class="sub">2,880 files · 30.19 GB across your Mac</div></div><span class="b sec">${ic('refresh', 11)}Refresh</span></div>
-        <div class="h2">Library <span class="count">6</span><span class="hint">Hover a folder · <kbd>Space</kbd> Quick Look</span></div>
-        <div class="folders${CARDISH.includes(c.folders) ? ' cardish' : ''}" style="${c.folders === 'cards' ? 'grid-template-columns:repeat(3,minmax(0,1fr))' : ''}">${folders}</div>
+        <div class="h2">Library <span class="count">6</span></div>
+        <div class="folders${CARDISH.includes(c.folders) ? ' cardish' : ''}${CARDSTYLES[c.folders] ? ' ' + CARDSTYLES[c.folders] : ''}" style="${c.folders === 'cards' ? 'grid-template-columns:repeat(3,minmax(0,1fr))' : ''}">${folders}</div>
         <div class="h2">Clean Up <span class="pill">Free up to 14.1 GB</span></div>
         <div class="cards">${[['dup', 'Duplicates', '44.8 MB', '24 extra copies'], ['down', 'Old Downloads', '11.5 GB', '1,227 items'], ['cam', 'Old Screenshots', '321 MB', '480 items'], ['drive', 'Large Files', '2.2 GB', '10 items']].map((s) => `<div class="card"><span>${ic(s[0], 11)}${s[1]}</span><b>${s[2]}</b><small>${s[3]}</small></div>`).join('')}</div>
       </div>
@@ -710,87 +702,6 @@ document.getElementById('copy').addEventListener('click', () => {
   const t = summaryText(), area = document.getElementById('copy-area'), st = document.getElementById('copy-status');
   area.value = t;
   navigator.clipboard.writeText(t).then(() => { st.textContent = 'Copied.'; }, () => { area.hidden = false; area.focus(); area.select(); st.textContent = 'Copy is blocked here: the text is selected, press ⌘C.'; });
-});
-
-/* ---------------- hover fan + Quick Look ---------------- */
-const pvEl = document.getElementById('pv');
-const reduce = matchMedia('(prefers-reduced-motion: reduce)');
-let openFw = null, closeT = 0, hoverFw = null;
-function setOpen(fw) {
-  clearTimeout(closeT);
-  if (openFw && openFw !== fw) openFw.classList.remove('open');
-  openFw = fw; if (fw) fw.classList.add('open');
-}
-pvEl.addEventListener('mouseover', (e) => { const fw = e.target.closest('.fw'); if (fw) { hoverFw = fw; setOpen(fw); } });
-pvEl.addEventListener('mouseout', (e) => {
-  const fw = e.target.closest('.fw'); if (!fw || fw.contains(e.relatedTarget)) return;
-  hoverFw = null; closeT = setTimeout(() => { if (openFw === fw && !fw.contains(document.activeElement)) { fw.classList.remove('open'); openFw = null; } }, 160);
-});
-pvEl.addEventListener('focusin', (e) => { const fw = e.target.closest('.fw'); if (fw) setOpen(fw); });
-pvEl.addEventListener('focusout', (e) => { const fw = e.target.closest('.fw'); if (fw && !fw.contains(e.relatedTarget) && hoverFw !== fw) { fw.classList.remove('open'); if (openFw === fw) openFw = null; } });
-pvEl.addEventListener('click', (e) => { const b = e.target.closest('.fan button'); if (b) quickLook(+b.dataset.k, +b.dataset.i, b); });
-
-const ql = document.createElement('div');
-ql.className = 'ql'; ql.hidden = true;
-ql.innerHTML = `<div class="panel" role="dialog" aria-modal="true" aria-label="Quick Look"><div class="qbar"><button class="qx" aria-label="Close (Esc)"></button><span class="qname"></span><button class="qnav" data-d="-1" aria-label="Previous item">‹</button><button class="qnav" data-d="1" aria-label="Next item">›</button><button class="qopen">Open</button></div><div class="qview"></div><div class="qinfo"></div><div class="strip5"></div></div>`;
-document.body.appendChild(ql);
-const panel = ql.querySelector('.panel');
-let qk = 0, qi = 0, qReturn = null;
-function qlRender() {
-  const kind = KINDS[qk], [k, col, h, icon] = kind, items = RECENT[k], [nm, size, when] = items[qi];
-  const v = varsFor(mode === 'dark'); for (const [key, val] of Object.entries(v)) ql.style.setProperty(key, val);
-  ql.style.colorScheme = mode;
-  ql.querySelector('.qname').textContent = nm;
-  const view = ql.querySelector('.qview'); view.className = 'qview'; view.style.cssText = `--k:${col};--h:${h + qi * 47}`;
-  if (k === 'Images' || k === 'Videos') { view.classList.add('qthumb', 'photo'); view.innerHTML = k === 'Videos' ? '<i class="play"></i>' : ''; }
-  else if (k === 'Documents') { view.style.background = `color-mix(in oklab, ${col} 10%, var(--p-alt))`; view.innerHTML = `<div class="page">${'<i></i>'.repeat(1)}${[92, 80, 96, 70, 88, 60, 94, 76].map((w) => `<i style="width:${w}%"></i>`).join('')}</div>`; }
-  else if (k === 'Music') { view.style.background = `color-mix(in oklab, ${col} 10%, var(--p-alt))`; view.innerHTML = `<div class="wave">${Array.from({ length: 44 }, (_, i) => `<i style="height:${18 + Math.round(Math.abs(Math.sin(i * .7 + qi) * Math.cos(i * .23)) * 82)}%"></i>`).join('')}</div>`; }
-  else { view.style.background = `color-mix(in oklab, ${col} 10%, var(--p-alt))`; view.innerHTML = `<div class="bigic">${ic(icon, 56)}</div>`; }
-  ql.querySelector('.qinfo').innerHTML = `<span><b>${TYPE[k]}</b> · ${nm.split('.').pop().toUpperCase()}</span><span>${size}</span><span>Added ${when}</span><span>${qi + 1} of 5 · newest last</span>`;
-  ql.querySelector('.strip5').innerHTML = items.map(([n], i) => `<button type="button" data-i="${i}" aria-label="${esc(n)}" aria-current="${i === qi}" style="--k:${col}">${thumbHtml(kind, i, 16)}</button>`).join('');
-  ql.querySelector('[data-d="-1"]').disabled = qi === 0;
-  ql.querySelector('[data-d="1"]').disabled = qi === 4;
-}
-function quickLook(k, i, from) {
-  qk = k; qi = i; qReturn = from || document.activeElement;
-  qlRender(); ql.hidden = false;
-  ql.querySelector('.qx').focus();
-  if (from && !reduce.matches && panel.animate) {
-    const a = from.getBoundingClientRect(), b = panel.getBoundingClientRect();
-    const dx = a.left + a.width / 2 - (b.left + b.width / 2), dy = a.top + a.height / 2 - (b.top + b.height / 2), sc = Math.max(.08, a.width / b.width);
-    panel.animate([{ transform: `translate(${dx}px, ${dy}px) scale(${sc})`, opacity: .3 }, { transform: 'none', opacity: 1 }], { duration: 340, easing: 'cubic-bezier(.2, .9, .25, 1.08)' });
-    ql.animate([{ opacity: 0 }, { opacity: 1 }], { duration: 200 });
-  }
-}
-function closeQL() {
-  if (ql.hidden) return;
-  ql.hidden = true;
-  if (qReturn && document.contains(qReturn)) qReturn.focus({ preventScroll: true });
-}
-function step(d) { const n = Math.min(4, Math.max(0, qi + d)); if (n !== qi) { qi = n; qlRender(); } }
-ql.addEventListener('click', (e) => {
-  if (e.target === ql || e.target.closest('.qx')) return closeQL();
-  const nav = e.target.closest('.qnav'); if (nav) return step(+nav.dataset.d);
-  const t = e.target.closest('.strip5 button'); if (t) { qi = +t.dataset.i; qlRender(); ql.querySelector(`.strip5 [data-i="${qi}"]`).focus(); return; }
-  if (e.target.closest('.qopen')) {
-    const old = ql.querySelector('.qtoast'); if (old) old.remove();
-    const t2 = document.createElement('div'); t2.className = 'qtoast'; t2.textContent = `In the app this opens ${RECENT[KINDS[qk][0]][qi][0]} in its default app`;
-    ql.querySelector('.qview').appendChild(t2); setTimeout(() => t2.remove(), 2200);
-  }
-});
-document.addEventListener('keydown', (e) => {
-  if (!ql.hidden) {
-    if (e.key === 'Escape' || e.key === ' ' && !e.target.closest('.qopen, .qnav, .strip5 button, .qx')) { e.preventDefault(); closeQL(); }
-    else if (e.key === 'ArrowLeft') { e.preventDefault(); step(-1); }
-    else if (e.key === 'ArrowRight') { e.preventDefault(); step(1); }
-    else if (e.key === 'Tab') { const f = [...panel.querySelectorAll('button:not(:disabled)')], i = f.indexOf(document.activeElement); if (e.shiftKey && i <= 0) { e.preventDefault(); f[f.length - 1].focus(); } else if (!e.shiftKey && i === f.length - 1) { e.preventDefault(); f[0].focus(); } }
-    return;
-  }
-  if (e.key !== ' ') return;
-  const btn = e.target.closest && e.target.closest('.fan button');
-  const fw = btn ? null : (e.target.closest && e.target.closest('.fw')) || (e.target === document.body || e.target === document.documentElement ? hoverFw : null);
-  if (btn) { e.preventDefault(); quickLook(+btn.dataset.k, +btn.dataset.i, btn); }
-  else if (fw) { e.preventDefault(); setOpen(fw); quickLook(+fw.dataset.k, 4, fw.querySelector('.fan button:last-child')); }
 });
 
 if (matchMedia('(prefers-color-scheme: dark)').matches && document.documentElement.dataset.theme !== 'light' || document.documentElement.dataset.theme === 'dark') {
