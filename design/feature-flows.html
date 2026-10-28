@@ -2,7 +2,7 @@
 <meta name="claude:viewport-fit-sides" content="cover">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Atkinson+Hyperlegible:wght@400;700&family=JetBrains+Mono:wght@400;600&family=Schibsted+Grotesk:wght@600;800&display=swap">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Atkinson+Hyperlegible:wght@400;700&family=Nunito:wght@800;900&family=JetBrains+Mono:wght@400;600&family=Schibsted+Grotesk:wght@600;800&display=swap">
 <style>
 /* Layout: a design-review desk. Feature index on the left; a live Mac mock-up marked up with red review pins; the parts list below it. */
 :root {
@@ -159,7 +159,6 @@ main { min-width: 0; display: grid; gap: 22px; }
 .m-lights { display: flex; gap: 7px; padding: 2px 6px 12px; }
 .m-lights i { width: 11px; height: 11px; border-radius: 50%; background: #ff5f57; }
 .m-lights i:nth-child(2) { background: #febc2e; } .m-lights i:nth-child(3) { background: #28c840; }
-.m-brand { font-weight: 700; font-size: 14px; padding: 0 6px 8px; display: flex; gap: 7px; align-items: center; }
 .m-mark { width: 20px; height: 20px; border-radius: 6px; background: linear-gradient(160deg, #6f86ff, #2f4bc4); position: relative; flex: none; }
 .m-mark::after { content: ""; position: absolute; inset: 5px 5px 5px; border: 2px solid #fff; border-top: 0; border-radius: 0 0 3px 3px; }
 .m-row { display: flex; align-items: center; gap: 8px; height: 25px; padding: 0 8px; border-radius: 7px; color: var(--m-text2); white-space: nowrap; }
@@ -174,6 +173,7 @@ main { min-width: 0; display: grid; gap: 22px; }
 .m-toolbar { display: flex; align-items: center; gap: 10px; padding: 9px 16px; border-bottom: 1px solid var(--m-line); min-height: 48px; }
 .m-search { display: flex; align-items: center; gap: 7px; flex: 1; max-width: 320px; background: var(--m-alt); border-radius: 8px; padding: 5px 9px; color: var(--m-text3); font-size: 12.5px; min-width: 0; }
 .m-search span { flex: 1; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.m-search .m-kbd, .m-search .m-ai { flex: none; overflow: visible; }
 .m-search.focus { background: var(--m-bg); box-shadow: 0 0 0 3px var(--m-soft), 0 0 0 1px var(--m-accent); }
 .m-search .typed { color: var(--m-text); }
 .m-kbd { font-size: 10px; border: 1px solid var(--m-line); border-radius: 4px; padding: 0 4px; color: var(--m-text3); background: var(--m-bg); line-height: 15px; }
@@ -270,6 +270,40 @@ main { min-width: 0; display: grid; gap: 22px; }
 .m-empty b { font-size: 15px; color: var(--m-text); }
 .m-shot { background: #1e1e1e; color: #d4d4d4; border-radius: 8px; font: 10.5px/1.7 ui-monospace, Menlo, monospace; padding: 10px 12px; position: relative; }
 .m-ocrbox { outline: 2px solid #ffd60a; background: rgba(255,214,10,.3); border-radius: 2px; }
+
+/* brand: logos, wordmarks, AI toggle */
+.m-brand { font-weight: 700; font-size: 14px; padding: 0 6px 8px; display: flex; gap: 7px; align-items: center; min-width: 0; }
+.wm { font-family: var(--mac-font); color: var(--m-text); white-space: nowrap; line-height: 1; }
+.wm-classic { font-weight: 700; letter-spacing: -0.02em; }
+.wm-split { font-weight: 400; letter-spacing: -0.02em; } .wm-split b { font-weight: 800; }
+.wm-rounded { font-family: ui-rounded, "SF Pro Rounded", "Nunito", var(--mac-font); font-weight: 900; letter-spacing: -0.01em; }
+.wm-italic { font-weight: 800; font-style: italic; letter-spacing: -0.035em; position: relative; }
+.wm-italic::after { content: ""; position: absolute; left: 8%; right: 0; bottom: -3px; height: 2px; border-radius: 2px; background: linear-gradient(90deg, transparent, var(--m-accent)); }
+.wm-ai { font-weight: 700; letter-spacing: -0.02em; display: inline-flex; align-items: center; gap: 5px; }
+.wm-ai i { font-style: normal; font-size: 0.62em; font-weight: 800; letter-spacing: 0.02em; color: #fff; background: var(--m-btn); border-radius: 5px; padding: 2px 4px; }
+.m-ai { display: inline-flex; align-items: center; gap: 3px; flex: none; font-size: 10.5px; font-weight: 700; border-radius: 6px; padding: 2px 6px; border: 1px solid var(--m-line); color: var(--m-text3); background: var(--m-bg); cursor: pointer; }
+.m-ai.on { color: var(--m-accent); background: var(--m-soft); border-color: transparent; }
+
+/* brand picker (page UI) */
+.brand-card { background: var(--sheet); border: 1px solid var(--rule); border-radius: 18px; padding: 20px; display: grid; gap: 18px; }
+.brand-card h3 { font-size: 24px; font-weight: 800; }
+.brand-card > p { color: var(--ink-2); max-width: 74ch; }
+.brand-card h4 { font: 700 16px/1.2 var(--body); margin-bottom: 10px; }
+.opt-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(150px, 1fr)); gap: 10px; }
+.opt { text-align: left; border: 1px solid var(--rule); background: var(--paper); border-radius: 14px; padding: 12px; display: grid; gap: 8px; align-content: start; }
+.opt:hover { border-color: var(--blue); }
+.opt[aria-pressed=true] { border-color: var(--blue); box-shadow: 0 0 0 2px var(--blue); background: var(--sheet); }
+.opt b { font-size: 15px; }
+.opt small { color: var(--ink-2); font-size: 13px; line-height: 1.4; }
+.opt .lockup { display: flex; align-items: center; gap: 8px; font-size: 15.5px; overflow: hidden; background: var(--m-bg); border-radius: 9px; padding: 10px; min-height: 46px; }
+.sheetrow { display: flex; flex-wrap: wrap; gap: 14px; align-items: flex-end; }
+.sheetrow figure { margin: 0; display: grid; gap: 6px; justify-items: center; font-size: 12.5px; color: var(--ink-3); }
+.tile-l, .tile-d { border-radius: 12px; padding: 14px; display: flex; gap: 14px; align-items: center; }
+.tile-l { background: #ffffff; box-shadow: 0 0 0 1px var(--rule); }
+.tile-d { background: #17181c; }
+.tile-l .wm { color: #16161a; } .tile-d .wm { color: #ececf0; }
+.ai-demo { display: flex; flex-wrap: wrap; gap: 12px; align-items: center; }
+.ai-demo .m-search { width: 330px; max-width: 100%; }
 
 /* desktop scenes */
 .desk { position: relative; width: 100%; height: 520px; border-radius: 12px; overflow: hidden; background: var(--m-desk); font: 13px/1.35 var(--mac-font); color: var(--m-text); box-shadow: 0 0 0 1px var(--m-line); }
@@ -400,8 +434,46 @@ const P = {
 const ic = (n, s = 14, extra = '') => `<svg viewBox="0 0 24 24" width="${s}" height="${s}" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" ${extra}>${P[n] || ''}</svg>`;
 const esc = (s) => String(s).replace(/[&<>"]/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]));
 
+/* =================== brand options (logo, wordmark, AI toggle) =================== */
+let brand = { logo: 'folder', word: 'classic', ai: true };
+try { const s = JSON.parse(localStorage.getItem('msff-brand') || '{}'); brand = { ...brand, ...s }; } catch (e) {}
+const saveBrand = () => { try { localStorage.setItem('msff-brand', JSON.stringify(brand)); } catch (e) {} };
+let gid = 0;
+// Each glyph is drawn white on the indigo tile (viewBox 64 × 64).
+const LOGOS = [
+  { id: 'folder', name: 'Sprint Folder', idea: 'A folder moving fast: files, made quick.',
+    glyph: '<g fill="none" stroke="#fff" stroke-width="3.6" stroke-linecap="round"><path d="M8 29h8M5 36h11M9 43h7"/></g><path fill="#fff" d="M24 21h8.5l4 4H48a3 3 0 0 1 3 3v15a3 3 0 0 1-3 3H24a3 3 0 0 1-3-3V24a3 3 0 0 1 3-3z"/>' },
+  { id: 'chevron', name: 'Forward M', idea: 'An M that points ahead, like a play-forward key.',
+    glyph: '<g fill="none" stroke="#fff" stroke-width="5.5" stroke-linecap="round" stroke-linejoin="round"><path d="M12 45V20l11 14 11-14v25"/><path d="M42 21l11 11-11 11"/></g>' },
+  { id: 'window', name: 'Spark Window', idea: 'A Mac window with an AI spark inside.',
+    glyph: '<rect x="12" y="15" width="40" height="34" rx="7" fill="none" stroke="#fff" stroke-width="4"/><g fill="#fff"><circle cx="19" cy="22" r="2"/><circle cx="25" cy="22" r="2"/><path d="M33 26l2.6 6.4L42 35l-6.4 2.6L33 44l-2.6-6.4L24 35l6.4-2.6z"/></g>' },
+  { id: 'stack', name: 'Card Sweep', idea: 'Files sorting themselves into a tidy stack.',
+    glyph: '<rect x="12" y="31" width="26" height="19" rx="4" fill="#fff" fill-opacity=".45"/><rect x="19" y="23" width="26" height="19" rx="4" fill="#fff" fill-opacity=".72"/><rect x="26" y="15" width="26" height="19" rx="4" fill="#fff"/>' },
+  { id: 'lens', name: 'Smart Lens', idea: 'Search that understands: a lens with a spark.',
+    glyph: '<circle cx="28" cy="28" r="13" fill="none" stroke="#fff" stroke-width="5"/><path d="M38 38l11 11" stroke="#fff" stroke-width="6" stroke-linecap="round"/><path fill="#fff" d="M28 20.5l2 5 5 2-5 2-2 5-2-5-5-2 5-2z"/>' },
+  { id: 'monogram', name: 'MS Monogram', idea: 'Simple letters, strong at tiny sizes.',
+    glyph: '<text x="32" y="42" text-anchor="middle" font-family="-apple-system, BlinkMacSystemFont, Helvetica Neue, sans-serif" font-size="27" font-weight="800" letter-spacing="-1.5" fill="#fff">MS</text>' },
+];
+const WORDS = [
+  { id: 'classic', name: 'Classic', idea: 'System font, bold. Calm and native.', html: () => '<span class="wm wm-classic">MacSprint</span>' },
+  { id: 'split', name: 'Two weights', idea: 'Light “Mac”, heavy “Sprint” puts the action first.', html: () => '<span class="wm wm-split">Mac<b>Sprint</b></span>' },
+  { id: 'rounded', name: 'Rounded', idea: 'Lowercase, rounded (SF Pro Rounded). Friendly.', html: () => '<span class="wm wm-rounded">macsprint</span>' },
+  { id: 'italic', name: 'In motion', idea: 'Heavy italic with a speed line. Energetic.', html: () => '<span class="wm wm-italic">MacSprint</span>' },
+  { id: 'ai', name: 'With AI tag', idea: 'Names the AI clearly; good for marketing.', html: () => '<span class="wm wm-ai">MacSprint<i>AI</i></span>' },
+];
+function logoSvg(size, id = brand.logo) {
+  const l = LOGOS.find((x) => x.id === id) || LOGOS[0], g = 'lg' + (gid++);
+  return `<svg width="${size}" height="${size}" viewBox="0 0 64 64" aria-hidden="true" style="flex:none"><defs><linearGradient id="${g}" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#7389ff"/><stop offset="1" stop-color="#2f45c2"/></linearGradient></defs><rect width="64" height="64" rx="14.5" fill="url(#${g})"/><rect x=".5" y=".5" width="63" height="63" rx="14" fill="none" stroke="#fff" stroke-opacity=".18"/>${l.glyph}</svg>`;
+}
+const wordHtml = (id = brand.word) => (WORDS.find((w) => w.id === id) || WORDS[0]).html();
+const aiToggle = (on = brand.ai) => `<span class="m-ai${on ? ' on' : ''}" data-c="aiToggle" data-ai-toggle role="switch" aria-checked="${on}" title="AI search ${on ? 'on' : 'off'}">${ic('sparkles', 11)}AI</span>`;
+
 /* =================== component library (the "parts") =================== */
 const C = {
+  brand: { name: 'Logo and wordmark', swift: 'Label {\n  Text("MacSprint").font(.headline)\n} icon: {\n  Image("BrandMark")          // from the asset catalog\n    .resizable().frame(width: 20, height: 20)\n}\n// The Dock icon is the AppIcon set: one 1024 × 1024 px master', sf: [], size: 'Sidebar mark 20 pt; app icon master 1024 px', type: 'Wordmark 14 pt in the sidebar', color: 'Indigo gradient tile, white symbol', shape: 'Rounded square (macOS app icon shape)', states: ['Light', 'Dark', 'Tiny (16 pt)', 'Dock (128 pt+)'],
+    sample: () => `<div style="display:flex;gap:10px;align-items:center;font-size:18px">${logoSvg(40)}${wordHtml()}</div>` },
+  aiToggle: { name: 'AI search toggle', swift: 'Toggle(isOn: $aiSearch) {\n  Label("AI", systemImage: "sparkles")\n}\n.toggleStyle(.button)\n.help(aiSearch ? "AI search on" : "AI search off")\n.disabled(!appleIntelligenceAvailable)', sf: ['sparkles'], size: 'Height 18 pt, inside the search field', type: '10.5–11 pt bold', color: 'On: accent text on 11% accent; off: grey outline', shape: '6 pt corners', states: ['On (plain-English search)', 'Off (file names only)', 'Unavailable (no Apple Intelligence)'],
+    sample: () => `<div style="display:flex;gap:10px">${aiToggle(true)}${aiToggle(false)}</div>` },
   window: { name: 'Window', swift: 'WindowGroup { ContentView() }', sf: [], size: 'Opens at about 1100 × 700 pt; minimum 900 × 560 pt', type: 'Uses the system font throughout', color: 'Window background (white / graphite)', shape: 'System corners; shadow drawn by macOS', states: ['Active', 'Inactive', 'Full screen'],
     sample: () => `<div class="m-lights" style="padding:0"><i></i><i></i><i></i></div>` },
   sidebar: { name: 'Sidebar', swift: 'NavigationSplitView {\n  List(selection: $section) { … }\n} detail: { … }', sf: [], size: '188–220 pt wide, resizable', type: 'Rows 13 pt; group labels 11 pt semibold', color: 'Translucent sidebar material', shape: 'Full height, divider line on the right', states: ['Expanded', 'Collapsed', 'Resizing'],
@@ -520,11 +592,12 @@ const SIDE = [
   ['clipboard', 'doc.on.clipboard', 'Clipboard'], ['screenshots', 'camera.viewfinder', 'Screenshots'], ['similar-images', 'square.stack', 'Similar Images'],
 ];
 function sidebar(sel) {
-  return `<aside class="m-side" data-c="sidebar"><div class="m-lights" data-c="window"><i></i><i></i><i></i></div><div class="m-brand"><span class="m-mark"></span>MacSprint</div>${SIDE.map((r) => r === '-' ? '<div class="m-sep"></div>'
+  return `<aside class="m-side" data-c="sidebar"><div class="m-lights" data-c="window"><i></i><i></i><i></i></div><div class="m-brand" data-c="brand">${logoSvg(20)}${wordHtml()}</div>${SIDE.map((r) => r === '-' ? '<div class="m-sep"></div>'
     : `<div class="m-row${r[0] === sel ? ' sel' : ''}" ${r[0] === sel ? 'data-c="sideRow"' : ''}>${ic(r[1], 14)}${r[2]}${r[3] ? `<em class="${r[4] || ''}" ${r[4] === 'alert' ? 'data-c="badge"' : ''}>${r[3]}</em>` : ''}</div>`).join('')}</aside>`;
 }
 function toolbar({ q = '', focus = false, right = '', hot = false } = {}) {
-  return `<div class="m-toolbar" data-c="toolbar"><div class="m-search${focus ? ' focus' : ''}" data-c="search" ${hot ? 'data-hot' : ''}>${ic('magnifyingglass', 12)}<span ${q ? 'class="typed"' : ''}>${q || 'Search, or try “pdfs from last week”'}</span>${q ? '' : '<span class="m-kbd">⌘F</span>'}</div>${right || '<span class="m-libsize">Library size <b>30.19 GB</b></span>'}</div>`;
+  const ph = brand.ai ? 'Ask anything, e.g. “pdfs from last week”' : 'Search file names';
+  return `<div class="m-toolbar" data-c="toolbar"><div class="m-search${focus ? ' focus' : ''}" data-c="search" ${hot ? 'data-hot' : ''}>${ic(brand.ai ? 'sparkles' : 'magnifyingglass', 12)}<span ${q ? 'class="typed"' : ''}>${q || ph}</span>${q ? '' : '<span class="m-kbd">⌘F</span>'}${aiToggle()}</div>${right || '<span class="m-libsize">Library size <b>30.19 GB</b></span>'}</div>`;
 }
 function win({ sel, tb, body, insp, footer, over }) {
   return `<div class="mac${insp ? ' insp' : ''}">${sidebar(sel)}<div class="m-main">${tb === undefined ? toolbar() : tb}<div class="m-content">${body}</div>${footer || ''}</div>${insp ? `<aside class="m-insp" data-c="inspector">${insp}</aside>` : ''}${over || ''}</div>`;
@@ -562,7 +635,7 @@ const F = [
     when: 'Every time you open MacSprint.',
     steps: [
       { t: 'Open the app', do: 'Open MacSprint. Home is selected in the sidebar.', see: 'A greeting, six Library folders and four Clean Up cards with real sizes.', why: 'One glance answers two questions: what do I have, and what can I clean? Big numbers are used only where they matter.',
-        comps: ['window', 'sidebar', 'sideRow', 'badge', 'search', 'title', 'bordered', 'folder', 'pill', 'stat'], screen: () => win({ sel: 'home', body: homeBody({ hotRefresh: true }) }) },
+        comps: ['window', 'brand', 'sidebar', 'sideRow', 'badge', 'search', 'aiToggle', 'title', 'bordered', 'folder', 'pill', 'stat'], screen: () => win({ sel: 'home', body: homeBody({ hotRefresh: true }) }) },
       { t: 'Refresh the scan', do: 'Click Refresh. Click the progress bar to finish the scan.', see: 'The toolbar shows progress; folders turn into grey placeholders while numbers update.', why: 'Placeholders keep the layout still while loading, so nothing jumps around. Progress lives in the toolbar so the page stays readable.',
         comps: ['progress', 'skeleton', 'bordered'], screen: () => win({ sel: 'home', tb: toolbar({ right: `<span style="display:flex;gap:8px;align-items:center;font-size:11.5px;color:var(--m-text2)" data-c="progress" data-hot>Scanning Downloads… 62%<span class="m-progress"><i style="width:62%"></i></span></span><span class="m-btn" data-c="bordered">Pause</span>` }), body: homeBody({ loading: true }) }) },
       { t: 'Scan finished', do: 'Nothing to do: the scan finished.', see: 'Updated numbers and a short message at the bottom that fades away.', why: 'A toast confirms the result without interrupting. Messages name what happened (“Updated”) instead of a vague “Done”.',
@@ -599,7 +672,7 @@ const F = [
     when: 'You remember what a file was about, not its name.',
     steps: [
       { t: 'Start typing', do: 'Click the suggested search.', see: 'A focused search field with recent and suggested searches.', why: 'Suggestions teach people what kinds of questions work.',
-        comps: ['search', 'pRow'], screen: () => win({ sel: 'ai-search', tb: toolbar({ focus: true, q: '' }), body: `<div class="m-h2">Try asking</div><div style="display:grid;gap:2px;max-width:420px">${['screenshots with login errors from last month', 'videos larger than 1 GB', 'pdfs mentioning my university', 'old zip files in Downloads'].map((s, i) => `<div class="p-row" ${i === 0 ? 'data-hot data-c="pRow"' : ''}><span class="ico">${ic('sparkles', 13)}</span>${s}</div>`).join('')}</div>` }) },
+        comps: ['search', 'aiToggle', 'pRow'], screen: () => win({ sel: 'ai-search', tb: toolbar({ focus: true, q: '' }), body: `<div class="m-h2">Try asking</div><div style="display:grid;gap:2px;max-width:420px">${['screenshots with login errors from last month', 'videos larger than 1 GB', 'pdfs mentioning my university', 'old zip files in Downloads'].map((s, i) => `<div class="p-row" ${i === 0 ? 'data-hot data-c="pRow"' : ''}><span class="ico">${ic('sparkles', 13)}</span>${s}</div>`).join('')}</div>` }) },
       { t: 'See how it understood you', do: 'Click the first result.', see: '“Understood as” chips, editable filters and matching files with the words that matched.', why: 'Showing the interpretation builds trust: the AI never invents files, it only builds filters. People can fix a wrong filter with one click.',
         comps: ['chip', 'popup', 'grid', 'fileCard', 'snippet'], screen: () => win({ sel: 'ai-search', tb: toolbar({ q: 'screenshots with login errors from last month' }), body: `<div class="m-h1" style="font-size:17px">Results for “screenshots with login errors from last month”</div><div style="display:flex;gap:6px;align-items:center;font-size:11px;color:var(--m-text2)" data-c="chip">${ic('sparkles', 12)}Understood as <span class="m-chip">Screenshot</span><span class="m-chip">“login”, “error”</span><span class="m-chip">September 2026</span></div><div style="display:flex;gap:6px" data-c="popup"><span class="m-pop">From: <b>Anywhere</b> ▾</span><span class="m-pop">Kind: <b>Image</b> ▾</span><span class="m-pop">Date: <b>Last month</b> ▾</span><span class="m-pop">Sort: <b>Relevance</b> ▾</span></div><div class="m-grid" style="grid-template-columns:repeat(3,1fr)" data-c="grid">${[['Screenshot 09-18 10.42.png', 260, '…<span class="m-mk">Login</span> failed: invalid token <span class="m-mk">error</span> 401…'], ['IMG_3310.png', 220, '…<span class="m-mk">Error</span> signing in. Check your <span class="m-mk">login</span>…'], ['Screenshot 09-02 18.07.png', 190, '…session <span class="m-mk">error</span>: please <span class="m-mk">log in</span>…']].map((r, i) => `<div class="m-file" ${i === 0 ? 'data-c="fileCard" data-hot' : ''}><i class="ph" style="--h:${r[1]}"></i><span style="text-align:left;font-weight:600">${r[0]}</span><span style="text-align:left;white-space:normal;color:var(--m-text2)" ${i === 0 ? 'data-c="snippet"' : ''}>${r[2]}</span></div>`).join('')}</div>` }) },
       { t: 'Preview the match', do: 'Done. This is the end of the flow.', see: 'A preview with the matching words outlined, plus Open and Show in Finder.', why: 'One primary action (Open) and one secondary keep the choice simple.',
@@ -798,6 +871,7 @@ function renderFeature() {
       <p class="what">${esc(cur.what)}</p>
       <p class="feat-meta"><span><b>When:</b> ${esc(cur.when)}</span><span><b>Release:</b> ${esc(cur.rel)}</span><span><b>Steps:</b> ${cur.steps.length}</span></p>
     </section>
+    ${cur.id === 'home' ? brandPanel() : ''}
     <nav class="steps" aria-label="Steps in this flow">${cur.steps.map((s, i) => `<button type="button" class="stepbtn" data-step="${i}"><b>${i + 1}</b>${esc(s.t)}</button>`).join('')}</nav>
     <section class="stage-card">
       <div class="stage-tools">
@@ -825,6 +899,30 @@ function applyTheme() {
   main.querySelectorAll('.mscope').forEach((el) => { el.classList.toggle('force-light', theme === 'light'); el.classList.toggle('force-dark', theme === 'dark'); });
 }
 function applyPins() { document.getElementById('stage').classList.toggle('hide-pins', !showPins); }
+
+function brandPanel() {
+  const l = LOGOS.find((x) => x.id === brand.logo) || LOGOS[0];
+  return `<section class="brand-card mscope" id="brand-panel" aria-labelledby="brand-h">
+    <h3 id="brand-h">Choose the brand look</h3>
+    <p>Pick a logo and a wordmark. Your choice is saved in this browser and shown in every MacSprint mock-up on this page. Tell me your pick and I will make it final.</p>
+    <div><h4>Logo</h4><div class="opt-grid">${LOGOS.map((x) => `<button type="button" class="opt" data-logo="${x.id}" aria-pressed="${x.id === brand.logo}">${logoSvg(52, x.id)}<b>${x.name}</b><small>${x.idea}</small></button>`).join('')}</div></div>
+    <div><h4>Wordmark (the name in text)</h4><div class="opt-grid">${WORDS.map((w) => `<button type="button" class="opt" data-word="${w.id}" aria-pressed="${w.id === brand.word}"><span class="lockup">${logoSvg(26)}${w.html()}</span><b>${w.name}</b><small>${w.idea}</small></button>`).join('')}</div></div>
+    <div><h4>Your pick at every size</h4><div class="sheetrow">
+      ${[16, 32, 64, 128].map((n) => `<figure>${logoSvg(n)}<figcaption>${n} pt</figcaption></figure>`).join('')}
+      <figure><div class="tile-l" style="font-size:20px">${logoSvg(34)}${wordHtml()}</div><figcaption>On light</figcaption></figure>
+      <figure><div class="tile-d" style="font-size:20px">${logoSvg(34)}${wordHtml()}</div><figcaption>On dark</figcaption></figure>
+    </div><p style="font-size:13.5px;color:var(--ink-3);margin-top:8px">Current: ${esc(l.name)} + ${esc((WORDS.find((w) => w.id === brand.word) || WORDS[0]).name)}. Check that the 16 pt version is still recognisable: that is how it appears in the menu bar and Finder lists.</p></div>
+    <div><h4>AI toggle in the search field</h4><div class="ai-demo">
+      <div class="m-search" style="background:var(--m-alt)">${ic(brand.ai ? 'sparkles' : 'magnifyingglass', 12)}<span>${brand.ai ? 'Ask anything, e.g. “pdfs from last week”' : 'Search file names'}</span>${aiToggle()}</div>
+      <span style="font-size:14px;color:var(--ink-2)">Click <b>AI</b> to switch. On: plain-English search. Off: classic file-name search. Greyed out on Macs without Apple Intelligence.</span>
+    </div></div>
+  </section>`;
+}
+function rerenderBrand() {
+  const old = document.getElementById('brand-panel');
+  if (old) { old.outerHTML = brandPanel(); applyTheme(); }
+  renderStep();
+}
 
 function renderStep() {
   const s = cur.steps[step];
@@ -886,6 +984,9 @@ function go(i) { if (i < 0 || i >= cur.steps.length) return; step = i; renderSte
 main.addEventListener('mouseover', (e) => { const t = e.target.closest('[data-part]'); if (t) highlight(t.dataset.part, true); });
 main.addEventListener('mouseout', (e) => { const t = e.target.closest('[data-part]'); if (t && !t.contains(e.relatedTarget)) highlight(t.dataset.part, false); });
 main.addEventListener('click', (e) => {
+  const lo = e.target.closest('[data-logo]'); if (lo) { brand.logo = lo.dataset.logo; saveBrand(); rerenderBrand(); return; }
+  const wo = e.target.closest('[data-word]'); if (wo) { brand.word = wo.dataset.word; saveBrand(); rerenderBrand(); return; }
+  const at = e.target.closest('[data-ai-toggle]'); if (at && !at.closest('.part')) { brand.ai = !brand.ai; saveBrand(); rerenderBrand(); return; }
   const pin = e.target.closest('.pin');
   if (pin) { const card = main.querySelector(`.part[data-part="${pin.dataset.part}"]`); if (card) { card.scrollIntoView({ block: 'center' }); highlight(pin.dataset.part, true); } return; }
   if (e.target.closest('#stage [data-hot]')) go(step + 1);
