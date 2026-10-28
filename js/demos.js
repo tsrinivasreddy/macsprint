@@ -125,59 +125,57 @@ function images(el) {
 /* ---------------- Search (names, meaning, text in images) ---------------- */
 const QUERIES = [
   {
-    q: 'Screenshots containing login errors from last month',
-    filters: [['Kind', 'Image'], ['Source', 'Screenshot'], ['Text', 'login, error'], ['Date', 'September 2026']],
-    results: [['Screenshot 2026-09-18 at 10.42.png', '~/Desktop', '…<mark>Login</mark> failed: invalid token <mark>error</mark> 401…', 'text'], ['IMG_3310.png', '~/Downloads', 'A sign-in window showing an error message', 'meaning']],
+    q: 'Screenshots containing login errors from last month', tokens: ['Screenshots', 'Last month'], rest: 'login errors',
+    results: [['Screenshot 2026-09-18 at 10.42.png', '~/Desktop', '…<mark>Login</mark> failed: invalid token <mark>error</mark> 401…', 'text', 'Screenshot · Sep 18', 260], ['IMG_3310.png', '~/Downloads', 'A sign-in window showing an error message', 'meaning', 'Screenshot · Sep 2', 220]],
   },
   {
-    q: 'Videos larger than 1 GB',
-    filters: [['Kind', 'Video'], ['Size', '> 1 GB'], ['Sort', 'Largest first']],
-    results: [['Wedding-highlights.mov', '~/Movies', '4.8 GB · modified Jan 2025', 'meaning'], ['Screen-recording-final.mp4', '~/Desktop', '1.3 GB · modified Aug 2026', 'meaning']],
+    q: 'Videos larger than 1 GB', tokens: ['Videos', 'Over 1 GB'], rest: '',
+    results: [['Wedding-highlights.mov', '~/Movies', '4.8 GB · modified Jan 2025', 'meaning', 'Video · 12:40', 330], ['Screen-recording-final.mp4', '~/Desktop', '1.3 GB · modified Aug 2026', 'meaning', 'Video · 4:05', 200]],
   },
   {
-    q: 'PDFs mentioning my university',
-    filters: [['Kind', 'PDF'], ['Text', 'university'], ['Sort', 'Relevance']],
-    results: [['Transcript-official.pdf', '~/Documents/School', '…Office of the Registrar, <mark>University</mark> of…', 'meaning'], ['University-letter.pdf', '~/Downloads', 'Name contains <mark>University</mark>', 'name']],
+    q: 'PDFs mentioning my university', tokens: ['PDFs'], rest: 'my university',
+    results: [['Transcript-official.pdf', '~/Documents/School', '…Office of the Registrar, <mark>University</mark> of…', 'meaning', 'PDF · Mar 2026'], ['University-letter.pdf', '~/Downloads', 'Name contains <mark>University</mark>', 'name', 'PDF · Jun 2026']],
   },
   {
-    q: 'Old ZIP files in Downloads',
-    filters: [['Kind', 'Archive (ZIP)'], ['Folder', 'Downloads'], ['Modified', 'over 1 year ago']],
-    results: [['fonts-pack.zip', '~/Downloads', 'Not modified for 2 years · 312 MB', 'meaning'], ['project-backup-old.zip', '~/Downloads', 'Not modified for 14 months · 1.1 GB', 'name']],
+    q: 'Old ZIP files in Downloads', tokens: ['Archives', 'In Downloads', 'Over 1 year old'], rest: '',
+    results: [['fonts-pack.zip', '~/Downloads', 'Not modified for 2 years · 312 MB', 'meaning', 'ZIP · 2024'], ['project-backup-old.zip', '~/Downloads', 'Not modified for 14 months · 1.1 GB', 'name', 'ZIP · 2025']],
   },
   {
-    q: 'connection timed out',
-    filters: [['Text', 'connection timed out'], ['Kind', 'Any'], ['Sort', 'Relevance']],
-    results: [['IMG_2048.png', '~/Desktop', 'Error: <mark>connection timed out</mark> after 30000ms', 'text']],
+    q: 'connection timed out', tokens: [], rest: 'connection timed out',
+    results: [['IMG_2048.png', '~/Desktop', 'Error: <mark>connection timed out</mark> after 30000ms', 'text', 'Screenshot · Oct 1', 160]],
   },
 ];
 // Why a result matched: one search covers names, meaning (AI) and text inside images.
 const WHY = { name: 'Matched by name', meaning: 'Matched by meaning', text: 'Text in image' };
+// The AI's reading of a query is shown as removable tokens in the field, with any leftover
+// words after them, and a status bar under the results (ideas adapted from Seek).
 function search(el) {
-  let idx = 0, timer = null;
+  let idx = 0, timer = null, removed = 0;
   el.innerHTML = `
     <div class="d-search">
       <div class="d-search-top">
-        <label class="d-searchbox">${svg('<circle cx="10.5" cy="10.5" r="6.5"/><path d="m20 20-4.8-4.8"/>')}<span class="visually-hidden">Example search</span><output class="d-q"></output></label>
+        <div class="d-searchbox d-tokenbox">${svg('<path d="M12 3l1.8 4.7L18.5 9.5l-4.7 1.8L12 16l-1.8-4.7L5.5 9.5l4.7-1.8z"/>')}<span class="visually-hidden">Example search</span><span class="d-tokens" role="group" aria-label="Filters the search understood"></span><output class="d-q"></output></div>
         <button type="button" class="d-cycle" aria-pressed="false">Pause examples</button>
       </div>
       <div class="d-chips" role="group" aria-label="Try an example">${QUERIES.map((x, i) => `<button type="button" data-i="${i}">${esc(x.q)}</button>`).join('')}</div>
-      <div class="d-understood"><span class="d-label">Understood as</span><div class="d-filters"></div></div>
-      <div class="d-filterbar" role="group" aria-label="Filters"></div>
       <p class="d-label">Matching files</p>
       <ul class="d-results"></ul>
+      <p class="d-statusbar"><span class="d-sb-count"></span><span>${svg('<rect x="5" y="11" width="14" height="10" rx="2.5"/><path d="M8 11V8a4 4 0 0 1 8 0v3"/>', 12)} On your Mac</span></p>
       <span class="d-copied" role="status"></span>
     </div>`;
+  const count = () => {
+    const n = QUERIES[idx].results.length;
+    el.querySelector('.d-sb-count').innerHTML = `<b>${n} result${n === 1 ? '' : 's'}</b> · ${removed ? `${removed} filter${removed === 1 ? '' : 's'} removed: the app widens the search as you do` : QUERIES[idx].tokens.length ? 'Understood as filters' : 'Matched by text'}`;
+  };
   const draw = () => {
     const x = QUERIES[idx];
-    el.querySelector('.d-q').textContent = x.q;
+    removed = 0;
+    el.querySelector('.d-q').textContent = x.rest;
     el.querySelectorAll('.d-chips button').forEach((b) => b.setAttribute('aria-pressed', String(+b.dataset.i === idx)));
-    el.querySelector('.d-filters').innerHTML = x.filters.map(([k, v]) => `<span class="d-filter"><b>${k}</b> ${esc(v)}</span>`).join('');
-    // The same interpretation as editable filters, the way the app shows it.
-    const val = (...keys) => (x.filters.find(([k]) => keys.includes(k)) || [])[1];
-    const bar = [['From', val('Folder', 'Source') || 'Anywhere'], ['Kind', val('Kind') || 'All'], ['Date', val('Date', 'Modified') || 'Any'], ['Size', val('Size') || 'Any'], ['Sort', val('Sort') || 'Relevance']];
-    el.querySelector('.d-filterbar').innerHTML = bar.map(([k, v]) => `<span class="d-fb">${k}: <b>${esc(v)}</b></span>`).join('');
-    el.querySelector('.d-results').innerHTML = x.results.map(([n, p, s, why]) => `
-      <li><span class="d-res-icon">${svg(ICON.doc, 18)}</span><div><b>${esc(n)}</b><small>${esc(p)}</small><span class="d-why">${WHY[why]}</span><p>${s}</p>${why === 'text' ? `<button type="button" class="btn btn-small btn-ghost d-copy" data-text="${esc(s.replace(/<[^>]+>/g, ''))}">${svg(ICON.copy, 13)} Copy text</button>` : ''}</div></li>`).join('');
+    el.querySelector('.d-tokens').innerHTML = x.tokens.map((t) => `<button type="button" class="d-token" aria-label="Remove filter: ${esc(t)}">${esc(t)}<span aria-hidden="true">×</span></button>`).join('');
+    el.querySelector('.d-results').innerHTML = x.results.map(([n, p, s, why, meta, h]) => `
+      <li><span class="d-thumb${h === undefined ? ' d-thumb-file' : ' ph'}" ${h === undefined ? '' : `style="--h:${h}"`}>${h === undefined ? svg(ICON.doc, 20) : ''}<em>${esc(meta)}</em></span><div><b>${esc(n)}</b><small>${esc(p)}</small><span class="d-why">${WHY[why]}</span><p class="d-snip">${s}${why === 'text' ? ` <button type="button" class="btn btn-small d-copy" data-text="${esc(s.replace(/<[^>]+>/g, ''))}">${svg(ICON.copy, 13)} Copy Text</button>` : ''}</p></div></li>`).join('');
+    count();
   };
   // Auto-cycles through examples only while visible, not paused, and not focused/hovered.
   const cycleBtn = el.querySelector('.d-cycle');
@@ -193,6 +191,8 @@ function search(el) {
   const setPaused = (v) => { paused = v; update(); };
   cycleBtn.addEventListener('click', () => setPaused(!paused));
   el.addEventListener('click', async (e) => {
+    const tok = e.target.closest('.d-token');
+    if (tok) { setPaused(true); tok.remove(); removed++; count(); el.querySelector('.d-cycle').focus(); return; }
     const b = e.target.closest('.d-copy'); if (!b) return;
     setPaused(true);
     const status = el.querySelector('.d-copied');
@@ -293,11 +293,14 @@ function cleanup(el) {
 
 /* ---------------- Duplicates ---------------- */
 function duplicates(el) {
+  // [name, size in MB, copies as [folder, file name]], thumbnail hue for photos
   const groups = [
-    ['Invoice-March.pdf', '2.4 MB', ['~/Downloads/Invoice-March.pdf', '~/Downloads/Invoice-March (1).pdf', '~/Documents/Bills/Invoice-March.pdf']],
-    ['Family-photo.heic', '3.8 MB', ['~/Pictures/Family-photo.heic', '~/Desktop/Family-photo copy.heic']],
-    ['Zoom-installer.pkg', '86 MB', ['~/Downloads/Zoom-installer.pkg', '~/Downloads/Zoom-installer (2).pkg']],
+    ['Zoom-installer.pkg', 86, [['Downloads', 'Zoom-installer.pkg'], ['Downloads', 'Zoom-installer (1).pkg'], ['Desktop', 'Zoom-installer copy.pkg']]],
+    ['Family-photo.heic', 3.8, [['Pictures', 'Family-photo.heic'], ['Desktop', 'Family-photo copy.heic']], 200],
+    ['Invoice-March.pdf', 2.4, [['Downloads', 'Invoice-March.pdf'], ['Documents/Bills', 'Invoice-March.pdf']]],
   ];
+  const keep = groups.map(() => 0);   // the first copy is the suggested keep
+  const mb = (n) => (n >= 10 ? Math.round(n) : n.toFixed(1)) + ' MB';
   el.innerHTML = `
     <div class="d-seg" role="group" aria-label="Duplicate type"><button type="button" aria-pressed="true" data-v="exact">Exact copies · 27</button><button type="button" aria-pressed="false" data-v="similar">Similar photos · 14</button></div>
     <div class="d-similar" hidden></div>
@@ -308,17 +311,33 @@ function duplicates(el) {
         <li><b>131</b><span>partial match</span></li>
         <li><b>27 groups</b><span>exact full-hash match</span></li>
       </ol>
-      ${groups.map(([n, s, copies], gi) => `
-        <fieldset class="d-group"><legend>${svg(ICON.copy, 14)} ${esc(n)} <small>${copies.length} copies · ${s} each</small></legend>
-          ${copies.map((p, i) => `<label><input type="checkbox" data-g="${gi}"> <span>${esc(p)}</span>${i === 0 ? '<em class="d-keep">Suggested keep</em>' : ''}</label>`).join('')}
-        </fieldset>`).join('')}
-      <div class="d-clean-foot"><button type="button" class="btn btn-small btn-ghost d-suggest">Select all but suggested</button><span class="d-total" aria-live="polite">Nothing selected</span></div>
+      <div class="d-dsum"><span class="d-sum-free"><b></b><small>can be freed</small></span><span class="d-extra"><b></b><small>extra copies</small></span><button type="button" class="btn btn-small d-trash"></button></div>
+      <p class="d-trashed" role="status"></p>
+      ${groups.map(([n, size, copies, h], gi) => `
+        <div class="d-cgroup" role="group" aria-label="${esc(n)}: choose the copy to keep"><p><b>${esc(n)}</b> · ${copies.length} copies · ${mb(size)} each</p>
+          <div class="d-cards">${copies.map(([folder, file], i) => `<button type="button" class="d-ccard" data-g="${gi}" data-i="${i}" aria-pressed="${i === 0}">
+            <span class="d-ccard-art${h === undefined ? '' : ' ph'}" ${h === undefined ? '' : `style="--h:${h + i * 4}"`}>${h === undefined ? svg(ICON.doc, 20) : ''}<em></em></span>
+            <b>${esc(file)}</b><small>${esc(folder)} · ${mb(size)}</small></button>`).join('')}</div>
+        </div>`).join('')}
+      <p class="d-foot">Click a copy to keep it instead. Everything else goes to the Trash, so you can put it back.</p>
     </div>`;
   const total = () => {
-    const n = el.querySelectorAll('input:checked').length;
-    el.querySelector('.d-total').textContent = n ? `${n} cop${n === 1 ? 'y' : 'ies'} selected for Trash` : 'Nothing selected';
+    const extra = groups.reduce((t, g) => t + g[2].length - 1, 0);
+    const freed = groups.reduce((t, g) => t + g[1] * (g[2].length - 1), 0);
+    el.querySelector('.d-sum-free b').textContent = mb(freed);
+    el.querySelector('.d-extra b').textContent = extra;
+    el.querySelector('.d-trash').textContent = `Trash ${extra} copies`;
+    el.querySelectorAll('.d-ccard').forEach((c) => {
+      const kept = keep[+c.dataset.g] === +c.dataset.i;
+      c.setAttribute('aria-pressed', String(kept));
+      c.querySelector('em').textContent = kept ? '✓ Keep' : 'Trash';
+    });
   };
-  bindAll(el, 'input', 'change', total);
+  bindAll(el, '.d-ccard', 'click', (e) => { keep[+e.currentTarget.dataset.g] = +e.currentTarget.dataset.i; total(); });
+  el.querySelector('.d-trash').addEventListener('click', () => {
+    el.querySelector('.d-trashed').textContent = `In the app, ${el.querySelector('.d-extra b').textContent} copies would move to the Trash, with Undo. This preview never touches your files.`;
+  });
+  total();
   const sim = el.querySelector('.d-similar');
   bindAll(el, '.d-seg button', 'click', (e) => {
     const v = e.currentTarget.dataset.v;
@@ -326,10 +345,6 @@ function duplicates(el) {
     if (v === 'similar' && !sim.firstChild) similar(sim);
     sim.hidden = v !== 'similar';
     el.querySelector('.d-dupes').hidden = v === 'similar';
-  });
-  el.querySelector('.d-suggest').addEventListener('click', () => {
-    el.querySelectorAll('.d-group').forEach((g) => g.querySelectorAll('input').forEach((c, i) => { c.checked = i > 0; }));
-    total();
   });
 }
 

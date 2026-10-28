@@ -486,11 +486,25 @@ check('sidebarIndicatorFollowsSelection', async (b) => {
   assert(Math.abs(it - tt) <= 2, `indicator at ${it}, tab at ${tt}`);
 });
 
-check('searchDemoFilterBar', async (b) => {
+check('searchDemoTokensAndStatusBar', async (b) => {
   const p = await open(b, { hash: '#feature-search' });
-  const t = await p.textContent('#explorer .demo-search .d-filterbar');
-  for (const k of ['Kind:', 'Date:', 'Sort:']) assert(t.includes(k), 'filter bar missing ' + k);
-  assert((await p.textContent('#explorer .demo-search')).includes('Understood as'), 'Understood as missing');
+  const demo = '#explorer .demo-search';
+  assert(await p.locator(`${demo} .d-token`).count() === 2, 'expected 2 search tokens for the first example');
+  assert((await p.textContent(`${demo} .d-statusbar`)).includes('Understood as filters'), 'status bar missing');
+  assert((await p.textContent(`${demo} .d-statusbar`)).includes('On your Mac'), 'privacy note missing');
+  await p.locator(`${demo} .d-token`).first().click();
+  assert(await p.locator(`${demo} .d-token`).count() === 1, 'token was not removed');
+  assert((await p.textContent(`${demo} .d-statusbar`)).includes('1 filter removed'), 'status bar did not react to removal');
+});
+
+check('duplicatesKeepCards', async (b) => {
+  const p = await open(b, { hash: '#feature-duplicates' });
+  const cards = p.locator('#explorer .d-cgroup').first().locator('.d-ccard');
+  assert(await cards.nth(0).getAttribute('aria-pressed') === 'true', 'first copy should be the suggested keep');
+  await cards.nth(2).click();
+  assert(await cards.nth(2).getAttribute('aria-pressed') === 'true' && await cards.nth(0).getAttribute('aria-pressed') === 'false', 'clicking a copy should keep it instead');
+  assert((await cards.nth(0).textContent()).includes('Trash'), 'other copies should be marked Trash');
+  assert((await p.textContent('#explorer .d-trash')).includes('Trash 4 copies'), 'summary button should count extra copies');
 });
 
 check('libraryUsesStorageCards', async (b) => {
