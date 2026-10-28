@@ -31,24 +31,24 @@
 
 /* Mock-up tokens: the MacSprint app itself (Graphite & Glass). Follows the page theme unless forced. */
 .mscope {
-  --m-bg: #ffffff; --m-side: #f4f4f7; --m-alt: #f1f1f5; --m-line: rgba(20,20,30,0.1); --m-menu: rgba(250,250,252,0.97);
+  --m-bg: #ffffff; --m-side: #f4f4f7; --m-alt: #f0f1f5; --m-line: rgba(20,20,30,0.1); --m-menu: rgba(250,250,252,0.97);
   --m-text: #16161a; --m-text2: #5f6068; --m-text3: #6c6d76; --m-accent: #3b5bdb; --m-btn: #2f4bc4; --m-soft: rgba(59,91,219,0.11);
   --m-good: #1f7a4d; --m-alert: #c4223b; --m-fold: #c9ccd6; --m-fold2: #b4b8c4; --m-paperc: #ffffff;
   --m-menubar: rgba(255,255,255,0.62); --m-menubar-text: #111;
   --m-desk: linear-gradient(135deg, #6d7be0, #4aa3dc 55%, #8fd6e6);
 }
 @media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) .mscope:not(.force-light) {
-  --m-bg: #18191d; --m-side: #1f2025; --m-alt: #24252b; --m-line: rgba(255,255,255,0.09); --m-menu: rgba(42,43,49,0.98);
+  --m-bg: #18191d; --m-side: #1f2025; --m-alt: #25262c; --m-line: rgba(255,255,255,0.09); --m-menu: rgba(42,43,49,0.98);
   --m-text: #ececf0; --m-text2: #a3a4ad; --m-text3: #92939f; --m-accent: #8399ff; --m-btn: #4a63e0; --m-soft: rgba(131,153,255,0.15);
   --m-good: #4cd38a; --m-fold: #3b3e48; --m-fold2: #2c2e36; --m-paperc: #d9dbe3;
   --m-menubar: rgba(30,30,36,0.62); --m-menubar-text: #f2f2f5; --m-desk: linear-gradient(135deg, #252a5c, #1d4a6a 55%, #24606e); } }
 :root[data-theme="dark"] .mscope:not(.force-light), .mscope.force-dark {
-  --m-bg: #18191d; --m-side: #1f2025; --m-alt: #24252b; --m-line: rgba(255,255,255,0.09); --m-menu: rgba(42,43,49,0.98);
+  --m-bg: #18191d; --m-side: #1f2025; --m-alt: #25262c; --m-line: rgba(255,255,255,0.09); --m-menu: rgba(42,43,49,0.98);
   --m-text: #ececf0; --m-text2: #a3a4ad; --m-text3: #92939f; --m-accent: #8399ff; --m-btn: #4a63e0; --m-soft: rgba(131,153,255,0.15);
   --m-good: #4cd38a; --m-fold: #3b3e48; --m-fold2: #2c2e36; --m-paperc: #d9dbe3;
   --m-menubar: rgba(30,30,36,0.62); --m-menubar-text: #f2f2f5; --m-desk: linear-gradient(135deg, #252a5c, #1d4a6a 55%, #24606e); }
 .mscope.force-light {
-  --m-bg: #ffffff; --m-side: #f4f4f7; --m-alt: #f1f1f5; --m-line: rgba(20,20,30,0.1); --m-menu: rgba(250,250,252,0.97);
+  --m-bg: #ffffff; --m-side: #f4f4f7; --m-alt: #f0f1f5; --m-line: rgba(20,20,30,0.1); --m-menu: rgba(250,250,252,0.97);
   --m-text: #16161a; --m-text2: #5f6068; --m-text3: #6c6d76; --m-accent: #3b5bdb; --m-btn: #2f4bc4; --m-soft: rgba(59,91,219,0.11);
   --m-good: #1f7a4d; --m-fold: #c9ccd6; --m-fold2: #b4b8c4; --m-paperc: #ffffff;
   --m-menubar: rgba(255,255,255,0.62); --m-menubar-text: #111; --m-desk: linear-gradient(135deg, #6d7be0, #4aa3dc 55%, #8fd6e6); }
@@ -87,7 +87,7 @@ header.top p { color: var(--ink-2); font-size: 17px; }
 .picker { display: none; }
 .picker select { width: 100%; padding: 10px 12px; border-radius: 10px; border: 1px solid var(--rule); background: var(--sheet); font-size: 16px; }
 
-main { min-width: 0; display: grid; gap: 22px; }
+main { min-width: 0; display: grid; grid-template-columns: minmax(0, 1fr); gap: 22px; }
 .feat-head { display: grid; gap: 8px; }
 .feat-head h2 { font-size: clamp(30px, 4vw, 42px); font-weight: 800; letter-spacing: -0.025em; }
 .feat-head .what { font-size: 18px; color: var(--ink-2); max-width: 70ch; }
@@ -151,7 +151,7 @@ main { min-width: 0; display: grid; gap: 22px; }
 .done-card { display: flex; flex-wrap: wrap; gap: 12px; align-items: center; justify-content: space-between; padding: 14px 16px; border-radius: 12px; background: var(--blue-soft); }
 
 /* ------------- MOCK-UP: MacSprint ------------- */
-.mac { position: relative; width: 100%; height: 520px; border-radius: 12px; overflow: hidden; background: var(--m-bg); color: var(--m-text);
+.mac { position: relative; width: 100%; height: 520px; border-radius: 14px; overflow: hidden; background: var(--m-bg); color: var(--m-text);
   font: 13px/1.35 var(--mac-font); display: grid; grid-template-columns: 188px minmax(0, 1fr); box-shadow: 0 2px 6px rgba(0,0,0,.08), 0 24px 60px -24px rgba(20,30,80,.35), 0 0 0 1px var(--m-line); }
 .mac.insp { grid-template-columns: 188px minmax(0, 1fr) 210px; }
 .mac svg { flex: none; }
@@ -171,40 +171,47 @@ main { min-width: 0; display: grid; gap: 22px; }
 .m-sep { height: 1px; background: var(--m-line); margin: 5px 6px; flex: none; }
 .m-main { display: flex; flex-direction: column; min-width: 0; min-height: 0; }
 .m-toolbar { display: flex; align-items: center; gap: 10px; padding: 9px 16px; border-bottom: 1px solid var(--m-line); min-height: 48px; }
-.m-search { display: flex; align-items: center; gap: 7px; flex: 1; max-width: 320px; background: var(--m-alt); border-radius: 8px; padding: 5px 9px; color: var(--m-text3); font-size: 12.5px; min-width: 0; }
+.m-search { display: flex; align-items: center; gap: 7px; flex: 1; max-width: 320px; background: var(--m-alt); border-radius: 9px; padding: 5px 9px; color: var(--m-text3); font-size: 12.5px; min-width: 0; }
 .m-search span { flex: 1; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
 .m-search .m-kbd, .m-search .m-ai { flex: none; overflow: visible; }
 .m-search.focus { background: var(--m-bg); box-shadow: 0 0 0 3px var(--m-soft), 0 0 0 1px var(--m-accent); }
+/* foundations: search centred in the toolbar, white with a hairline */
+.m-toolbar > .m-search { margin: 0 auto; max-width: 380px; background: var(--m-bg); box-shadow: 0 0 0 1px var(--m-line), 0 2px 6px rgba(0,0,0,.05); }
+.m-toolbar > .m-search.focus { box-shadow: 0 0 0 3px var(--m-soft), 0 0 0 1px var(--m-accent); }
+.m-toolbar > .m-libsize { margin-left: 0; }
 .m-search .typed { color: var(--m-text); }
 .m-kbd { font-size: 10px; border: 1px solid var(--m-line); border-radius: 4px; padding: 0 4px; color: var(--m-text3); background: var(--m-bg); line-height: 15px; }
 .m-libsize { margin-left: auto; font-size: 11.5px; color: var(--m-text2); white-space: nowrap; }
 .m-libsize b { color: var(--m-text); }
 .m-content { flex: 1; min-height: 0; overflow: hidden; padding: 14px 18px; display: flex; flex-direction: column; gap: 11px; position: relative; }
-.m-h1 { font-size: 21px; font-weight: 700; letter-spacing: -0.02em; }
+.m-h1 { font-size: 22px; font-weight: 700; letter-spacing: -0.02em; }
 .m-sub { font-size: 11.5px; color: var(--m-text2); }
-.m-h2 { font-size: 13.5px; font-weight: 650; display: flex; gap: 8px; align-items: center; }
+.m-h2 { font-size: 14px; font-weight: 650; display: flex; gap: 8px; align-items: center; }
 .m-count { font-size: 10px; font-weight: 600; background: var(--m-alt); border-radius: 99px; padding: 1px 7px; color: var(--m-text2); }
 .m-pill { font-size: 10.5px; font-weight: 600; color: var(--m-good); background: color-mix(in oklab, var(--m-good) 14%, transparent); padding: 1px 8px; border-radius: 99px; }
 .m-row2 { display: flex; align-items: center; justify-content: space-between; gap: 10px; }
-.m-folders { display: grid; grid-template-columns: repeat(6, minmax(0, 1fr)); gap: 6px; }
-.m-folder { text-align: center; padding: 4px 2px; border-radius: 10px; min-width: 0; }
-.m-folder b { display: block; font-size: 11.5px; font-weight: 600; }
-.m-folder small { display: block; font-size: 10px; color: var(--m-text3); }
-.m-fd { position: relative; width: 62px; height: 50px; margin: 0 auto 5px; }
-.m-fd i { position: absolute; display: block; }
-.m-fd .t { left: 0; top: 0; width: 42%; height: 22%; border-radius: 5px 7px 0 0; background: color-mix(in oklab, var(--t) 16%, var(--m-fold2)); }
-.m-fd .b { inset: 9% 0 0; border-radius: 6px; background: color-mix(in oklab, var(--t) 16%, var(--m-fold2)); }
-.m-fd .p { left: 12%; right: 12%; top: 15%; height: 50%; border-radius: 3px; background: linear-gradient(135deg, hsl(var(--h) 70% 62%), hsl(calc(var(--h) + 50) 65% 48%)); transform: rotate(3deg); }
-.m-fd .f { left: 0; right: 0; bottom: 0; height: 64%; border-radius: 4px 4px 8px 8px; background: linear-gradient(180deg, color-mix(in oklab, var(--t) 18%, var(--m-fold)), color-mix(in oklab, var(--t) 22%, var(--m-fold2))); box-shadow: inset 0 1px 0 rgba(255,255,255,.35); }
+.m-folders { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 8px; }
+/* foundations: Library folders as storage cards */
+.m-fcard { border: 1px solid var(--m-line); border-radius: 16px; padding: 8px 11px 9px; display: grid; gap: 5px; background: var(--m-bg); box-shadow: 0 1px 2px rgba(0,0,0,.05), 0 8px 20px -12px rgba(0,0,0,.25); min-width: 0; }
+.m-fcard .top { display: flex; align-items: center; gap: 7px; min-width: 0; }
+.m-fcard .gl { flex: none; width: 22px; height: 22px; border-radius: 7px; display: grid; place-items: center; color: var(--t); background: color-mix(in oklab, var(--t) 15%, var(--m-bg)); }
+.m-fcard .nm { min-width: 0; font-size: 12px; font-weight: 600; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.m-fcard .ct { margin-left: auto; font-size: 10px; color: var(--m-text3); white-space: nowrap; }
+.m-fcard b { font-size: 17px; font-weight: 700; letter-spacing: -0.03em; font-variant-numeric: tabular-nums; line-height: 1.1; }
+.m-fcard .meter { height: 4px; border-radius: 99px; background: color-mix(in oklab, var(--m-text) 9%, transparent); overflow: hidden; }
+.m-fcard .meter i { display: block; height: 100%; border-radius: inherit; background: var(--t); min-width: 4px; }
+.m-fcard .foot { display: flex; justify-content: space-between; gap: 8px; font-size: 10px; color: var(--m-text3); white-space: nowrap; min-width: 0; }
+.m-fcard .foot span:last-child { min-width: 0; overflow: hidden; text-overflow: ellipsis; }
+.m-fcard.skel > * { opacity: .35; } .m-fcard.skel b, .m-fcard.skel .foot { color: transparent; background: var(--m-line); border-radius: 4px; }
 .m-cards { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 8px; }
-.m-stat { border: 1px solid var(--m-line); border-radius: 12px; padding: 9px 10px; display: grid; gap: 1px; background: var(--m-bg); box-shadow: 0 1px 2px rgba(0,0,0,.05); min-width: 0; }
+.m-stat { border: 1px solid var(--m-line); border-radius: 16px; padding: 9px 11px; display: grid; gap: 1px; background: var(--m-bg); box-shadow: 0 1px 2px rgba(0,0,0,.05), 0 8px 20px -12px rgba(0,0,0,.25); min-width: 0; }
 .m-stat span { font-size: 10.5px; color: var(--m-text2); display: flex; align-items: center; gap: 5px; }
 .m-stat b { font-size: 17px; font-weight: 700; letter-spacing: -0.03em; font-variant-numeric: tabular-nums; }
 .m-stat small { font-size: 10px; color: var(--m-text3); }
-.m-btn { display: inline-flex; align-items: center; gap: 5px; height: 24px; padding: 0 10px; border-radius: 7px; font-size: 11.5px; border: 1px solid var(--m-line); background: var(--m-bg); color: var(--m-text); white-space: nowrap; font-weight: 500; }
+.m-btn { display: inline-flex; align-items: center; gap: 5px; height: 24px; padding: 0 10px; border-radius: 9px; font-size: 11.5px; border: 1px solid var(--m-line); background: var(--m-bg); color: var(--m-text); white-space: nowrap; font-weight: 500; }
 .m-btn.pri { background: var(--m-btn); color: #fff; border-color: transparent; font-weight: 600; }
 .m-btn.danger { background: var(--m-alert); color: #fff; border-color: transparent; font-weight: 600; }
-.m-ibtn { width: 26px; height: 24px; border-radius: 6px; display: inline-grid; place-items: center; color: var(--m-text2); border: 1px solid var(--m-line); background: var(--m-bg); }
+.m-ibtn { width: 26px; height: 24px; border-radius: 9px; display: inline-grid; place-items: center; color: var(--m-text2); border: 1px solid var(--m-line); background: var(--m-bg); }
 .m-seg { display: inline-flex; background: var(--m-alt); border-radius: 7px; padding: 2px; gap: 2px; }
 .m-seg span { padding: 2px 9px; border-radius: 5px; font-size: 11px; color: var(--m-text2); white-space: nowrap; }
 .m-seg span.on { background: var(--m-bg); color: var(--m-text); font-weight: 600; box-shadow: 0 1px 2px rgba(0,0,0,.14); }
@@ -271,31 +278,23 @@ main { min-width: 0; display: grid; gap: 22px; }
 .m-shot { background: #1e1e1e; color: #d4d4d4; border-radius: 8px; font: 10.5px/1.7 ui-monospace, Menlo, monospace; padding: 10px 12px; position: relative; }
 .m-ocrbox { outline: 2px solid #ffd60a; background: rgba(255,214,10,.3); border-radius: 2px; }
 
-/* brand: logos, wordmarks, AI toggle */
-.m-brand { font-weight: 700; font-size: 14px; padding: 0 6px 8px; display: flex; gap: 7px; align-items: center; min-width: 0; }
-.wm { font-family: var(--mac-font); color: var(--m-text); white-space: nowrap; line-height: 1; }
-.wm-classic { font-weight: 700; letter-spacing: -0.02em; }
-.wm-split { font-weight: 400; letter-spacing: -0.02em; } .wm-split b { font-weight: 800; }
-.wm-rounded { font-family: ui-rounded, "SF Pro Rounded", "Nunito", var(--mac-font); font-weight: 900; letter-spacing: -0.01em; }
-.wm-italic { font-weight: 800; font-style: italic; letter-spacing: -0.035em; position: relative; }
-.wm-italic::after { content: ""; position: absolute; left: 8%; right: 0; bottom: -3px; height: 2px; border-radius: 2px; background: linear-gradient(90deg, transparent, var(--m-accent)); }
-.wm-ai { font-weight: 700; letter-spacing: -0.02em; display: inline-flex; align-items: center; gap: 5px; }
-.wm-ai i { font-style: normal; font-size: 0.62em; font-weight: 800; letter-spacing: 0.02em; color: #fff; background: var(--m-btn); border-radius: 5px; padding: 2px 4px; }
+/* brand (foundations): no logo, the name "Mac S P R I N T" in indigo */
+.m-brand { padding: 0 6px 10px; display: flex; align-items: center; min-width: 0; }
+.wm2 { font-family: -apple-system, BlinkMacSystemFont, "SF Pro Display", "Helvetica Neue", Arial, sans-serif; white-space: nowrap; line-height: 1.05; letter-spacing: -0.01em; display: inline-block; color: var(--m-accent); }
+.wm2 .m { font-weight: 400; }
+.wm2 .s { font-weight: 500; letter-spacing: 0.16em; }
 .m-ai { display: inline-flex; align-items: center; gap: 3px; flex: none; font-size: 10.5px; font-weight: 700; border-radius: 6px; padding: 2px 6px; border: 1px solid var(--m-line); color: var(--m-text3); background: var(--m-bg); cursor: pointer; }
 .m-ai.on { color: var(--m-accent); background: var(--m-soft); border-color: transparent; }
+.fnd { display: grid; grid-template-columns: repeat(auto-fill, minmax(210px, 1fr)); gap: 8px 16px; margin: 0; }
+.fnd div { border-top: 1px solid var(--rule); padding-top: 6px; }
+.fnd dt { font-size: 12.5px; color: var(--ink-3); }
+.fnd dd { margin: 0; font-weight: 600; font-size: 14.5px; }
 
 /* brand picker (page UI) */
-.brand-card { background: var(--sheet); border: 1px solid var(--rule); border-radius: 18px; padding: 20px; display: grid; gap: 18px; }
+.brand-card { background: var(--sheet); border: 1px solid var(--rule); border-radius: 18px; padding: 20px; display: grid; grid-template-columns: minmax(0, 1fr); gap: 18px; }
 .brand-card h3 { font-size: 24px; font-weight: 800; }
 .brand-card > p { color: var(--ink-2); max-width: 74ch; }
 .brand-card h4 { font: 700 16px/1.2 var(--body); margin-bottom: 10px; }
-.opt-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(150px, 1fr)); gap: 10px; }
-.opt { text-align: left; border: 1px solid var(--rule); background: var(--paper); border-radius: 14px; padding: 12px; display: grid; gap: 8px; align-content: start; }
-.opt:hover { border-color: var(--blue); }
-.opt[aria-pressed=true] { border-color: var(--blue); box-shadow: 0 0 0 2px var(--blue); background: var(--sheet); }
-.opt b { font-size: 15px; }
-.opt small { color: var(--ink-2); font-size: 13px; line-height: 1.4; }
-.opt .lockup { display: flex; align-items: center; gap: 8px; font-size: 15.5px; overflow: hidden; background: var(--m-bg); border-radius: 9px; padding: 10px; min-height: 46px; }
 .sheetrow { display: flex; flex-wrap: wrap; gap: 14px; align-items: flex-end; }
 .sheetrow figure { margin: 0; display: grid; gap: 6px; justify-items: center; font-size: 12.5px; color: var(--ink-3); }
 .tile-l, .tile-d { border-radius: 12px; padding: 14px; display: flex; gap: 14px; align-items: center; }
@@ -434,44 +433,18 @@ const P = {
 const ic = (n, s = 14, extra = '') => `<svg viewBox="0 0 24 24" width="${s}" height="${s}" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" ${extra}>${P[n] || ''}</svg>`;
 const esc = (s) => String(s).replace(/[&<>"]/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]));
 
-/* =================== brand options (logo, wordmark, AI toggle) =================== */
-let brand = { logo: 'folder', word: 'classic', ai: true };
-try { const s = JSON.parse(localStorage.getItem('msff-brand') || '{}'); brand = { ...brand, ...s }; } catch (e) {}
-const saveBrand = () => { try { localStorage.setItem('msff-brand', JSON.stringify(brand)); } catch (e) {} };
+/* =================== brand (final foundations) =================== */
+let brand = { ai: true };   // AI search is on by default
+try { const s = JSON.parse(localStorage.getItem('msff-ai') || '{}'); brand = { ...brand, ...s }; } catch (e) {}
+const saveBrand = () => { try { localStorage.setItem('msff-ai', JSON.stringify(brand)); } catch (e) {} };
 let gid = 0;
-// Each glyph is drawn white on the indigo tile (viewBox 64 × 64).
-const LOGOS = [
-  { id: 'folder', name: 'Sprint Folder', idea: 'A folder moving fast: files, made quick.',
-    glyph: '<g fill="none" stroke="#fff" stroke-width="3.6" stroke-linecap="round"><path d="M8 29h8M5 36h11M9 43h7"/></g><path fill="#fff" d="M24 21h8.5l4 4H48a3 3 0 0 1 3 3v15a3 3 0 0 1-3 3H24a3 3 0 0 1-3-3V24a3 3 0 0 1 3-3z"/>' },
-  { id: 'chevron', name: 'Forward M', idea: 'An M that points ahead, like a play-forward key.',
-    glyph: '<g fill="none" stroke="#fff" stroke-width="5.5" stroke-linecap="round" stroke-linejoin="round"><path d="M12 45V20l11 14 11-14v25"/><path d="M42 21l11 11-11 11"/></g>' },
-  { id: 'window', name: 'Spark Window', idea: 'A Mac window with an AI spark inside.',
-    glyph: '<rect x="12" y="15" width="40" height="34" rx="7" fill="none" stroke="#fff" stroke-width="4"/><g fill="#fff"><circle cx="19" cy="22" r="2"/><circle cx="25" cy="22" r="2"/><path d="M33 26l2.6 6.4L42 35l-6.4 2.6L33 44l-2.6-6.4L24 35l6.4-2.6z"/></g>' },
-  { id: 'stack', name: 'Card Sweep', idea: 'Files sorting themselves into a tidy stack.',
-    glyph: '<rect x="12" y="31" width="26" height="19" rx="4" fill="#fff" fill-opacity=".45"/><rect x="19" y="23" width="26" height="19" rx="4" fill="#fff" fill-opacity=".72"/><rect x="26" y="15" width="26" height="19" rx="4" fill="#fff"/>' },
-  { id: 'lens', name: 'Smart Lens', idea: 'Search that understands: a lens with a spark.',
-    glyph: '<circle cx="28" cy="28" r="13" fill="none" stroke="#fff" stroke-width="5"/><path d="M38 38l11 11" stroke="#fff" stroke-width="6" stroke-linecap="round"/><path fill="#fff" d="M28 20.5l2 5 5 2-5 2-2 5-2-5-5-2 5-2z"/>' },
-  { id: 'monogram', name: 'MS Monogram', idea: 'Simple letters, strong at tiny sizes.',
-    glyph: '<text x="32" y="42" text-anchor="middle" font-family="-apple-system, BlinkMacSystemFont, Helvetica Neue, sans-serif" font-size="27" font-weight="800" letter-spacing="-1.5" fill="#fff">MS</text>' },
-];
-const WORDS = [
-  { id: 'classic', name: 'Classic', idea: 'System font, bold. Calm and native.', html: () => '<span class="wm wm-classic">MacSprint</span>' },
-  { id: 'split', name: 'Two weights', idea: 'Light “Mac”, heavy “Sprint” puts the action first.', html: () => '<span class="wm wm-split">Mac<b>Sprint</b></span>' },
-  { id: 'rounded', name: 'Rounded', idea: 'Lowercase, rounded (SF Pro Rounded). Friendly.', html: () => '<span class="wm wm-rounded">macsprint</span>' },
-  { id: 'italic', name: 'In motion', idea: 'Heavy italic with a speed line. Energetic.', html: () => '<span class="wm wm-italic">MacSprint</span>' },
-  { id: 'ai', name: 'With AI tag', idea: 'Names the AI clearly; good for marketing.', html: () => '<span class="wm wm-ai">MacSprint<i>AI</i></span>' },
-];
-function logoSvg(size, id = brand.logo) {
-  const l = LOGOS.find((x) => x.id === id) || LOGOS[0], g = 'lg' + (gid++);
-  return `<svg width="${size}" height="${size}" viewBox="0 0 64 64" aria-hidden="true" style="flex:none"><defs><linearGradient id="${g}" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#7389ff"/><stop offset="1" stop-color="#2f45c2"/></linearGradient></defs><rect width="64" height="64" rx="14.5" fill="url(#${g})"/><rect x=".5" y=".5" width="63" height="63" rx="14" fill="none" stroke="#fff" stroke-opacity=".18"/>${l.glyph}</svg>`;
-}
-const wordHtml = (id = brand.word) => (WORDS.find((w) => w.id === id) || WORDS[0]).html();
+const wordmark = (size = 17, color = '') => `<span class="wm2" style="font-size:${size}px${color ? ';color:' + color : ''}"><span class="m">Mac</span> <span class="s">SPRINT</span></span>`;
 const aiToggle = (on = brand.ai) => `<span class="m-ai${on ? ' on' : ''}" data-c="aiToggle" data-ai-toggle role="switch" aria-checked="${on}" title="AI search ${on ? 'on' : 'off'}">${ic('sparkles', 11)}AI</span>`;
 
 /* =================== component library (the "parts") =================== */
 const C = {
-  brand: { name: 'Logo and wordmark', swift: 'Label {\n  Text("MacSprint").font(.headline)\n} icon: {\n  Image("BrandMark")          // from the asset catalog\n    .resizable().frame(width: 20, height: 20)\n}\n// The Dock icon is the AppIcon set: one 1024 × 1024 px master', sf: [], size: 'Sidebar mark 20 pt; app icon master 1024 px', type: 'Wordmark 14 pt in the sidebar', color: 'Indigo gradient tile, white symbol', shape: 'Rounded square (macOS app icon shape)', states: ['Light', 'Dark', 'Tiny (16 pt)', 'Dock (128 pt+)'],
-    sample: () => `<div style="display:flex;gap:10px;align-items:center;font-size:18px">${logoSvg(40)}${wordHtml()}</div>` },
+  brand: { name: 'Name (wordmark)', swift: '(Text("Mac ")\n + Text("SPRINT").fontWeight(.medium).kerning(2.7))\n  .font(.system(size: 17))\n  .foregroundStyle(Color.accentColor)   // indigo', sf: [], size: '17 pt in the sidebar; 40 pt on large headers and the website', type: 'SF Pro: “Mac” regular, “SPRINT” medium with 0.16 em letter spacing', color: 'Indigo #3b5bdb (dark #8399ff)', shape: 'Name only, no logo mark', states: ['Light', 'Dark'],
+    sample: () => wordmark(26) },
   aiToggle: { name: 'AI search toggle', swift: 'Toggle(isOn: $aiSearch) {\n  Label("AI", systemImage: "sparkles")\n}\n.toggleStyle(.button)\n.help(aiSearch ? "AI search on" : "AI search off")\n.disabled(!appleIntelligenceAvailable)', sf: ['sparkles'], size: 'Height 18 pt, inside the search field', type: '10.5–11 pt bold', color: 'On: accent text on 11% accent; off: grey outline', shape: '6 pt corners', states: ['On (plain-English search)', 'Off (file names only)', 'Unavailable (no Apple Intelligence)'],
     sample: () => `<div style="display:flex;gap:10px">${aiToggle(true)}${aiToggle(false)}</div>` },
   window: { name: 'Window', swift: 'WindowGroup { ContentView() }', sf: [], size: 'Opens at about 1100 × 700 pt; minimum 900 × 560 pt', type: 'Uses the system font throughout', color: 'Window background (white / graphite)', shape: 'System corners; shadow drawn by macOS', states: ['Active', 'Inactive', 'Full screen'],
@@ -482,29 +455,29 @@ const C = {
     sample: () => `<div style="display:grid;gap:4px;width:170px"><div class="m-row">${ic('photo')}Images</div><div class="m-row sel">${ic('photo')}Images</div></div>` },
   badge: { name: 'Badge', swift: '.badge(10)            // a count\n.badge(Text("14.1 GB"))', sf: [], size: 'Height 15 pt; padding 6 pt', type: '10.5 pt; bold when alert', color: 'Count grey · Alert red fill · Size green text', shape: 'Capsule', states: ['Count', 'Alert', 'Good news'],
     sample: () => `<div style="display:flex;gap:14px;align-items:center" class="m-row"><em>2,280</em><em class="alert">10</em><em class="good">14.1 GB</em></div>` },
-  toolbar: { name: 'Toolbar', swift: '.toolbar {\n  ToolbarItem(placement: .primaryAction) { … }\n}', sf: [], size: 'Height about 48–52 pt', type: '—', color: 'Window background, hairline below', shape: 'Spans the content column', states: ['Normal', 'Compact (narrow window)'],
+  toolbar: { name: 'Toolbar', swift: '.toolbar {\n  ToolbarItem(placement: .primaryAction) { … }\n}', sf: [], size: 'Height about 48–52 pt', type: '—', color: 'Window background, hairline below', shape: 'Search centred, library size on the right (foundations)', states: ['Normal', 'Compact (narrow window)'],
     sample: () => `<div class="m-toolbar" style="width:100%;border:1px solid var(--m-line);border-radius:10px;background:var(--m-bg)"><div class="m-search">${ic('magnifyingglass', 12)}<span>Search</span></div><span class="m-libsize">Library size <b>30.19 GB</b></span></div>` },
-  search: { name: 'Search field', swift: '.searchable(text: $query,\n  prompt: "Search, or try “pdfs from last week”")', sf: ['magnifyingglass'], size: 'Height 26–28 pt; 240–340 pt wide', type: '13 pt; placeholder in secondary grey', color: 'Filled light grey; focused: white + accent ring', shape: '8 pt corners', states: ['Empty', 'Focused', 'Typing', 'Clear (×) button'],
+  search: { name: 'Search field', swift: '.searchable(text: $query,\n  prompt: "Search, or try “pdfs from last week”")', sf: ['magnifyingglass'], size: 'Height 26–28 pt; 240–340 pt wide', type: '13 pt; placeholder in secondary grey', color: 'White with a hairline, centred in the toolbar; focused: accent ring', shape: '9 pt corners', states: ['Empty', 'Focused', 'Typing', 'Clear (×) button'],
     sample: () => `<div style="display:grid;gap:8px;width:240px"><div class="m-search">${ic('magnifyingglass', 12)}<span>Search</span><span class="m-kbd">⌘F</span></div><div class="m-search focus">${ic('magnifyingglass', 12)}<span class="typed">invoice march</span></div></div>` },
-  title: { name: 'Large title', swift: 'Text("Good afternoon")\n  .font(.largeTitle).bold()', sf: [], size: '—', type: '22–26 pt bold; tight letter spacing', color: 'Primary label colour', shape: '—', states: ['Morning / afternoon / evening'],
+  title: { name: 'Large title', swift: 'Text("Good afternoon")\n  .font(.largeTitle).bold()', sf: [], size: '—', type: '22 pt bold; tight letter spacing', color: 'Primary label colour', shape: '—', states: ['Morning / afternoon / evening'],
     sample: () => `<div><div class="m-h1">Good afternoon</div><div class="m-sub">2,880 files · 30.19 GB across your Mac</div></div>` },
-  secHead: { name: 'Section header', swift: 'HStack {\n  Text("Library").font(.title3).bold()\n  Text("6").font(.caption).padding(…)\n    .background(.quaternary, in: .capsule)\n}', sf: [], size: '—', type: '14–17 pt semibold + 10 pt count', color: 'Count in a grey capsule', shape: 'Capsule count', states: ['With count', 'With status pill', 'With “See all”'],
+  secHead: { name: 'Section header', swift: 'HStack {\n  Text("Library").font(.title3).bold()\n  Text("6").font(.caption).padding(…)\n    .background(.quaternary, in: .capsule)\n}', sf: [], size: '—', type: '14 pt semibold + 10 pt count', color: 'Count in a grey capsule', shape: 'Capsule count', states: ['With count', 'With status pill', 'With “See all”'],
     sample: () => `<div class="m-h2">Library <span class="m-count">6</span></div>` },
   pill: { name: 'Status pill', swift: 'Text("Free up to 14.1 GB")\n  .font(.caption.weight(.semibold))\n  .foregroundStyle(.green)\n  .padding(.horizontal, 8)\n  .background(.green.opacity(0.14), in: .capsule)', sf: [], size: 'Height 16–20 pt', type: '10.5–12 pt semibold', color: 'Green text on 14% green', shape: 'Capsule', states: ['Good', 'Warning', 'Info'],
     sample: () => `<span class="m-pill">Free up to 14.1 GB</span>` },
-  folder: { name: 'Folder tile', swift: 'struct FolderTile: View   // custom\n  let kind: FileKind; let count: Int\n  // folder art + Text(kind.name) + Text(count)', sf: [], size: 'Art 62–100 pt wide; tile ~100 pt', type: 'Name 12–13 pt semibold; count 10–11 pt grey', color: 'Folder tinted 16% with the kind’s colour', shape: 'Back, tab, paper, front layers', states: ['Default', 'Hover (paper lifts)', 'Selected', 'Drop target'],
-    sample: () => `<div style="display:flex;gap:10px">${fold('Images', '#5b7cfa', 215, '2,280')}${fold('Videos', '#a46bf5', 275, '162')}${fold('Music', '#f2647e', 345, '34')}</div>` },
-  stat: { name: 'Stat card', swift: 'struct StatCard: View   // custom\n  VStack(alignment: .leading) {\n    Label(title, systemImage: icon)\n    Text(size).font(.title2).bold()\n      .monospacedDigit()\n  }\n  .padding(12)\n  .background(.background, in: .rect(cornerRadius: 14))', sf: ['doc.on.doc', 'arrow.down.circle', 'camera.viewfinder', 'internaldrive'], size: 'Padding 10–14 pt', type: 'Label 11 pt grey; number 17–25 pt bold, monospaced digits', color: 'Card white / graphite, 1 pt hairline', shape: '12–16 pt corners, soft shadow', states: ['Default', 'Hover (lifts 3 pt)', 'Loading', 'Zero'],
+  folder: { name: 'Library storage card', swift: 'struct KindCard: View   // custom\n  let kind: FileKind\n  VStack(alignment: .leading, spacing: 6) {\n    Label(kind.name, systemImage: kind.symbol)\n    Text(kind.size, format: .byteCount(style: .file))\n      .font(.title3.bold()).monospacedDigit()\n    ProgressView(value: kind.share).tint(kind.color)\n    HStack { Text(kind.shareText); Spacer(); Text(kind.newest) }\n      .font(.caption2).foregroundStyle(.secondary)\n  }\n  .padding(10)\n  .background(.background, in: .rect(cornerRadius: 16))\n  .shadow(color: .black.opacity(0.12), radius: 10, y: 6)', sf: ['photo', 'film', 'music.note', 'doc', 'doc.zipper', 'app'], size: '3 per row; padding 9–11 pt', type: 'Name 12 pt semibold; size 17 pt bold, monospaced digits; footer 10 pt grey', color: 'Icon on 15% of the kind’s colour; bar in the kind’s colour', shape: '16 pt corners, soft shadow (foundations)', states: ['Default', 'Hover (shadow deepens)', 'Selected', 'Loading (placeholder)'],
+    sample: () => `<div style="display:grid;grid-template-columns:repeat(2,minmax(0,170px));gap:8px;width:100%;justify-content:center">${fold(...FOLDERS[0])}${fold(...FOLDERS[1])}</div>` },
+  stat: { name: 'Stat card', swift: 'struct StatCard: View   // custom\n  VStack(alignment: .leading) {\n    Label(title, systemImage: icon)\n    Text(size).font(.title2).bold()\n      .monospacedDigit()\n  }\n  .padding(12)\n  .background(.background, in: .rect(cornerRadius: 14))', sf: ['doc.on.doc', 'arrow.down.circle', 'camera.viewfinder', 'internaldrive'], size: 'Padding 10–14 pt', type: 'Label 11 pt grey; number 17–25 pt bold, monospaced digits', color: 'Card white / graphite, 1 pt hairline', shape: '16 pt corners, soft shadow (foundations)', states: ['Default', 'Hover (lifts 3 pt)', 'Loading', 'Zero'],
     sample: () => `<div class="m-stat" style="width:150px"><span>${ic('doc.on.doc', 11)}Duplicates</span><b>44.8 MB</b><small>24 extra copies</small></div>` },
-  bordered: { name: 'Bordered button', swift: 'Button("Refresh", systemImage: "arrow.clockwise") { … }\n  .buttonStyle(.bordered)', sf: ['arrow.clockwise'], size: 'Height 22–28 pt; padding 10 pt', type: '12–13 pt medium', color: 'Background fill, hairline border', shape: '6–8 pt corners', states: ['Default', 'Hover', 'Pressed', 'Disabled'],
+  bordered: { name: 'Bordered button', swift: 'Button("Refresh", systemImage: "arrow.clockwise") { … }\n  .buttonStyle(.bordered)', sf: ['arrow.clockwise'], size: 'Height 22–28 pt; padding 10 pt', type: '12–13 pt medium', color: 'Background fill, hairline border', shape: '9 pt corners', states: ['Default', 'Hover', 'Pressed', 'Disabled'],
     sample: () => `<span class="m-btn">${ic('arrow.clockwise', 11)}Refresh</span>` },
-  primary: { name: 'Primary button', swift: 'Button("Review moves") { … }\n  .buttonStyle(.borderedProminent)\n  .keyboardShortcut(.defaultAction)', sf: [], size: 'Height 24–28 pt; padding 12 pt', type: '12–13 pt semibold, white', color: 'Accent fill (indigo)', shape: '7–8 pt corners', states: ['Default', 'Hover', 'Pressed', 'Disabled', 'Loading'],
+  primary: { name: 'Primary button', swift: 'Button("Review moves") { … }\n  .buttonStyle(.borderedProminent)\n  .keyboardShortcut(.defaultAction)', sf: [], size: 'Height 24–28 pt; padding 12 pt', type: '12–13 pt semibold, white', color: 'Accent fill (indigo)', shape: '9 pt corners', states: ['Default', 'Hover', 'Pressed', 'Disabled', 'Loading'],
     sample: () => `<div style="display:flex;gap:8px"><span class="m-btn pri">Review moves</span><span class="m-btn pri" style="opacity:.4">Disabled</span></div>` },
-  destructive: { name: 'Destructive button', swift: 'Button("Move to Trash", role: .destructive) { … }\n  .buttonStyle(.borderedProminent)', sf: ['trash'], size: 'Same as primary', type: '12–13 pt semibold, white', color: 'Red fill', shape: '7–8 pt corners', states: ['Default', 'Hover', 'Pressed', 'Disabled'],
+  destructive: { name: 'Destructive button', swift: 'Button("Move to Trash", role: .destructive) { … }\n  .buttonStyle(.borderedProminent)', sf: ['trash'], size: 'Same as primary', type: '12–13 pt semibold, white', color: 'Red fill', shape: '9 pt corners', states: ['Default', 'Hover', 'Pressed', 'Disabled'],
     sample: () => `<span class="m-btn danger">${ic('trash', 11)}Move to Trash…</span>` },
-  secondary: { name: 'Secondary button', swift: 'Button("Cancel", role: .cancel) { … }\n  .keyboardShortcut(.cancelAction)', sf: [], size: 'Same height as the primary next to it', type: '12–13 pt', color: 'Neutral fill', shape: '7–8 pt corners', states: ['Default', 'Hover', 'Pressed'],
+  secondary: { name: 'Secondary button', swift: 'Button("Cancel", role: .cancel) { … }\n  .keyboardShortcut(.cancelAction)', sf: [], size: 'Same height as the primary next to it', type: '12–13 pt', color: 'Neutral fill', shape: '9 pt corners', states: ['Default', 'Hover', 'Pressed'],
     sample: () => `<div style="display:flex;gap:8px"><span class="m-btn">Cancel</span><span class="m-btn pri">Approve</span></div>` },
-  iconBtn: { name: 'Icon button', swift: 'Button { rotate() } label: {\n  Image(systemName: "rotate.right")\n}\n.help("Rotate")   // tooltip', sf: ['chevron.left', 'chevron.right', 'rotate.right', 'info.circle', 'pin'], size: '24–28 pt square; icon 13–15 pt', type: '—', color: 'Grey icon; accent when active', shape: '6 pt corners', states: ['Default', 'Hover', 'Pressed', 'Active (on)'],
+  iconBtn: { name: 'Icon button', swift: 'Button { rotate() } label: {\n  Image(systemName: "rotate.right")\n}\n.help("Rotate")   // tooltip', sf: ['chevron.left', 'chevron.right', 'rotate.right', 'info.circle', 'pin'], size: '24–28 pt square; icon 13–15 pt', type: '—', color: 'Grey icon; accent when active', shape: '9 pt corners', states: ['Default', 'Hover', 'Pressed', 'Active (on)'],
     sample: () => `<div style="display:flex;gap:6px"><span class="m-ibtn">${ic('chevron.left', 13)}</span><span class="m-ibtn">${ic('chevron.right', 13)}</span><span class="m-ibtn">${ic('rotate.right', 13)}</span><span class="m-ibtn">${ic('info.circle', 13)}</span></div>` },
   progress: { name: 'Progress bar', swift: 'ProgressView(value: 0.62) {\n  Text("Scanning Downloads…")\n}', sf: [], size: 'Height 5–6 pt; 120–200 pt wide', type: 'Label 11–12 pt', color: 'Accent fill on grey track', shape: 'Capsule', states: ['Determinate (%)', 'Indeterminate', 'Paused', 'Finished'],
     sample: () => `<div style="display:grid;gap:6px;font-size:11.5px">Scanning Downloads… 62%<div class="m-progress"><i style="width:62%"></i></div></div>` },
@@ -579,7 +552,7 @@ const C = {
   compare: { name: 'Compare view', swift: 'HStack(spacing: 2) {\n  PhotoPane(photo: best, label: "Best")\n  PhotoPane(photo: other)\n}', sf: ['star.fill'], size: 'Two equal halves', type: 'Labels 11–12 pt', color: 'Best shot: yellow star', shape: '2 pt divider', states: ['Comparing', 'Picking'],
     sample: () => `<div style="display:flex;gap:3px"><i class="ph" style="--h:200;width:80px;aspect-ratio:4/3;border-radius:5px"></i><i class="ph" style="--h:212;width:80px;aspect-ratio:4/3;border-radius:5px;filter:brightness(.9)"></i></div>` },
 };
-const fold = (k, t, h, n) => `<div class="m-folder" data-c="folder"><div class="m-fd" style="--t:${t};--h:${h}"><i class="t"></i><i class="b"></i><i class="p"></i><i class="f"></i></div><b>${k}</b><small>${n}</small></div>`;
+const fold = (k, t, h, n, size, pct, latest, sym, skel) => `<div class="m-fcard${skel ? ' skel' : ''}" data-c="${skel ? 'skeleton' : 'folder'}" style="--t:${t}"><div class="top"><span class="gl">${ic(sym, 12)}</span><span class="nm">${k}</span><span class="ct">${n} items</span></div><b>${size}</b><div class="meter"><i style="width:${pct}%"></i></div><div class="foot"><span>${pct || '<1'}% of library</span><span>${latest}</span></div></div>`;
 function storageBarHtml() {
   const c = [['Images', '#3a8dff', 98], ['Videos', '#a46bf5', 74], ['Docs', '#f0a23b', 41], ['Archives', '#3fb985', 33], ['Installers', '#3aa7d9', 29], ['Other', '#a1a1a6', 66]];
   return `<div class="m-bar" data-c="storageBar">${c.map((x) => `<i style="flex:${x[2]};background:${x[1]}"></i>`).join('')}<i style="flex:171;background:var(--m-line)"></i></div><div class="m-legend">${c.map((x) => `<span><i style="background:${x[1]}"></i>${x[0]} ${x[2]} GB</span>`).join('')}</div>`;
@@ -592,7 +565,7 @@ const SIDE = [
   ['clipboard', 'doc.on.clipboard', 'Clipboard'], ['screenshots', 'camera.viewfinder', 'Screenshots'], ['similar-images', 'square.stack', 'Similar Images'],
 ];
 function sidebar(sel) {
-  return `<aside class="m-side" data-c="sidebar"><div class="m-lights" data-c="window"><i></i><i></i><i></i></div><div class="m-brand" data-c="brand">${logoSvg(20)}${wordHtml()}</div>${SIDE.map((r) => r === '-' ? '<div class="m-sep"></div>'
+  return `<aside class="m-side" data-c="sidebar"><div class="m-lights" data-c="window"><i></i><i></i><i></i></div><div class="m-brand" data-c="brand">${wordmark(17)}</div>${SIDE.map((r) => r === '-' ? '<div class="m-sep"></div>'
     : `<div class="m-row${r[0] === sel ? ' sel' : ''}" ${r[0] === sel ? 'data-c="sideRow"' : ''}>${ic(r[1], 14)}${r[2]}${r[3] ? `<em class="${r[4] || ''}" ${r[4] === 'alert' ? 'data-c="badge"' : ''}>${r[3]}</em>` : ''}</div>`).join('')}</aside>`;
 }
 function toolbar({ q = '', focus = false, right = '', hot = false } = {}) {
@@ -609,12 +582,13 @@ const awin = (style, title, body) => `<div class="awin" style="${style}"><div cl
 const lines = (n, w = [90, 70, 80, 60, 85, 50]) => Array.from({ length: n }, (_, i) => `<i class="line" style="width:${w[i % w.length]}%"></i>`).join('');
 
 /* Home pieces */
-const FOLDERS = [['Images', '#5b7cfa', 215, '2,280'], ['Videos', '#a46bf5', 275, '162'], ['Music', '#f2647e', 345, '34'], ['Documents', '#f0a23b', 35, '201'], ['Archives', '#3fb985', 150, '93'], ['Apps', '#3aa7d9', 195, '110']];
+// [kind, colour, hue, count, size, % of library, newest item, SF Symbol]
+const FOLDERS = [['Images', '#5b7cfa', 215, '2,280', '2.81 GB', 9, 'Screenshot 9.41.png', 'photo'], ['Videos', '#a46bf5', 275, '162', '11.21 GB', 37, 'Trip.mov', 'film'], ['Music', '#f2647e', 345, '34', '82.7 MB', 0, 'Mix.m4a', 'music.note'], ['Documents', '#f0a23b', 35, '201', '1.16 GB', 4, 'Brief.pdf', 'doc'], ['Archives', '#3fb985', 150, '93', '630 MB', 2, 'Backup.zip', 'doc.zipper'], ['Apps', '#3aa7d9', 195, '110', '14.31 GB', 47, 'Figma.app', 'app']];
 const STATS = [['doc.on.doc', 'Duplicates', '44.8 MB', '24 extra copies'], ['arrow.down.circle', 'Old Downloads', '11.5 GB', '1,227 items'], ['camera.viewfinder', 'Old Screenshots', '321 MB', '480 items'], ['internaldrive', 'Large Files', '2.2 GB', '10 items']];
 function homeBody({ loading = false, updated = false, hotRefresh = false } = {}) {
   return `<div class="m-row2"><div data-c="title"><div class="m-h1">Good afternoon</div><div class="m-sub">${updated ? '2,893 files · 30.24 GB · updated just now' : '2,880 files · 30.19 GB across your Mac'}</div></div><span class="m-btn" data-c="bordered" ${hotRefresh ? 'data-hot' : ''}>${ic('arrow.clockwise', 11)}Refresh</span></div>
     <div class="m-h2" data-c="secHead">Library <span class="m-count">6</span></div>
-    <div class="m-folders">${FOLDERS.map((f) => loading ? `<div class="m-folder" data-c="skeleton"><div class="m-fd" style="opacity:.35"><i class="b" style="background:var(--m-line)"></i></div><div style="height:8px;border-radius:4px;background:var(--m-line);margin:3px 8px"></div></div>` : fold(...f)).join('')}</div>
+    <div class="m-folders">${FOLDERS.map((f) => fold(...f, loading)).join('')}</div>
     <div class="m-h2">Clean Up <span class="m-pill" data-c="pill">Free up to 14.1 GB</span></div>
     <div class="m-cards">${STATS.map((s) => `<div class="m-stat" data-c="stat"><span>${ic(s[0], 11)}${s[1]}</span><b>${loading ? '—' : s[2]}</b><small>${s[3]}</small></div>`).join('')}</div>`;
 }
@@ -634,9 +608,9 @@ const F = [
     what: 'A calm overview of your Mac: what kinds of files you have and how much space you could free.',
     when: 'Every time you open MacSprint.',
     steps: [
-      { t: 'Open the app', do: 'Open MacSprint. Home is selected in the sidebar.', see: 'A greeting, six Library folders and four Clean Up cards with real sizes.', why: 'One glance answers two questions: what do I have, and what can I clean? Big numbers are used only where they matter.',
+      { t: 'Open the app', do: 'Open MacSprint. Home is selected in the sidebar.', see: 'A greeting, six Library storage cards (size, share of the library, newest item) and four Clean Up cards.', why: 'One glance answers two questions: what do I have, and what can I clean? Big numbers are used only where they matter.',
         comps: ['window', 'brand', 'sidebar', 'sideRow', 'badge', 'search', 'aiToggle', 'title', 'bordered', 'folder', 'pill', 'stat'], screen: () => win({ sel: 'home', body: homeBody({ hotRefresh: true }) }) },
-      { t: 'Refresh the scan', do: 'Click Refresh. Click the progress bar to finish the scan.', see: 'The toolbar shows progress; folders turn into grey placeholders while numbers update.', why: 'Placeholders keep the layout still while loading, so nothing jumps around. Progress lives in the toolbar so the page stays readable.',
+      { t: 'Refresh the scan', do: 'Click Refresh. Click the progress bar to finish the scan.', see: 'The toolbar shows progress; the Library cards turn into grey placeholders while numbers update.', why: 'Placeholders keep the layout still while loading, so nothing jumps around. Progress lives in the toolbar so the page stays readable.',
         comps: ['progress', 'skeleton', 'bordered'], screen: () => win({ sel: 'home', tb: toolbar({ right: `<span style="display:flex;gap:8px;align-items:center;font-size:11.5px;color:var(--m-text2)" data-c="progress" data-hot>Scanning Downloads… 62%<span class="m-progress"><i style="width:62%"></i></span></span><span class="m-btn" data-c="bordered">Pause</span>` }), body: homeBody({ loading: true }) }) },
       { t: 'Scan finished', do: 'Nothing to do: the scan finished.', see: 'Updated numbers and a short message at the bottom that fades away.', why: 'A toast confirms the result without interrupting. Messages name what happened (“Updated”) instead of a vague “Done”.',
         comps: ['toast', 'title'], screen: () => win({ sel: 'home', body: homeBody({ updated: true }), over: toast('Library updated · 13 new files') }) },
@@ -901,20 +875,15 @@ function applyTheme() {
 function applyPins() { document.getElementById('stage').classList.toggle('hide-pins', !showPins); }
 
 function brandPanel() {
-  const l = LOGOS.find((x) => x.id === brand.logo) || LOGOS[0];
+  const F = [['Name', 'Mac S P R I N T, indigo'], ['Accent', 'Indigo #3b5bdb / #8399ff'], ['Greys', 'Cool graphite'], ['Type', 'SF Pro, Mac standard (13 / 22 / 14 / 11)'], ['Corners', 'Soft: window 14, card 16, button 9, field 9'], ['Spacing', 'Regular'], ['Cards', 'Soft shadow'], ['Sidebar', 'Raised selection, outline icons'], ['Toolbar', 'Search centred'], ['Buttons', 'Filled'], ['Library', 'Storage cards'], ['AI search', 'On by default']];
   return `<section class="brand-card mscope" id="brand-panel" aria-labelledby="brand-h">
-    <h3 id="brand-h">Choose the brand look</h3>
-    <p>Pick a logo and a wordmark. Your choice is saved in this browser and shown in every MacSprint mock-up on this page. Tell me your pick and I will make it final.</p>
-    <div><h4>Logo</h4><div class="opt-grid">${LOGOS.map((x) => `<button type="button" class="opt" data-logo="${x.id}" aria-pressed="${x.id === brand.logo}">${logoSvg(52, x.id)}<b>${x.name}</b><small>${x.idea}</small></button>`).join('')}</div></div>
-    <div><h4>Wordmark (the name in text)</h4><div class="opt-grid">${WORDS.map((w) => `<button type="button" class="opt" data-word="${w.id}" aria-pressed="${w.id === brand.word}"><span class="lockup">${logoSvg(26)}${w.html()}</span><b>${w.name}</b><small>${w.idea}</small></button>`).join('')}</div></div>
-    <div><h4>Your pick at every size</h4><div class="sheetrow">
-      ${[16, 32, 64, 128].map((n) => `<figure>${logoSvg(n)}<figcaption>${n} pt</figcaption></figure>`).join('')}
-      <figure><div class="tile-l" style="font-size:20px">${logoSvg(34)}${wordHtml()}</div><figcaption>On light</figcaption></figure>
-      <figure><div class="tile-d" style="font-size:20px">${logoSvg(34)}${wordHtml()}</div><figcaption>On dark</figcaption></figure>
-    </div><p style="font-size:13.5px;color:var(--ink-3);margin-top:8px">Current: ${esc(l.name)} + ${esc((WORDS.find((w) => w.id === brand.word) || WORDS[0]).name)}. Check that the 16 pt version is still recognisable: that is how it appears in the menu bar and Finder lists.</p></div>
+    <h3 id="brand-h">Foundations applied</h3>
+    <p>Every mock-up on this page now uses your final foundations. The full list lives in design/FOUNDATIONS.md in the repo.</p>
+    <div class="sheetrow"><figure><div class="tile-l">${wordmark(28, '#3b5bdb')}</div><figcaption>On light</figcaption></figure><figure><div class="tile-d">${wordmark(28, '#8399ff')}</div><figcaption>On dark</figcaption></figure></div>
+    <dl class="fnd">${F.map(([k, v]) => `<div><dt>${k}</dt><dd>${esc(v)}</dd></div>`).join('')}</dl>
     <div><h4>AI toggle in the search field</h4><div class="ai-demo">
       <div class="m-search" style="background:var(--m-alt)">${ic(brand.ai ? 'sparkles' : 'magnifyingglass', 12)}<span>${brand.ai ? 'Ask anything, e.g. “pdfs from last week”' : 'Search file names'}</span>${aiToggle()}</div>
-      <span style="font-size:14px;color:var(--ink-2)">Click <b>AI</b> to switch. On: plain-English search. Off: classic file-name search. Greyed out on Macs without Apple Intelligence.</span>
+      <span style="font-size:14px;color:var(--ink-2)">On by default. Click <b>AI</b> to switch to classic file-name search. Greyed out on Macs without Apple Intelligence.</span>
     </div></div>
   </section>`;
 }
@@ -984,8 +953,6 @@ function go(i) { if (i < 0 || i >= cur.steps.length) return; step = i; renderSte
 main.addEventListener('mouseover', (e) => { const t = e.target.closest('[data-part]'); if (t) highlight(t.dataset.part, true); });
 main.addEventListener('mouseout', (e) => { const t = e.target.closest('[data-part]'); if (t && !t.contains(e.relatedTarget)) highlight(t.dataset.part, false); });
 main.addEventListener('click', (e) => {
-  const lo = e.target.closest('[data-logo]'); if (lo) { brand.logo = lo.dataset.logo; saveBrand(); rerenderBrand(); return; }
-  const wo = e.target.closest('[data-word]'); if (wo) { brand.word = wo.dataset.word; saveBrand(); rerenderBrand(); return; }
   const at = e.target.closest('[data-ai-toggle]'); if (at && !at.closest('.part')) { brand.ai = !brand.ai; saveBrand(); rerenderBrand(); return; }
   const pin = e.target.closest('.pin');
   if (pin) { const card = main.querySelector(`.part[data-part="${pin.dataset.part}"]`); if (card) { card.scrollIntoView({ block: 'center' }); highlight(pin.dataset.part, true); } return; }
