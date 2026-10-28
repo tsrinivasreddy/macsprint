@@ -100,6 +100,7 @@ header.top > p { color: var(--ink-2); font-size: 17px; max-width: 78ch; }
 .pv .row em { margin-left: auto; font-style: normal; font-size: var(--p-small); color: var(--p-text2); opacity: .85; }
 .pv .row em.alert { background: #c4223b; color: #fff; border-radius: 99px; padding: 0 6px; font-weight: 700; line-height: 15px; opacity: 1; }
 .pv .row em.good { color: var(--p-good); font-weight: 700; opacity: 1; }
+.pv .sechd { font-size: 10px; font-weight: 600; color: var(--p-text2); padding: 8px 8px 3px; }
 .pv .sep { height: 1px; background: var(--p-line); margin: 5px 6px; flex: none; }
 .pv[data-sidebar=raised] .row.sel { background: var(--p-bg); color: var(--p-text); font-weight: 600; box-shadow: 0 1px 2px rgba(0,0,0,.08), 0 0 0 1px var(--p-line); }
 .pv[data-sidebar=raised] .row.sel svg { color: var(--p-accent); }
@@ -380,6 +381,7 @@ const P = {
   trash: '<path d="M4 7h16M9 7V4.5h6V7M6 7l1 13h10l1-13"/>',
   dup: '<rect x="8" y="8" width="11" height="13" rx="2"/><path d="M16 8V5a2 2 0 0 0-2-2H7a2 2 0 0 0-2 2v10a2 2 0 0 0 2 2h1"/>',
   folder: '<path d="M3 7.5V18a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V9.5a2 2 0 0 0-2-2h-7L10 5H5a2 2 0 0 0-2 2.5Z"/>',
+  clock: '<circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/>',
   clip: '<rect x="5" y="5" width="14" height="16" rx="2.5"/><rect x="9" y="3" width="6" height="4" rx="1.2"/>',
   cam: '<path d="M4 8V6a2 2 0 0 1 2-2h2M16 4h2a2 2 0 0 1 2 2v2M20 16v2a2 2 0 0 1-2 2h-2M8 20H6a2 2 0 0 1-2-2v-2"/><circle cx="12" cy="12" r="3"/>',
   film: '<rect x="3" y="4" width="18" height="16" rx="2"/><path d="M7 4v16M17 4v16"/>',
@@ -623,12 +625,12 @@ function varsFor(dark) {
 }
 const varStyle = (dark) => Object.entries(varsFor(dark)).map(([k, v]) => `${k}:${String(v).replace(/"/g, "'")}`).join(';') + ';min-width:0;padding:4px;background:transparent;border-radius:0';
 function previewHtml() {
-  const c = state.choices, sb = [['house', 'Home', '', '#3a8dff', true], ['grid', 'Library', '2,880', '#6a6ff0'], ['photo', 'Images', '2,280', '#3a8dff'], '-', ['drive', 'Storage', '10', '#f0a23b', false, 'alert'], ['trash', 'Clean Up', '14.1 GB', '#f2647e', false, 'good'], ['dup', 'Duplicates', '44.8 MB', '#3aa7d9', false, 'good'], ['folder', 'Organizer', '', '#f0a23b'], '-', ['clip', 'Clipboard', '', '#6a6ff0']];
+  const c = state.choices, sb = ['#Discover', ['house', 'Home', '', '#3a8dff', true], ['clock', 'Recents', '', '#6a6ff0'], ['grid', 'Library', '2,880', '#6a6ff0'], ['down', 'Downloaded From', '913', '#3aa7d9'], ['clip', 'Clipboard', '', '#6a6ff0'], '#Clean up', ['trash', 'Clean Up', '14.1 GB', '#f2647e', false, 'good'], ['dup', 'Duplicates', '44.8 MB', '#3aa7d9', false, 'good'], ['folder', 'Organizer', '', '#f0a23b']];
   const folders = KINDS.map((kind) => folderHtml(c.folders, kind)).join('');
   const aiOn = c.ai === 'on';
   return `<div class="win">
     <aside class="side"><div class="lights"><i></i><i></i><i></i></div><div class="brand">${wordmark(c.word, c.wcolor, mode === 'dark', 17)}</div>
-      ${sb.map((r) => r === '-' ? '<div class="sep"></div>' : `<div class="row${r[4] ? ' sel' : ''}" style="--ic:${r[3]}">${ic(r[0], 14)}${r[1]}${r[2] ? `<em class="${r[5] || ''}">${r[2]}</em>` : ''}</div>`).join('')}</aside>
+      ${sb.map((r) => r === '-' ? '<div class="sep"></div>' : typeof r === 'string' ? `<div class="sechd">${r.slice(1)}</div>` : `<div class="row${r[4] ? ' sel' : ''}" style="--ic:${r[3]}">${ic(r[0], 14)}${r[1]}${r[2] ? `<em class="${r[5] || ''}">${r[2]}</em>` : ''}</div>`).join('')}</aside>
     <div class="main">
       <div class="tb"><span class="tbtitle">Home</span><div class="search">${ic(aiOn ? 'sparkles' : 'search', 12)}<span>${aiOn ? 'Ask anything, e.g. “pdfs from last week”' : 'Search file names'}</span><span class="kbd">⌘F</span><span class="ai${aiOn ? ' on' : ''}">${ic('sparkles', 10)}AI</span></div><span class="libsize">Library size <b>30.19 GB</b></span></div>
       <div class="content">
