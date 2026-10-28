@@ -13,10 +13,10 @@
     { "binding": "DB", "database_name": "macsprint-waitlist", "database_id": "fd342aa8-4aec-48f9-9927-77b9fa2bccc9" }
   ],
   "send_email": [{ "name": "EMAIL" }],
+  // NOTIFY_TO (your own inbox, verified in Email Routing) is set in the dashboard: Settings → Variables and secrets.
+  "keep_vars": true,
   "vars": {
-    "MAIL_FROM": "waitlist@macsprint.com",
-    "NOTIFY_TO": "hello@macsprint.com",
-    "SEND_CONFIRMATION": "true"
+    "MAIL_FROM": "waitlist@macsprint.com"
   },
   "observability": { "enabled": true }
 }

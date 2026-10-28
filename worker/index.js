@@ -4,8 +4,11 @@
 //   GET  /api/waitlist/export   ?key=EXPORT_KEY   → CSV of every sign-up, opens in Excel
 //   GET  /api/waitlist/test-email ?key=EXPORT_KEY → sends one test email to NOTIFY_TO and shows the result
 //
-// Bindings (wrangler.jsonc): ASSETS (static site), DB (D1), EMAIL (send_email).
-// Variables: MAIL_FROM, NOTIFY_TO, SEND_CONFIRMATION ("true" / "false"). Secret: EXPORT_KEY.
+// Bindings (wrangler.jsonc): ASSETS (static site), DB (D1), EMAIL (send_email, free via Email Routing).
+// Variables: MAIL_FROM (an address on your domain), NOTIFY_TO (your inbox, verified in Email Routing). Secret: EXPORT_KEY.
+// Email Routing can only send to addresses you have verified, so the alert goes to you and subscribers get no email.
+
+import { EmailMessage } from 'cloudflare:email';
 
 const EMAIL_RE = /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/;
 const json = (body, status = 200) => new Response(JSON.stringify(body), { status, headers: { 'Content-Type': 'application/json', 'Cache-Control': 'no-store' } });
@@ -45,28 +48,39 @@ async function join(request, env, ctx) {
   return json({ ok: true, already: !isNew });
 }
 
+// Email Routing's send_email binding takes a raw message; plain text only, so the MIME is built by hand.
+const b64 = (str) => btoa(String.fromCharCode(...new TextEncoder().encode(str)));
+function rawMessage({ from, fromName, to, subject, text }) {
+  const header = (v) => v.replace(/[\r\n]+/g, ' ');
+  const body = b64(text).replace(/.{1,76}/g, '$&\r\n');
+  return [
+    `From: =?UTF-8?B?${b64(fromName)}?= <${header(from)}>`,
+    `To: ${header(to)}`,
+    `Subject: =?UTF-8?B?${b64(subject)}?=`,
+    `Message-ID: <${crypto.randomUUID()}@${from.split('@')[1]}>`,
+    `Date: ${new Date().toUTCString()}`,
+    'MIME-Version: 1.0',
+    'Content-Type: text/plain; charset=UTF-8',
+    'Content-Transfer-Encoding: base64',
+    '',
+    body,
+  ].join('\r\n');
+}
+const sendMail = (env, { to, subject, text }) =>
+  env.EMAIL.send(new EmailMessage(env.MAIL_FROM, to, rawMessage({ from: env.MAIL_FROM, fromName: 'MacSprint waitlist', to, subject, text })));
+
 async function notify(env, email, when, country) {
-  const sends = [];
-  if (env.NOTIFY_TO) {
+  if (!env.NOTIFY_TO) return;
+  try {
     const { count } = await env.DB.prepare('SELECT COUNT(*) AS count FROM signups').first();
-    sends.push(env.EMAIL.send({
-      from: { name: 'MacSprint waitlist', email: env.MAIL_FROM },
+    await sendMail(env, {
       to: env.NOTIFY_TO,
       subject: `New waitlist sign-up: ${email}`,
       text: `${email} joined the MacSprint waitlist on ${when}${country ? ` (${country})` : ''}.\n\nTotal sign-ups: ${count}.\nDownload the list for Excel: https://macsprint.com/api/waitlist/export?key=… (use your export key)`,
-    }));
+    });
+  } catch (e) {
+    console.error('waitlist email failed', e?.code || '', e?.message || e);
   }
-  if (env.SEND_CONFIRMATION === 'true') {
-    sends.push(env.EMAIL.send({
-      from: { name: 'MacSprint', email: env.MAIL_FROM },
-      to: email,
-      subject: "You're on the MacSprint waitlist",
-      text: "Thanks for joining the MacSprint waitlist.\n\nWe'll email you once, when MacSprint is ready. No spam, and we never share your address.\n\nIf you didn't sign up, you can ignore this email.",
-      html: "<p>Thanks for joining the <b>MacSprint</b> waitlist.</p><p>We'll email you once, when MacSprint is ready. No spam, and we never share your address.</p><p style=\"color:#5f6068\">If you didn't sign up, you can ignore this email.</p>",
-    }));
-  }
-  const results = await Promise.allSettled(sends);
-  for (const r of results) if (r.status === 'rejected') console.error('waitlist email failed', r.reason?.code || '', r.reason?.message || r.reason);
 }
 
 const authorized = (url, request, env) => {
@@ -81,13 +95,8 @@ async function testEmail(url, request, env) {
   const setup = { MAIL_FROM: env.MAIL_FROM || null, NOTIFY_TO: env.NOTIFY_TO || null, EMAIL_binding: Boolean(env.EMAIL) };
   if (!env.EMAIL || !env.MAIL_FROM || !env.NOTIFY_TO) return json({ ok: false, setup, error: 'Missing EMAIL binding, MAIL_FROM or NOTIFY_TO' }, 500);
   try {
-    const sent = await env.EMAIL.send({
-      from: { name: 'MacSprint waitlist', email: env.MAIL_FROM },
-      to: env.NOTIFY_TO,
-      subject: 'MacSprint waitlist: test email',
-      text: 'If you can read this, waitlist emails work.',
-    });
-    return json({ ok: true, setup, messageId: sent?.messageId || null });
+    await sendMail(env, { to: env.NOTIFY_TO, subject: 'MacSprint waitlist: test email', text: 'If you can read this, waitlist emails work.' });
+    return json({ ok: true, setup });
   } catch (e) {
     return json({ ok: false, setup, code: e?.code || null, error: e?.message || String(e) }, 502);
   }
