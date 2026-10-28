@@ -221,39 +221,35 @@ const OLD = [
   ['Thesis-drafts', 'Folder', '1.4 GB', 8, 'Not modified for 8 months'],
   ['Zoom-recording.mp4', 'Videos', '920 MB', 4, 'Not modified for 4 months'],
 ];
-function storage(el) {
-  const cats = [['Images', 'img', 98], ['Videos', 'vid', 74], ['Audio', 'aud', 12], ['Documents', 'doc', 41], ['Archives', 'arc', 33], ['Installers', 'dmg', 29], ['Developer', 'dev', 22], ['Other', 'oth', 32]];
-  const ages = [['30 days', 1], ['90 days', 3], ['6 months', 6], ['1 year', 12], ['2 years', 24]];
-  el.innerHTML = `
-    <div class="d-storage">
-      <div class="d-vol"><b>Macintosh HD</b><span>341 GB used · 171 GB available · 512 GB</span></div>
-      <div class="d-bar" role="img" aria-label="Storage by category">${cats.map(([n, c, g]) => `<span title="${n} ${g} GB" style="flex:${g};background:var(--c-${c})"></span>`).join('')}<span style="flex:171" class="d-free"></span></div>
-      <ul class="d-legend d-legend-row">${cats.map(([n, c, g]) => `<li><i style="background:var(--c-${c})"></i>${n}<span>${g} GB</span></li>`).join('')}</ul>
-      <div class="d-row-head"><p class="d-label">Old-file review</p>
-        <div class="d-seg d-seg-sm" role="group" aria-label="Older than">${ages.map(([l, m]) => `<button type="button" data-m="${m}" aria-pressed="${m === 12}">${l}</button>`).join('')}</div>
-      </div>
-      <ul class="d-files"></ul>
-      <p class="d-foot">Based on modification date. Selected sizes may not equal recovered space (iCloud placeholders, APFS clones).</p>
-    </div>`;
-  const draw = (m) => {
-    el.querySelector('.d-files').innerHTML = OLD.filter((f) => f[3] >= m).map(([n, k, s, , why]) =>
-      `<li><span class="d-res-icon">${svg(k === 'Folder' ? ICON.folder : ICON.doc, 16)}</span><div><b>${esc(n)}</b><small>${k} · ${why}</small></div><em>${s}</em></li>`).join('');
-  };
-  bindAll(el, '[data-m]', 'click', (e) => {
-    el.querySelectorAll('[data-m]').forEach((b) => b.setAttribute('aria-pressed', String(b === e.currentTarget)));
-    draw(+e.currentTarget.dataset.m);
-  });
-  draw(12);
-}
-
-/* ---------------- Safe Cleanup ---------------- */
+/* ---------------- Clean Up (storage overview + review + Trash) ---------------- */
+const GB = (n) => (n >= 1 ? n.toFixed(1) + ' GB' : Math.round(n * 1000) + ' MB');
+const CLEAN_CARDS = [
+  ['Old files', 'Not changed in a year or more', OLD.slice(0, 4).map(([n, , s, , why]) => [n, parseFloat(s), why])],
+  ['Old installers', '.dmg and .pkg you already installed', [['Xcode_15.xip', 2.6, 'Installed · downloaded 8 months ago'], ['Slack.dmg', 0.14, 'Installed · downloaded 5 months ago'], ['Figma.dmg', 0.31, 'Installed · downloaded 3 months ago'], ['Zoom.pkg', 0.086, 'Installed · downloaded 4 months ago']]],
+  ['Big old videos', 'Over 1 GB, not opened in a year', [['Wedding-raw.mov', 3.2, 'Not modified for 2 years'], ['Drone-footage.mp4', 1.3, 'Not modified for 14 months']]],
+  ['Old screenshots', 'On your Desktop, older than 3 months', [['480 screenshots on the Desktop', 0.321, 'Oldest from March 2025']]],
+  ['Apps you don’t open', 'Not opened in 6 months', [['GarageBand.app', 1.6, 'Last opened 9 months ago'], ['Keynote.app', 0.8, 'Last opened 7 months ago']]],
+  ['Large files', 'Single files over 500 MB', [['Photos-library-export.zip', 1.4, 'Over 1 GB'], ['Keynote-deck-final.key', 0.82, 'Over 500 MB']]],
+];
 function cleanup(el) {
-  const files = [['macOS-Installer-old.dmg', 12.9], ['Photos-backup-2024.zip', 8.3], ['Conference-talk.mov', 3.1], ['Xcode-cache-copy', 2.4]];
-  const render = () => {
+  const cats = [['Images', 'img', 98], ['Videos', 'vid', 74], ['Audio', 'aud', 12], ['Documents', 'doc', 41], ['Archives', 'arc', 33], ['Installers', 'dmg', 29], ['Developer', 'dev', 22], ['Other', 'oth', 32]];
+  const overview = () => {
+    el.innerHTML = `
+      <div class="d-storage">
+        <div class="d-vol"><b>Macintosh HD</b><span>341 GB used · 171 GB available · 512 GB</span></div>
+        <div class="d-bar" role="img" aria-label="Storage by category">${cats.map(([n, c, g]) => `<span title="${n} ${g} GB" style="flex:${g};background:var(--c-${c})"></span>`).join('')}<span style="flex:171" class="d-free"></span></div>
+        <ul class="d-legend d-legend-row">${cats.map(([n, c, g]) => `<li><i style="background:var(--c-${c})"></i>${n}<span>${g} GB</span></li>`).join('')}</ul>
+        <div class="d-ccats">${CLEAN_CARDS.map(([t, sub, items], i) => `<div class="d-ccat"><span>${esc(t)}</span><b>${GB(items.reduce((a, x) => a + x[1], 0))}</b><small>${esc(sub)}</small><button type="button" class="btn btn-small btn-ghost" data-review="${i}">Review</button></div>`).join('')}</div>
+        <p class="d-foot">Files that only live in iCloud are skipped, so nothing gets downloaded.</p>
+      </div>`;
+    bindAll(el, '[data-review]', 'click', (e) => review(+e.currentTarget.dataset.review));
+  };
+  const review = (ci) => {
+    const [title, , items] = CLEAN_CARDS[ci];
     el.innerHTML = `
       <div class="d-clean">
-        <p class="d-label">Selected for review</p>
-        <ul class="d-checks">${files.map(([n, g], i) => `<li><label><input type="checkbox" data-g="${g}" ${i < 3 ? 'checked' : ''}> <span>${esc(n)}</span><em>${g} GB</em></label></li>`).join('')}</ul>
+        <div class="d-row-head"><p class="d-label">${esc(title)}</p><button type="button" class="btn btn-small btn-ghost d-back">‹ Clean Up</button></div>
+        <ul class="d-checks">${items.map(([n, g, why]) => `<li><label><input type="checkbox" data-g="${g}" checked> <span>${esc(n)}<small>${esc(why)}</small></span><em>${GB(g)}</em></label></li>`).join('')}</ul>
         <div class="d-clean-foot"><span class="d-total" aria-live="polite"></span><button type="button" class="btn btn-small d-trash">Move to Trash…</button></div>
         <div class="d-confirm" hidden role="alertdialog" aria-label="Confirm move to Trash">
           <p><b>Move <span class="n"></span> to Trash?</b> You can put them back from the Trash any time.</p>
@@ -262,12 +258,12 @@ function cleanup(el) {
       </div>`;
     const total = () => {
       const c = [...el.querySelectorAll('input:checked')];
-      const gb = c.reduce((a, x) => a + +x.dataset.g, 0);
-      el.querySelector('.d-total').textContent = `${c.length} item${c.length === 1 ? '' : 's'} · ${gb.toFixed(1)} GB selected`;
+      el.querySelector('.d-total').textContent = `${c.length} item${c.length === 1 ? '' : 's'} · ${GB(c.reduce((a, x) => a + +x.dataset.g, 0))} selected`;
       el.querySelector('.d-trash').disabled = c.length === 0;
       return c.length;
     };
     bindAll(el, 'input', 'change', total);
+    el.querySelector('.d-back').addEventListener('click', overview);
     el.querySelector('.d-trash').addEventListener('click', () => {
       const n = total();
       el.querySelector('.d-confirm .n').textContent = `${n} item${n === 1 ? '' : 's'}`;
@@ -281,14 +277,115 @@ function cleanup(el) {
         <div class="d-report" role="status">
           <span class="d-report-icon">${svg(ICON.check, 22)}</span>
           <p><b>${n} item${n === 1 ? '' : 's'} moved to Trash.</b></p>
-          <p>Added to cleanup history. Nothing was permanently deleted.</p>
-          <button type="button" class="btn btn-small btn-ghost d-again">Reset demo</button>
+          <p>Added to cleanup history. Nothing was permanently deleted, and ⌘Z puts it back.</p>
+          <p class="d-offer">Want this to happen on its own? <b>Automatic clean up</b> can tidy old installers and screenshots. It is off until you turn it on.</p>
+          <button type="button" class="btn btn-small btn-ghost d-again">Back to Clean Up</button>
         </div>`;
-      el.querySelector('.d-again').addEventListener('click', render);
+      el.querySelector('.d-again').addEventListener('click', overview);
     });
     total();
   };
-  render();
+  overview();
+}
+
+/* ---------------- Recents ---------------- */
+const RECENT_DAYS = [
+  ['Today', [['Trip.mov', 'Video · 0:42', 200], ['Invoice 0412.pdf', 'PDF · 188 KB'], ['Screenshot 9.41.png', 'Screenshot', 260], ['Brief.pdf', 'PDF · 2.4 MB']]],
+  ['Yesterday', [['Sunset.heic', 'Photo', 30], ['Mix.m4a', 'Audio · 3:12'], ['Lease agreement.pdf', 'PDF · 640 KB']]],
+  ['Earlier this week', [['Backup.zip', 'ZIP · 1.4 GB'], ['Team photo.jpg', 'Photo', 120]]],
+];
+function recents(el) {
+  const all = RECENT_DAYS.flatMap(([, f]) => f);
+  let open = -1;
+  el.innerHTML = `
+    <div class="d-rec">
+      <div class="d-row-head"><p class="d-label">Newest first</p><div class="d-seg d-seg-sm" role="group" aria-label="View"><button type="button" data-v="grid" aria-pressed="true">Grid ⌘1</button><button type="button" data-v="list" aria-pressed="false">List ⌘2</button></div></div>
+      ${RECENT_DAYS.map(([day, files]) => `<p class="d-day">${day}</p><div class="d-rec-grid">${files.map((f) => { const i = all.indexOf(f); return `<button type="button" class="d-rec-file" data-i="${i}" aria-label="${esc(f[0])}, ${esc(f[1])}. Press Space for Quick Look">${f[2] === undefined ? `<span class="d-rec-art">${svg(ICON.doc, 22)}</span>` : `<span class="d-rec-art ph" style="--h:${f[2]}"></span>`}<b>${esc(f[0])}</b><small>${esc(f[1])}</small></button>`; }).join('')}</div>`).join('')}
+      <p class="d-foot">Click or press Space for Quick Look · ← → next file · right-click for more</p>
+      <div class="d-ql" hidden role="dialog" aria-label="Quick Look"><div class="d-ql-bar"><b></b><span><button type="button" class="btn btn-small btn-ghost" data-step="-1" aria-label="Previous file">←</button><button type="button" class="btn btn-small btn-ghost" data-step="1" aria-label="Next file">→</button><button type="button" class="btn btn-small btn-ghost d-ql-x">Close</button></span></div><div class="d-ql-art"></div></div>
+      <ul class="d-ctx" hidden role="menu">${[['Open', '⌘O'], ['Quick Look', 'Space'], ['Show in Finder', '⌥⌘R'], ['Copy Path', '⌥⌘C'], ['Move to Trash', '⌘⌫']].map(([t, k]) => `<li role="menuitem" tabindex="-1">${t}<kbd>${k}</kbd></li>`).join('')}</ul>
+      <p class="d-status" role="status"></p>
+    </div>`;
+  const ql = el.querySelector('.d-ql'), ctx = el.querySelector('.d-ctx');
+  const show = (i) => {
+    open = (i + all.length) % all.length; const f = all[open];
+    ql.querySelector('b').textContent = f[0];
+    ql.querySelector('.d-ql-art').innerHTML = f[2] === undefined ? `<span class="d-rec-art">${svg(ICON.doc, 48)}</span>` : `<span class="d-rec-art ph" style="--h:${f[2]}"></span>`;
+    ql.hidden = false; ql.querySelector('.d-ql-x').focus();
+  };
+  const close = () => { ql.hidden = true; const b = el.querySelector(`.d-rec-file[data-i="${open}"]`); open = -1; if (b) b.focus(); };
+  bindAll(el, '.d-rec-file', 'click', (e) => show(+e.currentTarget.dataset.i));
+  bindAll(el, '[data-step]', 'click', (e) => show(open + +e.currentTarget.dataset.step));
+  el.querySelector('.d-ql-x').addEventListener('click', close);
+  el.addEventListener('keydown', (e) => {
+    if (!ql.hidden) {
+      if (e.key === 'Escape' || e.key === ' ') { e.preventDefault(); close(); }
+      else if (e.key === 'ArrowRight' || e.key === 'ArrowLeft') { e.preventDefault(); e.stopPropagation(); show(open + (e.key === 'ArrowRight' ? 1 : -1)); }
+      return;
+    }
+    const f = e.target.closest('.d-rec-file');
+    if (f && e.key === ' ') { e.preventDefault(); show(+f.dataset.i); }
+    if (e.key === 'Escape') ctx.hidden = true;
+  });
+  el.addEventListener('contextmenu', (e) => {
+    const f = e.target.closest('.d-rec-file'); if (!f) return;
+    e.preventDefault();
+    const r = el.querySelector('.d-rec').getBoundingClientRect();
+    ctx.style.left = `${Math.min(e.clientX - r.left, r.width - 200)}px`; ctx.style.top = `${e.clientY - r.top}px`;
+    ctx.dataset.i = f.dataset.i; ctx.hidden = false; ctx.querySelector('li').focus();
+  });
+  ctx.addEventListener('click', (e) => {
+    const li = e.target.closest('li'); if (!li) return;
+    ctx.hidden = true;
+    el.querySelector('.d-status').textContent = `In the app, “${li.firstChild.textContent}” would act on ${all[+ctx.dataset.i][0]}. This preview never touches your files.`;
+  });
+  document.addEventListener('click', (e) => { if (!ctx.contains(e.target)) ctx.hidden = true; });
+  bindAll(el, '[data-v]', 'click', (e) => {
+    const v = e.currentTarget.dataset.v;
+    el.querySelectorAll('[data-v]').forEach((b) => b.setAttribute('aria-pressed', String(b.dataset.v === v)));
+    el.querySelector('.d-rec').classList.toggle('is-list', v === 'list');
+  });
+}
+
+/* ---------------- Downloaded From ---------------- */
+const SOURCES = [['Safari', '#3a8dff', 131, '1.0 GB'], ['Mail', '#5b7cfa', 104, '120 MB'], ['Slack', '#a46bf5', 79, '103 MB'], ['ChatGPT', '#16a07a', 63, '98 MB'], ['WhatsApp', '#3fb985', 37, '212 MB'], ['AirDrop', '#3aa7d9', 22, '3.1 GB']];
+const FROM_MAIL = [['Invoice 0412.pdf', 'billing@acme.com', 'Oct 2'], ['Lease agreement.pdf', 'landlord@homes.co', 'Oct 9'], ['Offer letter.pdf', 'people@studio.io', 'Oct 14'], ['Boarding pass.png', 'trips@skyline.air', 'Oct 18']];
+function downloaded(el) {
+  const sources = () => {
+    el.innerHTML = `<div class="d-dl"><p class="d-label">913 files from 9 places · biggest first</p><div class="d-srcs">${SOURCES.map(([n, c, k, s]) => `<button type="button" class="d-src" data-src="${n}" style="--t:${c}"><span class="d-src-gl" aria-hidden="true">${n[0]}</span><span><b>${n}</b><small>${k} files · ${s}</small></span></button>`).join('')}</div></div>`;
+    bindAll(el, '.d-src', 'click', (e) => files(e.currentTarget.dataset.src));
+  };
+  const files = (src) => {
+    const list = src === 'Mail' ? FROM_MAIL : FROM_MAIL.slice(0, 2).map(([n, , d]) => [n, src, d]);
+    el.innerHTML = `<div class="d-dl">
+      <div class="d-searchbox d-tokenbox"><span class="d-tokens"><button type="button" class="d-token" aria-label="Remove filter: From ${src}">From: ${src}<span aria-hidden="true">×</span></button></span><output class="d-q">invoice, lease, letter…</output></div>
+      <ul class="d-results">${list.map(([n, who, d]) => `<li><span class="d-res-icon">${svg(ICON.doc, 18)}</span><div><b>${esc(n)}</b><small>From ${esc(src)} · ${esc(who)} · ${d}</small></div></li>`).join('')}</ul>
+      <p class="d-foot">A source is just a search with a “From” token. Remove it with × to see every source again.</p></div>`;
+    el.querySelector('.d-token').addEventListener('click', sources);
+  };
+  sources();
+}
+
+/* ---------------- Smart Rename ---------------- */
+function rename(el) {
+  const rows = [['document (2).pdf', 'Lease agreement 2026.pdf'], ['IMG_8831.png', 'Flight SK 482 boarding pass.png'], ['scan0012.pdf', 'Electricity bill Sep 2026.pdf']];
+  const review = () => {
+    el.innerHTML = `<div class="d-ren">
+      <p class="d-label">3 downloads with names that say nothing</p>
+      <ul class="d-checks">${rows.map(([o, n], i) => `<li><label><input type="checkbox" data-i="${i}" checked> <span><s>${esc(o)}</s> → <b>${esc(n)}</b></span></label></li>`).join('')}</ul>
+      <div class="d-clean-foot"><span class="d-total">Only unclear names are suggested. Names you typed are never touched.</span><button type="button" class="btn btn-small d-go">Rename 3 files</button></div></div>`;
+    const btn = el.querySelector('.d-go');
+    const count = () => { const n = el.querySelectorAll('input:checked').length; btn.textContent = `Rename ${n} file${n === 1 ? '' : 's'}`; btn.disabled = !n; };
+    bindAll(el, 'input', 'change', count);
+    btn.addEventListener('click', () => {
+      const picked = [...el.querySelectorAll('input:checked')].map((x) => rows[+x.dataset.i]);
+      el.innerHTML = `<div class="d-ren"><div class="d-report" role="status"><span class="d-report-icon">${svg(ICON.check, 22)}</span><p><b>Renamed ${picked.length} file${picked.length === 1 ? '' : 's'}.</b></p><ul class="d-renamed">${picked.map(([, n]) => `<li>${esc(n)}</li>`).join('')}</ul><button type="button" class="btn btn-small btn-ghost d-undo">Undo</button></div>
+        <label class="d-auto"><span>Name new downloads automatically<small>Only unclear names. Every rename can be undone.</small></span><button type="button" class="d-switch" aria-pressed="false" aria-label="Name new downloads automatically"></button></label></div>`;
+      el.querySelector('.d-undo').addEventListener('click', review);
+      el.querySelector('.d-switch').addEventListener('click', (e) => e.currentTarget.setAttribute('aria-pressed', String(e.currentTarget.getAttribute('aria-pressed') !== 'true')));
+    });
+  };
+  review();
 }
 
 /* ---------------- Duplicates ---------------- */
@@ -377,31 +474,6 @@ function organizer(el) {
   });
 }
 
-/* ---------------- Quick Search & Command Panel ---------------- */
-function quicksearch(el) {
-  const files = ['Passport-scan.pdf', 'Project-plan.key', 'Invoice-March.pdf', 'Beach-sunset.heic', 'Budget-2026.numbers', 'Screenshot 2026-10-12.png', 'Lease-agreement.pdf'];
-  const actions = ['Find old files', 'Review large downloads', 'Capture screenshot', 'Paste from clipboard history', 'Restore window layout'];
-  el.innerHTML = `
-    <div class="d-qs">
-      <div class="d-qs-bg" aria-hidden="true"><span>Mail</span><span>Notes</span><span>Safari</span></div>
-      <div class="d-qs-panel">
-        <label class="d-qs-input">${svg('<circle cx="10.5" cy="10.5" r="6.5"/><path d="m20 20-4.8-4.8"/>')}<span class="visually-hidden">Quick search</span><input type="text" placeholder="Search files and actions…" value="pdf"><kbd>⌥ Space</kbd></label>
-        <p class="d-label">Files</p><ul class="d-qs-files"></ul>
-        <p class="d-label">Actions</p><ul class="d-qs-actions"></ul>
-      </div>
-    </div>`;
-  const input = el.querySelector('input');
-  const draw = () => {
-    const q = input.value.trim().toLowerCase();
-    const f = files.filter((x) => x.toLowerCase().includes(q)).slice(0, 4);
-    const a = actions.filter((x) => !q || x.toLowerCase().includes(q) || q.length < 2).slice(0, 3);
-    el.querySelector('.d-qs-files').innerHTML = f.length ? f.map((x) => `<li>${svg(ICON.doc, 14)} ${esc(x)}<small>⏎ Open · ⌘R Reveal</small></li>`).join('') : '<li class="d-muted">No matching files</li>';
-    el.querySelector('.d-qs-actions').innerHTML = (a.length ? a : actions.slice(0, 2)).map((x) => `<li>${esc(x)}</li>`).join('');
-  };
-  input.addEventListener('input', draw);
-  draw();
-}
-
 /* ---------------- Clipboard History ---------------- */
 function clipboard(el) {
   let paused = false;
@@ -464,6 +536,6 @@ function similar(el) {
 }
 
 export const DEMOS = {
-  home, library, images, search, storage, cleanup, duplicates, organizer,
-  quicksearch, clipboard,
+  home, recents, library, images, search, downloaded, clipboard,
+  cleanup, duplicates, organizer, rename,
 };

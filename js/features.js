@@ -14,11 +14,12 @@ const I = {
   library: '<rect x="3" y="3" width="7.5" height="7.5" rx="2"/><rect x="13.5" y="3" width="7.5" height="7.5" rx="2"/><rect x="3" y="13.5" width="7.5" height="7.5" rx="2"/><rect x="13.5" y="13.5" width="7.5" height="7.5" rx="2"/>',
   images: '<rect x="3" y="4.5" width="18" height="15" rx="2.5"/><circle cx="8.5" cy="9.5" r="1.8"/><path d="m21 16-5-5-9 8.5"/>',
   search: '<circle cx="10.5" cy="10.5" r="6.5"/><path d="m20 20-4.8-4.8"/><path d="M10.5 7.5v6M7.5 10.5h6" opacity=".6"/>',
-  storage: '<ellipse cx="12" cy="6" rx="8" ry="3"/><path d="M4 6v12c0 1.7 3.6 3 8 3s8-1.3 8-3V6"/><path d="M4 12c0 1.7 3.6 3 8 3s8-1.3 8-3"/>',
   cleanup: '<path d="M4 7h16"/><path d="M9 7V4.5h6V7"/><path d="M6 7l1 13h10l1-13"/><path d="M10 11v5M14 11v5"/>',
   duplicates: '<rect x="8" y="8" width="12" height="12" rx="2.5"/><path d="M16 8V5.5A1.5 1.5 0 0 0 14.5 4h-9A1.5 1.5 0 0 0 4 5.5v9A1.5 1.5 0 0 0 5.5 16H8"/>',
   organizer: '<path d="M3 7.5V18a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V9.5a2 2 0 0 0-2-2h-7L10 5H5a2 2 0 0 0-2 2.5Z"/><path d="m9.5 14 2 2 3.5-4"/>',
-  quicksearch: '<rect x="3" y="5" width="18" height="14" rx="3"/><path d="M7 10h3M7 14h10"/><circle cx="15.5" cy="10" r="1.5"/>',
+  recents: '<circle cx="12" cy="12" r="8.5"/><path d="M12 7.5V12l3 2"/>',
+  downloaded: '<circle cx="12" cy="12" r="8.5"/><path d="M12 7.5v8M8.5 12.5 12 16l3.5-3.5"/>',
+  rename: '<path d="M4 18 9 6l5 12M5.8 14h6.4"/><path d="M17 4v16M15 4h4M15 20h4"/>',
   clipboard: '<rect x="5" y="5" width="14" height="16" rx="2.5"/><rect x="9" y="3" width="6" height="4" rx="1.2"/><path d="M8.5 12h7M8.5 16h5"/>',
 };
 
@@ -33,6 +34,17 @@ export const FEATURES = [
       'Large-file, old-file and duplicate suggestions you can open in one click.',
       'Live indexing status and on-device AI availability.',
       'Shows “loading”, “unavailable” or “permission needed” instead of fake numbers.',
+    ],
+  },
+  {
+    id: 'recents', group: 'Discover', icon: I.recents, release: 'At launch', source: 'Seek + Homy',
+    title: 'Recents', short: 'Newest first, grouped by day',
+    headline: 'The file you just downloaded is always first.',
+    points: [
+      'Everything you added, saved or downloaded lately, grouped by Today, Yesterday and earlier.',
+      'Press Space for Quick Look and use ← → to step through. Grid or list with ⌘1 and ⌘2.',
+      'Right-click any file for Open, Show in Finder, Copy Path and Move to Trash, each with its shortcut.',
+      'Open Recents from anywhere with ⇧⌘R, or drag a file straight into Mail or Slack.',
     ],
   },
   {
@@ -68,27 +80,38 @@ export const FEATURES = [
       'Copy recognised text in one click. Without Apple Intelligence, name and text search still work.',
     ],
   },
-  // ---------- Clean up ----------
   {
-    id: 'storage', group: 'Clean up', icon: I.storage, release: 'At launch', source: 'MacSprint', meta: { text: '10', tone: 'alert', label: '10 large files' },
-    title: 'Storage Intelligence', short: 'See what fills your disk',
-    headline: 'See exactly where your space went.',
+    id: 'downloaded', group: 'Discover', icon: I.downloaded, release: 'At launch', source: 'Seek + Homy', meta: { text: '913' },
+    title: 'Downloaded From', short: 'Files grouped by where they came from',
+    headline: 'Remember who sent it, not what it was called.',
     points: [
-      'Category breakdown, largest files and largest folders.',
-      'Old-file review from 30 days to 2 years, or a custom age.',
-      'Honest labels such as “Not modified for 18 months” — never “unused” without proof.',
-      'Volume totals kept separate from scans of your chosen folders.',
+      'Every download grouped by source: Safari, Mail, Slack, WhatsApp, AirDrop, ChatGPT and any website.',
+      'Biggest sources first, with file counts and sizes.',
+      'Opening a source is a search with a “From” token, so you can narrow it down by typing.',
+      'The inspector shows where any file came from and when. Opens with ⇧⌘J.',
     ],
   },
   {
-    id: 'cleanup', group: 'Clean up', icon: I.cleanup, release: 'At launch', source: 'MacSprint', meta: { text: '14.1 GB', tone: 'good', label: 'up to 14.1 GB to review' },
-    title: 'Safe Cleanup', short: 'Preview, confirm, move to Trash',
-    headline: 'Nothing disappears without your say‑so.',
+    id: 'clipboard', group: 'Discover', icon: I.clipboard, release: '1.2', source: 'MacSprint',
+    title: 'Clipboard History', short: 'Never lose a copied item',
+    headline: 'Everything you copied, searchable.',
     points: [
-      'Every change is previewed with the total selected size.',
-      'Files go to the macOS Trash — never deleted outright.',
-      'Cleanup history and a report after every action.',
-      'System and app folders are excluded by default.',
+      'Text and image history with pinned snippets.',
+      'A quick-paste panel from the keyboard.',
+      'Pause anytime, exclude apps and set how long history is kept.',
+      'Stored locally; password fields are never recorded on purpose.',
+    ],
+  },
+  // ---------- Clean up ----------
+  {
+    id: 'cleanup', group: 'Clean up', icon: I.cleanup, release: 'At launch', source: 'MacSprint + Homy', meta: { text: '14.1 GB', tone: 'good', label: 'up to 14.1 GB to review' },
+    title: 'Clean Up', short: 'Where space went, and getting it back',
+    headline: 'See where your space went. Get it back safely.',
+    points: [
+      'The disk bar by category, then cards for old files, old installers, big old videos, old screenshots, apps you do not open and large files.',
+      'Every card opens a review with honest labels such as “Not modified for 18 months”.',
+      'Preview, confirm, and files go to the macOS Trash, never deleted outright. Undo anything.',
+      'Optional automatic clean up for old installers and screenshots, off until you turn it on.',
     ],
   },
   {
@@ -111,43 +134,33 @@ export const FEATURES = [
       'Never overwrites; name collisions are handled and every action is logged.',
     ],
   },
-  // ---------- Everyday ----------
   {
-    id: 'quicksearch', group: 'Everyday', icon: I.quicksearch, release: '1.2', source: 'Homy + MacSprint',
-    title: 'Quick Search & Command Panel', short: 'A shortcut away, from any app',
-    headline: 'One shortcut. Any file, any action.',
+    id: 'rename', group: 'Clean up', icon: I.rename, release: '1.1', source: 'Seek',
+    title: 'Smart Rename', short: 'Clear names for junk downloads',
+    headline: '“document (2).pdf” becomes “Lease agreement 2026.pdf”.',
     points: [
-      'A compact panel drops in over whatever app you are using.',
-      'Search files, then open, reveal or copy their path.',
-      'Run actions: find old files, capture a screenshot, restore a layout.',
-      'Keyboard-first, with a shortcut you can change.',
-    ],
-  },
-  {
-    id: 'clipboard', group: 'Everyday', icon: I.clipboard, release: '1.2', source: 'MacSprint',
-    title: 'Clipboard History', short: 'Never lose a copied item',
-    headline: 'Everything you copied, searchable.',
-    points: [
-      'Text and image history with pinned snippets.',
-      'A quick-paste panel from the keyboard.',
-      'Pause anytime, exclude apps and set how long history is kept.',
-      'Stored locally; password fields are never recorded on purpose.',
+      'Reads what is inside a download and suggests a clear name, on your Mac.',
+      'Only unclear names are suggested; names you typed yourself are never touched.',
+      'Review every suggestion before it applies, and undo any rename.',
+      'Optionally name new downloads automatically. Off until you turn it on.',
     ],
   },
 ];
 
 export const PROBLEMS = [
   { letter: 'A', title: 'Preview won’t go to the next photo in the folder', featureId: 'images' },
-  { letter: 'B', title: 'No idea what’s filling your disk', featureId: 'storage' },
-  { letter: 'C', title: 'Years of forgotten files', featureId: 'storage' },
+  { letter: 'B', title: 'No idea what’s filling your disk', featureId: 'cleanup' },
+  { letter: 'C', title: 'Years of forgotten files', featureId: 'cleanup' },
   { letter: 'D', title: 'You remember what’s in a file, not its name', featureId: 'search' },
   { letter: 'E', title: 'Important text trapped in screenshots', featureId: 'search' },
-  { letter: 'F', title: 'A Downloads folder out of control', featureId: 'organizer' },
-  { letter: 'G', title: 'The same file saved three times', featureId: 'duplicates' },
-  { letter: 'H', title: 'Ten photos of the same sunset', featureId: 'duplicates' },
-  { letter: 'I', title: 'Copying one thing erases the last', featureId: 'clipboard' },
-  { letter: 'J', title: 'Finding a file means leaving what you’re doing', featureId: 'quicksearch' },
-  { letter: 'K', title: 'Worried about private files leaving your Mac', featureId: 'home', anchor: '#privacy' },
+  { letter: 'F', title: 'Where did that download go?', featureId: 'recents' },
+  { letter: 'G', title: 'Who sent me that file?', featureId: 'downloaded' },
+  { letter: 'H', title: 'A Downloads folder out of control', featureId: 'organizer' },
+  { letter: 'I', title: '“document (2).pdf” tells you nothing', featureId: 'rename' },
+  { letter: 'J', title: 'The same file saved three times', featureId: 'duplicates' },
+  { letter: 'K', title: 'Ten photos of the same sunset', featureId: 'duplicates' },
+  { letter: 'L', title: 'Copying one thing erases the last', featureId: 'clipboard' },
+  { letter: 'M', title: 'Worried about private files leaving your Mac', featureId: 'home', anchor: '#privacy' },
 ];
 
 export const iconSvg = (inner, size = 18) =>
@@ -158,7 +171,7 @@ export const badgeClass = (release) =>
 export const badgeLabel = (release) => (release === 'At launch' ? 'At launch' : 'Coming in ' + release);
 
 export const SHORTCUTS = [
-  { group: 'Find', items: [['Quick Search, from any app', ['⌥', 'Space']], ['Search in MacSprint', ['⌘', 'F']], ['Command panel', ['⌘', 'K']], ['Copy text from images', ['⇧', '⌘', 'C']], ['Downloaded From', ['⇧', '⌘', 'J']]] },
-  { group: 'View', items: [['Next / previous image', ['←', '→']], ['Grid view', ['⌘', '1']], ['List view', ['⌘', '2']], ['Quick Look', ['Space']], ['Inspector', ['⌘', 'I']]] },
-  { group: 'Tidy', items: [['Duplicates', ['⇧', '⌘', 'D']], ['Clean Up', ['⇧', '⌘', 'K']], ['Clipboard history', ['⇧', '⌘', 'V']], ['Organize Downloads', ['⇧', '⌘', 'O']], ['Move to Trash', ['⌘', '⌫']]] },
+  { group: 'Go', items: [['Home', ['⇧', '⌘', 'H']], ['Recents', ['⇧', '⌘', 'R']], ['Library', ['⇧', '⌘', 'L']], ['Downloaded From', ['⇧', '⌘', 'J']], ['Clipboard', ['⇧', '⌘', 'V']], ['Clean Up', ['⇧', '⌘', 'K']], ['Duplicates', ['⇧', '⌘', 'D']], ['Organizer', ['⇧', '⌘', 'O']]] },
+  { group: 'Find and view', items: [['Search', ['⌘', 'F']], ['Copy text from images', ['⇧', '⌘', 'C']], ['Save search', ['⌘', 'S']], ['Quick Look', ['Space']], ['Grid / List', ['⌘', '1', '⌘', '2']], ['Inspector', ['⌘', 'I']], ['Back / Forward', ['⌘', '[', '⌘', ']']]] },
+  { group: 'Act', items: [['Open', ['⌘', 'O']], ['Show in Finder', ['⌥', '⌘', 'R']], ['Copy path', ['⌥', '⌘', 'C']], ['Move to Trash', ['⌘', '⌫']], ['Undo', ['⌘', 'Z']]] },
 ];

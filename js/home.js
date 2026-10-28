@@ -41,7 +41,7 @@ const CLEAN = [
   { label: 'Duplicates', tint: 'pink', icon: 'copy', big: '44.8 MB', sub: '24 extra copies', go: 'duplicates', dots: glyphDot('zip', 'c-doc') + glyphDot('zip', 'c-doc') + phDot(200) },
   { label: 'Old Downloads', tint: 'blue', icon: 'down', big: '11.5 GB', sub: '1,227 items', go: 'organizer', dots: glyphDot('app', 'c-dev') + glyphDot('app', 'c-vid') + glyphDot('zip', 'c-doc') },
   { label: 'Old Screenshots', tint: 'peach', icon: 'shot', big: '321.3 MB', sub: '480 items', go: 'cleanup', dots: phDot(250) + phDot(90) + phDot(160) },
-  { label: 'Large Files', tint: 'mint', icon: 'disk', big: '2.2 GB', sub: '10 items', go: 'storage', dots: phDot(330) + glyphDot('app', 'c-dev') + phDot(40) },
+  { label: 'Large Files', tint: 'mint', icon: 'disk', big: '2.2 GB', sub: '10 items', go: 'cleanup', dots: phDot(330) + glyphDot('app', 'c-dev') + phDot(40) },
 ];
 
 const SOURCES = [
@@ -87,9 +87,9 @@ export function homeMarkup({ compact = false } = {}) {
       </div>
 
       ${compact ? '' : `
-      <div class="hm-head"><h4>Downloaded From</h4><span class="hm-count">129</span><button type="button" class="hm-seeall" data-go="library">See all →</button></div>
+      <div class="hm-head"><h4>Downloaded From</h4><span class="hm-count">129</span><button type="button" class="hm-seeall" data-go="downloaded">See all →</button></div>
       <div class="hm-srcs">${SOURCES.map((s) => `
-        <button type="button" class="hm-src" data-go="library" aria-label="Downloaded from ${s.name}: ${s.files}, ${s.size}">
+        <button type="button" class="hm-src" data-go="downloaded" aria-label="Downloaded from ${s.name}: ${s.files}, ${s.size}">
           <span class="hm-src-icon">${svg(G[s.icon], 18)}</span>
           <span class="hm-src-text"><b>${s.name}</b><small>${s.files} · ${s.size}</small></span>
           <span class="hm-dots">${s.dots}</span>
@@ -108,22 +108,46 @@ export function bindHome(el, go) {
 
 // Static, non-interactive copy of the app window for the hero.
 export function heroWindowMarkup() {
-  const side = [
-    ['Home', '', true], ['Recents', ''], ['Images', '2,280'], ['Videos', '162'], ['Music', '34'], ['Documents', '201'], ['Archives', '93'], ['Apps', '110'],
-  ];
-  const tools = [['Large Files', '10', 'alert'], ['Duplicates', '44.8 MB', 'good'], ['Clean Up', '14.1 GB', 'good']];
+  const side = [['Home', '', true], ['Recents', ''], ['Library', '2,880'], ['Downloaded From', '913'], ['Clipboard', '']];
+  const tools = [['Clean Up', '14.1 GB', 'good'], ['Duplicates', '44.8 MB', 'good'], ['Organizer', '']];
   const row = ([n, m, tone]) => `<li${tone === true ? ' class="on"' : ''}><span>${n}</span>${m ? `<em class="${typeof tone === 'string' ? 'is-' + tone : ''}">${m}</em>` : ''}</li>`;
   return `
     <aside class="hw-side">
       <div class="hw-lights"><i></i><i></i><i></i></div>
       <div class="ex-brand"><span class="wm" style="font-size:17px"><span class="wm-m">Mac</span> <span class="wm-s">SPRINT</span></span></div>
+      <p class="hw-label hw-label-top">Discover</p>
       <ul>${side.map(row).join('')}</ul>
-      <ul class="hw-sep">${tools.map(row).join('')}</ul>
+      <p class="hw-label">Clean up</p>
+      <ul>${tools.map(row).join('')}</ul>
       <p class="hw-label">Locations</p>
       <ul class="hw-locs">${['Desktop', 'Documents', 'Downloads', 'Pictures'].map((l) => `<li><span>${l}</span></li>`).join('')}</ul>
     </aside>
     <div class="hw-main">
-      <div class="ex-toolbar"><span class="ex-search"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="10.5" cy="10.5" r="6.5"/><path d="m20 20-4.8-4.8"/></svg><span>Ask anything, e.g. “pdfs from last week”</span><kbd>⌘</kbd><kbd>F</kbd><span class="ex-ai">AI</span></span><span class="ex-libsize">Library size <b>30.19 GB</b></span></div>
+      <div class="ex-toolbar"><span class="ex-search hw-search"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="10.5" cy="10.5" r="6.5"/><path d="m20 20-4.8-4.8"/></svg><span class="hw-q">Ask anything, e.g. “pdfs from last week”</span><kbd>⌘</kbd><kbd>F</kbd><span class="ex-ai">AI</span></span><span class="ex-libsize">Library size <b>30.19 GB</b></span></div>
       <div class="hw-content">${homeMarkup({ compact: true })}</div>
     </div>`;
+}
+
+// Example searches under the hero window (idea from Seek): each one shows how the
+// search reads the query, as tokens, and a few sample results. "Home" goes back.
+const TRY = [
+  { q: 'videos from september', tokens: ['Videos', 'September'], rest: '', files: [['Trip.mov', 'Video · Sep 20', 200], ['Wedding-highlights.mov', 'Video · Sep 6', 330], ['Drone-footage.mp4', 'Video · Sep 2', 150]] },
+  { q: 'wifi password screenshot', tokens: ['Screenshots'], rest: 'wifi password', files: [['IMG_2048.png', 'Text in image: “WiFi password: lemon-tree-42”', 260]] },
+  { q: 'pdfs from mail this month', tokens: ['PDFs', 'From: Mail', 'This month'], rest: '', files: [['Invoice 0412.pdf', 'PDF · From Mail · Oct 2'], ['Lease agreement.pdf', 'PDF · From Mail · Oct 9'], ['Offer letter.pdf', 'PDF · From Mail · Oct 14']] },
+  { q: 'zips in downloads older than a year', tokens: ['Archives', 'In Downloads', 'Over 1 year'], rest: '', files: [['fonts-pack.zip', 'ZIP · 312 MB · 2 years'], ['project-backup-old.zip', 'ZIP · 1.1 GB · 14 months']] },
+];
+export function heroTryMarkup() {
+  return `<span class="hero-try-label">Try</span>${TRY.map((t, i) => `<button type="button" class="hero-try-chip" data-i="${i}" aria-pressed="false">“${t.q}”</button>`).join('')}<button type="button" class="hero-try-chip" data-i="home" aria-pressed="true">Home</button><span class="visually-hidden" role="status" id="hero-try-status"></span>`;
+}
+export function bindHeroTry(row, win) {
+  const content = win.querySelector('.hw-content'), q = win.querySelector('.hw-q'), home = content.innerHTML, placeholder = q.innerHTML;
+  row.addEventListener('click', (e) => {
+    const b = e.target.closest('.hero-try-chip'); if (!b) return;
+    row.querySelectorAll('.hero-try-chip').forEach((x) => x.setAttribute('aria-pressed', String(x === b)));
+    if (b.dataset.i === 'home') { content.innerHTML = home; q.innerHTML = placeholder; row.querySelector('#hero-try-status').textContent = 'Showing Home'; return; }
+    const t = TRY[+b.dataset.i];
+    q.innerHTML = t.tokens.map((k) => `<i class="hw-tok">${k}</i>`).join('') + (t.rest ? ` ${t.rest}` : '');
+    content.innerHTML = `<div class="hw-results">${t.files.map(([n, meta, h]) => `<figure>${h === undefined ? `<span class="hw-doc">${svg(G.doc, 26)}</span>` : `<span class="ph" style="--h:${h}"></span>`}<figcaption><b>${n}</b><small>${meta}</small></figcaption></figure>`).join('')}</div><p class="hw-status"><span><b>${t.files.length} result${t.files.length === 1 ? '' : 's'}</b> · Understood as filters</span><span>On your Mac</span></p>`;
+    row.querySelector('#hero-try-status').textContent = `Showing ${t.files.length} sample results for ${t.q}`;
+  });
 }

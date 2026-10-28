@@ -67,10 +67,10 @@ const paneTitle = (p) => p.textContent('#explorer .ex-pane h3');
 check('explorerTabsSelectEachFeature', async (b) => {
   const p = await open(b);
   const features = await getFeatures(p);
-  assert(features.length === 10, 'expected 10 features, got ' + features.length);
+  assert(features.length === 11, 'expected 11 features, got ' + features.length);
   const tabs = p.locator('#explorer [role=tab]');
-  assert(await tabs.count() === 10, 'expected 10 tabs, got ' + await tabs.count());
-  for (let i = 0; i < 10; i++) {
+  assert(await tabs.count() === 11, 'expected 11 tabs, got ' + await tabs.count());
+  for (let i = 0; i < 11; i++) {
     await tabs.nth(i).click();
     assert(await tabs.nth(i).getAttribute('aria-selected') === 'true', 'tab not selected: ' + i);
     const t = await paneTitle(p);
@@ -136,7 +136,7 @@ check('demosCoverEveryFeature', async (b) => {
   });
   assert(missing.length === 0, 'features without demo: ' + missing.join(','));
   const tabs = p.locator('#explorer [role=tab]');
-  for (let i = 0; i < 10; i++) {
+  for (let i = 0; i < 11; i++) {
     await tabs.nth(i).click();
     assert((await demoText(p)).trim().length > 0, 'empty demo at tab ' + i);
   }
@@ -185,8 +185,10 @@ check('demoOrganizerNeedsReview', async (b) => {
   assert(!(await approve.isDisabled()), 'Approve should enable after review');
 });
 
-check('demoStorageHonestLabels', async (b) => {
-  const p = await open(b, { hash: '#feature-storage' });
+check('demoCleanUpHonestLabels', async (b) => {
+  const p = await open(b, { hash: '#feature-cleanup' });
+  assert((await demoText(p)).includes('Macintosh HD'), 'storage overview missing from Clean Up');
+  await p.locator('#explorer [data-review="0"]').click();
   const t = await demoText(p);
   assert(t.includes('Not modified for 18 months'), 'honest old-file label missing');
   assert(!/\bunused\b|not accessed/i.test(t), 'demo uses unsupported "unused"/"not accessed" wording');
@@ -196,7 +198,7 @@ check('demoStorageHonestLabels', async (b) => {
 check('problemCardsOpenFeatures', async (b) => {
   const p = await open(b);
   const cards = p.locator('#problems .problem-card');
-  assert(await cards.count() === 11, 'expected 11 problem cards, got ' + await cards.count());
+  assert(await cards.count() === 13, 'expected 13 problem cards, got ' + await cards.count());
   await p.locator('#problems .problem-card', { hasText: 'Copying one thing erases the last' }).click();
   await p.waitForTimeout(200);
   assert((await paneTitle(p)).trim() === 'Clipboard History', 'card I did not open clipboard');
@@ -272,7 +274,7 @@ check('controlsHaveAccessibleNames', async (b) => {
   const p = await open(b);
   const tabs = p.locator('#explorer [role=tab]');
   const unnamed = [];
-  for (let i = 0; i < 10; i++) {
+  for (let i = 0; i < 11; i++) {
     await tabs.nth(i).click();
     const bad = await p.evaluate(() => [...document.querySelectorAll('button, input, [role=tab], a[href]')]
       .filter((el) => el.offsetParent !== null)
@@ -430,13 +432,13 @@ check('homeCleanupCardsOpenFeatures', async (b) => {
   await p.evaluate(() => { location.hash = '#feature-home'; });
   await p.waitForTimeout(100);
   await p.locator('#explorer .hm-clean', { hasText: 'Large Files' }).click();
-  assert((await paneTitle(p)).trim() === 'Storage Intelligence', 'large files card wrong target');
+  assert((await paneTitle(p)).trim() === 'Clean Up', 'large files card wrong target');
 });
 
 check('sidebarLocationsAndMetrics', async (b) => {
   const p = await open(b);
   assert((await p.textContent('#tab-cleanup .ex-tab-meta')).trim() === '14.1 GB', 'cleanup metric missing');
-  assert((await p.textContent('#tab-storage .ex-tab-meta')).trim() === '10', 'large-files badge missing');
+  assert((await p.textContent('#tab-downloaded .ex-tab-meta')).trim() === '913', 'Downloaded From count missing');
   await p.locator('#explorer .ex-loc', { hasText: 'Downloads' }).click();
   assert((await paneTitle(p)).trim() === 'Visual Library', 'location did not open library');
   assert((await p.textContent('#explorer .demo-library')).includes('In Downloads'), 'location filter chip missing');
@@ -505,6 +507,35 @@ check('duplicatesKeepCards', async (b) => {
   assert(await cards.nth(2).getAttribute('aria-pressed') === 'true' && await cards.nth(0).getAttribute('aria-pressed') === 'false', 'clicking a copy should keep it instead');
   assert((await cards.nth(0).textContent()).includes('Trash'), 'other copies should be marked Trash');
   assert((await p.textContent('#explorer .d-trash')).includes('Trash 4 copies'), 'summary button should count extra copies');
+});
+
+check('recentsQuickLookAndMenu', async (b) => {
+  const p = await open(b, { hash: '#feature-recents' });
+  await p.locator('#explorer .d-rec-file').first().click();
+  assert(await p.locator('#explorer .d-ql').isVisible(), 'Quick Look did not open');
+  await p.keyboard.press('ArrowRight');
+  assert((await p.textContent('#explorer .d-ql b')).includes('Invoice'), 'arrow did not step to the next file');
+  await p.keyboard.press('Escape');
+  assert(await p.locator('#explorer .d-ql').isHidden(), 'Esc did not close Quick Look');
+  await p.locator('#explorer .d-rec-file').first().click({ button: 'right' });
+  assert((await p.textContent('#explorer .d-ctx')).includes('Show in Finder'), 'right-click menu missing');
+});
+
+check('downloadedFromSourceToken', async (b) => {
+  const p = await open(b, { hash: '#feature-downloaded' });
+  await p.locator('#explorer .d-src', { hasText: 'Mail' }).click();
+  assert((await p.textContent('#explorer .d-token')).includes('From: Mail'), 'From token missing');
+  await p.locator('#explorer .d-token').click();
+  assert(await p.locator('#explorer .d-src').count() === 6, 'removing the token should show the sources again');
+});
+
+check('heroTrySearchChips', async (b) => {
+  const p = await open(b);
+  await p.locator('#hero-try .hero-try-chip', { hasText: 'pdfs from mail' }).click();
+  assert((await p.textContent('#hero-window .hw-q')).includes('From: Mail'), 'hero search tokens missing');
+  assert((await p.textContent('#hero-window .hw-content')).includes('Invoice 0412.pdf'), 'hero results missing');
+  await p.locator('#hero-try .hero-try-chip', { hasText: 'Home' }).click();
+  assert((await p.textContent('#hero-window .hw-content')).includes('Library'), 'Home chip did not restore the dashboard');
 });
 
 check('libraryUsesStorageCards', async (b) => {
