@@ -20,6 +20,10 @@ Nothing here needs a third-party service or a paid plan: storage is Cloudflare D
 
 `macsprint.com` and `www.macsprint.com` are attached automatically by the `routes` in `wrangler.jsonc`.
 
+## Phone alerts (optional, free)
+
+In Discord: create a server → a channel → **Edit Channel → Integrations → Webhooks → New Webhook → Copy Webhook URL**. In Cloudflare, open the Worker → **Settings → Variables and secrets → Add → Secret**: name `DISCORD_WEBHOOK`, value the URL. With the Discord phone app, every new sign-up then pings you. The test link above also checks it. Never paste the URL anywhere public.
+
 ## Using it
 
 - **New sign-ups**: you get an email for each one, with the running total.

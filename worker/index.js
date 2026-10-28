@@ -5,7 +5,7 @@
 //   GET  /api/waitlist/test-email ?key=EXPORT_KEY → sends one test email to NOTIFY_TO and shows the result
 //
 // Bindings (wrangler.jsonc): ASSETS (static site), DB (D1), EMAIL (send_email, free via Email Routing).
-// Variables: MAIL_FROM (an address on your domain), NOTIFY_TO (your inbox, verified in Email Routing). Secret: EXPORT_KEY.
+// Variables: MAIL_FROM (an address on your domain), NOTIFY_TO (your inbox, verified in Email Routing). Secrets: EXPORT_KEY, DISCORD_WEBHOOK (optional).
 // Email Routing can only send to addresses you have verified, so the alert goes to you and subscribers get no email.
 
 import { EmailMessage } from 'cloudflare:email';
@@ -69,18 +69,28 @@ function rawMessage({ from, fromName, to, subject, text }) {
 const sendMail = (env, { to, subject, text }) =>
   env.EMAIL.send(new EmailMessage(env.MAIL_FROM, to, rawMessage({ from: env.MAIL_FROM, fromName: 'MacSprint waitlist', to, subject, text })));
 
+// Phone alert: a Discord channel webhook (free). The URL is a secret named DISCORD_WEBHOOK; leave it unset to skip.
+async function sendDiscord(env, content) {
+  if (!env.DISCORD_WEBHOOK) return;
+  const res = await fetch(env.DISCORD_WEBHOOK, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ username: 'MacSprint waitlist', content, allowed_mentions: { parse: [] } }) });
+  if (!res.ok) throw new Error(`Discord returned ${res.status}`);
+}
+
 async function notify(env, email, when, country) {
+  const { count } = await env.DB.prepare('SELECT COUNT(*) AS count FROM signups').first();
+  await Promise.allSettled([
+    sendDiscord(env, `New waitlist sign-up: **${email.replace(/[*_`~|>\\]/g, '\\$&')}**${country ? ` (${country})` : ''}. Total: ${count}.`),
+    emailOwner(env, email, when, country, count),
+  ]).then((rs) => rs.forEach((r) => r.status === 'rejected' && console.error('waitlist alert failed', r.reason?.code || '', r.reason?.message || r.reason)));
+}
+
+async function emailOwner(env, email, when, country, count) {
   if (!env.NOTIFY_TO) return;
-  try {
-    const { count } = await env.DB.prepare('SELECT COUNT(*) AS count FROM signups').first();
-    await sendMail(env, {
-      to: env.NOTIFY_TO,
-      subject: `New waitlist sign-up: ${email}`,
-      text: `${email} joined the MacSprint waitlist on ${when}${country ? ` (${country})` : ''}.\n\nTotal sign-ups: ${count}.\nDownload the list for Excel: https://macsprint.com/api/waitlist/export?key=… (use your export key)`,
-    });
-  } catch (e) {
-    console.error('waitlist email failed', e?.code || '', e?.message || e);
-  }
+  await sendMail(env, {
+    to: env.NOTIFY_TO,
+    subject: `New waitlist sign-up: ${email}`,
+    text: `${email} joined the MacSprint waitlist on ${when}${country ? ` (${country})` : ''}.\n\nTotal sign-ups: ${count}.\nDownload the list for Excel: https://macsprint.com/api/waitlist/export?key=… (use your export key)`,
+  });
 }
 
 const authorized = (url, request, env) => {
@@ -92,13 +102,14 @@ const authorized = (url, request, env) => {
 // (domain not onboarded, plan without Email Sending, unverified address) shows up as a readable code.
 async function testEmail(url, request, env) {
   if (!authorized(url, request, env)) return json({ error: 'Unauthorized' }, 401);
-  const setup = { MAIL_FROM: env.MAIL_FROM || null, NOTIFY_TO: env.NOTIFY_TO || null, EMAIL_binding: Boolean(env.EMAIL) };
-  if (!env.EMAIL || !env.MAIL_FROM || !env.NOTIFY_TO) return json({ ok: false, setup, error: 'Missing EMAIL binding, MAIL_FROM or NOTIFY_TO' }, 500);
+  const setup = { MAIL_FROM: env.MAIL_FROM || null, NOTIFY_TO: env.NOTIFY_TO || null, EMAIL_binding: Boolean(env.EMAIL), DISCORD_WEBHOOK: Boolean(env.DISCORD_WEBHOOK) };
+  const discord = await sendDiscord(env, 'Test from MacSprint: waitlist alerts reach this channel.').then(() => (env.DISCORD_WEBHOOK ? 'sent' : 'not set up'), (e) => `failed: ${e.message}`);
+  if (!env.EMAIL || !env.MAIL_FROM || !env.NOTIFY_TO) return json({ ok: false, setup, discord, error: 'Missing EMAIL binding, MAIL_FROM or NOTIFY_TO' }, 500);
   try {
     await sendMail(env, { to: env.NOTIFY_TO, subject: 'MacSprint waitlist: test email', text: 'If you can read this, waitlist emails work.' });
-    return json({ ok: true, setup });
+    return json({ ok: true, setup, discord });
   } catch (e) {
-    return json({ ok: false, setup, code: e?.code || null, error: e?.message || String(e) }, 502);
+    return json({ ok: false, setup, discord, code: e?.code || null, error: e?.message || String(e) }, 502);
   }
 }
 
