@@ -34,7 +34,7 @@ function render(root) {
     <div class="mac-window ex-window">
       <aside class="ex-side">
         <div class="ex-lights" aria-hidden="true"><i></i><i></i><i></i></div>
-        <div class="ex-brand"><span class="brand-mark" aria-hidden="true"></span><span>MacSprint</span>
+        <div class="ex-brand"><span class="wm" style="font-size:19px"><span class="wm-m">Mac</span> <span class="wm-s">SPRINT</span></span>
           <span class="ex-side-icon" aria-hidden="true">${iconSvg('<rect x="3" y="4.5" width="18" height="15" rx="2.5"/><path d="M9 4.5v15"/>', 17)}</span>
         </div>
         <label class="ex-filter">

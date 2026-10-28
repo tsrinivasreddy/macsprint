@@ -493,9 +493,15 @@ check('searchDemoFilterBar', async (b) => {
   assert((await p.textContent('#explorer .demo-search')).includes('Understood as'), 'Understood as missing');
 });
 
-check('libraryFoldersAreFolderIcons', async (b) => {
+check('libraryUsesStorageCards', async (b) => {
   const p = await open(b, { hash: '#feature-home' });
-  assert(await p.locator('#explorer .hm-folder .fd-front').count() === 6, 'folders should use macOS folder icon');
+  assert(await p.locator('#explorer .hm-folder .hk-meter').count() === 6, 'Library should use the six storage cards from the foundations');
+});
+
+check('brandIsNameOnly', async (b) => {
+  const p = await open(b);
+  assert(await p.locator('.brand-mark').count() === 0, 'logo mark should be gone');
+  assert((await p.textContent('.globalnav .brand')).replace(/\s+/g, ' ').trim() === 'Mac SPRINT', 'nav should show the Mac SPRINT name');
 });
 
 /* ---------- runner ---------- */

@@ -1,4 +1,4 @@
-// Homy-inspired home screen: greeting, Library folders, Clean Up cards and
+// Home screen: greeting, Library storage cards, Clean Up cards and
 // Downloaded From sources. Used by the Explorer's Home demo and the hero window.
 // All figures are sample data.
 
@@ -19,6 +19,8 @@ const G = {
   hash: '<path d="M9 4 7 20M17 4l-2 16M4 9h16M3 15h16"/>',
   bubble: '<path d="M4 12a8 7 0 1 1 3.5 5.8L4 19l1-3.4A6.8 6.8 0 0 1 4 12Z"/>',
   pen: '<path d="M4 20l4-1 11-11-3-3L5 16z"/><path d="M14 6l3 3"/>',
+  photo: '<rect x="3" y="5" width="18" height="14" rx="2.5"/><circle cx="8.5" cy="10" r="1.6"/><path d="m21 16-5-5-9 8"/>',
+  film: '<rect x="3" y="4" width="18" height="16" rx="2"/><path d="M7 4v16M17 4v16"/>',
 };
 
 const dot = (inner) => `<i class="hm-dot">${inner}</i>`;
@@ -27,12 +29,12 @@ const glyphDot = (g, tone) => `<i class="hm-dot hm-dot-g" style="--dot:var(--${t
 const more = (n) => `<i class="hm-dot hm-more">+${n}</i>`;
 
 export const FOLDERS = [
-  { kind: 'Images', tint: '#5b7cfa', h: 215, items: '2,280', size: '2.81 GB', dots: phDot(210) + phDot(30) + phDot(150) + more(99) },
-  { kind: 'Videos', tint: '#a46bf5', h: 275, items: '162', size: '11.21 GB', dots: phDot(330) + phDot(190) + phDot(20) + more(99) },
-  { kind: 'Music', tint: '#f2647e', h: 345, items: '34', size: '82.7 MB', dots: glyphDot('music', 'c-aud') + glyphDot('music', 'c-aud') + glyphDot('music', 'c-aud') + more(31) },
-  { kind: 'Documents', tint: '#f0a23b', h: 35, items: '201', size: '1.16 GB', dots: glyphDot('doc', 'c-doc') + glyphDot('doc', 'c-img') + glyphDot('doc', 'c-arc') + more(99) },
-  { kind: 'Archives', tint: '#3fb985', h: 150, items: '93', size: '630.3 MB', dots: glyphDot('zip', 'c-doc') + glyphDot('zip', 'c-doc') + glyphDot('zip', 'c-doc') + more(90) },
-  { kind: 'Apps', tint: '#3aa7d9', h: 195, items: '110', size: '14.31 GB', dots: glyphDot('app', 'c-dev') + glyphDot('app', 'c-arc') + glyphDot('app', 'c-img') + more(99) },
+  { kind: 'Images', icon: 'photo', pct: 9, latest: 'Screenshot 9.41.png', tint: '#5b7cfa', h: 215, items: '2,280', size: '2.81 GB', dots: phDot(210) + phDot(30) + phDot(150) + more(99) },
+  { kind: 'Videos', icon: 'film', pct: 37, latest: 'Trip.mov', tint: '#a46bf5', h: 275, items: '162', size: '11.21 GB', dots: phDot(330) + phDot(190) + phDot(20) + more(99) },
+  { kind: 'Music', icon: 'music', pct: 0, latest: 'Mix.m4a', tint: '#f2647e', h: 345, items: '34', size: '82.7 MB', dots: glyphDot('music', 'c-aud') + glyphDot('music', 'c-aud') + glyphDot('music', 'c-aud') + more(31) },
+  { kind: 'Documents', icon: 'doc', pct: 4, latest: 'Brief.pdf', tint: '#f0a23b', h: 35, items: '201', size: '1.16 GB', dots: glyphDot('doc', 'c-doc') + glyphDot('doc', 'c-img') + glyphDot('doc', 'c-arc') + more(99) },
+  { kind: 'Archives', icon: 'zip', pct: 2, latest: 'Backup.zip', tint: '#3fb985', h: 150, items: '93', size: '630.3 MB', dots: glyphDot('zip', 'c-doc') + glyphDot('zip', 'c-doc') + glyphDot('zip', 'c-doc') + more(90) },
+  { kind: 'Apps', icon: 'app', pct: 47, latest: 'Figma.app', tint: '#3aa7d9', h: 195, items: '110', size: '14.31 GB', dots: glyphDot('app', 'c-dev') + glyphDot('app', 'c-arc') + glyphDot('app', 'c-img') + more(99) },
 ];
 
 const CLEAN = [
@@ -56,7 +58,7 @@ export function greeting(date = new Date()) {
 }
 
 export function homeMarkup({ compact = false } = {}) {
-  const folders = compact ? FOLDERS.slice(0, 4) : FOLDERS;
+  const folders = compact ? FOLDERS.slice(0, 3) : FOLDERS;
   return `
     <div class="hm${compact ? ' hm-compact' : ''}">
       <div class="hm-top">
@@ -66,10 +68,11 @@ export function homeMarkup({ compact = false } = {}) {
 
       <div class="hm-head"><h4>Library</h4><span class="hm-count">6</span></div>
       <div class="hm-folders">${folders.map((f) => `
-        <button type="button" class="hm-folder" style="--tint:${f.tint};--h:${f.h}" data-kind="${f.kind}" aria-label="${f.kind}: ${f.items} items, ${f.size}">
-          <span class="fd" aria-hidden="true"><span class="fd-tab"></span><span class="fd-back"></span><span class="fd-papers"><i></i><i></i></span><span class="fd-front"></span></span>
-          <b>${f.kind}</b>
-          <small>${f.items}${compact ? '' : ' · ' + f.size}</small>
+        <button type="button" class="hm-folder" style="--tint:${f.tint}" data-kind="${f.kind}" aria-label="${f.kind}: ${f.items} items, ${f.size}, ${f.pct || 'under 1'}% of library">
+          <span class="hk-top"><span class="hk-icon">${svg(G[f.icon], 16)}</span><b>${f.kind}</b><small>${f.items} items</small></span>
+          <span class="hk-size">${f.size}</span>
+          <span class="hk-meter" aria-hidden="true"><i style="width:${f.pct}%"></i></span>
+          <span class="hk-foot"><span>${f.pct || '<1'}% of library</span><span>${f.latest}</span></span>
         </button>`).join('')}
       </div>
 
@@ -113,14 +116,14 @@ export function heroWindowMarkup() {
   return `
     <aside class="hw-side">
       <div class="hw-lights"><i></i><i></i><i></i></div>
-      <div class="ex-brand"><span class="brand-mark"></span><span>MacSprint</span></div>
+      <div class="ex-brand"><span class="wm" style="font-size:17px"><span class="wm-m">Mac</span> <span class="wm-s">SPRINT</span></span></div>
       <ul>${side.map(row).join('')}</ul>
       <ul class="hw-sep">${tools.map(row).join('')}</ul>
       <p class="hw-label">Locations</p>
       <ul class="hw-locs">${['Desktop', 'Documents', 'Downloads', 'Pictures'].map((l) => `<li><span>${l}</span></li>`).join('')}</ul>
     </aside>
     <div class="hw-main">
-      <div class="ex-toolbar"><span class="ex-search"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="10.5" cy="10.5" r="6.5"/><path d="m20 20-4.8-4.8"/></svg><span>Search, or try “pdfs from last week”…</span><kbd>⌘</kbd><kbd>F</kbd></span><span class="ex-libsize">Library size <b>30.19 GB</b></span></div>
+      <div class="ex-toolbar"><span class="ex-search"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="10.5" cy="10.5" r="6.5"/><path d="m20 20-4.8-4.8"/></svg><span>Ask anything, e.g. “pdfs from last week”</span><kbd>⌘</kbd><kbd>F</kbd><span class="ex-ai">AI</span></span><span class="ex-libsize">Library size <b>30.19 GB</b></span></div>
       <div class="hw-content">${homeMarkup({ compact: true })}</div>
     </div>`;
 }
