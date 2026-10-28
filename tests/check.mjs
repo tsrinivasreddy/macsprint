@@ -67,10 +67,10 @@ const paneTitle = (p) => p.textContent('#explorer .ex-pane h3');
 check('explorerTabsSelectEachFeature', async (b) => {
   const p = await open(b);
   const features = await getFeatures(p);
-  assert(features.length === 16, 'expected 16 features, got ' + features.length);
+  assert(features.length === 10, 'expected 10 features, got ' + features.length);
   const tabs = p.locator('#explorer [role=tab]');
-  assert(await tabs.count() === 16, 'expected 16 tabs, got ' + await tabs.count());
-  for (let i = 0; i < 16; i++) {
+  assert(await tabs.count() === 10, 'expected 10 tabs, got ' + await tabs.count());
+  for (let i = 0; i < 10; i++) {
     await tabs.nth(i).click();
     assert(await tabs.nth(i).getAttribute('aria-selected') === 'true', 'tab not selected: ' + i);
     const t = await paneTitle(p);
@@ -136,7 +136,7 @@ check('demosCoverEveryFeature', async (b) => {
   });
   assert(missing.length === 0, 'features without demo: ' + missing.join(','));
   const tabs = p.locator('#explorer [role=tab]');
-  for (let i = 0; i < 16; i++) {
+  for (let i = 0; i < 10; i++) {
     await tabs.nth(i).click();
     assert((await demoText(p)).trim().length > 0, 'empty demo at tab ' + i);
   }
@@ -159,11 +159,21 @@ check('demoImageViewerArrows', async (b) => {
   assert((await demoText(p)).includes('14 of 120'), 'ArrowLeft did not go back');
 });
 
-check('demoOcrHighlight', async (b) => {
-  const p = await open(b, { hash: '#feature-ocr' });
+check('demoSearchTextInImage', async (b) => {
+  const p = await open(b, { hash: '#feature-search' });
+  await p.locator('#explorer .d-chips button', { hasText: 'connection timed out' }).click();
   assert((await demoText(p)).includes('IMG_2048.png'), 'IMG_2048.png missing');
+  assert((await demoText(p)).includes('Text in image'), 'match reason tag missing');
   const marks = await p.locator('#explorer .ex-demo mark').allTextContents();
   assert(marks.some((m) => m.toLowerCase().includes('connection timed out')), 'no highlighted phrase');
+});
+
+check('demoDuplicatesSimilarTab', async (b) => {
+  const p = await open(b, { hash: '#feature-duplicates' });
+  await p.locator('#explorer .d-seg button', { hasText: 'Similar photos' }).click();
+  assert((await demoText(p)).includes('Sunset at the pier'), 'similar photos view missing');
+  assert(await p.locator('#explorer .d-dupes').isHidden(), 'exact copies should hide on Similar photos');
+  assert(p.errors.length === 0, 'errors: ' + p.errors.join(' | '));
 });
 
 check('demoOrganizerNeedsReview', async (b) => {
@@ -186,7 +196,7 @@ check('demoStorageHonestLabels', async (b) => {
 check('problemCardsOpenFeatures', async (b) => {
   const p = await open(b);
   const cards = p.locator('#problems .problem-card');
-  assert(await cards.count() === 13, 'expected 13 problem cards, got ' + await cards.count());
+  assert(await cards.count() === 11, 'expected 11 problem cards, got ' + await cards.count());
   await p.locator('#problems .problem-card', { hasText: 'Copying one thing erases the last' }).click();
   await p.waitForTimeout(200);
   assert((await paneTitle(p)).trim() === 'Clipboard History', 'card I did not open clipboard');
@@ -241,7 +251,7 @@ check('narrowPhoneSidebarScrolls', async (b) => {
   const p = await open(b, { width: 320, height: 700 });
   const ov = await p.evaluate(() => getComputedStyle(document.querySelector('#explorer [role=tablist]')).overflowX);
   assert(ov === 'auto' || ov === 'scroll', 'tablist overflow-x is ' + ov);
-  for (const id of ['images', 'ocr', 'windows', 'cleanup', 'downloads']) {
+  for (const id of ['images', 'search', 'duplicates', 'cleanup', 'clipboard']) {
     await p.evaluate((h) => { location.hash = h; }, '#feature-' + id);
     await p.waitForTimeout(100);
     const [sw, iw] = await p.evaluate(() => [document.documentElement.scrollWidth, window.innerWidth]);
@@ -262,7 +272,7 @@ check('controlsHaveAccessibleNames', async (b) => {
   const p = await open(b);
   const tabs = p.locator('#explorer [role=tab]');
   const unnamed = [];
-  for (let i = 0; i < 16; i++) {
+  for (let i = 0; i < 10; i++) {
     await tabs.nth(i).click();
     const bad = await p.evaluate(() => [...document.querySelectorAll('button, input, [role=tab], a[href]')]
       .filter((el) => el.offsetParent !== null)
@@ -329,7 +339,7 @@ check('textContrastAA', async (b) => {
       return fails;
     });
     assert(bad.length === 0, `${scheme}: low contrast: ` + bad.join(', '));
-    for (const [hash, sel] of [['#feature-duplicates', '.ex-pane .badge-soon'], ['#feature-windows', '.ex-pane .badge-later']]) {
+    for (const [hash, sel] of [['#feature-duplicates', '.ex-pane .badge-soon'], ['#feature-search', '.ex-pane .badge-launch']]) {
       await p.evaluate((h) => { location.hash = h; }, hash);
       await p.waitForTimeout(100);
       const r = await p.evaluate((s) => {
@@ -362,10 +372,10 @@ check('roadmapLinkToCurrentFeatureScrolls', async (b) => {
 });
 
 check('mobileSelectedPillVisible', async (b) => {
-  const p = await open(b, { width: 320, height: 700, hash: '#feature-windows' });
+  const p = await open(b, { width: 320, height: 700, hash: '#feature-clipboard' });
   await p.waitForTimeout(200);
   const [tl, tr, bl, br] = await p.evaluate(() => {
-    const t = document.querySelector('#tab-windows').getBoundingClientRect();
+    const t = document.querySelector('#tab-clipboard').getBoundingClientRect();
     const l = document.querySelector('#explorer [role=tablist]').getBoundingClientRect();
     return [t.left, t.right, l.left, l.right];
   });

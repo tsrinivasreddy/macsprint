@@ -108,7 +108,7 @@ export function heroWindowMarkup() {
   const side = [
     ['Home', '', true], ['Recents', ''], ['Images', '2,280'], ['Videos', '162'], ['Music', '34'], ['Documents', '201'], ['Archives', '93'], ['Apps', '110'],
   ];
-  const tools = [['Large Files', '10', 'alert'], ['Screenshots', '589'], ['Duplicates', '44.8 MB', 'good'], ['Clean Up', '14.1 GB', 'good']];
+  const tools = [['Large Files', '10', 'alert'], ['Duplicates', '44.8 MB', 'good'], ['Clean Up', '14.1 GB', 'good']];
   const row = ([n, m, tone]) => `<li${tone === true ? ' class="on"' : ''}><span>${n}</span>${m ? `<em class="${typeof tone === 'string' ? 'is-' + tone : ''}">${m}</em>` : ''}</li>`;
   return `
     <aside class="hw-side">

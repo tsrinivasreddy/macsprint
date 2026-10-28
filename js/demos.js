@@ -122,29 +122,36 @@ function images(el) {
   draw();
 }
 
-/* ---------------- AI Search ---------------- */
+/* ---------------- Search (names, meaning, text in images) ---------------- */
 const QUERIES = [
   {
     q: 'Screenshots containing login errors from last month',
     filters: [['Kind', 'Image'], ['Source', 'Screenshot'], ['Text', 'login, error'], ['Date', 'September 2026']],
-    results: [['Screenshot 2026-09-18 at 10.42.png', '~/Desktop', '…<mark>Login</mark> failed: invalid token <mark>error</mark> 401…'], ['IMG_3310.png', '~/Downloads', '…<mark>Error</mark> signing in. Check your <mark>login</mark> details…']],
+    results: [['Screenshot 2026-09-18 at 10.42.png', '~/Desktop', '…<mark>Login</mark> failed: invalid token <mark>error</mark> 401…', 'text'], ['IMG_3310.png', '~/Downloads', 'A sign-in window showing an error message', 'meaning']],
   },
   {
     q: 'Videos larger than 1 GB',
     filters: [['Kind', 'Video'], ['Size', '> 1 GB'], ['Sort', 'Largest first']],
-    results: [['Wedding-highlights.mov', '~/Movies', '4.8 GB · modified Jan 2025'], ['Screen-recording-final.mp4', '~/Desktop', '1.3 GB · modified Aug 2026']],
+    results: [['Wedding-highlights.mov', '~/Movies', '4.8 GB · modified Jan 2025', 'meaning'], ['Screen-recording-final.mp4', '~/Desktop', '1.3 GB · modified Aug 2026', 'meaning']],
   },
   {
     q: 'PDFs mentioning my university',
     filters: [['Kind', 'PDF'], ['Text', 'university'], ['Sort', 'Relevance']],
-    results: [['Transcript-official.pdf', '~/Documents/School', '…Office of the Registrar, <mark>University</mark> of…'], ['Scholarship-letter.pdf', '~/Downloads', '…on behalf of the <mark>University</mark> scholarship board…']],
+    results: [['Transcript-official.pdf', '~/Documents/School', '…Office of the Registrar, <mark>University</mark> of…', 'meaning'], ['University-letter.pdf', '~/Downloads', 'Name contains <mark>University</mark>', 'name']],
   },
   {
     q: 'Old ZIP files in Downloads',
     filters: [['Kind', 'Archive (ZIP)'], ['Folder', 'Downloads'], ['Modified', 'over 1 year ago']],
-    results: [['fonts-pack.zip', '~/Downloads', 'Not modified for 2 years · 312 MB'], ['project-backup-old.zip', '~/Downloads', 'Not modified for 14 months · 1.1 GB']],
+    results: [['fonts-pack.zip', '~/Downloads', 'Not modified for 2 years · 312 MB', 'meaning'], ['project-backup-old.zip', '~/Downloads', 'Not modified for 14 months · 1.1 GB', 'name']],
+  },
+  {
+    q: 'connection timed out',
+    filters: [['Text', 'connection timed out'], ['Kind', 'Any'], ['Sort', 'Relevance']],
+    results: [['IMG_2048.png', '~/Desktop', 'Error: <mark>connection timed out</mark> after 30000ms', 'text']],
   },
 ];
+// Why a result matched: one search covers names, meaning (AI) and text inside images.
+const WHY = { name: 'Matched by name', meaning: 'Matched by meaning', text: 'Text in image' };
 function search(el) {
   let idx = 0, timer = null;
   el.innerHTML = `
@@ -158,6 +165,7 @@ function search(el) {
       <div class="d-filterbar" role="group" aria-label="Filters"></div>
       <p class="d-label">Matching files</p>
       <ul class="d-results"></ul>
+      <span class="d-copied" role="status"></span>
     </div>`;
   const draw = () => {
     const x = QUERIES[idx];
@@ -168,8 +176,8 @@ function search(el) {
     const val = (...keys) => (x.filters.find(([k]) => keys.includes(k)) || [])[1];
     const bar = [['From', val('Folder', 'Source') || 'Anywhere'], ['Kind', val('Kind') || 'All'], ['Date', val('Date', 'Modified') || 'Any'], ['Size', val('Size') || 'Any'], ['Sort', val('Sort') || 'Relevance']];
     el.querySelector('.d-filterbar').innerHTML = bar.map(([k, v]) => `<span class="d-fb">${k}: <b>${esc(v)}</b></span>`).join('');
-    el.querySelector('.d-results').innerHTML = x.results.map(([n, p, s]) => `
-      <li><span class="d-res-icon">${svg(ICON.doc, 18)}</span><div><b>${esc(n)}</b><small>${esc(p)}</small><p>${s}</p></div></li>`).join('');
+    el.querySelector('.d-results').innerHTML = x.results.map(([n, p, s, why]) => `
+      <li><span class="d-res-icon">${svg(ICON.doc, 18)}</span><div><b>${esc(n)}</b><small>${esc(p)}</small><span class="d-why">${WHY[why]}</span><p>${s}</p>${why === 'text' ? `<button type="button" class="btn btn-small btn-ghost d-copy" data-text="${esc(s.replace(/<[^>]+>/g, ''))}">${svg(ICON.copy, 13)} Copy text</button>` : ''}</div></li>`).join('');
   };
   // Auto-cycles through examples only while visible, not paused, and not focused/hovered.
   const cycleBtn = el.querySelector('.d-cycle');
@@ -184,6 +192,13 @@ function search(el) {
   };
   const setPaused = (v) => { paused = v; update(); };
   cycleBtn.addEventListener('click', () => setPaused(!paused));
+  el.addEventListener('click', async (e) => {
+    const b = e.target.closest('.d-copy'); if (!b) return;
+    setPaused(true);
+    const status = el.querySelector('.d-copied');
+    try { await navigator.clipboard.writeText(b.dataset.text); status.textContent = 'Recognized text copied'; }
+    catch { status.textContent = 'Copy is unavailable in this browser'; }
+  });
   bindAll(el, '.d-chips button', 'click', (e) => { idx = +e.currentTarget.dataset.i; draw(); setPaused(true); });
   const engage = (v) => () => { engaged = v; update(); };
   el.addEventListener('focusin', engage(true));
@@ -195,33 +210,6 @@ function search(el) {
   draw();
   update();
   return () => { clearInterval(timer); timer = null; if (io) io.disconnect(); };
-}
-
-/* ---------------- Text in Images (OCR) ---------------- */
-function ocr(el) {
-  const lines = ['$ npm run deploy', '> build ok (2.3s)', '> uploading bundle…', 'Error: connection timed out after 30000ms', '    at Socket.timeout (net.js:412)', 'Retrying in 5s…'];
-  el.innerHTML = `
-    <div class="d-ocr">
-      <div class="d-searchbox">${svg('<circle cx="10.5" cy="10.5" r="6.5"/><path d="m20 20-4.8-4.8"/>')}<output>connection timed out</output><span class="d-hits">1 match</span></div>
-      <div class="d-ocr-file">
-        <div class="d-shot">
-          <div class="d-shot-bar"><i></i><i></i><i></i><span>Terminal</span></div>
-          <pre>${lines.map((l) => esc(l).replace('connection timed out', '<mark>connection timed out</mark>')).join('\n')}</pre>
-        </div>
-        <div class="d-ocr-side">
-          <b>IMG_2048.png</b>
-          <small>~/Desktop · 1.2 MB · PNG</small>
-          <p>The filename says nothing — the text inside the image found it.</p>
-          <button type="button" class="btn btn-small d-copy">${svg(ICON.copy, 14)} Copy text</button>
-          <span class="d-copied" role="status"></span>
-        </div>
-      </div>
-    </div>`;
-  el.querySelector('.d-copy').addEventListener('click', async () => {
-    const status = el.querySelector('.d-copied');
-    try { await navigator.clipboard.writeText(lines.join('\n')); status.textContent = 'Recognized text copied'; }
-    catch { status.textContent = 'Copy is unavailable in this browser'; }
-  });
 }
 
 /* ---------------- Storage ---------------- */
@@ -311,6 +299,8 @@ function duplicates(el) {
     ['Zoom-installer.pkg', '86 MB', ['~/Downloads/Zoom-installer.pkg', '~/Downloads/Zoom-installer (2).pkg']],
   ];
   el.innerHTML = `
+    <div class="d-seg" role="group" aria-label="Duplicate type"><button type="button" aria-pressed="true" data-v="exact">Exact copies · 27</button><button type="button" aria-pressed="false" data-v="similar">Similar photos · 14</button></div>
+    <div class="d-similar" hidden></div>
     <div class="d-dupes">
       <ol class="d-steps">
         <li><b>48,210</b><span>files scanned</span></li>
@@ -329,6 +319,14 @@ function duplicates(el) {
     el.querySelector('.d-total').textContent = n ? `${n} cop${n === 1 ? 'y' : 'ies'} selected for Trash` : 'Nothing selected';
   };
   bindAll(el, 'input', 'change', total);
+  const sim = el.querySelector('.d-similar');
+  bindAll(el, '.d-seg button', 'click', (e) => {
+    const v = e.currentTarget.dataset.v;
+    el.querySelectorAll('.d-seg button').forEach((b) => b.setAttribute('aria-pressed', String(b.dataset.v === v)));
+    if (v === 'similar' && !sim.firstChild) similar(sim);
+    sim.hidden = v !== 'similar';
+    el.querySelector('.d-dupes').hidden = v === 'similar';
+  });
   el.querySelector('.d-suggest').addEventListener('click', () => {
     el.querySelectorAll('.d-group').forEach((g) => g.querySelectorAll('input').forEach((c, i) => { c.checked = i > 0; }));
     total();
@@ -389,51 +387,6 @@ function quicksearch(el) {
   draw();
 }
 
-/* ---------------- Menu-bar Downloads ---------------- */
-function downloads(el) {
-  const items = [
-    ['Boarding-pass.pdf', '210 KB', '2 min ago', null], ['Team-photo.jpg', '3.4 MB', '18 min ago', 30], ['Contract-v3.docx', '88 KB', '1 hr ago', null],
-    ['Figma-installer.dmg', '214 MB', '3 hr ago', null], ['Logo-final.png', '640 KB', 'Yesterday', 250], ['Statement-Sep.pdf', '1.1 MB', 'Yesterday', null],
-    ['Wallpaper.heic', '5.2 MB', 'Mon', 190], ['Slides.key', '12 MB', 'Mon', null], ['Notes.txt', '4 KB', 'Sun', null], ['Archive.zip', '48 MB', 'Sat', null],
-  ];
-  el.innerHTML = `
-    <div class="d-mb">
-      <div class="d-menubar"><span class="d-mb-left">Finder&nbsp;&nbsp; File&nbsp;&nbsp; Edit&nbsp;&nbsp; View</span><span class="d-mb-right"><button type="button" class="d-mb-icon" aria-expanded="true" aria-label="MacSprint recent downloads">${svg(ICON.folder, 14)}</button><span>Tue 9:41</span></span></div>
-      <div class="d-mb-menu">
-        <p class="d-label">Recent Downloads</p>
-        <ul>${items.map(([n, s, t, h]) => `<li draggable="true" data-name="${esc(n)}">${h !== null ? ph(h, 'aria-hidden="true"') : `<span class="d-mb-file">${svg(ICON.doc, 16)}</span>`}<span>${esc(n)}<small>${s} · ${t}</small></span></li>`).join('')}</ul>
-        <p class="d-mb-tip">Drag any item into Mail, Messages or another app.</p>
-      </div>
-    </div>`;
-  const btn = el.querySelector('.d-mb-icon');
-  const menu = el.querySelector('.d-mb-menu');
-  btn.addEventListener('click', () => { const open = btn.getAttribute('aria-expanded') !== 'true'; btn.setAttribute('aria-expanded', String(open)); menu.hidden = !open; });
-  bindAll(el, 'li[draggable]', 'dragstart', (e) => e.dataTransfer.setData('text/plain', e.currentTarget.dataset.name));
-}
-
-/* ---------------- Finder Tools ---------------- */
-function finder(el) {
-  el.innerHTML = `
-    <div class="d-finder">
-      <ul class="d-finder-list">
-        <li>${svg(ICON.folder, 16)} Projects</li>
-        <li class="on">${svg(ICON.doc, 16)} Plan.md</li>
-        <li>${svg(ICON.doc, 16)} Budget.numbers</li>
-        <li>${svg(ICON.folder, 16)} Archive</li>
-      </ul>
-      <ul class="d-menu" role="menu" aria-label="MacSprint actions for Plan.md">
-        <li role="none"><button type="button" role="menuitem" data-t="Copied /Users/you/Documents/Plan.md">Copy Full Path</button></li>
-        <li role="none"><button type="button" role="menuitem" data-t="Created “Untitled.txt” in Documents">New Text File</button></li>
-        <li role="none"><button type="button" role="menuitem" data-t="Moved Plan.md to Favorites ▸ Work">Move to Favorite ▸ Work</button></li>
-        <li role="none"><button type="button" role="menuitem" data-t="Copied Plan.md to Favorites ▸ Shared">Copy to Favorite ▸ Shared</button></li>
-        <li role="none"><button type="button" role="menuitem" data-t="Opened Terminal at ~/Documents">Open Terminal Here</button></li>
-        <li role="none"><button type="button" role="menuitem" data-t="Bookmarked ~/Documents">Bookmark This Folder</button></li>
-      </ul>
-      <p class="d-toast" role="status"></p>
-    </div>`;
-  bindAll(el, '[data-t]', 'click', (e) => { el.querySelector('.d-toast').textContent = '✓ ' + e.currentTarget.dataset.t; });
-}
-
 /* ---------------- Clipboard History ---------------- */
 function clipboard(el) {
   let paused = false;
@@ -473,68 +426,7 @@ function clipboard(el) {
   draw();
 }
 
-/* ---------------- Screenshot Toolkit ---------------- */
-function screenshots(el) {
-  el.innerHTML = `
-    <div class="d-shotkit">
-      <div class="d-seg d-seg-sm" role="group" aria-label="Capture">
-        <button type="button" aria-pressed="true">Region</button><button type="button" aria-pressed="false">Window</button><button type="button" aria-pressed="false">Display</button>
-      </div>
-      <div class="d-canvas">
-        <div class="d-receipt">
-          <b>Order confirmed</b>
-          <p>Payment successful — $48.20</p>
-          <p class="d-sensitive">Card •••• 4242 · jane.doe@example.com</p>
-          <span class="d-arrow" hidden></span><span class="d-note" hidden>Keep for taxes</span>
-        </div>
-      </div>
-      <div class="d-tools" role="toolbar" aria-label="Annotate">
-        <button type="button" data-tool="ocr">Copy text <span class="badge badge-soon">1.2</span></button>
-        <button type="button" data-tool="blur">Blur <span class="badge badge-later">2.0</span></button>
-        <button type="button" data-tool="arrow">Arrow <span class="badge badge-later">2.0</span></button>
-        <button type="button" data-tool="text">Text <span class="badge badge-later">2.0</span></button>
-      </div>
-      <p class="d-toast" role="status"></p>
-    </div>`;
-  bindAll(el, '.d-seg button', 'click', (e) => el.querySelectorAll('.d-seg button').forEach((b) => b.setAttribute('aria-pressed', String(b === e.currentTarget))));
-  bindAll(el, '[data-tool]', 'click', (e) => {
-    const t = e.currentTarget.dataset.tool, toast = el.querySelector('.d-toast');
-    if (t === 'blur') { el.querySelector('.d-sensitive').classList.toggle('blurred'); toast.textContent = 'Private details blurred'; }
-    if (t === 'arrow') el.querySelector('.d-arrow').hidden = !el.querySelector('.d-arrow').hidden;
-    if (t === 'text') el.querySelector('.d-note').hidden = !el.querySelector('.d-note').hidden;
-    if (t === 'ocr') toast.textContent = 'Recognized: “Order confirmed · Payment successful — $48.20”';
-  });
-}
-
-/* ---------------- Window Manager ---------------- */
-function windows(el) {
-  const layouts = {
-    'Left half': [0, 0, 50, 100], 'Right half': [50, 0, 50, 100], 'Top left': [0, 0, 50, 50], 'Top right': [50, 0, 50, 50],
-    'Bottom left': [0, 50, 50, 50], 'Bottom right': [50, 50, 50, 50], 'Left third': [0, 0, 33.33, 100], 'Center': [15, 10, 70, 80], 'Maximize': [0, 0, 100, 100],
-  };
-  el.innerHTML = `
-    <div class="d-win">
-      <div class="d-display" aria-hidden="true"><div class="d-mwin a"><i></i>Safari</div><div class="d-mwin b"><i></i>Notes</div></div>
-      <div class="d-win-side">
-        <div class="d-layouts" role="group" aria-label="Snap Safari">${Object.keys(layouts).map((k) => `<button type="button" data-l="${k}">${k}</button>`).join('')}</div>
-        <p class="d-label">Workspaces</p>
-        <div class="d-ws"><button type="button" data-ws="write">Writing</button><button type="button" data-ws="research">Research</button></div>
-        <p class="d-toast" role="status"></p>
-      </div>
-    </div>`;
-  const place = (node, [x, y, w, h]) => Object.assign(node.style, { left: x + '%', top: y + '%', width: w + '%', height: h + '%' });
-  const a = el.querySelector('.d-mwin.a'), b = el.querySelector('.d-mwin.b');
-  place(a, layouts.Center); place(b, [55, 30, 40, 55]);
-  bindAll(el, '[data-l]', 'click', (e) => { place(a, layouts[e.currentTarget.dataset.l]); el.querySelector('.d-toast').textContent = 'Safari → ' + e.currentTarget.dataset.l; });
-  bindAll(el, '[data-ws]', 'click', (e) => {
-    const ws = e.currentTarget.dataset.ws;
-    if (ws === 'write') { place(a, layouts['Left half']); place(b, layouts['Right half']); }
-    else { place(a, layouts['Left third']); place(b, [33.33, 0, 66.67, 100]); }
-    el.querySelector('.d-toast').textContent = `Restored “${e.currentTarget.textContent}” — 2 of 2 windows placed`;
-  });
-}
-
-/* ---------------- Similar Images ---------------- */
+/* ---------------- Similar photos (a tab inside Duplicates) ---------------- */
 function similar(el) {
   const sets = [[200, 'Sunset at the pier'], [330, 'Birthday candles'], [120, 'Trail overlook']];
   el.innerHTML = `
@@ -544,7 +436,7 @@ function similar(el) {
           <div class="d-sim-row">${[0, 1, 2, 3].map((k) => `<button type="button" class="ph${k === 1 ? ' best' : ''}" style="--h:${h + k * 6};filter:brightness(${1 - k * 0.06})" aria-label="${n} shot ${k + 1}${k === 1 ? ', suggested best' : ''}" data-g="${gi}" data-k="${k}">${k === 1 ? `<em>${svg(ICON.star, 12)} Best</em>` : ''}</button>`).join('')}</div>
         </div>`).join('')}
       <div class="d-compare" hidden><span class="ph"></span><span class="ph"></span><p>Side-by-side compare</p></div>
-      <p class="d-foot">Similar is not identical — these are reviewed separately from exact duplicates.</p>
+      <p class="d-foot">Similar is not identical, so nothing is selected for you: compare, then keep the best. Coming in 2.0.</p>
     </div>`;
   bindAll(el, '.d-sim-row .ph', 'click', (e) => {
     const g = +e.currentTarget.dataset.g, k = +e.currentTarget.dataset.k, h = sets[g][0];
@@ -557,6 +449,6 @@ function similar(el) {
 }
 
 export const DEMOS = {
-  home, library, images, search, ocr, storage, cleanup, duplicates, organizer,
-  quicksearch, downloads, finder, clipboard, screenshots, windows, similar,
+  home, library, images, search, storage, cleanup, duplicates, organizer,
+  quicksearch, clipboard,
 };
