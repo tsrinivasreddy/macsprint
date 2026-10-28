@@ -10,12 +10,12 @@
     { "pattern": "www.macsprint.com", "custom_domain": true }
   ],
   "d1_databases": [
-    { "binding": "DB", "database_name": "macsprint-waitlist", "database_id": "REPLACE_WITH_D1_DATABASE_ID" }
+    { "binding": "DB", "database_name": "macsprint-waitlist", "database_id": "fd342aa8-4aec-48f9-9927-77b9fa2bccc9" }
   ],
   "send_email": [{ "name": "EMAIL" }],
   "vars": {
     "MAIL_FROM": "waitlist@macsprint.com",
-    "NOTIFY_TO": "REPLACE_WITH_YOUR_EMAIL",
+    "NOTIFY_TO": "hello@macsprint.com",
     "SEND_CONFIRMATION": "true"
   },
   "observability": { "enabled": true }
