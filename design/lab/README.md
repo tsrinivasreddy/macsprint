@@ -5,13 +5,13 @@ Ideas we built, tried and took out of the main pages. Nothing here is in use. It
 **How to use something from here**
 1. Open the snapshot `.html` in a browser to see it working (it runs offline and never touches the real Foundations choices).
 2. Copy the snippet files (or the code between the markers named below) into the page that needs it.
-3. Each entry also has a git tag, so the exact commit can always be checked out: `git checkout <tag> -- <path>`.
+3. Each entry also names the commit it came from, so the original can always be restored: `git checkout <commit> -- <path>`.
 
-| Idea | Why it was removed | Snapshot | Reusable code | Git tag |
+| Idea | Why it was removed | Snapshot | Reusable code | Commit |
 |---|---|---|---|---|
-| **Hover fan + Quick Look**: hovering a folder fans its last five items out in an arc (oldest left, newest right, staggered spring); click an item or press Space for a Quick Look panel with ← → , filmstrip, Esc | Hover motion felt glitchy on Home, folders were hard to select and nearby items got clicked by mistake | [`hover-fan-quick-look/demo.html`](hover-fan-quick-look/demo.html) | [`fan-and-quicklook.css`](hover-fan-quick-look/fan-and-quicklook.css), [`fan-and-quicklook.js`](hover-fan-quick-look/fan-and-quicklook.js) | `lab/hover-fan-quick-look` |
-| **App-icon logo marks**: six rounded-square marks (folder, chevron, window, stack, lens, monogram) with Classic, Split, Rounded, Italic and AI wordmarks | We chose a name-only brand: "Mac S P R I N T" in Indigo, no logo | [`logo-marks.html`](logo-marks.html) (the "Logo" and "Wordmark" decisions) | `logoSvg()` and `LOGOS` in the snapshot; also still in `../feature-flows.html` until foundations are applied there | `lab/logo-marks` |
-| **Homy-style pastel website**: first website look with pastel library folders, before the Graphite & Glass restyle | Restyled to the Apple-like Graphite & Glass theme | Check out the tag (whole site) | `index.html`, `styles.css` at the tag | `lab/website-pastel` |
+| **Hover fan + Quick Look**: hovering a folder fans its last five items out in an arc (oldest left, newest right, staggered spring); click an item or press Space for a Quick Look panel with ← → , filmstrip, Esc | Hover motion felt glitchy on Home, folders were hard to select and nearby items got clicked by mistake | [`hover-fan-quick-look/demo.html`](hover-fan-quick-look/demo.html) | [`fan-and-quicklook.css`](hover-fan-quick-look/fan-and-quicklook.css), [`fan-and-quicklook.js`](hover-fan-quick-look/fan-and-quicklook.js) | `3945a2c` |
+| **App-icon logo marks**: six rounded-square marks (folder, chevron, window, stack, lens, monogram) with Classic, Split, Rounded, Italic and AI wordmarks | We chose a name-only brand: "Mac S P R I N T" in Indigo, no logo | [`logo-marks.html`](logo-marks.html) (the "Logo" and "Wordmark" decisions) | `logoSvg()` and `LOGOS` in the snapshot; also still in `../feature-flows.html` until foundations are applied there | `3f01864` |
+| **Homy-style pastel website**: first website look with pastel library folders, before the Graphite & Glass restyle | Restyled to the Apple-like Graphite & Glass theme | Check out the commit (whole site) | `index.html`, `styles.css` at the commit | `84d7bf5` |
 
 ## Still live, not archived
 
@@ -26,4 +26,4 @@ The Figma file [MacSprint — Library Folders](https://www.figma.com/design/GfAt
 
 ## Adding to the lab
 
-When we remove something, copy the last working page into `lab/` with its own `<title>MacSprint Lab · …</title>` and storage key, add a row above, and tag the commit `lab/<name>`.
+When we remove something, copy the last working page into `lab/` with its own `<title>MacSprint Lab · …</title>` and storage key, and add a row above with the commit it came from.
