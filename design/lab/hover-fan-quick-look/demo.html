@@ -1,0 +1,802 @@
+<title>MacSprint Lab · Hover fan</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Atkinson+Hyperlegible:wght@400;700&family=Nunito:wght@600;800;900&family=Schibsted+Grotesk:wght@600;800&family=Source+Serif+4:opsz,wght@8..60,600;8..60,700&display=swap">
+<style>
+/* Layout: decision sheet on the left, a pinned live preview of MacSprint on the right. Green marks what is final. */
+:root {
+  --paper: #eceff3;
+  --sheet: #ffffff;
+  --ink: #15171c;
+  --ink-2: #4f5562;
+  --ink-3: #5f6573;
+  --rule: rgba(21, 23, 28, 0.12);
+  --pick: #3346c8;
+  --pick-soft: rgba(51, 70, 200, 0.09);
+  --final: #1b7a46;
+  --final-soft: rgba(27, 122, 70, 0.1);
+  --display: "Schibsted Grotesk", "Avenir Next", system-ui, sans-serif;
+  --body: "Atkinson Hyperlegible", "Segoe UI", system-ui, sans-serif;
+}
+@media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) {
+  --paper: #111317; --sheet: #191c21; --ink: #eceef2; --ink-2: #b0b6c2; --ink-3: #99a0ad; --rule: rgba(255,255,255,0.1);
+  --pick: #93a3ff; --pick-soft: rgba(147,163,255,0.13); --final: #4cd38a; --final-soft: rgba(76,211,138,0.13); color-scheme: dark; } }
+:root[data-theme="dark"] {
+  --paper: #111317; --sheet: #191c21; --ink: #eceef2; --ink-2: #b0b6c2; --ink-3: #99a0ad; --rule: rgba(255,255,255,0.1);
+  --pick: #93a3ff; --pick-soft: rgba(147,163,255,0.13); --final: #4cd38a; --final-soft: rgba(76,211,138,0.13); color-scheme: dark; }
+
+* { box-sizing: border-box; }
+body { margin: 0; background: var(--paper); color: var(--ink); font: 16px/1.55 var(--body); -webkit-font-smoothing: antialiased; overflow-x: hidden;
+  padding-left: max(16px, env(safe-area-inset-left, 0px)); padding-right: max(16px, env(safe-area-inset-right, 0px)); padding-block: 0 64px; }
+h1, h2, h3 { font-family: var(--display); margin: 0; line-height: 1.12; text-wrap: balance; }
+p { margin: 0; }
+button { font: inherit; color: inherit; cursor: pointer; }
+:focus-visible { outline: 2.5px solid var(--pick); outline-offset: 2px; border-radius: 6px; }
+.wrap { max-width: 1320px; margin: 0 auto; }
+
+header.top { padding-block: 36px 20px; display: grid; gap: 12px; }
+header.top h1 { font-size: clamp(34px, 5vw, 54px); font-weight: 800; letter-spacing: -0.03em; }
+header.top > p { color: var(--ink-2); font-size: 17px; max-width: 78ch; }
+.statusbar { display: flex; flex-wrap: wrap; gap: 12px 20px; align-items: center; background: var(--sheet); border: 1px solid var(--rule); border-radius: 14px; padding: 12px 16px; }
+.prog { display: flex; align-items: center; gap: 10px; flex: 1; min-width: 220px; font-weight: 700; }
+.bar { flex: 1; height: 8px; background: var(--rule); border-radius: 99px; overflow: hidden; max-width: 260px; }
+.bar i { display: block; height: 100%; background: var(--final); width: 0; transition: width .4s; }
+.saved { font-size: 14px; color: var(--ink-2); display: inline-flex; align-items: center; gap: 8px; }
+.saved i { width: 9px; height: 9px; border-radius: 50%; background: var(--ink-3); }
+.saved.ok i { background: var(--final); }
+.btn { border: 1px solid var(--rule); background: var(--sheet); border-radius: 10px; padding: 8px 14px; font-weight: 700; font-size: 14.5px; }
+.btn.pri { background: var(--ink); color: var(--sheet); border-color: var(--ink); }
+
+.layout { display: grid; grid-template-columns: minmax(0, 440px) minmax(0, 1fr); gap: 28px; align-items: start; margin-top: 22px; }
+.decisions { display: grid; gap: 14px; min-width: 0; }
+.dec { background: var(--sheet); border: 1px solid var(--rule); border-radius: 16px; padding: 16px; display: grid; gap: 12px; scroll-margin-top: 16px; }
+.dec.is-final { border-color: var(--final); box-shadow: inset 4px 0 0 var(--final); }
+.dec-head { display: flex; gap: 10px; align-items: flex-start; justify-content: space-between; }
+.dec h2 { font-size: 20px; font-weight: 800; letter-spacing: -0.01em; }
+.dec .why { font-size: 14.5px; color: var(--ink-2); }
+.finalbox { display: inline-flex; align-items: center; gap: 7px; font-size: 14px; font-weight: 700; color: var(--ink-2); white-space: nowrap; cursor: pointer; padding: 4px 8px; border-radius: 8px; }
+.finalbox input { width: 17px; height: 17px; accent-color: var(--final); }
+.dec.is-final .finalbox { color: var(--final); background: var(--final-soft); }
+.opts { display: grid; grid-template-columns: repeat(auto-fill, minmax(120px, 1fr)); gap: 8px; }
+.opt { text-align: left; border: 1px solid var(--rule); background: var(--paper); border-radius: 12px; padding: 10px; display: grid; grid-template-columns: minmax(0, 1fr); gap: 6px; align-content: start; min-width: 0; }
+.opt:hover { border-color: var(--pick); }
+.opt[aria-pressed=true] { border-color: var(--pick); box-shadow: 0 0 0 2px var(--pick); background: var(--sheet); }
+.opt b { font-size: 14.5px; line-height: 1.2; }
+.opt small { font-size: 12.5px; color: var(--ink-2); line-height: 1.35; }
+.opt .cur { font-size: 11.5px; color: var(--pick); font-weight: 700; }
+.sw { display: flex; gap: 4px; flex-wrap: wrap; }
+.sw i { width: 18px; height: 18px; border-radius: 5px; box-shadow: inset 0 0 0 1px rgba(0,0,0,.12); }
+.chipdemo { height: 30px; display: flex; align-items: center; }
+
+.previewcol { position: sticky; top: calc(14px + env(safe-area-inset-top, 0px)); display: grid; gap: 12px; min-width: 0; }
+.pv-tools { display: flex; flex-wrap: wrap; justify-content: space-between; align-items: center; gap: 10px; }
+.pv-tools h3 { font-size: 18px; font-weight: 800; }
+.seg { display: inline-flex; border: 1px solid var(--rule); border-radius: 9px; overflow: hidden; background: var(--sheet); }
+.seg button { border: 0; background: transparent; padding: 6px 12px; font-size: 13.5px; color: var(--ink-2); }
+.seg button[aria-pressed=true] { background: var(--ink); color: var(--sheet); }
+.pv-scroll { overflow-x: auto; border-radius: 16px; }
+.summary { background: var(--sheet); border: 1px solid var(--rule); border-radius: 16px; padding: 18px; display: grid; gap: 10px; margin-top: 24px; }
+.summary h2 { font-size: 22px; font-weight: 800; }
+.summary table { border-collapse: collapse; width: 100%; font-size: 14.5px; }
+.summary td, .summary th { text-align: left; padding: 7px 8px; border-bottom: 1px solid var(--rule); vertical-align: top; }
+.summary th { font-size: 13px; color: var(--ink-3); font-weight: 700; }
+.tag { font-size: 12px; font-weight: 700; padding: 2px 8px; border-radius: 99px; }
+.tag.f { color: var(--final); background: var(--final-soft); }
+.tag.d { color: var(--ink-3); background: var(--rule); }
+.tablewrap { overflow-x: auto; }
+#copy-status { font-size: 14px; color: var(--final); }
+
+/* ===================== LIVE PREVIEW (driven by --p-* variables) ===================== */
+.pv { --p-s: 1; font-family: var(--p-font-body); color: var(--p-text); background: var(--p-page); border-radius: 16px; padding: 16px; display: grid; gap: 14px; min-width: 720px; }
+.pv svg { flex: none; }
+.pv .win { display: grid; grid-template-columns: 178px minmax(0, 1fr); height: 560px; background: var(--p-bg); border-radius: var(--p-r-win); overflow: hidden; box-shadow: 0 2px 6px rgba(0,0,0,.08), 0 24px 60px -26px rgba(20,30,80,.4), 0 0 0 1px var(--p-line); font-size: var(--p-body); }
+.pv .side { background: var(--p-side); border-right: 1px solid var(--p-line); padding: 10px 8px; display: flex; flex-direction: column; gap: 1px; overflow: hidden; }
+.pv .lights { display: flex; gap: 7px; padding: 2px 6px 12px; }
+.pv .lights i { width: 11px; height: 11px; border-radius: 50%; background: #ff5f57; } .pv .lights i:nth-child(2) { background: #febc2e; } .pv .lights i:nth-child(3) { background: #28c840; }
+.pv .brand { display: flex; align-items: center; gap: 7px; padding: 0 6px 10px; font-size: 14px; }
+.pv .row { display: flex; align-items: center; gap: 8px; height: calc(24px + 2px * var(--p-s)); padding: 0 8px; border-radius: var(--p-r-btn); color: var(--p-text2); white-space: nowrap; font-size: calc(var(--p-body) - .5px); }
+.pv .row svg { color: var(--p-text2); opacity: .9; }
+.pv .row em { margin-left: auto; font-style: normal; font-size: var(--p-small); color: var(--p-text2); opacity: .85; }
+.pv .row em.alert { background: #c4223b; color: #fff; border-radius: 99px; padding: 0 6px; font-weight: 700; line-height: 15px; opacity: 1; }
+.pv .row em.good { color: var(--p-good); font-weight: 700; opacity: 1; }
+.pv .sep { height: 1px; background: var(--p-line); margin: 5px 6px; flex: none; }
+.pv[data-sidebar=raised] .row.sel { background: var(--p-bg); color: var(--p-text); font-weight: 600; box-shadow: 0 1px 2px rgba(0,0,0,.08), 0 0 0 1px var(--p-line); }
+.pv[data-sidebar=raised] .row.sel svg { color: var(--p-accent); }
+.pv[data-sidebar=accent] .row.sel { background: var(--p-btn); color: #fff; font-weight: 600; }
+.pv[data-sidebar=accent] .row.sel svg, .pv[data-sidebar=accent] .row.sel em { color: #fff; }
+.pv[data-sidebar=tint] .row.sel { background: var(--p-soft); color: var(--p-accent); font-weight: 700; }
+.pv[data-sidebar=tint] .row.sel svg { color: var(--p-accent); }
+.pv[data-icons=filled] .row svg :is(path, rect, circle) { fill: currentColor; fill-opacity: .22; }
+.pv[data-icons=color] .row svg { color: var(--ic); opacity: 1; }
+.pv .main { display: flex; flex-direction: column; min-width: 0; }
+.pv .tb { display: flex; align-items: center; gap: 10px; padding: calc(8px * var(--p-s)) 16px; border-bottom: 1px solid var(--p-line); min-height: 46px; }
+.pv .search { display: flex; align-items: center; gap: 7px; background: var(--p-alt); border-radius: var(--p-r-field); padding: 5px 9px; color: var(--p-text2); font-size: calc(var(--p-body) - .5px); min-width: 0; flex: 1; max-width: 300px; }
+.pv .search span:first-of-type { flex: 1; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.pv[data-toolbar=center] .search { max-width: 380px; margin: 0 auto; background: var(--p-bg); box-shadow: 0 0 0 1px var(--p-line), 0 2px 6px rgba(0,0,0,.05); }
+.pv[data-toolbar=minimal] .search { flex: none; max-width: none; width: 28px; height: 26px; padding: 0; justify-content: center; background: transparent; box-shadow: 0 0 0 1px var(--p-line); }
+.pv[data-toolbar=minimal] .search > :not(svg) { display: none; }
+.pv .tbtitle { display: none; font-weight: 700; }
+.pv[data-toolbar=minimal] .tbtitle { display: block; }
+.pv .ai { display: inline-flex; align-items: center; gap: 3px; font-size: 10.5px; font-weight: 700; border-radius: calc(var(--p-r-field) - 2px); padding: 2px 6px; border: 1px solid var(--p-line); color: var(--p-text2); background: var(--p-bg); flex: none; }
+.pv .ai.on { color: var(--p-accent); background: var(--p-soft); border-color: transparent; }
+.pv .kbd { font-size: 10px; border: 1px solid var(--p-line); border-radius: 4px; padding: 0 4px; flex: none; }
+.pv .libsize { margin-left: auto; font-size: var(--p-small); color: var(--p-text2); white-space: nowrap; }
+.pv[data-toolbar=center] .libsize { margin-left: 0; }
+.pv .libsize b { color: var(--p-text); }
+.pv .content { flex: 1; overflow: visible; min-height: 0; padding: calc(14px * var(--p-s)) 18px; display: flex; flex-direction: column; gap: calc(11px * var(--p-s)); }
+.pv .greet { font-family: var(--p-font-title); font-size: var(--p-title); font-weight: 700; letter-spacing: -0.02em; line-height: 1.1; }
+.pv .sub { font-size: var(--p-small); color: var(--p-text2); }
+.pv .h2 { font-family: var(--p-font-title); font-size: var(--p-h2); font-weight: 700; display: flex; align-items: center; gap: 8px; }
+.pv .count { font-family: var(--p-font-body); font-size: 10px; font-weight: 700; background: var(--p-alt); border-radius: 99px; padding: 1px 7px; color: var(--p-text2); }
+.pv .pill { font-family: var(--p-font-body); font-size: 10.5px; font-weight: 700; color: var(--p-good); background: color-mix(in oklab, var(--p-good) 14%, transparent); padding: 1px 8px; border-radius: 99px; }
+.pv .head { display: flex; justify-content: space-between; align-items: flex-end; gap: 10px; }
+/* folders */
+.pv .folders { display: grid; grid-template-columns: repeat(6, minmax(0, 1fr)); gap: calc(8px * var(--p-s)); }
+.pv .fo { text-align: center; min-width: 0; }
+.pv .fo b { display: block; font-size: calc(var(--p-small) + .5px); font-weight: 600; }
+.pv .fo small { display: block; font-size: 10px; color: var(--p-text2); }
+.pv .fd { position: relative; width: 60px; height: 48px; margin: 0 auto 5px; }
+.pv .fd i { position: absolute; display: block; }
+.pv .fd .t { left: 0; top: 0; width: 42%; height: 22%; border-radius: 5px 7px 0 0; background: color-mix(in oklab, var(--k) 16%, var(--p-fold2)); }
+.pv .fd .b { inset: 9% 0 0; border-radius: 6px; background: color-mix(in oklab, var(--k) 16%, var(--p-fold2)); }
+.pv .fd .p { left: 12%; right: 12%; top: 15%; height: 50%; border-radius: 3px; background: linear-gradient(135deg, hsl(var(--h) 70% 62%), hsl(calc(var(--h) + 50) 65% 48%)); transform: rotate(3deg); }
+.pv .fd .f { left: 0; right: 0; bottom: 0; height: 64%; border-radius: 4px 4px 8px 8px; background: linear-gradient(180deg, color-mix(in oklab, var(--k) 18%, var(--p-fold)), color-mix(in oklab, var(--k) 22%, var(--p-fold2))); }
+.pv .fcard { border-radius: var(--p-r-card); padding: 9px; text-align: left; background: color-mix(in oklab, var(--k) 14%, var(--p-bg)); border: 1px solid color-mix(in oklab, var(--k) 24%, transparent); display: grid; gap: 14px; }
+.pv .fcard svg { color: var(--k); }
+.pv .ftile { display: grid; justify-items: center; gap: 5px; }
+/* folder-card styles (inspired by tabbed pastel folders) */
+.pv .folders.cardish { grid-template-columns: repeat(3, minmax(0, 1fr)); gap: calc(12px * var(--p-s)) calc(10px * var(--p-s)); }
+.fx { position: relative; padding-top: 12px; text-align: left; min-width: 0; font-family: var(--p-font-body); }
+.fx .tab { position: absolute; top: 0; left: 0; width: 46%; height: 26px; border-radius: calc(var(--p-r-card) * .75) calc(var(--p-r-card) * .9) 0 0; }
+.fx .tab::after { content: ""; position: absolute; right: -14px; bottom: 0; width: 22px; height: 18px; background: inherit; clip-path: polygon(0 0, 25% 0, 100% 100%, 0 100%); }
+.fx .face { position: relative; border-radius: 5px var(--p-r-card) var(--p-r-card) var(--p-r-card); padding: 11px 12px; display: grid; grid-template-columns: minmax(0, 1fr); gap: 9px; overflow: hidden; }
+.fx .lab { display: flex; justify-content: space-between; align-items: center; gap: 6px; font-weight: 600; font-size: calc(var(--p-body) - .5px); color: var(--p-text); }
+.fx .kb { width: 20px; height: 20px; border-radius: 50%; display: grid; place-items: center; background: var(--p-bg); color: var(--p-text2); flex: none; font-size: 11px; line-height: 1; letter-spacing: -1px; }
+.fx .foot { display: flex; justify-content: space-between; align-items: center; gap: 6px; padding-top: 8px; font-size: 10px; color: var(--p-text2); white-space: nowrap; }
+.fx .foot > span:last-child { overflow: hidden; text-overflow: ellipsis; min-width: 0; }
+.fx .lab b { min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.fx .stk { display: inline-flex; flex: none; }
+.fx .stk i { width: 17px; height: 17px; border-radius: 50%; margin-left: -5px; box-shadow: 0 0 0 1.5px var(--p-bg); display: grid; place-items: center; font-style: normal; }
+.fx .stk i:first-child { margin-left: 0; }
+.fx .stk .more { width: 22px; border-radius: 99px; font-size: 7.5px; font-weight: 700; background: var(--p-bg); color: var(--p-text2); }
+.fx .stk .g { background: color-mix(in oklab, var(--k) 20%, var(--p-bg)); color: var(--k); }
+.fx .ph { background: radial-gradient(circle at 30% 30%, hsl(calc(var(--h) + 40) 90% 75% / .9), transparent 55%), linear-gradient(135deg, hsl(var(--h) 75% 58%), hsl(calc(var(--h) + 60) 70% 40%)); }
+/* 1. pastel: tinted folder, mono label, like the reference */
+.fx.pastel .tab { background: color-mix(in oklab, var(--k) 22%, var(--p-bg)); }
+.fx.pastel .face { background: linear-gradient(180deg, color-mix(in oklab, var(--k) 9%, var(--p-bg)), color-mix(in oklab, var(--k) 18%, var(--p-bg))); box-shadow: 0 0 0 1px color-mix(in oklab, var(--k) 22%, transparent), 0 10px 22px -16px color-mix(in oklab, var(--k) 70%, transparent); }
+.fx.pastel .lab b { font-family: ui-monospace, "SF Mono", Menlo, monospace; font-weight: 500; letter-spacing: 0; }
+.fx.pastel .foot { border-top: 1px solid color-mix(in oklab, var(--k) 25%, transparent); }
+/* 2. glass: frosted panel over a soft colour glow */
+.fx.glass::before { content: ""; position: absolute; inset: 14px 8% -4px; border-radius: 40%; background: radial-gradient(closest-side, color-mix(in oklab, var(--k) 85%, transparent), transparent); filter: blur(8px); }
+.fx.glass .tab { background: color-mix(in oklab, var(--p-bg) 62%, transparent); -webkit-backdrop-filter: blur(14px); backdrop-filter: blur(14px); box-shadow: inset 0 1px 0 rgba(255,255,255,.5); }
+.fx.glass .face { background: color-mix(in oklab, var(--p-bg) 50%, transparent); -webkit-backdrop-filter: blur(14px); backdrop-filter: blur(14px); box-shadow: inset 0 1px 0 rgba(255,255,255,.55), 0 0 0 1px color-mix(in oklab, var(--p-text) 8%, transparent), 0 10px 24px -14px rgba(0,0,0,.25); }
+.fx.glass .foot { border-top: 1px solid color-mix(in oklab, var(--p-text) 10%, transparent); }
+/* 3. outline: neutral card, coloured tab only */
+.fx.outline .tab { width: 34%; height: 18px; top: 6px; background: var(--k); }
+.fx.outline .face { background: var(--p-bg); box-shadow: 0 0 0 1px var(--p-line), 0 1px 2px rgba(0,0,0,.04); }
+.fx.outline .foot { border-top: 1px solid var(--p-line); }
+/* 4. peek: photos sticking out of the folder */
+.fx.peek { padding-top: 22px; }
+.fx.peek .tab { top: 10px; background: color-mix(in oklab, var(--k) 30%, var(--p-bg)); }
+.fx.peek .papers { position: absolute; left: 14%; right: 14%; top: 2px; height: 46px; z-index: 0; }
+.fx.peek .papers i { position: absolute; width: 46%; height: 100%; border-radius: 5px; box-shadow: 0 1px 3px rgba(0,0,0,.18); border: 2px solid #fff; }
+.fx.peek .papers i:nth-child(1) { left: 0; transform: rotate(-8deg); }
+.fx.peek .papers i:nth-child(2) { left: 27%; transform: rotate(2deg); top: -3px; }
+.fx.peek .papers i:nth-child(3) { right: 0; transform: rotate(9deg); }
+.fx.peek .papers .gi { display: grid; place-items: center; background: color-mix(in oklab, var(--k) 12%, #fff); color: var(--k); }
+.fx.peek .face { z-index: 1; margin-top: 12px; background: linear-gradient(180deg, color-mix(in oklab, var(--k) 16%, var(--p-bg)), color-mix(in oklab, var(--k) 24%, var(--p-bg))); box-shadow: inset 0 1px 0 rgba(255,255,255,.45), 0 0 0 1px color-mix(in oklab, var(--k) 24%, transparent); }
+/* 5. gradient: bold colour with a glossy top */
+.fx.bold .tab { background: color-mix(in oklab, var(--k) 78%, #000); }
+.fx.bold .face { background: linear-gradient(165deg, color-mix(in oklab, var(--k) 70%, #fff), var(--k) 55%, color-mix(in oklab, var(--k) 82%, #000)); color: #fff; }
+.fx.bold .face::before { content: ""; position: absolute; inset: 0 0 55% 0; background: linear-gradient(180deg, rgba(255,255,255,.28), rgba(255,255,255,.04)); pointer-events: none; }
+.fx.bold .lab { color: #fff; }
+.fx.bold .kb { background: rgba(255,255,255,.22); color: #fff; }
+.fx.bold .foot { color: rgba(255,255,255,.85); border-top: 1px solid rgba(255,255,255,.25); }
+.fx.bold .stk i { box-shadow: 0 0 0 1.5px color-mix(in oklab, var(--k) 70%, #000); }
+.fx.bold .stk .more { background: rgba(255,255,255,.25); color: #fff; }
+.fdemo { width: 100%; display: grid !important; grid-template-columns: minmax(0, 1fr); gap: 0 !important; overflow: hidden; background: var(--p-page) !important; border-radius: 10px !important; padding: 10px 6px !important; color: var(--p-text); }
+/* new icon folders (designed in Figma: MacSprint — Library Folders) */
+.ns { text-align: center; min-width: 0; }
+.ns b { display: block; font-size: calc(var(--p-small) + .5px); font-weight: 600; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.ns small { display: block; font-size: 10px; color: var(--p-text2); }
+.ns .ico { position: relative; width: 64px; height: 52px; margin: 0 auto 6px; }
+.ns .ico i { position: absolute; display: block; font-style: normal; }
+.ns .t { left: 0; top: 0; width: 42%; height: 24%; border-radius: 5px 7px 0 0; }
+.ns .bk { left: 0; right: 0; top: 9%; bottom: 0; border-radius: 8px; }
+.ns .fr { left: 0; right: 0; bottom: 0; height: 70%; border-radius: 6px 6px 10px 10px; }
+.ns.vault .t, .ns.vault .bk { background: color-mix(in oklab, var(--k) 12%, #171a28); }
+.ns.vault .fr { background: linear-gradient(180deg, color-mix(in oklab, var(--k) 22%, #2b3049), #1e2235); box-shadow: inset 0 0 0 1px color-mix(in oklab, var(--k) 75%, transparent), 0 8px 18px -6px color-mix(in oklab, var(--k) 70%, transparent); }
+.ns.paper .t, .ns.paper .bk { background: color-mix(in oklab, var(--k) 20%, var(--p-fold2)); }
+.ns.paper .s1, .ns.paper .s2 { left: 10%; right: 10%; top: 14%; height: 40%; border-radius: 4px; background: #fff; box-shadow: 0 1px 2px rgba(0,0,0,.14); }
+.ns.paper .s2 { left: 15%; right: 15%; top: 22%; }
+.ns.paper .s1::after { content: ""; position: absolute; left: 14%; right: 30%; top: 22%; height: 2px; border-radius: 2px; background: color-mix(in oklab, var(--k) 60%, transparent); box-shadow: 0 5px 0 color-mix(in oklab, var(--k) 30%, transparent); }
+.ns.paper .fr { height: 58%; background: color-mix(in oklab, var(--k) 10%, var(--p-fold)); box-shadow: 0 -1px 0 rgba(255,255,255,.7) inset, 0 3px 8px -3px rgba(0,0,0,.18); }
+.ns.aurora .t, .ns.aurora .bk { background: linear-gradient(135deg, hsl(var(--h) 75% 62%), hsl(calc(var(--h) + 40) 70% 52%)); }
+.ns.aurora .fr { background: linear-gradient(120deg, hsl(var(--h) 90% 80%), hsl(calc(var(--h) + 60) 85% 78%)); box-shadow: inset 0 0 0 1px rgba(255,255,255,.55), 0 10px 20px -8px hsl(calc(var(--h) + 30) 70% 50% / .7); }
+.ns.line .t, .ns.line .bk, .ns.line .fr { border: 2px solid var(--k); background: var(--p-bg); }
+.ns.line .t { border-bottom: 0; }
+.ns.line .fr { height: 66%; }
+.ns.shelf .ico { width: 70px; }
+.ns.shelf .bk { top: 4px; border-radius: 12px; background: var(--p-bg); box-shadow: 0 0 0 1px var(--p-line), 0 4px 12px -4px rgba(0,0,0,.14); }
+.ns.shelf .sh { top: 10px; width: 18px; height: 20px; border-radius: 5px; overflow: hidden; }
+.ns.shelf .sh > span { display: grid; height: 100%; border-radius: 0; }
+.ns.shelf .sh:nth-of-type(2) { left: 7px; } .ns.shelf .sh:nth-of-type(3) { left: 26px; } .ns.shelf .sh:nth-of-type(4) { left: 45px; }
+.ns.shelf .cnt { left: 7px; bottom: 7px; font-size: 9px; font-weight: 700; color: var(--k); }
+.ns.lens .ico { width: 52px; }
+.ns.lens .bk { top: 0; border-radius: 15px; background: linear-gradient(160deg, color-mix(in oklab, var(--k) 8%, #fff), color-mix(in oklab, var(--k) 20%, var(--p-fold2))); box-shadow: inset 0 0 0 1.5px rgba(255,255,255,.8), 0 6px 14px -6px rgba(0,0,0,.25); }
+.ns.lens .orb { left: 50%; top: 50%; width: 30px; height: 30px; margin: -15px 0 0 -15px; border-radius: 50%; display: grid; place-items: center; color: #fff; background: radial-gradient(circle at 35% 30%, color-mix(in oklab, var(--k) 40%, #fff), var(--k) 70%); box-shadow: 0 4px 10px -2px color-mix(in oklab, var(--k) 70%, transparent); }
+
+/* hover fan: the last five items arc around the folder, oldest left, newest right */
+.fw { position: relative; min-width: 0; border-radius: 12px; outline: none; cursor: default; --fy: 24px; --R: 80px; }
+.fw.cardfan { --fy: 40px; --R: 96px; }
+.fw > :first-child { position: relative; z-index: 2; transition: transform .35s cubic-bezier(.34,1.56,.64,1); }
+.fw.open > :first-child { transform: translateY(2px) scale(.96); }
+.fw:focus-visible { box-shadow: 0 0 0 2px var(--p-accent); }
+.fw.open { z-index: 20; }
+.fw.open::before { content: ""; position: absolute; left: calc(var(--R) * -1.2); right: calc(var(--R) * -1.2); top: calc(var(--R) * -1.25); bottom: 0; z-index: 0; }
+.fan { position: absolute; left: 50%; top: var(--fy); width: 0; height: 0; z-index: 1; }
+.fw:not(.cardfan):nth-child(6n+1) .fan, .fw.cardfan:nth-child(3n+1) .fan { left: calc(50% + 26px); }
+.fw:not(.cardfan):nth-child(6n) .fan, .fw.cardfan:nth-child(3n) .fan { left: calc(50% - 26px); }
+.fan button { all: unset; box-sizing: border-box; position: absolute; left: 0; top: 0; width: 46px; height: 56px; border-radius: 9px; padding: 3px; background: #fff; cursor: pointer;
+  box-shadow: 0 0 0 1px rgba(0,0,0,.08), 0 6px 14px -4px rgba(10,16,48,.35); opacity: 0; pointer-events: none;
+  transform: translate(-50%, -50%) scale(.35); transition: transform .42s cubic-bezier(.34,1.5,.64,1), opacity .2s ease, box-shadow .2s; transition-delay: calc((4 - var(--i)) * 18ms); }
+.fw.open .fan button { opacity: 1; pointer-events: auto; transition-delay: calc(var(--i) * 38ms);
+  transform: translate(calc(-50% + var(--ux) * var(--R)), calc(-50% + var(--uy) * var(--R))) rotate(var(--rot)); }
+.fw.open .fan button:hover, .fw.open .fan button:focus-visible { z-index: 3; transition-delay: 0s; box-shadow: 0 0 0 2px var(--p-accent), 0 10px 20px -6px rgba(10,16,48,.45);
+  transform: translate(calc(-50% + var(--ux) * var(--R) * 1.06), calc(-50% + var(--uy) * var(--R) * 1.06 - 4px)) rotate(0deg) scale(1.18); }
+.fan .th { display: grid; place-items: center; align-content: center; gap: 1px; height: 36px; border-radius: 5px; color: #fff; position: relative; overflow: hidden; }
+.fan .nm { display: block; font: 600 7.5px/1.2 var(--p-font-body); color: #3a3b42; margin-top: 3px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; text-align: center; }
+.qthumb.photo { background: radial-gradient(circle at 70% 28%, hsl(calc(var(--h) + 40) 95% 82% / .95), transparent 30%), linear-gradient(160deg, hsl(var(--h) 75% 62%), hsl(calc(var(--h) + 55) 65% 42%)); }
+.qthumb.photo::after { content: ""; position: absolute; left: -10%; right: -10%; bottom: -20%; height: 55%; border-radius: 50% 50% 0 0; background: hsl(calc(var(--h) + 120) 40% 30% / .55); }
+.qthumb.file { background: color-mix(in oklab, var(--k) 16%, #fff); color: var(--k); }
+.qthumb .ext { font: 800 6px/1 var(--p-font-body); font-style: normal; letter-spacing: .3px; }
+.qthumb .play { position: absolute; z-index: 1; width: 0; height: 0; border-left: 7px solid #fff; border-top: 4.5px solid transparent; border-bottom: 4.5px solid transparent; filter: drop-shadow(0 1px 2px rgba(0,0,0,.4)); }
+.hint { font-family: var(--p-font-body); font-size: 10.5px; font-weight: 500; color: var(--p-text2); margin-left: auto; }
+.hint kbd { font: inherit; font-weight: 700; border: 1px solid var(--p-line); border-radius: 4px; padding: 0 4px; background: var(--p-bg); }
+
+/* Quick Look */
+.ql { position: fixed; inset: 0; z-index: 1000; display: grid; place-items: center; padding: 16px; background: rgba(8,10,20,.38); -webkit-backdrop-filter: blur(6px); backdrop-filter: blur(6px); }
+.ql[hidden] { display: none; }
+.ql .panel { width: min(620px, 100%); max-height: calc(100dvh - 32px); display: grid; grid-template-rows: auto minmax(0, 1fr) auto auto; border-radius: 18px; overflow: hidden; background: var(--p-bg); color: var(--p-text); font-family: var(--p-font-body); box-shadow: 0 0 0 1px var(--p-line), 0 30px 80px -20px rgba(0,0,0,.55); }
+.ql .qbar { display: flex; align-items: center; gap: 8px; padding: 10px 12px 10px 14px; }
+.ql .qx { all: unset; width: 13px; height: 13px; border-radius: 50%; background: #ff5f57; cursor: pointer; flex: none; box-shadow: inset 0 0 0 .5px rgba(0,0,0,.2); }
+.ql .qx:focus-visible, .ql .qnav:focus-visible, .ql .qopen:focus-visible { outline: 2px solid var(--p-accent); outline-offset: 2px; }
+.ql .qname { flex: 1; min-width: 0; font-weight: 600; font-size: 13.5px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.ql .qnav { all: unset; display: grid; place-items: center; width: 30px; height: 26px; border-radius: 7px; background: var(--p-alt); color: var(--p-accent); font-weight: 700; cursor: pointer; }
+.ql .qnav:disabled { opacity: .35; cursor: default; }
+.ql .qopen { all: unset; padding: 5px 12px; border-radius: var(--p-r-btn); background: var(--p-btn); color: #fff; font-weight: 600; font-size: 12.5px; cursor: pointer; }
+.ql .qview { position: relative; min-height: 220px; height: 340px; max-height: 52dvh; display: grid; place-items: center; overflow: hidden; }
+.ql .qview.photo::after { bottom: -30%; }
+.ql .qview .play { border-left-width: 26px; border-top-width: 16px; border-bottom-width: 16px; }
+.ql .page { width: 46%; max-width: 230px; aspect-ratio: 1 / 1.3; background: #fff; border-radius: 6px; box-shadow: 0 10px 30px -10px rgba(0,0,0,.35); padding: 8%; display: grid; align-content: start; gap: 7px; }
+.ql .page i { display: block; height: 5px; border-radius: 3px; background: #e3e4ea; }
+.ql .page i:first-child { height: 9px; width: 60%; background: var(--k); margin-bottom: 6px; }
+.ql .wave { display: flex; align-items: center; gap: 3px; height: 50%; }
+.ql .wave i { width: 5px; border-radius: 3px; background: var(--k); }
+.ql .bigic { width: 120px; height: 120px; border-radius: 28px; display: grid; place-items: center; color: #fff; background: linear-gradient(160deg, color-mix(in oklab, var(--k) 60%, #fff), var(--k)); box-shadow: 0 16px 36px -14px color-mix(in oklab, var(--k) 80%, transparent); }
+.ql .qinfo { display: flex; flex-wrap: wrap; gap: 4px 16px; padding: 10px 14px; font-size: 12px; color: var(--p-text2); border-top: 1px solid var(--p-line); }
+.ql .qinfo b { color: var(--p-text); font-weight: 600; }
+.ql .strip5 { display: flex; gap: 8px; padding: 0 14px 14px; overflow-x: auto; }
+.ql .strip5 button { all: unset; flex: none; width: 52px; height: 40px; border-radius: 7px; overflow: hidden; cursor: pointer; display: grid; position: relative; box-shadow: 0 0 0 1px var(--p-line); }
+.ql .strip5 button .th { height: 100%; border-radius: 0; display: grid; place-items: center; position: relative; overflow: hidden; }
+.ql .strip5 button[aria-current="true"] { box-shadow: 0 0 0 2.5px var(--p-accent); }
+.ql .strip5 button:focus-visible { outline: 2px solid var(--p-accent); outline-offset: 2px; }
+.ql .qtoast { position: absolute; left: 50%; bottom: 14px; transform: translateX(-50%); background: rgba(20,22,30,.86); color: #fff; font-size: 12px; padding: 6px 12px; border-radius: 99px; }
+@media (prefers-reduced-motion: reduce) { .fan button, .fw > :first-child { transition: opacity .15s !important; } .fw.open .fan button:hover { transform: translate(calc(-50% + var(--ux) * var(--R)), calc(-50% + var(--uy) * var(--R))); } }
+.pv .ftile span { width: 46px; height: 46px; border-radius: calc(var(--p-r-card) * .7); display: grid; place-items: center; background: color-mix(in oklab, var(--k) 16%, var(--p-bg)); color: var(--k); }
+/* cards */
+.pv .cards { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: calc(8px * var(--p-s)); }
+.pv .card { border-radius: var(--p-r-card); padding: calc(10px * var(--p-s)) 11px; display: grid; gap: 2px; min-width: 0; background: var(--p-bg); }
+.pv[data-card=outline] .card { border: 1px solid var(--p-line); }
+.pv[data-card=shadow] .card { border: 1px solid var(--p-line); box-shadow: 0 1px 2px rgba(0,0,0,.05), 0 8px 20px -12px rgba(0,0,0,.25); }
+.pv[data-card=filled] .card { background: var(--p-alt); }
+.pv .card span { font-size: var(--p-small); color: var(--p-text2); display: flex; align-items: center; gap: 5px; }
+.pv .card b { font-size: var(--p-big); font-weight: 700; letter-spacing: -0.03em; font-variant-numeric: tabular-nums; }
+.pv .card small { font-size: 10px; color: var(--p-text2); }
+/* component strip */
+.pv .strip { background: var(--p-bg); border-radius: var(--p-r-win); box-shadow: 0 0 0 1px var(--p-line); padding: 14px 16px; display: grid; gap: 12px; font-size: var(--p-body); }
+.pv .strip .lbl { font-size: 11px; color: var(--p-text2); font-weight: 700; }
+.pv .srow { display: flex; flex-wrap: wrap; gap: 10px; align-items: center; }
+.pv .b { display: inline-flex; align-items: center; gap: 5px; height: 26px; padding: 0 12px; border-radius: var(--p-r-btn); font-size: calc(var(--p-body) - .5px); font-weight: 600; border: 1px solid transparent; white-space: nowrap; }
+.pv[data-btn=filled] .b.pri { background: var(--p-btn); color: #fff; }
+.pv[data-btn=tinted] .b.pri { background: var(--p-soft); color: var(--p-accent); }
+.pv[data-btn=outlined] .b.pri { background: transparent; color: var(--p-accent); border-color: var(--p-accent); }
+.pv .b.sec { background: var(--p-alt); color: var(--p-text); border-color: var(--p-line); font-weight: 500; }
+.pv[data-btn=filled] .b.dan { background: #c4223b; color: #fff; }
+.pv[data-btn=tinted] .b.dan { background: color-mix(in oklab, #c4223b 14%, transparent); color: #d03a50; }
+.pv[data-btn=outlined] .b.dan { color: #d03a50; border-color: #d03a50; }
+.pv .segc { display: inline-flex; background: var(--p-alt); border-radius: var(--p-r-btn); padding: 2px; gap: 2px; }
+.pv .segc span { padding: 2px 10px; border-radius: calc(var(--p-r-btn) - 2px); font-size: calc(var(--p-body) - 1.5px); color: var(--p-text2); }
+.pv .segc span.on { background: var(--p-bg); color: var(--p-text); font-weight: 600; box-shadow: 0 1px 2px rgba(0,0,0,.14); }
+.pv .chk { width: 14px; height: 14px; border-radius: 4px; background: var(--p-btn); position: relative; display: inline-block; }
+.pv .chk::after { content: ""; position: absolute; left: 4px; top: 1px; width: 4px; height: 8px; border: solid #fff; border-width: 0 2px 2px 0; transform: rotate(45deg); }
+.pv .swc { width: 30px; height: 17px; border-radius: 99px; background: var(--p-btn); position: relative; display: inline-block; }
+.pv .swc::after { content: ""; position: absolute; right: 2px; top: 2px; width: 13px; height: 13px; border-radius: 50%; background: #fff; }
+.pv .toast { display: inline-flex; gap: 8px; align-items: center; background: var(--p-text); color: var(--p-bg); border-radius: 99px; padding: 6px 12px; font-size: 12px; }
+.pv .cardsample { border-radius: var(--p-r-card); padding: 9px 11px; background: var(--p-bg); font-size: var(--p-small); display: grid; gap: 1px; }
+.pv[data-card=outline] .cardsample { border: 1px solid var(--p-line); }
+.pv[data-card=shadow] .cardsample { border: 1px solid var(--p-line); box-shadow: 0 1px 2px rgba(0,0,0,.05), 0 8px 20px -12px rgba(0,0,0,.25); }
+.pv[data-card=filled] .cardsample { background: var(--p-alt); }
+.pv .typescale { display: flex; flex-wrap: wrap; gap: 6px 18px; align-items: baseline; }
+.pv .typescale span { color: var(--p-text2); font-size: 10px; margin-left: 4px; }
+
+/* wordmarks */
+.wm { white-space: nowrap; line-height: 1; color: var(--p-text, var(--ink)); }
+.wm-classic { font-weight: 700; letter-spacing: -0.02em; }
+.wm-split { font-weight: 400; letter-spacing: -0.02em; } .wm-split b { font-weight: 800; }
+.wm-rounded { font-family: ui-rounded, "SF Pro Rounded", "Nunito", sans-serif; font-weight: 900; }
+.wm-italic { font-weight: 800; font-style: italic; letter-spacing: -0.035em; }
+.wm-ai { font-weight: 700; letter-spacing: -0.02em; display: inline-flex; align-items: center; gap: 5px; }
+.wm-ai i { font-style: normal; font-size: .62em; font-weight: 800; color: #fff; background: var(--p-btn, #2f4bc4); border-radius: 5px; padding: 2px 4px; }
+.wm2 { font-family: -apple-system, BlinkMacSystemFont, "SF Pro Display", "Helvetica Neue", Arial, sans-serif; white-space: nowrap; line-height: 1.05; letter-spacing: -0.01em; display: inline-block; }
+.wm2 .m { font-weight: 400; }
+.wm2 .s { font-weight: 400; letter-spacing: 0.01em; }
+.wm2.w-bold .s { font-weight: 600; }
+.wm2.w-wide .s { font-weight: 500; letter-spacing: 0.16em; }
+.wm2.w-light .m, .wm2.w-light .s { font-weight: 300; }
+.wm2.w-mixed .m { font-weight: 300; } .wm2.w-mixed .s { font-weight: 700; letter-spacing: 0; }
+.wm2.gloss { -webkit-background-clip: text; background-clip: text; color: transparent; }
+.brandtiles { display: grid; gap: 5px; }
+.brandtiles > span { border-radius: 8px; padding: 8px 10px; display: flex; align-items: center; min-width: 0; overflow: hidden; }
+.brandtiles > .l { background: #ffffff; box-shadow: inset 0 0 0 1px rgba(0,0,0,.1); }
+.brandtiles > .d { background: #18191d; }
+#dec-word .opts, #dec-wcolor .opts, #dec-folders .opts { grid-template-columns: repeat(auto-fill, minmax(160px, 1fr)); }
+.brandrow { display: flex; flex-wrap: wrap; gap: 12px; }
+.brandrow > span { border-radius: 12px; padding: 18px 22px; display: inline-flex; align-items: center; }
+.opt .wm { color: var(--ink); font-family: -apple-system, BlinkMacSystemFont, "Helvetica Neue", sans-serif; font-size: 15px; }
+.opt .wm-rounded { font-family: ui-rounded, "SF Pro Rounded", "Nunito", sans-serif; }
+
+@media (max-width: 1100px) {
+  .layout { grid-template-columns: 1fr; }
+  .previewcol { position: static; order: -1; }
+}
+@media (prefers-reduced-motion: reduce) { * { transition: none !important; } }
+</style>
+
+<div class="wrap">
+  <header class="top">
+    <h1>MacSprint Foundations</h1>
+    <p>These are the shared parts every feature reuses: colour, type, corners, spacing, cards, sidebar, toolbar, buttons, icons and the brand. Pick an option for each, watch the MacSprint preview change, and tick <b>Final</b> when you are sure. Once everything is final, every feature screen will be built from these choices.</p>
+    <div class="statusbar">
+      <div class="prog"><span id="prog-label">0 of 15 final</span><div class="bar" aria-hidden="true"><i id="prog-bar"></i></div></div>
+      <span class="saved" id="saved"><i></i><span>Loading your choices…</span></span>
+      <button type="button" class="btn" id="reset">Back to current design</button>
+    </div>
+  </header>
+
+  <div class="layout">
+    <div class="decisions" id="decisions"></div>
+    <aside class="previewcol" aria-label="Live preview">
+      <div class="pv-tools">
+        <h3>Live preview</h3>
+        <div class="seg" role="group" aria-label="Preview appearance"><button type="button" data-mode="light" aria-pressed="true">Light</button><button type="button" data-mode="dark" aria-pressed="false">Dark</button></div>
+      </div>
+      <div class="pv-scroll"><div class="pv" id="pv"></div></div>
+    </aside>
+  </div>
+
+  <section class="summary" aria-labelledby="sum-h">
+    <h2 id="sum-h">Your foundations</h2>
+    <p style="color:var(--ink-2)">Claude reads this list directly from this page. You can also copy it as text.</p>
+    <div class="tablewrap"><table id="sum"></table></div>
+    <div style="display:flex;gap:12px;align-items:center;flex-wrap:wrap"><button type="button" class="btn pri" id="copy">Copy as text</button><span id="copy-status" role="status"></span></div>
+    <textarea id="copy-area" readonly hidden aria-label="Foundations as text" style="width:100%;min-height:160px;font:13px ui-monospace,Menlo,monospace"></textarea>
+  </section>
+</div>
+
+<script>
+(() => {
+/* ---------------- icons ---------------- */
+const P = {
+  house: '<path d="M3 11.5 12 4l9 7.5"/><path d="M5.5 10v9.5h13V10"/>',
+  grid: '<rect x="4" y="4" width="7" height="7" rx="1.5"/><rect x="13" y="4" width="7" height="7" rx="1.5"/><rect x="4" y="13" width="7" height="7" rx="1.5"/><rect x="13" y="13" width="7" height="7" rx="1.5"/>',
+  photo: '<rect x="3" y="5" width="18" height="14" rx="2.5"/><circle cx="8.5" cy="10" r="1.6"/><path d="m21 16-5-5-9 8"/>',
+  search: '<circle cx="10.5" cy="10.5" r="6"/><path d="m20 20-5-5"/>',
+  text: '<path d="M4 8V6a2 2 0 0 1 2-2h2M16 4h2a2 2 0 0 1 2 2v2M20 16v2a2 2 0 0 1-2 2h-2M8 20H6a2 2 0 0 1-2-2v-2"/><path d="M8 10h8M8 14h5"/>',
+  drive: '<rect x="3" y="7" width="18" height="10" rx="2.5"/><path d="M7 13h.01M11 13h6"/>',
+  trash: '<path d="M4 7h16M9 7V4.5h6V7M6 7l1 13h10l1-13"/>',
+  dup: '<rect x="8" y="8" width="11" height="13" rx="2"/><path d="M16 8V5a2 2 0 0 0-2-2H7a2 2 0 0 0-2 2v10a2 2 0 0 0 2 2h1"/>',
+  folder: '<path d="M3 7.5V18a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V9.5a2 2 0 0 0-2-2h-7L10 5H5a2 2 0 0 0-2 2.5Z"/>',
+  clip: '<rect x="5" y="5" width="14" height="16" rx="2.5"/><rect x="9" y="3" width="6" height="4" rx="1.2"/>',
+  cam: '<path d="M4 8V6a2 2 0 0 1 2-2h2M16 4h2a2 2 0 0 1 2 2v2M20 16v2a2 2 0 0 1-2 2h-2M8 20H6a2 2 0 0 1-2-2v-2"/><circle cx="12" cy="12" r="3"/>',
+  film: '<rect x="3" y="4" width="18" height="16" rx="2"/><path d="M7 4v16M17 4v16"/>',
+  music: '<path d="M9 18V5l11-2v13"/><circle cx="6" cy="18" r="3"/><circle cx="17" cy="16" r="3"/>',
+  doc: '<path d="M14 3H7a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V8z"/><path d="M14 3v5h5"/>',
+  zip: '<rect x="4" y="4" width="16" height="16" rx="3"/><path d="M12 4v4M12 11v2"/>',
+  app: '<rect x="4" y="4" width="16" height="16" rx="4.5"/>',
+  down: '<circle cx="12" cy="12" r="9"/><path d="M12 7.5v9M8.5 13l3.5 3.5 3.5-3.5"/>',
+  sparkles: '<path d="M12 3l1.8 4.7L18.5 9.5l-4.7 1.8L12 16l-1.8-4.7L5.5 9.5l4.7-1.8z"/>',
+  refresh: '<path d="M20 12a8 8 0 1 1-2.3-5.7"/><path d="M20 4v4h-4"/>',
+  check: '<circle cx="12" cy="12" r="9"/><path d="m8 12.5 3 3 5-6"/>',
+};
+const ic = (n, s = 14, style = '') => `<svg viewBox="0 0 24 24" width="${s}" height="${s}" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" ${style}>${P[n] || ''}</svg>`;
+const esc = (s) => String(s).replace(/[&<>"]/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]));
+
+/* ---------------- brand ---------------- */
+const LOGOS = {
+  folder: '<g fill="none" stroke="#fff" stroke-width="3.6" stroke-linecap="round"><path d="M8 29h8M5 36h11M9 43h7"/></g><path fill="#fff" d="M24 21h8.5l4 4H48a3 3 0 0 1 3 3v15a3 3 0 0 1-3 3H24a3 3 0 0 1-3-3V24a3 3 0 0 1 3-3z"/>',
+  chevron: '<g fill="none" stroke="#fff" stroke-width="5.5" stroke-linecap="round" stroke-linejoin="round"><path d="M12 45V20l11 14 11-14v25"/><path d="M42 21l11 11-11 11"/></g>',
+  window: '<rect x="12" y="15" width="40" height="34" rx="7" fill="none" stroke="#fff" stroke-width="4"/><g fill="#fff"><circle cx="19" cy="22" r="2"/><circle cx="25" cy="22" r="2"/><path d="M33 26l2.6 6.4L42 35l-6.4 2.6L33 44l-2.6-6.4L24 35l6.4-2.6z"/></g>',
+  stack: '<rect x="12" y="31" width="26" height="19" rx="4" fill="#fff" fill-opacity=".45"/><rect x="19" y="23" width="26" height="19" rx="4" fill="#fff" fill-opacity=".72"/><rect x="26" y="15" width="26" height="19" rx="4" fill="#fff"/>',
+  lens: '<circle cx="28" cy="28" r="13" fill="none" stroke="#fff" stroke-width="5"/><path d="M38 38l11 11" stroke="#fff" stroke-width="6" stroke-linecap="round"/><path fill="#fff" d="M28 20.5l2 5 5 2-5 2-2 5-2-5-5-2 5-2z"/>',
+  monogram: '<text x="32" y="42" text-anchor="middle" font-family="-apple-system, BlinkMacSystemFont, Helvetica Neue, sans-serif" font-size="27" font-weight="800" letter-spacing="-1.5" fill="#fff">MS</text>',
+};
+let gid = 0;
+function logoSvg(size, id, accent) {
+  const a = ACCENTS[accent || state.choices.accent] || ACCENTS.indigo, g = 'g' + (gid++);
+  return `<svg width="${size}" height="${size}" viewBox="0 0 64 64" aria-hidden="true" style="flex:none"><defs><linearGradient id="${g}" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="${a.top}"/><stop offset="1" stop-color="${a.lb}"/></linearGradient></defs><rect width="64" height="64" rx="14.5" fill="url(#${g})"/>${LOGOS[id] || LOGOS.folder}</svg>`;
+}
+/* Wordmark: "Mac" + "SPRINT", no logo. Solid or glossy colours, each with a light- and dark-background version. */
+const WCOLORS = {
+  navy: { name: 'Classic blue', note: 'Deep blue, like the reference.', l: '#2c4f9e', d: '#8fb0ff' },
+  indigo: { name: 'Indigo', note: 'Matches the current accent.', l: '#3b5bdb', d: '#8399ff' },
+  ink: { name: 'Graphite', note: 'Black on light, white on dark.', l: '#1d1d1f', d: '#f2f2f5' },
+  teal: { name: 'Teal', note: 'Fresh and calm.', l: '#0f7f82', d: '#46c9c5' },
+  violet: { name: 'Violet', note: 'Creative, hints at AI.', l: '#6a40cf', d: '#b49cff' },
+  'g-blue': { name: 'Glossy blue', note: 'Bright highlight on top, deep blue below.', gloss: true, l: ['#86b6ff', '#3c78e6', '#1f4fb4', '#3f78dc'], d: ['#cfe0ff', '#7fb0ff', '#3c78e6', '#6c9df0'] },
+  'g-silver': { name: 'Glossy silver', note: 'Brushed-metal look, like aluminium.', gloss: true, l: ['#9aa1ad', '#5d636e', '#3a3f48', '#6d7380'], d: ['#ffffff', '#d5d9e0', '#9aa0aa', '#e6e9ee'] },
+  'g-violet': { name: 'Glossy violet', note: 'Violet with a soft sheen.', gloss: true, l: ['#c3a3ff', '#7c4ddb', '#5a2fb5', '#8a5ce6'], d: ['#e6d9ff', '#b49cff', '#7c4ddb', '#a383f2'] },
+  'g-aqua': { name: 'Glossy aqua', note: 'Classic Mac “Aqua” shine.', gloss: true, l: ['#8fe1ff', '#1fa0d6', '#0b77a6', '#2c9bd0'], d: ['#d6f5ff', '#7fd6f5', '#1fa0d6', '#5cc3ea'] },
+  'g-sunset': { name: 'Glossy sunset', note: 'Warm orange to pink; bold.', gloss: true, l: ['#ffb36b', '#f26b3a', '#d6336c', '#ec5a4c'], d: ['#ffd7a8', '#ff9a6b', '#f2577f', '#ff8a6b'] },
+};
+const WSTYLES = {
+  space: { name: 'Mac SPRINT', note: 'A space between the two words.', sep: ' ', cls: '' },
+  joined: { name: 'MacSPRINT', note: 'One word; the capitals do the splitting.', sep: '', cls: '' },
+  bold: { name: 'Mac SPRINT, bold', note: 'SPRINT a little heavier.', sep: ' ', cls: 'w-bold' },
+  wide: { name: 'Mac S P R I N T', note: 'SPRINT spaced out; airy, premium.', sep: ' ', cls: 'w-wide' },
+  mixed: { name: 'Light Mac, bold SPRINT', note: 'Strong contrast between the words.', sep: '', cls: 'w-mixed' },
+};
+function wordmark(style, color, dark, size) {
+  const st = WSTYLES[style] || WSTYLES.space, co = WCOLORS[color] || WCOLORS.navy;
+  let paint;
+  if (co.gloss) {
+    const g = dark ? co.d : co.l;
+    paint = `background-image:linear-gradient(180deg, ${g[0]} 0%, ${g[1]} 48%, ${g[2]} 52%, ${g[3]} 100%);filter:drop-shadow(0 ${dark ? '0 6px' : '1px 0'} ${dark ? 'rgba(160,190,255,.25)' : 'rgba(255,255,255,.9)'})`;
+  } else paint = `color:${dark ? co.d : co.l}`;
+  return `<span class="wm2 ${st.cls}${co.gloss ? ' gloss' : ''}" style="font-size:${size}px;${paint}"><span class="m">Mac</span>${st.sep}<span class="s">SPRINT</span></span>`;
+}
+const brandTiles = (style, color, size = 17) => `<span class="brandtiles"><span class="l">${wordmark(style, color, false, size)}</span><span class="d">${wordmark(style, color, true, size)}</span></span>`;
+const WORDS = {
+  classic: '<span class="wm wm-classic">MacSprint</span>',
+  split: '<span class="wm wm-split">Mac<b>Sprint</b></span>',
+  rounded: '<span class="wm wm-rounded">macsprint</span>',
+  italic: '<span class="wm wm-italic">MacSprint</span>',
+  ai: '<span class="wm wm-ai">MacSprint<i>AI</i></span>',
+};
+
+/* ---------------- option data ---------------- */
+const ACCENTS = {
+  indigo: { l: '#3b5bdb', lb: '#2f4bc4', d: '#8399ff', db: '#4a63e0', top: '#7389ff' },
+  blue: { l: '#0a7cff', lb: '#0064d2', d: '#4aa3ff', db: '#0a6fe0', top: '#4aa3ff' },
+  teal: { l: '#0f8285', lb: '#0b6e70', d: '#46c9c5', db: '#0b7a7c', top: '#3dbdb9' },
+  violet: { l: '#7246d6', lb: '#6236c4', d: '#b49cff', db: '#7650de', top: '#a084ff' },
+  graphite: { l: '#3f4450', lb: '#2f333c', d: '#c9ccd4', db: '#5b606c', top: '#7a808e' },
+};
+const NEUTRALS = {
+  cool: { l: { page: '#f4f5f8', bg: '#ffffff', side: '#f4f4f7', alt: '#f0f1f5', line: 'rgba(20,20,30,.1)', text: '#16161a', text2: '#5f6068', fold: '#c9ccd6', fold2: '#b4b8c4' },
+          d: { page: '#0e0f12', bg: '#18191d', side: '#1f2025', alt: '#25262c', line: 'rgba(255,255,255,.09)', text: '#ececf0', text2: '#a3a4ad', fold: '#3b3e48', fold2: '#2c2e36' } },
+  neutral: { l: { page: '#f5f5f5', bg: '#ffffff', side: '#f3f3f3', alt: '#ededed', line: 'rgba(0,0,0,.1)', text: '#1d1d1f', text2: '#6e6e73', fold: '#cbcbcf', fold2: '#b6b6bb' },
+             d: { page: '#111111', bg: '#1e1e1e', side: '#262626', alt: '#2c2c2e', line: 'rgba(255,255,255,.1)', text: '#f5f5f7', text2: '#a1a1a6', fold: '#3d3d40', fold2: '#2e2e31' } },
+  warm: { l: { page: '#f7f4ef', bg: '#fffdfa', side: '#f5f1ea', alt: '#efeae2', line: 'rgba(40,30,20,.11)', text: '#1f1b16', text2: '#675f55', fold: '#d3ccc1', fold2: '#bfb7ab' },
+          d: { page: '#12100e', bg: '#1c1a17', side: '#24211d', alt: '#2b2823', line: 'rgba(255,245,230,.09)', text: '#f1ece4', text2: '#aaa196', fold: '#423d36', fold2: '#322e29' } },
+};
+const KINDS = [['Images', '#3a8dff', 215, 'photo', '2,280', '2.81 GB'], ['Videos', '#a46bf5', 275, 'film', '162', '11.21 GB'], ['Music', '#f2647e', 345, 'music', '34', '82.7 MB'], ['Documents', '#f0a23b', 35, 'doc', '201', '1.16 GB'], ['Archives', '#3fb985', 150, 'zip', '93', '630 MB'], ['Apps', '#3aa7d9', 195, 'app', '110', '14.31 GB']];
+
+const DECISIONS = [
+  { id: 'word', title: 'Name style', why: 'No logo: the name is the brand, written Mac + SPRINT in capitals with Apple’s system font.', def: 'space',
+    opts: Object.entries(WSTYLES).map(([id, w]) => [id, w.name, w.note]),
+    demo: (id) => brandTiles(id, state.choices.wcolor, 15) },
+  { id: 'wcolor', title: 'Name colour', why: 'Solid colours stay crisp at small sizes; glossy ones add a highlight band for big uses like the Home header and website.', def: 'navy',
+    opts: Object.entries(WCOLORS).map(([id, c]) => [id, c.name, c.note]),
+    demo: (id) => brandTiles(state.choices.word, id, 16) },
+  { id: 'accent', title: 'Accent colour', why: 'The one colour for selection, the main button and links. Everything else stays neutral.', def: 'indigo',
+    opts: [['indigo', 'Indigo', 'Calm, a little premium. Current.'], ['blue', 'System blue', 'Feels most like a built-in Mac app.'], ['teal', 'Teal', 'Fresh and clean; less common.'], ['violet', 'Violet', 'Creative; connects to “AI”.'], ['graphite', 'Graphite', 'No colour at all; very minimal.']],
+    demo: (id) => `<div class="sw"><i style="background:${ACCENTS[id].l}"></i><i style="background:${ACCENTS[id].d}"></i></div>` },
+  { id: 'neutral', title: 'Background greys', why: 'The window, sidebar and card colours behind everything.', def: 'cool',
+    opts: [['cool', 'Cool graphite', 'Grey with a hint of blue. Current.'], ['neutral', 'True neutral', 'Plain greys, like stock macOS.'], ['warm', 'Warm stone', 'Slightly warm; softer on the eyes.']],
+    demo: (id) => `<div class="sw">${['bg', 'side', 'alt'].map((k) => `<i style="background:${NEUTRALS[id].l[k]}"></i>`).join('')}${['bg', 'side'].map((k) => `<i style="background:${NEUTRALS[id].d[k]}"></i>`).join('')}</div>` },
+  { id: 'font', title: 'Typeface', why: 'All three are Apple system fonts, free to use in the app.', def: 'system',
+    opts: [['system', 'SF Pro', 'The standard Mac font. Neutral and very readable.'], ['rounded', 'SF Pro Rounded', 'Softer and friendlier, like Apple’s Reminders.'], ['serif', 'New York titles', 'Serif headings with SF Pro text. Editorial.']],
+    demo: (id) => `<span class="chipdemo" style="font:700 19px ${id === 'rounded' ? 'ui-rounded, \'SF Pro Rounded\', Nunito, sans-serif' : id === 'serif' ? 'ui-serif, \'New York\', \'Source Serif 4\', Georgia, serif' : '-apple-system, BlinkMacSystemFont, \'Helvetica Neue\', sans-serif'}">Good afternoon</span>` },
+  { id: 'scale', title: 'Text size', why: 'Mac apps use 13 pt body text. Bigger sizes are easier to read but fit less.', def: 'compact',
+    opts: [['compact', 'Mac standard', 'Body 13 pt, title 22 pt. Current.'], ['comfortable', 'Comfortable', 'Body 14 pt, title 26 pt.'], ['large', 'Large', 'Body 15 pt, title 28 pt.']] },
+  { id: 'radius', title: 'Corner shape', why: 'How round windows, cards, buttons and fields are. Inner corners stay smaller than outer ones.', def: 'soft',
+    opts: [['tight', 'Crisp', 'Cards 8, buttons 5 pt. Precise.'], ['native', 'Native', 'Cards 12, buttons 7 pt. Like macOS.'], ['soft', 'Soft', 'Cards 16, buttons 9 pt. Current.'], ['round', 'Round', 'Cards 22 pt, pill buttons. Playful.']],
+    demo: (id) => `<div class="sw"><i style="border-radius:${RADII[id].card / 2}px;background:var(--pick-soft)"></i><i style="border-radius:${Math.min(RADII[id].btn, 11) / 2 + 2}px;background:var(--pick-soft);width:36px"></i></div>` },
+  { id: 'space', title: 'Spacing', why: 'The gaps between things. More space feels calmer; less shows more files.', def: 'regular',
+    opts: [['compact', 'Compact', 'Fits more; for big libraries.'], ['regular', 'Regular', '8 pt rhythm. Current.'], ['airy', 'Airy', 'More breathing room.']] },
+  { id: 'card', title: 'Card style', why: 'How Clean Up cards and other panels stand out from the background.', def: 'shadow',
+    opts: [['outline', 'Outline', 'A thin border, no shadow. Flat.'], ['shadow', 'Soft shadow', 'Border plus a soft lift. Current.'], ['filled', 'Filled', 'A grey fill, no border.']] },
+  { id: 'sidebar', title: 'Sidebar selection', why: 'How the selected section looks in the sidebar.', def: 'raised',
+    opts: [['raised', 'Raised', 'A white pill with accent icon. Current.'], ['accent', 'Accent fill', 'Solid accent, white text. Classic Mac.'], ['tint', 'Tinted', 'Light accent background, accent text.']] },
+  { id: 'toolbar', title: 'Toolbar layout', why: 'Where the search field sits at the top of every screen.', def: 'left',
+    opts: [['left', 'Search left', 'Search first, info on the right. Current.'], ['center', 'Search centred', 'A big central search, like a search app.'], ['minimal', 'Minimal', 'Page title with a search icon that expands.']] },
+  { id: 'btn', title: 'Main button style', why: 'The look of primary and destructive buttons.', def: 'filled',
+    opts: [['filled', 'Filled', 'Solid colour, white text. Current.'], ['tinted', 'Tinted', 'Soft colour background, coloured text.'], ['outlined', 'Outlined', 'A coloured border only.']] },
+  { id: 'icons', title: 'Sidebar icons', why: 'All are SF Symbols; this sets their style.', def: 'outline',
+    opts: [['outline', 'Outline', 'Thin lines, quiet. Current.'], ['filled', 'Filled', 'Solid shapes, stronger.'], ['color', 'Colour-coded', 'Each kind in its own colour.']] },
+  { id: 'folders', title: 'Library folders', why: 'How the six file kinds appear on Home.', def: 'mac',
+    opts: [['pastel', 'Pastel folders', 'Tabbed tinted folders, monospaced labels (like your reference).'], ['glass', 'Frosted glass', 'See-through panels over a soft colour glow.'], ['outline', 'Clean outline', 'White card with only the tab in colour. Quiet.'], ['peek', 'Photos peeking', 'Thumbnails sticking out of a tinted folder.'], ['bold', 'Glossy colour', 'Strong colour, white text, glossy top.'], ['vault', 'Vault', 'Smoked dark folder with a coloured edge glow. New.'], ['paper', 'Paper stack', 'Soft folder with paper sheets inside. New.'], ['aurora', 'Aurora', 'Two-tone gradient folder per kind. New.'], ['line', 'Line', 'Monoline outline in the kind colour. New.'], ['shelf', 'Shelf', 'Card showing the three newest thumbnails. New.'], ['lens', 'Lens tile', 'Rounded tile with a glossy colour orb. New.'], ['mac', 'macOS folders', 'Small folder icons. Current.'], ['cards', 'Colour cards', 'Tinted cards with icons.'], ['tiles', 'Icon tiles', 'Simple rounded icon squares.']],
+    demo: (id) => `<span class="pv fdemo" style="${varStyle(false)}">${folderHtml(id, KINDS[0])}</span>` },
+  { id: 'ai', title: 'AI search default', why: 'Whether the ✦ AI switch in the search field starts on.', def: 'on',
+    opts: [['on', 'On by default', 'Plain-English search first.'], ['off', 'Off by default', 'File-name search first; AI when asked.']] },
+];
+const RADII = { tight: { win: 10, card: 8, btn: 5, field: 6 }, native: { win: 12, card: 12, btn: 7, field: 7 }, soft: { win: 14, card: 16, btn: 9, field: 9 }, round: { win: 18, card: 22, btn: 999, field: 999 } };
+const SCALES = { compact: { body: 13, small: 11, title: 22, h2: 14, big: 18 }, comfortable: { body: 14, small: 12, title: 26, h2: 15, big: 20 }, large: { body: 15, small: 12.5, title: 28, h2: 16, big: 22 } };
+const SPACE = { compact: 0.75, regular: 1, airy: 1.3 };
+const FONTS = {
+  system: { body: '-apple-system, BlinkMacSystemFont, "SF Pro Text", "Helvetica Neue", sans-serif', title: '-apple-system, BlinkMacSystemFont, "SF Pro Display", "Helvetica Neue", sans-serif' },
+  rounded: { body: 'ui-rounded, "SF Pro Rounded", Nunito, sans-serif', title: 'ui-rounded, "SF Pro Rounded", Nunito, sans-serif' },
+  serif: { body: '-apple-system, BlinkMacSystemFont, "SF Pro Text", "Helvetica Neue", sans-serif', title: 'ui-serif, "New York", "Source Serif 4", Georgia, serif' },
+};
+
+/* ---------------- state + storage ---------------- */
+const defaults = () => Object.fromEntries(DECISIONS.map((d) => [d.id, d.def]));
+let state = { choices: defaults(), final: {} };
+let mode = 'light';
+let ref = null, store = 'local', saveTimer = null, saving = Promise.resolve();
+try { const s = JSON.parse(localStorage.getItem('macsprint-lab-hover-fan') || 'null'); if (s && s.choices) state = { choices: { ...defaults(), ...s.choices }, final: s.final || {} }; } catch (e) {}
+
+// Drop saved values that no longer exist (e.g. the old logo options).
+function clean(st) { for (const d of DECISIONS) if (!d.opts.some((o) => o[0] === st.choices[d.id])) { st.choices[d.id] = d.def; delete st.final[d.id]; } return st; }
+state = clean(state);
+function setSaved(text, ok) { const el = document.getElementById('saved'); el.classList.toggle('ok', !!ok); el.querySelector('span').textContent = text; }
+function save() {
+  try { localStorage.setItem('macsprint-lab-hover-fan', JSON.stringify(state)); } catch (e) {}
+  if (!ref) { setSaved('Saved in this browser only. Use “Copy as text” to send it to Claude.', false); return; }
+  setSaved('Saving…', false);
+  clearTimeout(saveTimer);
+  saveTimer = setTimeout(() => {
+    const payload = { choices: { ...state.choices }, final: { ...state.final }, summary: summaryText(), updatedAt: new Date().toISOString() };
+    saving = saving.then(() => ref.set(payload)).then(() => setSaved('Saved. Claude can read your choices.', true), () => setSaved('Could not save online; kept in this browser. Use “Copy as text”.', false));
+  }, 500);
+}
+async function connect() {
+  try {
+    const db = null /* lab snapshot: never touches the real foundations doc */;
+    if (!db) { setSaved('Saved in this browser only. Use “Copy as text” to send it to Claude.', false); return; }
+    ref = db.doc('foundations/decisions');
+    const snap = await ref.get();
+    if (snap.exists) { const d = snap.data() || {}; state = clean({ choices: { ...defaults(), ...(d.choices || {}) }, final: d.final || {} }); renderAll(); }
+    setSaved('Connected. Claude can read your choices.', true);
+  } catch (e) { setSaved('Saved in this browser only. Use “Copy as text” to send it to Claude.', false); }
+}
+
+/* ---------------- rendering ---------------- */
+const optName = (d, id) => (d.opts.find((o) => o[0] === id) || d.opts[0])[1];
+function decisionHtml(d) {
+  const fin = !!state.final[d.id];
+  return `<section class="dec${fin ? ' is-final' : ''}" id="dec-${d.id}" aria-labelledby="h-${d.id}">
+    <div class="dec-head"><div><h2 id="h-${d.id}">${esc(d.title)}</h2><p class="why">${esc(d.why)}</p></div>
+      <label class="finalbox" for="fin-${d.id}"><input type="checkbox" id="fin-${d.id}" data-final="${d.id}" ${fin ? 'checked' : ''}>Final</label></div>
+    <div class="opts" role="group" aria-label="${esc(d.title)} options">${d.opts.map(([id, name, note]) => `<button type="button" class="opt" data-dec="${d.id}" data-opt="${id}" aria-pressed="${state.choices[d.id] === id}">${d.demo ? d.demo(id) : ''}<b>${esc(name)}</b><small>${esc(note)}</small>${id === d.def ? '<span class="cur">Current design</span>' : ''}</button>`).join('')}</div>
+  </section>`;
+}
+const CARDISH = ['pastel', 'glass', 'outline', 'peek', 'bold'];
+const NEWSTYLES = ['vault', 'paper', 'aurora', 'line', 'shelf', 'lens'];
+// The last five items per kind, oldest first (they fan out left to right, newest on the right).
+const RECENT = {
+  Images: [['Family.jpg', '3.1 MB', 'Mon 18:20'], ['Receipt.png', '412 KB', 'Tue 09:02'], ['Sunset.heic', '2.4 MB', 'Yesterday 19:47'], ['Whiteboard.jpg', '1.8 MB', 'Today 08:15'], ['Screenshot 9.41.png', '880 KB', 'Today 09:41']],
+  Videos: [['Launch.mp4', '84 MB', 'Mon 11:00'], ['Clip_03.mov', '212 MB', 'Tue 16:30'], ['Recording.mov', '46 MB', 'Yesterday 10:12'], ['Demo.mp4', '128 MB', 'Today 08:50'], ['Trip.mov', '1.2 GB', 'Today 09:30']],
+  Music: [['Demo.wav', '38 MB', 'Mon 21:14'], ['Podcast 42.mp3', '61 MB', 'Tue 07:30'], ['Track 07.mp3', '8.2 MB', 'Yesterday 22:01'], ['Voice memo.m4a', '1.1 MB', 'Today 08:03'], ['Mix.m4a', '9.6 MB', 'Today 09:12']],
+  Documents: [['Deck.key', '24 MB', 'Mon 15:42'], ['Budget.xlsx', '96 KB', 'Tue 12:10'], ['Notes.md', '6 KB', 'Yesterday 17:55'], ['Invoice 0412.pdf', '188 KB', 'Today 08:31'], ['Brief.pdf', '2.4 MB', 'Today 09:38']],
+  Archives: [['Logs.zip', '22 MB', 'Mon 09:00'], ['Fonts.zip', '14 MB', 'Tue 13:25'], ['Assets.tar.gz', '310 MB', 'Yesterday 18:40'], ['Export.dmg', '96 MB', 'Today 07:58'], ['Backup.zip', '1.4 GB', 'Today 09:05']],
+  Apps: [['Arc.app', '612 MB', 'Mon 10:10'], ['Raycast.app', '148 MB', 'Tue 08:44'], ['Notion.app', '402 MB', 'Yesterday 14:02'], ['Xcode.app', '11.2 GB', 'Today 07:40'], ['Figma.app', '510 MB', 'Today 09:20']],
+};
+const TYPE = { Images: 'Image', Videos: 'Movie', Music: 'Audio', Documents: 'Document', Archives: 'Archive', Apps: 'Application' };
+const FAN = [-76, -38, 0, 38, 76].map((a) => { const r = a * Math.PI / 180; return { ux: Math.sin(r).toFixed(3), uy: (-Math.cos(r)).toFixed(3), rot: (a * .32).toFixed(1) + 'deg' }; });
+function thumbHtml(kind, i, size = 13, nm = '') {
+  const [k, col, h, icon] = kind, photo = k === 'Images' || k === 'Videos';
+  return photo ? `<span class="th qthumb photo" style="--h:${h + i * 47}">${k === 'Videos' ? '<i class="play"></i>' : ''}</span>` : `<span class="th qthumb file" style="--k:${col}">${ic(icon, size)}${nm ? `<em class="ext">${esc(nm.split('.').pop().toUpperCase())}</em>` : ''}</span>`;
+}
+function fanHtml(kind, ki) {
+  return `<div class="fan">${RECENT[kind[0]].map(([nm], i) => `<button type="button" data-k="${ki}" data-i="${i}" aria-label="Quick Look ${esc(nm)}" style="--i:${i};--ux:${FAN[i].ux};--uy:${FAN[i].uy};--rot:${FAN[i].rot}">${thumbHtml(kind, i, 13, nm)}<span class="nm">${esc(nm)}</span></button>`).join('')}</div>`;
+}
+function newFolderHtml(style, kind) {
+  const [k, col, h, icon, n] = kind;
+  let ico = '<i class="t"></i><i class="bk"></i><i class="fr"></i>';
+  if (style === 'paper') ico = '<i class="t"></i><i class="bk"></i><i class="s2"></i><i class="s1"></i><i class="fr"></i>';
+  if (style === 'shelf') ico = `<i class="bk"></i>${[2, 3, 4].map((i) => `<i class="sh">${thumbHtml(kind, i, 9)}</i>`).join('')}<i class="cnt">${n}</i>`;
+  if (style === 'lens') ico = `<i class="bk"></i><i class="orb">${ic(icon, 15)}</i>`;
+  return `<div class="ns ${style}" style="--k:${col};--h:${h}"><div class="ico">${ico}</div><b>${k}</b><small>${n} items</small></div>`;
+}
+function stackHtml(kind) {
+  const [k, col, h, icon] = kind;
+  const photos = k === 'Images' || k === 'Videos';
+  return `<span class="stk">${[0, 1, 2].map((i) => photos ? `<i class="ph" style="--h:${h + i * 40}"></i>` : `<i class="g">${ic(icon, 9)}</i>`).join('')}<i class="more">+99</i></span>`;
+}
+function folderHtml(style, kind) {
+  const [k, col, h, icon, n, size] = kind;
+  if (NEWSTYLES.includes(style)) return newFolderHtml(style, kind);
+  if (CARDISH.includes(style)) {
+    const papers = style === 'peek' ? `<span class="papers">${[0, 1, 2].map((i) => k === 'Images' || k === 'Videos' ? `<i class="ph" style="--h:${h + i * 35}"></i>` : `<i class="gi">${ic(icon, 14)}</i>`).join('')}</span>` : '';
+    return `<div class="fx ${style}" style="--k:${col};--h:${h}">${papers}<span class="tab"></span><div class="face"><div class="lab"><b>${k}</b><span class="kb">···</span></div><div class="foot">${stackHtml(kind)}<span>${n} items · ${size}</span></div></div></div>`;
+  }
+  if (style === 'cards') return `<div class="fcard" style="--k:${col}">${ic(icon, 16)}<div><b style="display:block;font-size:12px">${k}</b><small style="font-size:10px;color:var(--p-text2)">${n} items</small></div></div>`;
+  if (style === 'tiles') return `<div class="ftile" style="--k:${col}"><span>${ic(icon, 20)}</span><div class="fo"><b>${k}</b><small>${n}</small></div></div>`;
+  return `<div class="fo" style="--k:${col};--h:${h}"><div class="fd"><i class="t"></i><i class="b"></i><i class="p"></i><i class="f"></i></div><b>${k}</b><small>${n}</small></div>`;
+}
+function varsFor(dark) {
+  const c = state.choices, a = ACCENTS[c.accent], n = NEUTRALS[c.neutral][dark ? 'd' : 'l'], r = RADII[c.radius], sc = SCALES[c.scale], f = FONTS[c.font];
+  return {
+    '--p-accent': dark ? a.d : a.l, '--p-btn': dark ? a.db : a.lb,
+    '--p-soft': `color-mix(in oklab, ${dark ? a.d : a.l} ${dark ? 16 : 12}%, transparent)`,
+    '--p-good': dark ? '#4cd38a' : '#1f7a4d',
+    '--p-page': n.page, '--p-bg': n.bg, '--p-side': n.side, '--p-alt': n.alt, '--p-line': n.line, '--p-text': n.text, '--p-text2': n.text2, '--p-fold': n.fold, '--p-fold2': n.fold2,
+    '--p-r-win': r.win + 'px', '--p-r-card': r.card + 'px', '--p-r-btn': r.btn + 'px', '--p-r-field': r.field + 'px',
+    '--p-body': sc.body + 'px', '--p-small': sc.small + 'px', '--p-title': sc.title + 'px', '--p-h2': sc.h2 + 'px', '--p-big': sc.big + 'px',
+    '--p-font-body': f.body, '--p-font-title': f.title, '--p-s': SPACE[c.space],
+  };
+}
+const varStyle = (dark) => Object.entries(varsFor(dark)).map(([k, v]) => `${k}:${String(v).replace(/"/g, "'")}`).join(';') + ';min-width:0;padding:4px;background:transparent;border-radius:0';
+function previewHtml() {
+  const c = state.choices, sb = [['house', 'Home', '', '#3a8dff', true], ['grid', 'Library', '2,880', '#6a6ff0'], ['photo', 'Images', '2,280', '#3a8dff'], ['search', 'AI Search', '', '#a46bf5'], ['text', 'Text in Images', '589', '#3fb985'], '-', ['drive', 'Storage', '10', '#f0a23b', false, 'alert'], ['trash', 'Clean Up', '14.1 GB', '#f2647e', false, 'good'], ['dup', 'Duplicates', '44.8 MB', '#3aa7d9', false, 'good'], ['folder', 'Organizer', '', '#f0a23b'], '-', ['clip', 'Clipboard', '', '#6a6ff0'], ['cam', 'Screenshots', '', '#3fb985']];
+  const folders = KINDS.map((kind, ki) => `<div class="fw${CARDISH.includes(c.folders) ? ' cardfan' : ''}" tabindex="0" data-k="${ki}" aria-label="${kind[0]}, ${kind[4]} items. Hover to see the last five, Space for Quick Look">${folderHtml(c.folders, kind)}${fanHtml(kind, ki)}</div>`).join('');
+  const aiOn = c.ai === 'on';
+  return `<div class="win">
+    <aside class="side"><div class="lights"><i></i><i></i><i></i></div><div class="brand">${wordmark(c.word, c.wcolor, mode === 'dark', 17)}</div>
+      ${sb.map((r) => r === '-' ? '<div class="sep"></div>' : `<div class="row${r[4] ? ' sel' : ''}" style="--ic:${r[3]}">${ic(r[0], 14)}${r[1]}${r[2] ? `<em class="${r[5] || ''}">${r[2]}</em>` : ''}</div>`).join('')}</aside>
+    <div class="main">
+      <div class="tb"><span class="tbtitle">Home</span><div class="search">${ic(aiOn ? 'sparkles' : 'search', 12)}<span>${aiOn ? 'Ask anything, e.g. “pdfs from last week”' : 'Search file names'}</span><span class="kbd">⌘F</span><span class="ai${aiOn ? ' on' : ''}">${ic('sparkles', 10)}AI</span></div><span class="libsize">Library size <b>30.19 GB</b></span></div>
+      <div class="content">
+        <div class="head"><div><div class="greet">Good afternoon</div><div class="sub">2,880 files · 30.19 GB across your Mac</div></div><span class="b sec">${ic('refresh', 11)}Refresh</span></div>
+        <div class="h2">Library <span class="count">6</span><span class="hint">Hover a folder · <kbd>Space</kbd> Quick Look</span></div>
+        <div class="folders${CARDISH.includes(c.folders) ? ' cardish' : ''}" style="${c.folders === 'cards' ? 'grid-template-columns:repeat(3,minmax(0,1fr))' : ''}">${folders}</div>
+        <div class="h2">Clean Up <span class="pill">Free up to 14.1 GB</span></div>
+        <div class="cards">${[['dup', 'Duplicates', '44.8 MB', '24 extra copies'], ['down', 'Old Downloads', '11.5 GB', '1,227 items'], ['cam', 'Old Screenshots', '321 MB', '480 items'], ['drive', 'Large Files', '2.2 GB', '10 items']].map((s) => `<div class="card"><span>${ic(s[0], 11)}${s[1]}</span><b>${s[2]}</b><small>${s[3]}</small></div>`).join('')}</div>
+      </div>
+    </div>
+  </div>
+  <div class="strip">
+    <span class="lbl">Name, large (Home header, website, App Store)</span><div class="brandrow"><span style="background:#ffffff;box-shadow:inset 0 0 0 1px rgba(0,0,0,.1)">${wordmark(c.word, c.wcolor, false, 40)}</span><span style="background:#18191d">${wordmark(c.word, c.wcolor, true, 40)}</span></div>
+    <span class="lbl">Shared components</span>
+    <div class="srow"><span class="b pri">Review moves</span><span class="b sec">Cancel</span><span class="b dan">${ic('trash', 11)}Move to Trash…</span><div class="segc"><span>All</span><span class="on">Images</span><span>Videos</span></div><span class="chk"></span><span class="swc"></span><span class="pill">Good</span><span class="toast">${ic('check', 12)}Moved to Trash</span></div>
+    <div class="srow"><div class="cardsample"><b style="font-size:var(--p-big)">2.2 GB</b><span style="color:var(--p-text2)">Card</span></div><div class="search" style="max-width:260px">${ic('search', 12)}<span>Search field</span></div>
+      <div class="typescale"><b style="font-family:var(--p-font-title);font-size:var(--p-title)">Title<span>${SCALES[c.scale].title}</span></b><b style="font-family:var(--p-font-title);font-size:var(--p-h2)">Heading<span>${SCALES[c.scale].h2}</span></b><span style="font-size:var(--p-body);color:var(--p-text);margin:0">Body<span>${SCALES[c.scale].body}</span></span><span style="font-size:var(--p-small);margin:0">Caption<span>${SCALES[c.scale].small}</span></span></div></div>
+  </div>`;
+}
+function applyVars() {
+  const c = state.choices;
+  const pv = document.getElementById('pv');
+  const v = varsFor(mode === 'dark');
+  for (const [k, val] of Object.entries(v)) pv.style.setProperty(k, val);
+  pv.style.colorScheme = mode;
+  Object.assign(pv.dataset, { sidebar: c.sidebar, toolbar: c.toolbar, btn: c.btn, icons: c.icons, card: c.card });
+}
+function summaryText() {
+  const lines = ['MacSprint foundations'];
+  for (const d of DECISIONS) lines.push(`- ${d.title}: ${optName(d, state.choices[d.id])}${state.final[d.id] ? ' (final)' : ' (draft)'}`);
+  const a = ACCENTS[state.choices.accent], r = RADII[state.choices.radius], sc = SCALES[state.choices.scale];
+  lines.push('', `Tokens: accent ${a.l} / dark ${a.d}; buttons ${a.lb} / ${a.db}; radius window ${r.win}, card ${r.card}, button ${r.btn === 999 ? 'pill' : r.btn}, field ${r.field === 999 ? 'pill' : r.field}; type body ${sc.body}, title ${sc.title}, heading ${sc.h2}, caption ${sc.small}; spacing x${SPACE[state.choices.space]}`);
+  return lines.join('\n');
+}
+function renderSummary() {
+  document.getElementById('sum').innerHTML = `<tr><th>Decision</th><th>Choice</th><th>Status</th></tr>` + DECISIONS.map((d) => `<tr><td><a href="#dec-${d.id}">${esc(d.title)}</a></td><td>${esc(optName(d, state.choices[d.id]))}</td><td><span class="tag ${state.final[d.id] ? 'f">Final' : 'd">Draft'}</span></td></tr>`).join('');
+  const n = DECISIONS.filter((d) => state.final[d.id]).length;
+  document.getElementById('prog-label').textContent = n === DECISIONS.length ? `All ${n} final. Tell Claude to apply them.` : `${n} of ${DECISIONS.length} final`;
+  document.getElementById('prog-bar').style.width = `${(n / DECISIONS.length) * 100}%`;
+}
+function renderPreview() { gid = 0; document.getElementById('pv').innerHTML = previewHtml(); applyVars(); }
+function renderAll() {
+  document.getElementById('decisions').innerHTML = DECISIONS.map(decisionHtml).join('');
+  renderPreview(); renderSummary();
+}
+
+/* ---------------- events ---------------- */
+document.getElementById('decisions').addEventListener('click', (e) => {
+  const b = e.target.closest('.opt'); if (!b) return;
+  state.choices[b.dataset.dec] = b.dataset.opt;
+  b.closest('.opts').querySelectorAll('.opt').forEach((x) => x.setAttribute('aria-pressed', String(x === b)));
+  if (['accent', 'word', 'wcolor', 'neutral', 'radius', 'font', 'scale'].includes(b.dataset.dec)) renderAll(); else { renderPreview(); renderSummary(); }
+  save();
+});
+document.getElementById('decisions').addEventListener('change', (e) => {
+  const id = e.target.dataset.final; if (!id) return;
+  state.final[id] = e.target.checked;
+  document.getElementById('dec-' + id).classList.toggle('is-final', e.target.checked);
+  renderSummary(); save();
+});
+document.querySelectorAll('[data-mode]').forEach((b) => b.addEventListener('click', () => {
+  mode = b.dataset.mode; document.querySelectorAll('[data-mode]').forEach((x) => x.setAttribute('aria-pressed', String(x === b))); applyVars();
+}));
+let armed = false;
+document.getElementById('reset').addEventListener('click', (e) => {
+  if (!armed) { armed = true; e.target.textContent = 'Click again to reset all'; setTimeout(() => { armed = false; e.target.textContent = 'Back to current design'; }, 4000); return; }
+  armed = false; e.target.textContent = 'Back to current design';
+  state = { choices: defaults(), final: {} }; renderAll(); save();
+});
+document.getElementById('copy').addEventListener('click', () => {
+  const t = summaryText(), area = document.getElementById('copy-area'), st = document.getElementById('copy-status');
+  area.value = t;
+  navigator.clipboard.writeText(t).then(() => { st.textContent = 'Copied.'; }, () => { area.hidden = false; area.focus(); area.select(); st.textContent = 'Copy is blocked here: the text is selected, press ⌘C.'; });
+});
+
+/* ---------------- hover fan + Quick Look ---------------- */
+const pvEl = document.getElementById('pv');
+const reduce = matchMedia('(prefers-reduced-motion: reduce)');
+let openFw = null, closeT = 0, hoverFw = null;
+function setOpen(fw) {
+  clearTimeout(closeT);
+  if (openFw && openFw !== fw) openFw.classList.remove('open');
+  openFw = fw; if (fw) fw.classList.add('open');
+}
+pvEl.addEventListener('mouseover', (e) => { const fw = e.target.closest('.fw'); if (fw) { hoverFw = fw; setOpen(fw); } });
+pvEl.addEventListener('mouseout', (e) => {
+  const fw = e.target.closest('.fw'); if (!fw || fw.contains(e.relatedTarget)) return;
+  hoverFw = null; closeT = setTimeout(() => { if (openFw === fw && !fw.contains(document.activeElement)) { fw.classList.remove('open'); openFw = null; } }, 160);
+});
+pvEl.addEventListener('focusin', (e) => { const fw = e.target.closest('.fw'); if (fw) setOpen(fw); });
+pvEl.addEventListener('focusout', (e) => { const fw = e.target.closest('.fw'); if (fw && !fw.contains(e.relatedTarget) && hoverFw !== fw) { fw.classList.remove('open'); if (openFw === fw) openFw = null; } });
+pvEl.addEventListener('click', (e) => { const b = e.target.closest('.fan button'); if (b) quickLook(+b.dataset.k, +b.dataset.i, b); });
+
+const ql = document.createElement('div');
+ql.className = 'ql'; ql.hidden = true;
+ql.innerHTML = `<div class="panel" role="dialog" aria-modal="true" aria-label="Quick Look"><div class="qbar"><button class="qx" aria-label="Close (Esc)"></button><span class="qname"></span><button class="qnav" data-d="-1" aria-label="Previous item">‹</button><button class="qnav" data-d="1" aria-label="Next item">›</button><button class="qopen">Open</button></div><div class="qview"></div><div class="qinfo"></div><div class="strip5"></div></div>`;
+document.body.appendChild(ql);
+const panel = ql.querySelector('.panel');
+let qk = 0, qi = 0, qReturn = null;
+function qlRender() {
+  const kind = KINDS[qk], [k, col, h, icon] = kind, items = RECENT[k], [nm, size, when] = items[qi];
+  const v = varsFor(mode === 'dark'); for (const [key, val] of Object.entries(v)) ql.style.setProperty(key, val);
+  ql.style.colorScheme = mode;
+  ql.querySelector('.qname').textContent = nm;
+  const view = ql.querySelector('.qview'); view.className = 'qview'; view.style.cssText = `--k:${col};--h:${h + qi * 47}`;
+  if (k === 'Images' || k === 'Videos') { view.classList.add('qthumb', 'photo'); view.innerHTML = k === 'Videos' ? '<i class="play"></i>' : ''; }
+  else if (k === 'Documents') { view.style.background = `color-mix(in oklab, ${col} 10%, var(--p-alt))`; view.innerHTML = `<div class="page">${'<i></i>'.repeat(1)}${[92, 80, 96, 70, 88, 60, 94, 76].map((w) => `<i style="width:${w}%"></i>`).join('')}</div>`; }
+  else if (k === 'Music') { view.style.background = `color-mix(in oklab, ${col} 10%, var(--p-alt))`; view.innerHTML = `<div class="wave">${Array.from({ length: 44 }, (_, i) => `<i style="height:${18 + Math.round(Math.abs(Math.sin(i * .7 + qi) * Math.cos(i * .23)) * 82)}%"></i>`).join('')}</div>`; }
+  else { view.style.background = `color-mix(in oklab, ${col} 10%, var(--p-alt))`; view.innerHTML = `<div class="bigic">${ic(icon, 56)}</div>`; }
+  ql.querySelector('.qinfo').innerHTML = `<span><b>${TYPE[k]}</b> · ${nm.split('.').pop().toUpperCase()}</span><span>${size}</span><span>Added ${when}</span><span>${qi + 1} of 5 · newest last</span>`;
+  ql.querySelector('.strip5').innerHTML = items.map(([n], i) => `<button type="button" data-i="${i}" aria-label="${esc(n)}" aria-current="${i === qi}" style="--k:${col}">${thumbHtml(kind, i, 16)}</button>`).join('');
+  ql.querySelector('[data-d="-1"]').disabled = qi === 0;
+  ql.querySelector('[data-d="1"]').disabled = qi === 4;
+}
+function quickLook(k, i, from) {
+  qk = k; qi = i; qReturn = from || document.activeElement;
+  qlRender(); ql.hidden = false;
+  ql.querySelector('.qx').focus();
+  if (from && !reduce.matches && panel.animate) {
+    const a = from.getBoundingClientRect(), b = panel.getBoundingClientRect();
+    const dx = a.left + a.width / 2 - (b.left + b.width / 2), dy = a.top + a.height / 2 - (b.top + b.height / 2), sc = Math.max(.08, a.width / b.width);
+    panel.animate([{ transform: `translate(${dx}px, ${dy}px) scale(${sc})`, opacity: .3 }, { transform: 'none', opacity: 1 }], { duration: 340, easing: 'cubic-bezier(.2, .9, .25, 1.08)' });
+    ql.animate([{ opacity: 0 }, { opacity: 1 }], { duration: 200 });
+  }
+}
+function closeQL() {
+  if (ql.hidden) return;
+  ql.hidden = true;
+  if (qReturn && document.contains(qReturn)) qReturn.focus({ preventScroll: true });
+}
+function step(d) { const n = Math.min(4, Math.max(0, qi + d)); if (n !== qi) { qi = n; qlRender(); } }
+ql.addEventListener('click', (e) => {
+  if (e.target === ql || e.target.closest('.qx')) return closeQL();
+  const nav = e.target.closest('.qnav'); if (nav) return step(+nav.dataset.d);
+  const t = e.target.closest('.strip5 button'); if (t) { qi = +t.dataset.i; qlRender(); ql.querySelector(`.strip5 [data-i="${qi}"]`).focus(); return; }
+  if (e.target.closest('.qopen')) {
+    const old = ql.querySelector('.qtoast'); if (old) old.remove();
+    const t2 = document.createElement('div'); t2.className = 'qtoast'; t2.textContent = `In the app this opens ${RECENT[KINDS[qk][0]][qi][0]} in its default app`;
+    ql.querySelector('.qview').appendChild(t2); setTimeout(() => t2.remove(), 2200);
+  }
+});
+document.addEventListener('keydown', (e) => {
+  if (!ql.hidden) {
+    if (e.key === 'Escape' || e.key === ' ' && !e.target.closest('.qopen, .qnav, .strip5 button, .qx')) { e.preventDefault(); closeQL(); }
+    else if (e.key === 'ArrowLeft') { e.preventDefault(); step(-1); }
+    else if (e.key === 'ArrowRight') { e.preventDefault(); step(1); }
+    else if (e.key === 'Tab') { const f = [...panel.querySelectorAll('button:not(:disabled)')], i = f.indexOf(document.activeElement); if (e.shiftKey && i <= 0) { e.preventDefault(); f[f.length - 1].focus(); } else if (!e.shiftKey && i === f.length - 1) { e.preventDefault(); f[0].focus(); } }
+    return;
+  }
+  if (e.key !== ' ') return;
+  const btn = e.target.closest && e.target.closest('.fan button');
+  const fw = btn ? null : (e.target.closest && e.target.closest('.fw')) || (e.target === document.body || e.target === document.documentElement ? hoverFw : null);
+  if (btn) { e.preventDefault(); quickLook(+btn.dataset.k, +btn.dataset.i, btn); }
+  else if (fw) { e.preventDefault(); setOpen(fw); quickLook(+fw.dataset.k, 4, fw.querySelector('.fan button:last-child')); }
+});
+
+if (matchMedia('(prefers-color-scheme: dark)').matches && document.documentElement.dataset.theme !== 'light' || document.documentElement.dataset.theme === 'dark') {
+  mode = 'dark'; document.querySelectorAll('[data-mode]').forEach((x) => x.setAttribute('aria-pressed', String(x.dataset.mode === 'dark')));
+}
+renderAll();
+connect();
+})();
+</script>

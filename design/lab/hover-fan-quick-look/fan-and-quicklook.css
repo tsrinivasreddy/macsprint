@@ -1,0 +1,61 @@
+/* MacSprint Lab · Hover fan + Quick Look (CSS)
+   Archived from design/foundations.html @ 3945a2c. Removed because hover motion made folders hard to select.
+   Depends on the preview tokens: --p-accent, --p-bg, --p-alt, --p-line, --p-text, --p-text2, --p-btn, --p-r-btn, --p-font-body.
+   Markup: <div class="fw" tabindex="0" data-k="0">[folder]<div class="fan"><button style="--i;--ux;--uy;--rot">…</button>×5</div></div> */
+/* hover fan: the last five items arc around the folder, oldest left, newest right */
+.fw { position: relative; min-width: 0; border-radius: 12px; outline: none; cursor: default; --fy: 24px; --R: 80px; }
+.fw.cardfan { --fy: 40px; --R: 96px; }
+.fw > :first-child { position: relative; z-index: 2; transition: transform .35s cubic-bezier(.34,1.56,.64,1); }
+.fw.open > :first-child { transform: translateY(2px) scale(.96); }
+.fw:focus-visible { box-shadow: 0 0 0 2px var(--p-accent); }
+.fw.open { z-index: 20; }
+.fw.open::before { content: ""; position: absolute; left: calc(var(--R) * -1.2); right: calc(var(--R) * -1.2); top: calc(var(--R) * -1.25); bottom: 0; z-index: 0; }
+.fan { position: absolute; left: 50%; top: var(--fy); width: 0; height: 0; z-index: 1; }
+.fw:not(.cardfan):nth-child(6n+1) .fan, .fw.cardfan:nth-child(3n+1) .fan { left: calc(50% + 26px); }
+.fw:not(.cardfan):nth-child(6n) .fan, .fw.cardfan:nth-child(3n) .fan { left: calc(50% - 26px); }
+.fan button { all: unset; box-sizing: border-box; position: absolute; left: 0; top: 0; width: 46px; height: 56px; border-radius: 9px; padding: 3px; background: #fff; cursor: pointer;
+  box-shadow: 0 0 0 1px rgba(0,0,0,.08), 0 6px 14px -4px rgba(10,16,48,.35); opacity: 0; pointer-events: none;
+  transform: translate(-50%, -50%) scale(.35); transition: transform .42s cubic-bezier(.34,1.5,.64,1), opacity .2s ease, box-shadow .2s; transition-delay: calc((4 - var(--i)) * 18ms); }
+.fw.open .fan button { opacity: 1; pointer-events: auto; transition-delay: calc(var(--i) * 38ms);
+  transform: translate(calc(-50% + var(--ux) * var(--R)), calc(-50% + var(--uy) * var(--R))) rotate(var(--rot)); }
+.fw.open .fan button:hover, .fw.open .fan button:focus-visible { z-index: 3; transition-delay: 0s; box-shadow: 0 0 0 2px var(--p-accent), 0 10px 20px -6px rgba(10,16,48,.45);
+  transform: translate(calc(-50% + var(--ux) * var(--R) * 1.06), calc(-50% + var(--uy) * var(--R) * 1.06 - 4px)) rotate(0deg) scale(1.18); }
+.fan .th { display: grid; place-items: center; align-content: center; gap: 1px; height: 36px; border-radius: 5px; color: #fff; position: relative; overflow: hidden; }
+.fan .nm { display: block; font: 600 7.5px/1.2 var(--p-font-body); color: #3a3b42; margin-top: 3px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; text-align: center; }
+.qthumb.photo { background: radial-gradient(circle at 70% 28%, hsl(calc(var(--h) + 40) 95% 82% / .95), transparent 30%), linear-gradient(160deg, hsl(var(--h) 75% 62%), hsl(calc(var(--h) + 55) 65% 42%)); }
+.qthumb.photo::after { content: ""; position: absolute; left: -10%; right: -10%; bottom: -20%; height: 55%; border-radius: 50% 50% 0 0; background: hsl(calc(var(--h) + 120) 40% 30% / .55); }
+.qthumb.file { background: color-mix(in oklab, var(--k) 16%, #fff); color: var(--k); }
+.qthumb .ext { font: 800 6px/1 var(--p-font-body); font-style: normal; letter-spacing: .3px; }
+.qthumb .play { position: absolute; z-index: 1; width: 0; height: 0; border-left: 7px solid #fff; border-top: 4.5px solid transparent; border-bottom: 4.5px solid transparent; filter: drop-shadow(0 1px 2px rgba(0,0,0,.4)); }
+.hint { font-family: var(--p-font-body); font-size: 10.5px; font-weight: 500; color: var(--p-text2); margin-left: auto; }
+.hint kbd { font: inherit; font-weight: 700; border: 1px solid var(--p-line); border-radius: 4px; padding: 0 4px; background: var(--p-bg); }
+
+/* Quick Look */
+.ql { position: fixed; inset: 0; z-index: 1000; display: grid; place-items: center; padding: 16px; background: rgba(8,10,20,.38); -webkit-backdrop-filter: blur(6px); backdrop-filter: blur(6px); }
+.ql[hidden] { display: none; }
+.ql .panel { width: min(620px, 100%); max-height: calc(100dvh - 32px); display: grid; grid-template-rows: auto minmax(0, 1fr) auto auto; border-radius: 18px; overflow: hidden; background: var(--p-bg); color: var(--p-text); font-family: var(--p-font-body); box-shadow: 0 0 0 1px var(--p-line), 0 30px 80px -20px rgba(0,0,0,.55); }
+.ql .qbar { display: flex; align-items: center; gap: 8px; padding: 10px 12px 10px 14px; }
+.ql .qx { all: unset; width: 13px; height: 13px; border-radius: 50%; background: #ff5f57; cursor: pointer; flex: none; box-shadow: inset 0 0 0 .5px rgba(0,0,0,.2); }
+.ql .qx:focus-visible, .ql .qnav:focus-visible, .ql .qopen:focus-visible { outline: 2px solid var(--p-accent); outline-offset: 2px; }
+.ql .qname { flex: 1; min-width: 0; font-weight: 600; font-size: 13.5px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.ql .qnav { all: unset; display: grid; place-items: center; width: 30px; height: 26px; border-radius: 7px; background: var(--p-alt); color: var(--p-accent); font-weight: 700; cursor: pointer; }
+.ql .qnav:disabled { opacity: .35; cursor: default; }
+.ql .qopen { all: unset; padding: 5px 12px; border-radius: var(--p-r-btn); background: var(--p-btn); color: #fff; font-weight: 600; font-size: 12.5px; cursor: pointer; }
+.ql .qview { position: relative; min-height: 220px; height: 340px; max-height: 52dvh; display: grid; place-items: center; overflow: hidden; }
+.ql .qview.photo::after { bottom: -30%; }
+.ql .qview .play { border-left-width: 26px; border-top-width: 16px; border-bottom-width: 16px; }
+.ql .page { width: 46%; max-width: 230px; aspect-ratio: 1 / 1.3; background: #fff; border-radius: 6px; box-shadow: 0 10px 30px -10px rgba(0,0,0,.35); padding: 8%; display: grid; align-content: start; gap: 7px; }
+.ql .page i { display: block; height: 5px; border-radius: 3px; background: #e3e4ea; }
+.ql .page i:first-child { height: 9px; width: 60%; background: var(--k); margin-bottom: 6px; }
+.ql .wave { display: flex; align-items: center; gap: 3px; height: 50%; }
+.ql .wave i { width: 5px; border-radius: 3px; background: var(--k); }
+.ql .bigic { width: 120px; height: 120px; border-radius: 28px; display: grid; place-items: center; color: #fff; background: linear-gradient(160deg, color-mix(in oklab, var(--k) 60%, #fff), var(--k)); box-shadow: 0 16px 36px -14px color-mix(in oklab, var(--k) 80%, transparent); }
+.ql .qinfo { display: flex; flex-wrap: wrap; gap: 4px 16px; padding: 10px 14px; font-size: 12px; color: var(--p-text2); border-top: 1px solid var(--p-line); }
+.ql .qinfo b { color: var(--p-text); font-weight: 600; }
+.ql .strip5 { display: flex; gap: 8px; padding: 0 14px 14px; overflow-x: auto; }
+.ql .strip5 button { all: unset; flex: none; width: 52px; height: 40px; border-radius: 7px; overflow: hidden; cursor: pointer; display: grid; position: relative; box-shadow: 0 0 0 1px var(--p-line); }
+.ql .strip5 button .th { height: 100%; border-radius: 0; display: grid; place-items: center; position: relative; overflow: hidden; }
+.ql .strip5 button[aria-current="true"] { box-shadow: 0 0 0 2.5px var(--p-accent); }
+.ql .strip5 button:focus-visible { outline: 2px solid var(--p-accent); outline-offset: 2px; }
+.ql .qtoast { position: absolute; left: 50%; bottom: 14px; transform: translateX(-50%); background: rgba(20,22,30,.86); color: #fff; font-size: 12px; padding: 6px 12px; border-radius: 99px; }
+@media (prefers-reduced-motion: reduce) { .fan button, .fw > :first-child { transition: opacity .15s !important; } .fw.open .fan button:hover { transform: translate(calc(-50% + var(--ux) * var(--R)), calc(-50% + var(--uy) * var(--R))); } }

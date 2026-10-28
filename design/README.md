@@ -24,3 +24,6 @@ Other references:
 
 Note: the artifact pages are written without `<html>`/`<head>` tags because claude.ai adds
 them when publishing; browsers still open the files directly.
+
+- [`FOUNDATIONS.md`](FOUNDATIONS.md): the final foundations and tokens every feature uses.
+- [`lab/`](lab/README.md): removed experiments (hover fan + Quick Look, logo marks, pastel website) kept for reuse.

@@ -1,0 +1,485 @@
+<title>MacSprint Lab · Logo marks</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Atkinson+Hyperlegible:wght@400;700&family=Nunito:wght@600;800;900&family=Schibsted+Grotesk:wght@600;800&family=Source+Serif+4:opsz,wght@8..60,600;8..60,700&display=swap">
+<style>
+/* Layout: decision sheet on the left, a pinned live preview of MacSprint on the right. Green marks what is final. */
+:root {
+  --paper: #eceff3;
+  --sheet: #ffffff;
+  --ink: #15171c;
+  --ink-2: #4f5562;
+  --ink-3: #5f6573;
+  --rule: rgba(21, 23, 28, 0.12);
+  --pick: #3346c8;
+  --pick-soft: rgba(51, 70, 200, 0.09);
+  --final: #1b7a46;
+  --final-soft: rgba(27, 122, 70, 0.1);
+  --display: "Schibsted Grotesk", "Avenir Next", system-ui, sans-serif;
+  --body: "Atkinson Hyperlegible", "Segoe UI", system-ui, sans-serif;
+}
+@media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) {
+  --paper: #111317; --sheet: #191c21; --ink: #eceef2; --ink-2: #b0b6c2; --ink-3: #99a0ad; --rule: rgba(255,255,255,0.1);
+  --pick: #93a3ff; --pick-soft: rgba(147,163,255,0.13); --final: #4cd38a; --final-soft: rgba(76,211,138,0.13); color-scheme: dark; } }
+:root[data-theme="dark"] {
+  --paper: #111317; --sheet: #191c21; --ink: #eceef2; --ink-2: #b0b6c2; --ink-3: #99a0ad; --rule: rgba(255,255,255,0.1);
+  --pick: #93a3ff; --pick-soft: rgba(147,163,255,0.13); --final: #4cd38a; --final-soft: rgba(76,211,138,0.13); color-scheme: dark; }
+
+* { box-sizing: border-box; }
+body { margin: 0; background: var(--paper); color: var(--ink); font: 16px/1.55 var(--body); -webkit-font-smoothing: antialiased; overflow-x: hidden;
+  padding-left: max(16px, env(safe-area-inset-left, 0px)); padding-right: max(16px, env(safe-area-inset-right, 0px)); padding-block: 0 64px; }
+h1, h2, h3 { font-family: var(--display); margin: 0; line-height: 1.12; text-wrap: balance; }
+p { margin: 0; }
+button { font: inherit; color: inherit; cursor: pointer; }
+:focus-visible { outline: 2.5px solid var(--pick); outline-offset: 2px; border-radius: 6px; }
+.wrap { max-width: 1320px; margin: 0 auto; }
+
+header.top { padding-block: 36px 20px; display: grid; gap: 12px; }
+header.top h1 { font-size: clamp(34px, 5vw, 54px); font-weight: 800; letter-spacing: -0.03em; }
+header.top > p { color: var(--ink-2); font-size: 17px; max-width: 78ch; }
+.statusbar { display: flex; flex-wrap: wrap; gap: 12px 20px; align-items: center; background: var(--sheet); border: 1px solid var(--rule); border-radius: 14px; padding: 12px 16px; }
+.prog { display: flex; align-items: center; gap: 10px; flex: 1; min-width: 220px; font-weight: 700; }
+.bar { flex: 1; height: 8px; background: var(--rule); border-radius: 99px; overflow: hidden; max-width: 260px; }
+.bar i { display: block; height: 100%; background: var(--final); width: 0; transition: width .4s; }
+.saved { font-size: 14px; color: var(--ink-2); display: inline-flex; align-items: center; gap: 8px; }
+.saved i { width: 9px; height: 9px; border-radius: 50%; background: var(--ink-3); }
+.saved.ok i { background: var(--final); }
+.btn { border: 1px solid var(--rule); background: var(--sheet); border-radius: 10px; padding: 8px 14px; font-weight: 700; font-size: 14.5px; }
+.btn.pri { background: var(--ink); color: var(--sheet); border-color: var(--ink); }
+
+.layout { display: grid; grid-template-columns: minmax(0, 440px) minmax(0, 1fr); gap: 28px; align-items: start; margin-top: 22px; }
+.decisions { display: grid; gap: 14px; min-width: 0; }
+.dec { background: var(--sheet); border: 1px solid var(--rule); border-radius: 16px; padding: 16px; display: grid; gap: 12px; scroll-margin-top: 16px; }
+.dec.is-final { border-color: var(--final); box-shadow: inset 4px 0 0 var(--final); }
+.dec-head { display: flex; gap: 10px; align-items: flex-start; justify-content: space-between; }
+.dec h2 { font-size: 20px; font-weight: 800; letter-spacing: -0.01em; }
+.dec .why { font-size: 14.5px; color: var(--ink-2); }
+.finalbox { display: inline-flex; align-items: center; gap: 7px; font-size: 14px; font-weight: 700; color: var(--ink-2); white-space: nowrap; cursor: pointer; padding: 4px 8px; border-radius: 8px; }
+.finalbox input { width: 17px; height: 17px; accent-color: var(--final); }
+.dec.is-final .finalbox { color: var(--final); background: var(--final-soft); }
+.opts { display: grid; grid-template-columns: repeat(auto-fill, minmax(120px, 1fr)); gap: 8px; }
+.opt { text-align: left; border: 1px solid var(--rule); background: var(--paper); border-radius: 12px; padding: 10px; display: grid; gap: 6px; align-content: start; min-width: 0; }
+.opt:hover { border-color: var(--pick); }
+.opt[aria-pressed=true] { border-color: var(--pick); box-shadow: 0 0 0 2px var(--pick); background: var(--sheet); }
+.opt b { font-size: 14.5px; line-height: 1.2; }
+.opt small { font-size: 12.5px; color: var(--ink-2); line-height: 1.35; }
+.opt .cur { font-size: 11.5px; color: var(--pick); font-weight: 700; }
+.sw { display: flex; gap: 4px; flex-wrap: wrap; }
+.sw i { width: 18px; height: 18px; border-radius: 5px; box-shadow: inset 0 0 0 1px rgba(0,0,0,.12); }
+.chipdemo { height: 30px; display: flex; align-items: center; }
+
+.previewcol { position: sticky; top: calc(14px + env(safe-area-inset-top, 0px)); display: grid; gap: 12px; min-width: 0; }
+.pv-tools { display: flex; flex-wrap: wrap; justify-content: space-between; align-items: center; gap: 10px; }
+.pv-tools h3 { font-size: 18px; font-weight: 800; }
+.seg { display: inline-flex; border: 1px solid var(--rule); border-radius: 9px; overflow: hidden; background: var(--sheet); }
+.seg button { border: 0; background: transparent; padding: 6px 12px; font-size: 13.5px; color: var(--ink-2); }
+.seg button[aria-pressed=true] { background: var(--ink); color: var(--sheet); }
+.pv-scroll { overflow-x: auto; border-radius: 16px; }
+.summary { background: var(--sheet); border: 1px solid var(--rule); border-radius: 16px; padding: 18px; display: grid; gap: 10px; margin-top: 24px; }
+.summary h2 { font-size: 22px; font-weight: 800; }
+.summary table { border-collapse: collapse; width: 100%; font-size: 14.5px; }
+.summary td, .summary th { text-align: left; padding: 7px 8px; border-bottom: 1px solid var(--rule); vertical-align: top; }
+.summary th { font-size: 13px; color: var(--ink-3); font-weight: 700; }
+.tag { font-size: 12px; font-weight: 700; padding: 2px 8px; border-radius: 99px; }
+.tag.f { color: var(--final); background: var(--final-soft); }
+.tag.d { color: var(--ink-3); background: var(--rule); }
+.tablewrap { overflow-x: auto; }
+#copy-status { font-size: 14px; color: var(--final); }
+
+/* ===================== LIVE PREVIEW (driven by --p-* variables) ===================== */
+.pv { --p-s: 1; font-family: var(--p-font-body); color: var(--p-text); background: var(--p-page); border-radius: 16px; padding: 16px; display: grid; gap: 14px; min-width: 720px; }
+.pv svg { flex: none; }
+.pv .win { display: grid; grid-template-columns: 178px minmax(0, 1fr); height: 470px; background: var(--p-bg); border-radius: var(--p-r-win); overflow: hidden; box-shadow: 0 2px 6px rgba(0,0,0,.08), 0 24px 60px -26px rgba(20,30,80,.4), 0 0 0 1px var(--p-line); font-size: var(--p-body); }
+.pv .side { background: var(--p-side); border-right: 1px solid var(--p-line); padding: 10px 8px; display: flex; flex-direction: column; gap: 1px; overflow: hidden; }
+.pv .lights { display: flex; gap: 7px; padding: 2px 6px 12px; }
+.pv .lights i { width: 11px; height: 11px; border-radius: 50%; background: #ff5f57; } .pv .lights i:nth-child(2) { background: #febc2e; } .pv .lights i:nth-child(3) { background: #28c840; }
+.pv .brand { display: flex; align-items: center; gap: 7px; padding: 0 6px 10px; font-size: 14px; }
+.pv .row { display: flex; align-items: center; gap: 8px; height: calc(24px + 2px * var(--p-s)); padding: 0 8px; border-radius: var(--p-r-btn); color: var(--p-text2); white-space: nowrap; font-size: calc(var(--p-body) - .5px); }
+.pv .row svg { color: var(--p-text2); opacity: .9; }
+.pv .row em { margin-left: auto; font-style: normal; font-size: var(--p-small); color: var(--p-text2); opacity: .85; }
+.pv .row em.alert { background: #c4223b; color: #fff; border-radius: 99px; padding: 0 6px; font-weight: 700; line-height: 15px; opacity: 1; }
+.pv .row em.good { color: var(--p-good); font-weight: 700; opacity: 1; }
+.pv .sep { height: 1px; background: var(--p-line); margin: 5px 6px; flex: none; }
+.pv[data-sidebar=raised] .row.sel { background: var(--p-bg); color: var(--p-text); font-weight: 600; box-shadow: 0 1px 2px rgba(0,0,0,.08), 0 0 0 1px var(--p-line); }
+.pv[data-sidebar=raised] .row.sel svg { color: var(--p-accent); }
+.pv[data-sidebar=accent] .row.sel { background: var(--p-btn); color: #fff; font-weight: 600; }
+.pv[data-sidebar=accent] .row.sel svg, .pv[data-sidebar=accent] .row.sel em { color: #fff; }
+.pv[data-sidebar=tint] .row.sel { background: var(--p-soft); color: var(--p-accent); font-weight: 700; }
+.pv[data-sidebar=tint] .row.sel svg { color: var(--p-accent); }
+.pv[data-icons=filled] .row svg :is(path, rect, circle) { fill: currentColor; fill-opacity: .22; }
+.pv[data-icons=color] .row svg { color: var(--ic); opacity: 1; }
+.pv .main { display: flex; flex-direction: column; min-width: 0; }
+.pv .tb { display: flex; align-items: center; gap: 10px; padding: calc(8px * var(--p-s)) 16px; border-bottom: 1px solid var(--p-line); min-height: 46px; }
+.pv .search { display: flex; align-items: center; gap: 7px; background: var(--p-alt); border-radius: var(--p-r-field); padding: 5px 9px; color: var(--p-text2); font-size: calc(var(--p-body) - .5px); min-width: 0; flex: 1; max-width: 300px; }
+.pv .search span:first-of-type { flex: 1; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.pv[data-toolbar=center] .search { max-width: 380px; margin: 0 auto; background: var(--p-bg); box-shadow: 0 0 0 1px var(--p-line), 0 2px 6px rgba(0,0,0,.05); }
+.pv[data-toolbar=minimal] .search { flex: none; max-width: none; width: 28px; height: 26px; padding: 0; justify-content: center; background: transparent; box-shadow: 0 0 0 1px var(--p-line); }
+.pv[data-toolbar=minimal] .search > :not(svg) { display: none; }
+.pv .tbtitle { display: none; font-weight: 700; }
+.pv[data-toolbar=minimal] .tbtitle { display: block; }
+.pv .ai { display: inline-flex; align-items: center; gap: 3px; font-size: 10.5px; font-weight: 700; border-radius: calc(var(--p-r-field) - 2px); padding: 2px 6px; border: 1px solid var(--p-line); color: var(--p-text2); background: var(--p-bg); flex: none; }
+.pv .ai.on { color: var(--p-accent); background: var(--p-soft); border-color: transparent; }
+.pv .kbd { font-size: 10px; border: 1px solid var(--p-line); border-radius: 4px; padding: 0 4px; flex: none; }
+.pv .libsize { margin-left: auto; font-size: var(--p-small); color: var(--p-text2); white-space: nowrap; }
+.pv[data-toolbar=center] .libsize { margin-left: 0; }
+.pv .libsize b { color: var(--p-text); }
+.pv .content { flex: 1; overflow: hidden; padding: calc(14px * var(--p-s)) 18px; display: flex; flex-direction: column; gap: calc(11px * var(--p-s)); }
+.pv .greet { font-family: var(--p-font-title); font-size: var(--p-title); font-weight: 700; letter-spacing: -0.02em; line-height: 1.1; }
+.pv .sub { font-size: var(--p-small); color: var(--p-text2); }
+.pv .h2 { font-family: var(--p-font-title); font-size: var(--p-h2); font-weight: 700; display: flex; align-items: center; gap: 8px; }
+.pv .count { font-family: var(--p-font-body); font-size: 10px; font-weight: 700; background: var(--p-alt); border-radius: 99px; padding: 1px 7px; color: var(--p-text2); }
+.pv .pill { font-family: var(--p-font-body); font-size: 10.5px; font-weight: 700; color: var(--p-good); background: color-mix(in oklab, var(--p-good) 14%, transparent); padding: 1px 8px; border-radius: 99px; }
+.pv .head { display: flex; justify-content: space-between; align-items: flex-end; gap: 10px; }
+/* folders */
+.pv .folders { display: grid; grid-template-columns: repeat(6, minmax(0, 1fr)); gap: calc(8px * var(--p-s)); }
+.pv .fo { text-align: center; min-width: 0; }
+.pv .fo b { display: block; font-size: calc(var(--p-small) + .5px); font-weight: 600; }
+.pv .fo small { display: block; font-size: 10px; color: var(--p-text2); }
+.pv .fd { position: relative; width: 60px; height: 48px; margin: 0 auto 5px; }
+.pv .fd i { position: absolute; display: block; }
+.pv .fd .t { left: 0; top: 0; width: 42%; height: 22%; border-radius: 5px 7px 0 0; background: color-mix(in oklab, var(--k) 16%, var(--p-fold2)); }
+.pv .fd .b { inset: 9% 0 0; border-radius: 6px; background: color-mix(in oklab, var(--k) 16%, var(--p-fold2)); }
+.pv .fd .p { left: 12%; right: 12%; top: 15%; height: 50%; border-radius: 3px; background: linear-gradient(135deg, hsl(var(--h) 70% 62%), hsl(calc(var(--h) + 50) 65% 48%)); transform: rotate(3deg); }
+.pv .fd .f { left: 0; right: 0; bottom: 0; height: 64%; border-radius: 4px 4px 8px 8px; background: linear-gradient(180deg, color-mix(in oklab, var(--k) 18%, var(--p-fold)), color-mix(in oklab, var(--k) 22%, var(--p-fold2))); }
+.pv .fcard { border-radius: var(--p-r-card); padding: 9px; text-align: left; background: color-mix(in oklab, var(--k) 14%, var(--p-bg)); border: 1px solid color-mix(in oklab, var(--k) 24%, transparent); display: grid; gap: 14px; }
+.pv .fcard svg { color: var(--k); }
+.pv .ftile { display: grid; justify-items: center; gap: 5px; }
+.pv .ftile span { width: 46px; height: 46px; border-radius: calc(var(--p-r-card) * .7); display: grid; place-items: center; background: color-mix(in oklab, var(--k) 16%, var(--p-bg)); color: var(--k); }
+/* cards */
+.pv .cards { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: calc(8px * var(--p-s)); }
+.pv .card { border-radius: var(--p-r-card); padding: calc(10px * var(--p-s)) 11px; display: grid; gap: 2px; min-width: 0; background: var(--p-bg); }
+.pv[data-card=outline] .card { border: 1px solid var(--p-line); }
+.pv[data-card=shadow] .card { border: 1px solid var(--p-line); box-shadow: 0 1px 2px rgba(0,0,0,.05), 0 8px 20px -12px rgba(0,0,0,.25); }
+.pv[data-card=filled] .card { background: var(--p-alt); }
+.pv .card span { font-size: var(--p-small); color: var(--p-text2); display: flex; align-items: center; gap: 5px; }
+.pv .card b { font-size: var(--p-big); font-weight: 700; letter-spacing: -0.03em; font-variant-numeric: tabular-nums; }
+.pv .card small { font-size: 10px; color: var(--p-text2); }
+/* component strip */
+.pv .strip { background: var(--p-bg); border-radius: var(--p-r-win); box-shadow: 0 0 0 1px var(--p-line); padding: 14px 16px; display: grid; gap: 12px; font-size: var(--p-body); }
+.pv .strip .lbl { font-size: 11px; color: var(--p-text2); font-weight: 700; }
+.pv .srow { display: flex; flex-wrap: wrap; gap: 10px; align-items: center; }
+.pv .b { display: inline-flex; align-items: center; gap: 5px; height: 26px; padding: 0 12px; border-radius: var(--p-r-btn); font-size: calc(var(--p-body) - .5px); font-weight: 600; border: 1px solid transparent; white-space: nowrap; }
+.pv[data-btn=filled] .b.pri { background: var(--p-btn); color: #fff; }
+.pv[data-btn=tinted] .b.pri { background: var(--p-soft); color: var(--p-accent); }
+.pv[data-btn=outlined] .b.pri { background: transparent; color: var(--p-accent); border-color: var(--p-accent); }
+.pv .b.sec { background: var(--p-alt); color: var(--p-text); border-color: var(--p-line); font-weight: 500; }
+.pv[data-btn=filled] .b.dan { background: #c4223b; color: #fff; }
+.pv[data-btn=tinted] .b.dan { background: color-mix(in oklab, #c4223b 14%, transparent); color: #d03a50; }
+.pv[data-btn=outlined] .b.dan { color: #d03a50; border-color: #d03a50; }
+.pv .segc { display: inline-flex; background: var(--p-alt); border-radius: var(--p-r-btn); padding: 2px; gap: 2px; }
+.pv .segc span { padding: 2px 10px; border-radius: calc(var(--p-r-btn) - 2px); font-size: calc(var(--p-body) - 1.5px); color: var(--p-text2); }
+.pv .segc span.on { background: var(--p-bg); color: var(--p-text); font-weight: 600; box-shadow: 0 1px 2px rgba(0,0,0,.14); }
+.pv .chk { width: 14px; height: 14px; border-radius: 4px; background: var(--p-btn); position: relative; display: inline-block; }
+.pv .chk::after { content: ""; position: absolute; left: 4px; top: 1px; width: 4px; height: 8px; border: solid #fff; border-width: 0 2px 2px 0; transform: rotate(45deg); }
+.pv .swc { width: 30px; height: 17px; border-radius: 99px; background: var(--p-btn); position: relative; display: inline-block; }
+.pv .swc::after { content: ""; position: absolute; right: 2px; top: 2px; width: 13px; height: 13px; border-radius: 50%; background: #fff; }
+.pv .toast { display: inline-flex; gap: 8px; align-items: center; background: var(--p-text); color: var(--p-bg); border-radius: 99px; padding: 6px 12px; font-size: 12px; }
+.pv .cardsample { border-radius: var(--p-r-card); padding: 9px 11px; background: var(--p-bg); font-size: var(--p-small); display: grid; gap: 1px; }
+.pv[data-card=outline] .cardsample { border: 1px solid var(--p-line); }
+.pv[data-card=shadow] .cardsample { border: 1px solid var(--p-line); box-shadow: 0 1px 2px rgba(0,0,0,.05), 0 8px 20px -12px rgba(0,0,0,.25); }
+.pv[data-card=filled] .cardsample { background: var(--p-alt); }
+.pv .typescale { display: flex; flex-wrap: wrap; gap: 6px 18px; align-items: baseline; }
+.pv .typescale span { color: var(--p-text2); font-size: 10px; margin-left: 4px; }
+
+/* wordmarks */
+.wm { white-space: nowrap; line-height: 1; color: var(--p-text, var(--ink)); }
+.wm-classic { font-weight: 700; letter-spacing: -0.02em; }
+.wm-split { font-weight: 400; letter-spacing: -0.02em; } .wm-split b { font-weight: 800; }
+.wm-rounded { font-family: ui-rounded, "SF Pro Rounded", "Nunito", sans-serif; font-weight: 900; }
+.wm-italic { font-weight: 800; font-style: italic; letter-spacing: -0.035em; }
+.wm-ai { font-weight: 700; letter-spacing: -0.02em; display: inline-flex; align-items: center; gap: 5px; }
+.wm-ai i { font-style: normal; font-size: .62em; font-weight: 800; color: #fff; background: var(--p-btn, #2f4bc4); border-radius: 5px; padding: 2px 4px; }
+.opt .wm { color: var(--ink); font-family: -apple-system, BlinkMacSystemFont, "Helvetica Neue", sans-serif; font-size: 15px; }
+.opt .wm-rounded { font-family: ui-rounded, "SF Pro Rounded", "Nunito", sans-serif; }
+
+@media (max-width: 1100px) {
+  .layout { grid-template-columns: 1fr; }
+  .previewcol { position: static; order: -1; }
+}
+@media (prefers-reduced-motion: reduce) { * { transition: none !important; } }
+</style>
+
+<div class="wrap">
+  <header class="top">
+    <h1>MacSprint Foundations</h1>
+    <p>These are the shared parts every feature reuses: colour, type, corners, spacing, cards, sidebar, toolbar, buttons, icons and the brand. Pick an option for each, watch the MacSprint preview change, and tick <b>Final</b> when you are sure. Once everything is final, every feature screen will be built from these choices.</p>
+    <div class="statusbar">
+      <div class="prog"><span id="prog-label">0 of 15 final</span><div class="bar" aria-hidden="true"><i id="prog-bar"></i></div></div>
+      <span class="saved" id="saved"><i></i><span>Loading your choices…</span></span>
+      <button type="button" class="btn" id="reset">Back to current design</button>
+    </div>
+  </header>
+
+  <div class="layout">
+    <div class="decisions" id="decisions"></div>
+    <aside class="previewcol" aria-label="Live preview">
+      <div class="pv-tools">
+        <h3>Live preview</h3>
+        <div class="seg" role="group" aria-label="Preview appearance"><button type="button" data-mode="light" aria-pressed="true">Light</button><button type="button" data-mode="dark" aria-pressed="false">Dark</button></div>
+      </div>
+      <div class="pv-scroll"><div class="pv" id="pv"></div></div>
+    </aside>
+  </div>
+
+  <section class="summary" aria-labelledby="sum-h">
+    <h2 id="sum-h">Your foundations</h2>
+    <p style="color:var(--ink-2)">Claude reads this list directly from this page. You can also copy it as text.</p>
+    <div class="tablewrap"><table id="sum"></table></div>
+    <div style="display:flex;gap:12px;align-items:center;flex-wrap:wrap"><button type="button" class="btn pri" id="copy">Copy as text</button><span id="copy-status" role="status"></span></div>
+    <textarea id="copy-area" readonly hidden aria-label="Foundations as text" style="width:100%;min-height:160px;font:13px ui-monospace,Menlo,monospace"></textarea>
+  </section>
+</div>
+
+<script>
+(() => {
+/* ---------------- icons ---------------- */
+const P = {
+  house: '<path d="M3 11.5 12 4l9 7.5"/><path d="M5.5 10v9.5h13V10"/>',
+  grid: '<rect x="4" y="4" width="7" height="7" rx="1.5"/><rect x="13" y="4" width="7" height="7" rx="1.5"/><rect x="4" y="13" width="7" height="7" rx="1.5"/><rect x="13" y="13" width="7" height="7" rx="1.5"/>',
+  photo: '<rect x="3" y="5" width="18" height="14" rx="2.5"/><circle cx="8.5" cy="10" r="1.6"/><path d="m21 16-5-5-9 8"/>',
+  search: '<circle cx="10.5" cy="10.5" r="6"/><path d="m20 20-5-5"/>',
+  text: '<path d="M4 8V6a2 2 0 0 1 2-2h2M16 4h2a2 2 0 0 1 2 2v2M20 16v2a2 2 0 0 1-2 2h-2M8 20H6a2 2 0 0 1-2-2v-2"/><path d="M8 10h8M8 14h5"/>',
+  drive: '<rect x="3" y="7" width="18" height="10" rx="2.5"/><path d="M7 13h.01M11 13h6"/>',
+  trash: '<path d="M4 7h16M9 7V4.5h6V7M6 7l1 13h10l1-13"/>',
+  dup: '<rect x="8" y="8" width="11" height="13" rx="2"/><path d="M16 8V5a2 2 0 0 0-2-2H7a2 2 0 0 0-2 2v10a2 2 0 0 0 2 2h1"/>',
+  folder: '<path d="M3 7.5V18a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V9.5a2 2 0 0 0-2-2h-7L10 5H5a2 2 0 0 0-2 2.5Z"/>',
+  clip: '<rect x="5" y="5" width="14" height="16" rx="2.5"/><rect x="9" y="3" width="6" height="4" rx="1.2"/>',
+  cam: '<path d="M4 8V6a2 2 0 0 1 2-2h2M16 4h2a2 2 0 0 1 2 2v2M20 16v2a2 2 0 0 1-2 2h-2M8 20H6a2 2 0 0 1-2-2v-2"/><circle cx="12" cy="12" r="3"/>',
+  film: '<rect x="3" y="4" width="18" height="16" rx="2"/><path d="M7 4v16M17 4v16"/>',
+  music: '<path d="M9 18V5l11-2v13"/><circle cx="6" cy="18" r="3"/><circle cx="17" cy="16" r="3"/>',
+  doc: '<path d="M14 3H7a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V8z"/><path d="M14 3v5h5"/>',
+  zip: '<rect x="4" y="4" width="16" height="16" rx="3"/><path d="M12 4v4M12 11v2"/>',
+  app: '<rect x="4" y="4" width="16" height="16" rx="4.5"/>',
+  down: '<circle cx="12" cy="12" r="9"/><path d="M12 7.5v9M8.5 13l3.5 3.5 3.5-3.5"/>',
+  sparkles: '<path d="M12 3l1.8 4.7L18.5 9.5l-4.7 1.8L12 16l-1.8-4.7L5.5 9.5l4.7-1.8z"/>',
+  refresh: '<path d="M20 12a8 8 0 1 1-2.3-5.7"/><path d="M20 4v4h-4"/>',
+  check: '<circle cx="12" cy="12" r="9"/><path d="m8 12.5 3 3 5-6"/>',
+};
+const ic = (n, s = 14, style = '') => `<svg viewBox="0 0 24 24" width="${s}" height="${s}" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" ${style}>${P[n] || ''}</svg>`;
+const esc = (s) => String(s).replace(/[&<>"]/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]));
+
+/* ---------------- brand ---------------- */
+const LOGOS = {
+  folder: '<g fill="none" stroke="#fff" stroke-width="3.6" stroke-linecap="round"><path d="M8 29h8M5 36h11M9 43h7"/></g><path fill="#fff" d="M24 21h8.5l4 4H48a3 3 0 0 1 3 3v15a3 3 0 0 1-3 3H24a3 3 0 0 1-3-3V24a3 3 0 0 1 3-3z"/>',
+  chevron: '<g fill="none" stroke="#fff" stroke-width="5.5" stroke-linecap="round" stroke-linejoin="round"><path d="M12 45V20l11 14 11-14v25"/><path d="M42 21l11 11-11 11"/></g>',
+  window: '<rect x="12" y="15" width="40" height="34" rx="7" fill="none" stroke="#fff" stroke-width="4"/><g fill="#fff"><circle cx="19" cy="22" r="2"/><circle cx="25" cy="22" r="2"/><path d="M33 26l2.6 6.4L42 35l-6.4 2.6L33 44l-2.6-6.4L24 35l6.4-2.6z"/></g>',
+  stack: '<rect x="12" y="31" width="26" height="19" rx="4" fill="#fff" fill-opacity=".45"/><rect x="19" y="23" width="26" height="19" rx="4" fill="#fff" fill-opacity=".72"/><rect x="26" y="15" width="26" height="19" rx="4" fill="#fff"/>',
+  lens: '<circle cx="28" cy="28" r="13" fill="none" stroke="#fff" stroke-width="5"/><path d="M38 38l11 11" stroke="#fff" stroke-width="6" stroke-linecap="round"/><path fill="#fff" d="M28 20.5l2 5 5 2-5 2-2 5-2-5-5-2 5-2z"/>',
+  monogram: '<text x="32" y="42" text-anchor="middle" font-family="-apple-system, BlinkMacSystemFont, Helvetica Neue, sans-serif" font-size="27" font-weight="800" letter-spacing="-1.5" fill="#fff">MS</text>',
+};
+let gid = 0;
+function logoSvg(size, id, accent) {
+  const a = ACCENTS[accent || state.choices.accent] || ACCENTS.indigo, g = 'g' + (gid++);
+  return `<svg width="${size}" height="${size}" viewBox="0 0 64 64" aria-hidden="true" style="flex:none"><defs><linearGradient id="${g}" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="${a.top}"/><stop offset="1" stop-color="${a.lb}"/></linearGradient></defs><rect width="64" height="64" rx="14.5" fill="url(#${g})"/>${LOGOS[id] || LOGOS.folder}</svg>`;
+}
+const WORDS = {
+  classic: '<span class="wm wm-classic">MacSprint</span>',
+  split: '<span class="wm wm-split">Mac<b>Sprint</b></span>',
+  rounded: '<span class="wm wm-rounded">macsprint</span>',
+  italic: '<span class="wm wm-italic">MacSprint</span>',
+  ai: '<span class="wm wm-ai">MacSprint<i>AI</i></span>',
+};
+
+/* ---------------- option data ---------------- */
+const ACCENTS = {
+  indigo: { l: '#3b5bdb', lb: '#2f4bc4', d: '#8399ff', db: '#4a63e0', top: '#7389ff' },
+  blue: { l: '#0a7cff', lb: '#0064d2', d: '#4aa3ff', db: '#0a6fe0', top: '#4aa3ff' },
+  teal: { l: '#0f8285', lb: '#0b6e70', d: '#46c9c5', db: '#0b7a7c', top: '#3dbdb9' },
+  violet: { l: '#7246d6', lb: '#6236c4', d: '#b49cff', db: '#7650de', top: '#a084ff' },
+  graphite: { l: '#3f4450', lb: '#2f333c', d: '#c9ccd4', db: '#5b606c', top: '#7a808e' },
+};
+const NEUTRALS = {
+  cool: { l: { page: '#f4f5f8', bg: '#ffffff', side: '#f4f4f7', alt: '#f0f1f5', line: 'rgba(20,20,30,.1)', text: '#16161a', text2: '#5f6068', fold: '#c9ccd6', fold2: '#b4b8c4' },
+          d: { page: '#0e0f12', bg: '#18191d', side: '#1f2025', alt: '#25262c', line: 'rgba(255,255,255,.09)', text: '#ececf0', text2: '#a3a4ad', fold: '#3b3e48', fold2: '#2c2e36' } },
+  neutral: { l: { page: '#f5f5f5', bg: '#ffffff', side: '#f3f3f3', alt: '#ededed', line: 'rgba(0,0,0,.1)', text: '#1d1d1f', text2: '#6e6e73', fold: '#cbcbcf', fold2: '#b6b6bb' },
+             d: { page: '#111111', bg: '#1e1e1e', side: '#262626', alt: '#2c2c2e', line: 'rgba(255,255,255,.1)', text: '#f5f5f7', text2: '#a1a1a6', fold: '#3d3d40', fold2: '#2e2e31' } },
+  warm: { l: { page: '#f7f4ef', bg: '#fffdfa', side: '#f5f1ea', alt: '#efeae2', line: 'rgba(40,30,20,.11)', text: '#1f1b16', text2: '#675f55', fold: '#d3ccc1', fold2: '#bfb7ab' },
+          d: { page: '#12100e', bg: '#1c1a17', side: '#24211d', alt: '#2b2823', line: 'rgba(255,245,230,.09)', text: '#f1ece4', text2: '#aaa196', fold: '#423d36', fold2: '#322e29' } },
+};
+const KINDS = [['Images', '#3a8dff', 215, 'photo', '2,280'], ['Videos', '#a46bf5', 275, 'film', '162'], ['Music', '#f2647e', 345, 'music', '34'], ['Documents', '#f0a23b', 35, 'doc', '201'], ['Archives', '#3fb985', 150, 'zip', '93'], ['Apps', '#3aa7d9', 195, 'app', '110']];
+
+const DECISIONS = [
+  { id: 'accent', title: 'Accent colour', why: 'The one colour for selection, the main button and links. Everything else stays neutral.', def: 'indigo',
+    opts: [['indigo', 'Indigo', 'Calm, a little premium. Current.'], ['blue', 'System blue', 'Feels most like a built-in Mac app.'], ['teal', 'Teal', 'Fresh and clean; less common.'], ['violet', 'Violet', 'Creative; connects to “AI”.'], ['graphite', 'Graphite', 'No colour at all; very minimal.']],
+    demo: (id) => `<div class="sw"><i style="background:${ACCENTS[id].l}"></i><i style="background:${ACCENTS[id].d}"></i></div>` },
+  { id: 'neutral', title: 'Background greys', why: 'The window, sidebar and card colours behind everything.', def: 'cool',
+    opts: [['cool', 'Cool graphite', 'Grey with a hint of blue. Current.'], ['neutral', 'True neutral', 'Plain greys, like stock macOS.'], ['warm', 'Warm stone', 'Slightly warm; softer on the eyes.']],
+    demo: (id) => `<div class="sw">${['bg', 'side', 'alt'].map((k) => `<i style="background:${NEUTRALS[id].l[k]}"></i>`).join('')}${['bg', 'side'].map((k) => `<i style="background:${NEUTRALS[id].d[k]}"></i>`).join('')}</div>` },
+  { id: 'font', title: 'Typeface', why: 'All three are Apple system fonts, free to use in the app.', def: 'system',
+    opts: [['system', 'SF Pro', 'The standard Mac font. Neutral and very readable.'], ['rounded', 'SF Pro Rounded', 'Softer and friendlier, like Apple’s Reminders.'], ['serif', 'New York titles', 'Serif headings with SF Pro text. Editorial.']],
+    demo: (id) => `<span class="chipdemo" style="font:700 19px ${id === 'rounded' ? 'ui-rounded, \'SF Pro Rounded\', Nunito, sans-serif' : id === 'serif' ? 'ui-serif, \'New York\', \'Source Serif 4\', Georgia, serif' : '-apple-system, BlinkMacSystemFont, \'Helvetica Neue\', sans-serif'}">Good afternoon</span>` },
+  { id: 'scale', title: 'Text size', why: 'Mac apps use 13 pt body text. Bigger sizes are easier to read but fit less.', def: 'compact',
+    opts: [['compact', 'Mac standard', 'Body 13 pt, title 22 pt. Current.'], ['comfortable', 'Comfortable', 'Body 14 pt, title 26 pt.'], ['large', 'Large', 'Body 15 pt, title 28 pt.']] },
+  { id: 'radius', title: 'Corner shape', why: 'How round windows, cards, buttons and fields are. Inner corners stay smaller than outer ones.', def: 'soft',
+    opts: [['tight', 'Crisp', 'Cards 8, buttons 5 pt. Precise.'], ['native', 'Native', 'Cards 12, buttons 7 pt. Like macOS.'], ['soft', 'Soft', 'Cards 16, buttons 9 pt. Current.'], ['round', 'Round', 'Cards 22 pt, pill buttons. Playful.']],
+    demo: (id) => `<div class="sw"><i style="border-radius:${RADII[id].card / 2}px;background:var(--pick-soft)"></i><i style="border-radius:${Math.min(RADII[id].btn, 11) / 2 + 2}px;background:var(--pick-soft);width:36px"></i></div>` },
+  { id: 'space', title: 'Spacing', why: 'The gaps between things. More space feels calmer; less shows more files.', def: 'regular',
+    opts: [['compact', 'Compact', 'Fits more; for big libraries.'], ['regular', 'Regular', '8 pt rhythm. Current.'], ['airy', 'Airy', 'More breathing room.']] },
+  { id: 'card', title: 'Card style', why: 'How Clean Up cards and other panels stand out from the background.', def: 'shadow',
+    opts: [['outline', 'Outline', 'A thin border, no shadow. Flat.'], ['shadow', 'Soft shadow', 'Border plus a soft lift. Current.'], ['filled', 'Filled', 'A grey fill, no border.']] },
+  { id: 'sidebar', title: 'Sidebar selection', why: 'How the selected section looks in the sidebar.', def: 'raised',
+    opts: [['raised', 'Raised', 'A white pill with accent icon. Current.'], ['accent', 'Accent fill', 'Solid accent, white text. Classic Mac.'], ['tint', 'Tinted', 'Light accent background, accent text.']] },
+  { id: 'toolbar', title: 'Toolbar layout', why: 'Where the search field sits at the top of every screen.', def: 'left',
+    opts: [['left', 'Search left', 'Search first, info on the right. Current.'], ['center', 'Search centred', 'A big central search, like a search app.'], ['minimal', 'Minimal', 'Page title with a search icon that expands.']] },
+  { id: 'btn', title: 'Main button style', why: 'The look of primary and destructive buttons.', def: 'filled',
+    opts: [['filled', 'Filled', 'Solid colour, white text. Current.'], ['tinted', 'Tinted', 'Soft colour background, coloured text.'], ['outlined', 'Outlined', 'A coloured border only.']] },
+  { id: 'icons', title: 'Sidebar icons', why: 'All are SF Symbols; this sets their style.', def: 'outline',
+    opts: [['outline', 'Outline', 'Thin lines, quiet. Current.'], ['filled', 'Filled', 'Solid shapes, stronger.'], ['color', 'Colour-coded', 'Each kind in its own colour.']] },
+  { id: 'folders', title: 'Library folders', why: 'How the six file kinds appear on Home.', def: 'mac',
+    opts: [['mac', 'macOS folders', 'Folder art with papers inside. Current.'], ['cards', 'Colour cards', 'Tinted cards with icons (Homy-like).'], ['tiles', 'Icon tiles', 'Simple rounded icon squares.']] },
+  { id: 'logo', title: 'Logo', why: 'The app mark in the sidebar, Dock and menu bar.', def: 'folder',
+    opts: [['folder', 'Sprint Folder', 'Folder with speed lines.'], ['chevron', 'Forward M', 'An M that points ahead.'], ['window', 'Spark Window', 'Mac window with an AI spark.'], ['stack', 'Card Sweep', 'Files stacking neatly.'], ['lens', 'Smart Lens', 'Search with a spark.'], ['monogram', 'MS Monogram', 'Clear at tiny sizes.']],
+    demo: (id) => logoSvg(30, id) },
+  { id: 'word', title: 'Wordmark', why: 'How the name is written next to the logo.', def: 'classic',
+    opts: [['classic', 'Classic', 'Bold system font.'], ['split', 'Two weights', 'Light Mac, heavy Sprint.'], ['rounded', 'Rounded', 'Lowercase, friendly.'], ['italic', 'In motion', 'Heavy italic, energetic.'], ['ai', 'With AI tag', 'Names the AI.']],
+    demo: (id) => `<span class="chipdemo">${WORDS[id]}</span>` },
+  { id: 'ai', title: 'AI search default', why: 'Whether the ✦ AI switch in the search field starts on.', def: 'on',
+    opts: [['on', 'On by default', 'Plain-English search first.'], ['off', 'Off by default', 'File-name search first; AI when asked.']] },
+];
+const RADII = { tight: { win: 10, card: 8, btn: 5, field: 6 }, native: { win: 12, card: 12, btn: 7, field: 7 }, soft: { win: 14, card: 16, btn: 9, field: 9 }, round: { win: 18, card: 22, btn: 999, field: 999 } };
+const SCALES = { compact: { body: 13, small: 11, title: 22, h2: 14, big: 18 }, comfortable: { body: 14, small: 12, title: 26, h2: 15, big: 20 }, large: { body: 15, small: 12.5, title: 28, h2: 16, big: 22 } };
+const SPACE = { compact: 0.75, regular: 1, airy: 1.3 };
+const FONTS = {
+  system: { body: '-apple-system, BlinkMacSystemFont, "SF Pro Text", "Helvetica Neue", sans-serif', title: '-apple-system, BlinkMacSystemFont, "SF Pro Display", "Helvetica Neue", sans-serif' },
+  rounded: { body: 'ui-rounded, "SF Pro Rounded", Nunito, sans-serif', title: 'ui-rounded, "SF Pro Rounded", Nunito, sans-serif' },
+  serif: { body: '-apple-system, BlinkMacSystemFont, "SF Pro Text", "Helvetica Neue", sans-serif', title: 'ui-serif, "New York", "Source Serif 4", Georgia, serif' },
+};
+
+/* ---------------- state + storage ---------------- */
+const defaults = () => Object.fromEntries(DECISIONS.map((d) => [d.id, d.def]));
+let state = { choices: defaults(), final: {} };
+let mode = 'light';
+let ref = null, store = 'local', saveTimer = null, saving = Promise.resolve();
+try { const s = JSON.parse(localStorage.getItem('macsprint-lab-logo-marks') || 'null'); if (s && s.choices) state = { choices: { ...defaults(), ...s.choices }, final: s.final || {} }; } catch (e) {}
+
+function setSaved(text, ok) { const el = document.getElementById('saved'); el.classList.toggle('ok', !!ok); el.querySelector('span').textContent = text; }
+function save() {
+  try { localStorage.setItem('macsprint-lab-logo-marks', JSON.stringify(state)); } catch (e) {}
+  if (!ref) { setSaved('Saved in this browser only. Use “Copy as text” to send it to Claude.', false); return; }
+  setSaved('Saving…', false);
+  clearTimeout(saveTimer);
+  saveTimer = setTimeout(() => {
+    const payload = { choices: { ...state.choices }, final: { ...state.final }, summary: summaryText(), updatedAt: new Date().toISOString() };
+    saving = saving.then(() => ref.set(payload)).then(() => setSaved('Saved. Claude can read your choices.', true), () => setSaved('Could not save online; kept in this browser. Use “Copy as text”.', false));
+  }, 500);
+}
+async function connect() {
+  try {
+    const db = null /* lab snapshot: never touches the real foundations doc */;
+    if (!db) { setSaved('Saved in this browser only. Use “Copy as text” to send it to Claude.', false); return; }
+    ref = db.doc('foundations/decisions');
+    const snap = await ref.get();
+    if (snap.exists) { const d = snap.data() || {}; state = { choices: { ...defaults(), ...(d.choices || {}) }, final: d.final || {} }; renderAll(); }
+    setSaved('Connected. Claude can read your choices.', true);
+  } catch (e) { setSaved('Saved in this browser only. Use “Copy as text” to send it to Claude.', false); }
+}
+
+/* ---------------- rendering ---------------- */
+const optName = (d, id) => (d.opts.find((o) => o[0] === id) || d.opts[0])[1];
+function decisionHtml(d) {
+  const fin = !!state.final[d.id];
+  return `<section class="dec${fin ? ' is-final' : ''}" id="dec-${d.id}" aria-labelledby="h-${d.id}">
+    <div class="dec-head"><div><h2 id="h-${d.id}">${esc(d.title)}</h2><p class="why">${esc(d.why)}</p></div>
+      <label class="finalbox" for="fin-${d.id}"><input type="checkbox" id="fin-${d.id}" data-final="${d.id}" ${fin ? 'checked' : ''}>Final</label></div>
+    <div class="opts" role="group" aria-label="${esc(d.title)} options">${d.opts.map(([id, name, note]) => `<button type="button" class="opt" data-dec="${d.id}" data-opt="${id}" aria-pressed="${state.choices[d.id] === id}">${d.demo ? d.demo(id) : ''}<b>${esc(name)}</b><small>${esc(note)}</small>${id === d.def ? '<span class="cur">Current design</span>' : ''}</button>`).join('')}</div>
+  </section>`;
+}
+function previewHtml() {
+  const c = state.choices, sb = [['house', 'Home', '', '#3a8dff', true], ['grid', 'Library', '2,880', '#6a6ff0'], ['photo', 'Images', '2,280', '#3a8dff'], ['search', 'AI Search', '', '#a46bf5'], ['text', 'Text in Images', '589', '#3fb985'], '-', ['drive', 'Storage', '10', '#f0a23b', false, 'alert'], ['trash', 'Clean Up', '14.1 GB', '#f2647e', false, 'good'], ['dup', 'Duplicates', '44.8 MB', '#3aa7d9', false, 'good'], ['folder', 'Organizer', '', '#f0a23b'], '-', ['clip', 'Clipboard', '', '#6a6ff0'], ['cam', 'Screenshots', '', '#3fb985']];
+  const folders = KINDS.map(([k, col, h, icon, n]) => c.folders === 'cards' ? `<div class="fcard" style="--k:${col}">${ic(icon, 16)}<div><b style="display:block;font-size:12px">${k}</b><small style="font-size:10px;color:var(--p-text2)">${n} items</small></div></div>`
+    : c.folders === 'tiles' ? `<div class="ftile" style="--k:${col}"><span>${ic(icon, 20)}</span><div class="fo"><b>${k}</b><small>${n}</small></div></div>`
+    : `<div class="fo" style="--k:${col};--h:${h}"><div class="fd"><i class="t"></i><i class="b"></i><i class="p"></i><i class="f"></i></div><b>${k}</b><small>${n}</small></div>`).join('');
+  const aiOn = c.ai === 'on';
+  return `<div class="win">
+    <aside class="side"><div class="lights"><i></i><i></i><i></i></div><div class="brand">${logoSvg(20, c.logo)}${WORDS[c.word]}</div>
+      ${sb.map((r) => r === '-' ? '<div class="sep"></div>' : `<div class="row${r[4] ? ' sel' : ''}" style="--ic:${r[3]}">${ic(r[0], 14)}${r[1]}${r[2] ? `<em class="${r[5] || ''}">${r[2]}</em>` : ''}</div>`).join('')}</aside>
+    <div class="main">
+      <div class="tb"><span class="tbtitle">Home</span><div class="search">${ic(aiOn ? 'sparkles' : 'search', 12)}<span>${aiOn ? 'Ask anything, e.g. “pdfs from last week”' : 'Search file names'}</span><span class="kbd">⌘F</span><span class="ai${aiOn ? ' on' : ''}">${ic('sparkles', 10)}AI</span></div><span class="libsize">Library size <b>30.19 GB</b></span></div>
+      <div class="content">
+        <div class="head"><div><div class="greet">Good afternoon</div><div class="sub">2,880 files · 30.19 GB across your Mac</div></div><span class="b sec">${ic('refresh', 11)}Refresh</span></div>
+        <div class="h2">Library <span class="count">6</span></div>
+        <div class="folders" style="${c.folders === 'cards' ? 'grid-template-columns:repeat(3,minmax(0,1fr))' : ''}">${folders}</div>
+        <div class="h2">Clean Up <span class="pill">Free up to 14.1 GB</span></div>
+        <div class="cards">${[['dup', 'Duplicates', '44.8 MB', '24 extra copies'], ['down', 'Old Downloads', '11.5 GB', '1,227 items'], ['cam', 'Old Screenshots', '321 MB', '480 items'], ['drive', 'Large Files', '2.2 GB', '10 items']].map((s) => `<div class="card"><span>${ic(s[0], 11)}${s[1]}</span><b>${s[2]}</b><small>${s[3]}</small></div>`).join('')}</div>
+      </div>
+    </div>
+  </div>
+  <div class="strip">
+    <span class="lbl">Shared components</span>
+    <div class="srow"><span class="b pri">Review moves</span><span class="b sec">Cancel</span><span class="b dan">${ic('trash', 11)}Move to Trash…</span><div class="segc"><span>All</span><span class="on">Images</span><span>Videos</span></div><span class="chk"></span><span class="swc"></span><span class="pill">Good</span><span class="toast">${ic('check', 12)}Moved to Trash</span></div>
+    <div class="srow"><div class="cardsample"><b style="font-size:var(--p-big)">2.2 GB</b><span style="color:var(--p-text2)">Card</span></div><div class="search" style="max-width:260px">${ic('search', 12)}<span>Search field</span></div>
+      <div class="typescale"><b style="font-family:var(--p-font-title);font-size:var(--p-title)">Title<span>${SCALES[c.scale].title}</span></b><b style="font-family:var(--p-font-title);font-size:var(--p-h2)">Heading<span>${SCALES[c.scale].h2}</span></b><span style="font-size:var(--p-body);color:var(--p-text);margin:0">Body<span>${SCALES[c.scale].body}</span></span><span style="font-size:var(--p-small);margin:0">Caption<span>${SCALES[c.scale].small}</span></span></div></div>
+  </div>`;
+}
+function applyVars() {
+  const c = state.choices, a = ACCENTS[c.accent], n = NEUTRALS[c.neutral][mode === 'dark' ? 'd' : 'l'], r = RADII[c.radius], sc = SCALES[c.scale], f = FONTS[c.font];
+  const pv = document.getElementById('pv');
+  const v = {
+    '--p-accent': mode === 'dark' ? a.d : a.l, '--p-btn': mode === 'dark' ? a.db : a.lb,
+    '--p-soft': `color-mix(in oklab, ${mode === 'dark' ? a.d : a.l} ${mode === 'dark' ? 16 : 12}%, transparent)`,
+    '--p-good': mode === 'dark' ? '#4cd38a' : '#1f7a4d',
+    '--p-page': n.page, '--p-bg': n.bg, '--p-side': n.side, '--p-alt': n.alt, '--p-line': n.line, '--p-text': n.text, '--p-text2': n.text2, '--p-fold': n.fold, '--p-fold2': n.fold2,
+    '--p-r-win': r.win + 'px', '--p-r-card': r.card + 'px', '--p-r-btn': r.btn + 'px', '--p-r-field': r.field + 'px',
+    '--p-body': sc.body + 'px', '--p-small': sc.small + 'px', '--p-title': sc.title + 'px', '--p-h2': sc.h2 + 'px', '--p-big': sc.big + 'px',
+    '--p-font-body': f.body, '--p-font-title': f.title, '--p-s': SPACE[c.space],
+  };
+  for (const [k, val] of Object.entries(v)) pv.style.setProperty(k, val);
+  pv.style.colorScheme = mode;
+  Object.assign(pv.dataset, { sidebar: c.sidebar, toolbar: c.toolbar, btn: c.btn, icons: c.icons, card: c.card });
+}
+function summaryText() {
+  const lines = ['MacSprint foundations'];
+  for (const d of DECISIONS) lines.push(`- ${d.title}: ${optName(d, state.choices[d.id])}${state.final[d.id] ? ' (final)' : ' (draft)'}`);
+  const a = ACCENTS[state.choices.accent], r = RADII[state.choices.radius], sc = SCALES[state.choices.scale];
+  lines.push('', `Tokens: accent ${a.l} / dark ${a.d}; buttons ${a.lb} / ${a.db}; radius window ${r.win}, card ${r.card}, button ${r.btn === 999 ? 'pill' : r.btn}, field ${r.field === 999 ? 'pill' : r.field}; type body ${sc.body}, title ${sc.title}, heading ${sc.h2}, caption ${sc.small}; spacing x${SPACE[state.choices.space]}`);
+  return lines.join('\n');
+}
+function renderSummary() {
+  document.getElementById('sum').innerHTML = `<tr><th>Decision</th><th>Choice</th><th>Status</th></tr>` + DECISIONS.map((d) => `<tr><td><a href="#dec-${d.id}">${esc(d.title)}</a></td><td>${esc(optName(d, state.choices[d.id]))}</td><td><span class="tag ${state.final[d.id] ? 'f">Final' : 'd">Draft'}</span></td></tr>`).join('');
+  const n = DECISIONS.filter((d) => state.final[d.id]).length;
+  document.getElementById('prog-label').textContent = n === DECISIONS.length ? `All ${n} final. Tell Claude to apply them.` : `${n} of ${DECISIONS.length} final`;
+  document.getElementById('prog-bar').style.width = `${(n / DECISIONS.length) * 100}%`;
+}
+function renderPreview() { gid = 0; document.getElementById('pv').innerHTML = previewHtml(); applyVars(); }
+function renderAll() {
+  document.getElementById('decisions').innerHTML = DECISIONS.map(decisionHtml).join('');
+  renderPreview(); renderSummary();
+}
+
+/* ---------------- events ---------------- */
+document.getElementById('decisions').addEventListener('click', (e) => {
+  const b = e.target.closest('.opt'); if (!b) return;
+  state.choices[b.dataset.dec] = b.dataset.opt;
+  b.closest('.opts').querySelectorAll('.opt').forEach((x) => x.setAttribute('aria-pressed', String(x === b)));
+  if (b.dataset.dec === 'accent') renderAll(); else { renderPreview(); renderSummary(); }
+  save();
+});
+document.getElementById('decisions').addEventListener('change', (e) => {
+  const id = e.target.dataset.final; if (!id) return;
+  state.final[id] = e.target.checked;
+  document.getElementById('dec-' + id).classList.toggle('is-final', e.target.checked);
+  renderSummary(); save();
+});
+document.querySelectorAll('[data-mode]').forEach((b) => b.addEventListener('click', () => {
+  mode = b.dataset.mode; document.querySelectorAll('[data-mode]').forEach((x) => x.setAttribute('aria-pressed', String(x === b))); applyVars();
+}));
+let armed = false;
+document.getElementById('reset').addEventListener('click', (e) => {
+  if (!armed) { armed = true; e.target.textContent = 'Click again to reset all'; setTimeout(() => { armed = false; e.target.textContent = 'Back to current design'; }, 4000); return; }
+  armed = false; e.target.textContent = 'Back to current design';
+  state = { choices: defaults(), final: {} }; renderAll(); save();
+});
+document.getElementById('copy').addEventListener('click', () => {
+  const t = summaryText(), area = document.getElementById('copy-area'), st = document.getElementById('copy-status');
+  area.value = t;
+  navigator.clipboard.writeText(t).then(() => { st.textContent = 'Copied.'; }, () => { area.hidden = false; area.focus(); area.select(); st.textContent = 'Copy is blocked here: the text is selected, press ⌘C.'; });
+});
+
+if (matchMedia('(prefers-color-scheme: dark)').matches && document.documentElement.dataset.theme !== 'light' || document.documentElement.dataset.theme === 'dark') {
+  mode = 'dark'; document.querySelectorAll('[data-mode]').forEach((x) => x.setAttribute('aria-pressed', String(x.dataset.mode === 'dark')));
+}
+renderAll();
+connect();
+})();
+</script>
