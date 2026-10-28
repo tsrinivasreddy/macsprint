@@ -190,6 +190,21 @@ header.top > p { color: var(--ink-2); font-size: 17px; max-width: 78ch; }
 .wm-italic { font-weight: 800; font-style: italic; letter-spacing: -0.035em; }
 .wm-ai { font-weight: 700; letter-spacing: -0.02em; display: inline-flex; align-items: center; gap: 5px; }
 .wm-ai i { font-style: normal; font-size: .62em; font-weight: 800; color: #fff; background: var(--p-btn, #2f4bc4); border-radius: 5px; padding: 2px 4px; }
+.wm2 { font-family: -apple-system, BlinkMacSystemFont, "SF Pro Display", "Helvetica Neue", Arial, sans-serif; white-space: nowrap; line-height: 1.05; letter-spacing: -0.01em; display: inline-block; }
+.wm2 .m { font-weight: 400; }
+.wm2 .s { font-weight: 400; letter-spacing: 0.01em; }
+.wm2.w-bold .s { font-weight: 600; }
+.wm2.w-wide .s { font-weight: 500; letter-spacing: 0.16em; }
+.wm2.w-light .m, .wm2.w-light .s { font-weight: 300; }
+.wm2.w-mixed .m { font-weight: 300; } .wm2.w-mixed .s { font-weight: 700; letter-spacing: 0; }
+.wm2.gloss { -webkit-background-clip: text; background-clip: text; color: transparent; }
+.brandtiles { display: grid; gap: 5px; }
+.brandtiles > span { border-radius: 8px; padding: 8px 10px; display: flex; align-items: center; min-width: 0; overflow: hidden; }
+.brandtiles > .l { background: #ffffff; box-shadow: inset 0 0 0 1px rgba(0,0,0,.1); }
+.brandtiles > .d { background: #18191d; }
+#dec-word .opts, #dec-wcolor .opts { grid-template-columns: repeat(auto-fill, minmax(160px, 1fr)); }
+.brandrow { display: flex; flex-wrap: wrap; gap: 12px; }
+.brandrow > span { border-radius: 12px; padding: 18px 22px; display: inline-flex; align-items: center; }
 .opt .wm { color: var(--ink); font-family: -apple-system, BlinkMacSystemFont, "Helvetica Neue", sans-serif; font-size: 15px; }
 .opt .wm-rounded { font-family: ui-rounded, "SF Pro Rounded", "Nunito", sans-serif; }
 
@@ -273,6 +288,36 @@ function logoSvg(size, id, accent) {
   const a = ACCENTS[accent || state.choices.accent] || ACCENTS.indigo, g = 'g' + (gid++);
   return `<svg width="${size}" height="${size}" viewBox="0 0 64 64" aria-hidden="true" style="flex:none"><defs><linearGradient id="${g}" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="${a.top}"/><stop offset="1" stop-color="${a.lb}"/></linearGradient></defs><rect width="64" height="64" rx="14.5" fill="url(#${g})"/>${LOGOS[id] || LOGOS.folder}</svg>`;
 }
+/* Wordmark: "Mac" + "SPRINT", no logo. Solid or glossy colours, each with a light- and dark-background version. */
+const WCOLORS = {
+  navy: { name: 'Classic blue', note: 'Deep blue, like the reference.', l: '#2c4f9e', d: '#8fb0ff' },
+  indigo: { name: 'Indigo', note: 'Matches the current accent.', l: '#3b5bdb', d: '#8399ff' },
+  ink: { name: 'Graphite', note: 'Black on light, white on dark.', l: '#1d1d1f', d: '#f2f2f5' },
+  teal: { name: 'Teal', note: 'Fresh and calm.', l: '#0f7f82', d: '#46c9c5' },
+  violet: { name: 'Violet', note: 'Creative, hints at AI.', l: '#6a40cf', d: '#b49cff' },
+  'g-blue': { name: 'Glossy blue', note: 'Bright highlight on top, deep blue below.', gloss: true, l: ['#86b6ff', '#3c78e6', '#1f4fb4', '#3f78dc'], d: ['#cfe0ff', '#7fb0ff', '#3c78e6', '#6c9df0'] },
+  'g-silver': { name: 'Glossy silver', note: 'Brushed-metal look, like aluminium.', gloss: true, l: ['#9aa1ad', '#5d636e', '#3a3f48', '#6d7380'], d: ['#ffffff', '#d5d9e0', '#9aa0aa', '#e6e9ee'] },
+  'g-violet': { name: 'Glossy violet', note: 'Violet with a soft sheen.', gloss: true, l: ['#c3a3ff', '#7c4ddb', '#5a2fb5', '#8a5ce6'], d: ['#e6d9ff', '#b49cff', '#7c4ddb', '#a383f2'] },
+  'g-aqua': { name: 'Glossy aqua', note: 'Classic Mac “Aqua” shine.', gloss: true, l: ['#8fe1ff', '#1fa0d6', '#0b77a6', '#2c9bd0'], d: ['#d6f5ff', '#7fd6f5', '#1fa0d6', '#5cc3ea'] },
+  'g-sunset': { name: 'Glossy sunset', note: 'Warm orange to pink; bold.', gloss: true, l: ['#ffb36b', '#f26b3a', '#d6336c', '#ec5a4c'], d: ['#ffd7a8', '#ff9a6b', '#f2577f', '#ff8a6b'] },
+};
+const WSTYLES = {
+  space: { name: 'Mac SPRINT', note: 'A space between the two words.', sep: ' ', cls: '' },
+  joined: { name: 'MacSPRINT', note: 'One word; the capitals do the splitting.', sep: '', cls: '' },
+  bold: { name: 'Mac SPRINT, bold', note: 'SPRINT a little heavier.', sep: ' ', cls: 'w-bold' },
+  wide: { name: 'Mac S P R I N T', note: 'SPRINT spaced out; airy, premium.', sep: ' ', cls: 'w-wide' },
+  mixed: { name: 'Light Mac, bold SPRINT', note: 'Strong contrast between the words.', sep: '', cls: 'w-mixed' },
+};
+function wordmark(style, color, dark, size) {
+  const st = WSTYLES[style] || WSTYLES.space, co = WCOLORS[color] || WCOLORS.navy;
+  let paint;
+  if (co.gloss) {
+    const g = dark ? co.d : co.l;
+    paint = `background-image:linear-gradient(180deg, ${g[0]} 0%, ${g[1]} 48%, ${g[2]} 52%, ${g[3]} 100%);filter:drop-shadow(0 ${dark ? '0 6px' : '1px 0'} ${dark ? 'rgba(160,190,255,.25)' : 'rgba(255,255,255,.9)'})`;
+  } else paint = `color:${dark ? co.d : co.l}`;
+  return `<span class="wm2 ${st.cls}${co.gloss ? ' gloss' : ''}" style="font-size:${size}px;${paint}"><span class="m">Mac</span>${st.sep}<span class="s">SPRINT</span></span>`;
+}
+const brandTiles = (style, color, size = 17) => `<span class="brandtiles"><span class="l">${wordmark(style, color, false, size)}</span><span class="d">${wordmark(style, color, true, size)}</span></span>`;
 const WORDS = {
   classic: '<span class="wm wm-classic">MacSprint</span>',
   split: '<span class="wm wm-split">Mac<b>Sprint</b></span>',
@@ -300,6 +345,12 @@ const NEUTRALS = {
 const KINDS = [['Images', '#3a8dff', 215, 'photo', '2,280'], ['Videos', '#a46bf5', 275, 'film', '162'], ['Music', '#f2647e', 345, 'music', '34'], ['Documents', '#f0a23b', 35, 'doc', '201'], ['Archives', '#3fb985', 150, 'zip', '93'], ['Apps', '#3aa7d9', 195, 'app', '110']];
 
 const DECISIONS = [
+  { id: 'word', title: 'Name style', why: 'No logo: the name is the brand, written Mac + SPRINT in capitals with Apple’s system font.', def: 'space',
+    opts: Object.entries(WSTYLES).map(([id, w]) => [id, w.name, w.note]),
+    demo: (id) => brandTiles(id, state.choices.wcolor, 15) },
+  { id: 'wcolor', title: 'Name colour', why: 'Solid colours stay crisp at small sizes; glossy ones add a highlight band for big uses like the Home header and website.', def: 'navy',
+    opts: Object.entries(WCOLORS).map(([id, c]) => [id, c.name, c.note]),
+    demo: (id) => brandTiles(state.choices.word, id, 16) },
   { id: 'accent', title: 'Accent colour', why: 'The one colour for selection, the main button and links. Everything else stays neutral.', def: 'indigo',
     opts: [['indigo', 'Indigo', 'Calm, a little premium. Current.'], ['blue', 'System blue', 'Feels most like a built-in Mac app.'], ['teal', 'Teal', 'Fresh and clean; less common.'], ['violet', 'Violet', 'Creative; connects to “AI”.'], ['graphite', 'Graphite', 'No colour at all; very minimal.']],
     demo: (id) => `<div class="sw"><i style="background:${ACCENTS[id].l}"></i><i style="background:${ACCENTS[id].d}"></i></div>` },
@@ -328,12 +379,6 @@ const DECISIONS = [
     opts: [['outline', 'Outline', 'Thin lines, quiet. Current.'], ['filled', 'Filled', 'Solid shapes, stronger.'], ['color', 'Colour-coded', 'Each kind in its own colour.']] },
   { id: 'folders', title: 'Library folders', why: 'How the six file kinds appear on Home.', def: 'mac',
     opts: [['mac', 'macOS folders', 'Folder art with papers inside. Current.'], ['cards', 'Colour cards', 'Tinted cards with icons (Homy-like).'], ['tiles', 'Icon tiles', 'Simple rounded icon squares.']] },
-  { id: 'logo', title: 'Logo', why: 'The app mark in the sidebar, Dock and menu bar.', def: 'folder',
-    opts: [['folder', 'Sprint Folder', 'Folder with speed lines.'], ['chevron', 'Forward M', 'An M that points ahead.'], ['window', 'Spark Window', 'Mac window with an AI spark.'], ['stack', 'Card Sweep', 'Files stacking neatly.'], ['lens', 'Smart Lens', 'Search with a spark.'], ['monogram', 'MS Monogram', 'Clear at tiny sizes.']],
-    demo: (id) => logoSvg(30, id) },
-  { id: 'word', title: 'Wordmark', why: 'How the name is written next to the logo.', def: 'classic',
-    opts: [['classic', 'Classic', 'Bold system font.'], ['split', 'Two weights', 'Light Mac, heavy Sprint.'], ['rounded', 'Rounded', 'Lowercase, friendly.'], ['italic', 'In motion', 'Heavy italic, energetic.'], ['ai', 'With AI tag', 'Names the AI.']],
-    demo: (id) => `<span class="chipdemo">${WORDS[id]}</span>` },
   { id: 'ai', title: 'AI search default', why: 'Whether the ✦ AI switch in the search field starts on.', def: 'on',
     opts: [['on', 'On by default', 'Plain-English search first.'], ['off', 'Off by default', 'File-name search first; AI when asked.']] },
 ];
@@ -353,6 +398,9 @@ let mode = 'light';
 let ref = null, store = 'local', saveTimer = null, saving = Promise.resolve();
 try { const s = JSON.parse(localStorage.getItem('macsprint-foundations') || 'null'); if (s && s.choices) state = { choices: { ...defaults(), ...s.choices }, final: s.final || {} }; } catch (e) {}
 
+// Drop saved values that no longer exist (e.g. the old logo options).
+function clean(st) { for (const d of DECISIONS) if (!d.opts.some((o) => o[0] === st.choices[d.id])) { st.choices[d.id] = d.def; delete st.final[d.id]; } return st; }
+state = clean(state);
 function setSaved(text, ok) { const el = document.getElementById('saved'); el.classList.toggle('ok', !!ok); el.querySelector('span').textContent = text; }
 function save() {
   try { localStorage.setItem('macsprint-foundations', JSON.stringify(state)); } catch (e) {}
@@ -370,7 +418,7 @@ async function connect() {
     if (!db) { setSaved('Saved in this browser only. Use “Copy as text” to send it to Claude.', false); return; }
     ref = db.doc('foundations/decisions');
     const snap = await ref.get();
-    if (snap.exists) { const d = snap.data() || {}; state = { choices: { ...defaults(), ...(d.choices || {}) }, final: d.final || {} }; renderAll(); }
+    if (snap.exists) { const d = snap.data() || {}; state = clean({ choices: { ...defaults(), ...(d.choices || {}) }, final: d.final || {} }); renderAll(); }
     setSaved('Connected. Claude can read your choices.', true);
   } catch (e) { setSaved('Saved in this browser only. Use “Copy as text” to send it to Claude.', false); }
 }
@@ -392,7 +440,7 @@ function previewHtml() {
     : `<div class="fo" style="--k:${col};--h:${h}"><div class="fd"><i class="t"></i><i class="b"></i><i class="p"></i><i class="f"></i></div><b>${k}</b><small>${n}</small></div>`).join('');
   const aiOn = c.ai === 'on';
   return `<div class="win">
-    <aside class="side"><div class="lights"><i></i><i></i><i></i></div><div class="brand">${logoSvg(20, c.logo)}${WORDS[c.word]}</div>
+    <aside class="side"><div class="lights"><i></i><i></i><i></i></div><div class="brand">${wordmark(c.word, c.wcolor, mode === 'dark', 17)}</div>
       ${sb.map((r) => r === '-' ? '<div class="sep"></div>' : `<div class="row${r[4] ? ' sel' : ''}" style="--ic:${r[3]}">${ic(r[0], 14)}${r[1]}${r[2] ? `<em class="${r[5] || ''}">${r[2]}</em>` : ''}</div>`).join('')}</aside>
     <div class="main">
       <div class="tb"><span class="tbtitle">Home</span><div class="search">${ic(aiOn ? 'sparkles' : 'search', 12)}<span>${aiOn ? 'Ask anything, e.g. “pdfs from last week”' : 'Search file names'}</span><span class="kbd">⌘F</span><span class="ai${aiOn ? ' on' : ''}">${ic('sparkles', 10)}AI</span></div><span class="libsize">Library size <b>30.19 GB</b></span></div>
@@ -406,6 +454,7 @@ function previewHtml() {
     </div>
   </div>
   <div class="strip">
+    <span class="lbl">Name, large (Home header, website, App Store)</span><div class="brandrow"><span style="background:#ffffff;box-shadow:inset 0 0 0 1px rgba(0,0,0,.1)">${wordmark(c.word, c.wcolor, false, 40)}</span><span style="background:#18191d">${wordmark(c.word, c.wcolor, true, 40)}</span></div>
     <span class="lbl">Shared components</span>
     <div class="srow"><span class="b pri">Review moves</span><span class="b sec">Cancel</span><span class="b dan">${ic('trash', 11)}Move to Trash…</span><div class="segc"><span>All</span><span class="on">Images</span><span>Videos</span></div><span class="chk"></span><span class="swc"></span><span class="pill">Good</span><span class="toast">${ic('check', 12)}Moved to Trash</span></div>
     <div class="srow"><div class="cardsample"><b style="font-size:var(--p-big)">2.2 GB</b><span style="color:var(--p-text2)">Card</span></div><div class="search" style="max-width:260px">${ic('search', 12)}<span>Search field</span></div>
@@ -452,7 +501,7 @@ document.getElementById('decisions').addEventListener('click', (e) => {
   const b = e.target.closest('.opt'); if (!b) return;
   state.choices[b.dataset.dec] = b.dataset.opt;
   b.closest('.opts').querySelectorAll('.opt').forEach((x) => x.setAttribute('aria-pressed', String(x === b)));
-  if (b.dataset.dec === 'accent') renderAll(); else { renderPreview(); renderSummary(); }
+  if (['accent', 'word', 'wcolor'].includes(b.dataset.dec)) renderAll(); else { renderPreview(); renderSummary(); }
   save();
 });
 document.getElementById('decisions').addEventListener('change', (e) => {
