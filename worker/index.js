@@ -2,6 +2,7 @@
 //
 //   POST /api/waitlist          { "email": "…" }  → saves to D1, emails the owner (and the subscriber, if enabled)
 //   GET  /api/waitlist/export   ?key=EXPORT_KEY   → CSV of every sign-up, opens in Excel
+//   GET  /api/waitlist/test-email ?key=EXPORT_KEY → sends one test email to NOTIFY_TO and shows the result
 //
 // Bindings (wrangler.jsonc): ASSETS (static site), DB (D1), EMAIL (send_email).
 // Variables: MAIL_FROM, NOTIFY_TO, SEND_CONFIRMATION ("true" / "false"). Secret: EXPORT_KEY.
@@ -14,6 +15,7 @@ export default {
     const url = new URL(request.url);
     if (url.pathname === '/api/waitlist' && request.method === 'POST') return join(request, env, ctx);
     if (url.pathname === '/api/waitlist/export' && request.method === 'GET') return exportCsv(url, request, env);
+    if (url.pathname === '/api/waitlist/test-email' && request.method === 'GET') return testEmail(url, request, env);
     if (url.pathname.startsWith('/api/')) return json({ error: 'Not found' }, 404);
     return env.ASSETS.fetch(request);
   },
@@ -67,9 +69,32 @@ async function notify(env, email, when, country) {
   for (const r of results) if (r.status === 'rejected') console.error('waitlist email failed', r.reason?.code || '', r.reason?.message || r.reason);
 }
 
-async function exportCsv(url, request, env) {
+const authorized = (url, request, env) => {
   const key = url.searchParams.get('key') || (request.headers.get('Authorization') || '').replace(/^Bearer\s+/i, '');
-  if (!env.EXPORT_KEY || !timingSafeEqual(key, env.EXPORT_KEY)) return json({ error: 'Unauthorized' }, 401);
+  return Boolean(env.EXPORT_KEY) && timingSafeEqual(key, env.EXPORT_KEY);
+};
+
+// Sends one email the same way a sign-up does and reports Cloudflare's answer, so a setup problem
+// (domain not onboarded, plan without Email Sending, unverified address) shows up as a readable code.
+async function testEmail(url, request, env) {
+  if (!authorized(url, request, env)) return json({ error: 'Unauthorized' }, 401);
+  const setup = { MAIL_FROM: env.MAIL_FROM || null, NOTIFY_TO: env.NOTIFY_TO || null, EMAIL_binding: Boolean(env.EMAIL) };
+  if (!env.EMAIL || !env.MAIL_FROM || !env.NOTIFY_TO) return json({ ok: false, setup, error: 'Missing EMAIL binding, MAIL_FROM or NOTIFY_TO' }, 500);
+  try {
+    const sent = await env.EMAIL.send({
+      from: { name: 'MacSprint waitlist', email: env.MAIL_FROM },
+      to: env.NOTIFY_TO,
+      subject: 'MacSprint waitlist: test email',
+      text: 'If you can read this, waitlist emails work.',
+    });
+    return json({ ok: true, setup, messageId: sent?.messageId || null });
+  } catch (e) {
+    return json({ ok: false, setup, code: e?.code || null, error: e?.message || String(e) }, 502);
+  }
+}
+
+async function exportCsv(url, request, env) {
+  if (!authorized(url, request, env)) return json({ error: 'Unauthorized' }, 401);
   const { results } = await env.DB.prepare('SELECT email, created_at, country FROM signups ORDER BY created_at').all();
   const cell = (v) => `"${String(v ?? '').replace(/"/g, '""')}"`;
   // A byte-order mark makes Excel read the file as UTF-8.

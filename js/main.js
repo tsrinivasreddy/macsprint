@@ -4,6 +4,7 @@ import { DEMOS } from './demos.js';
 import { initProblems, initWaitlist, initShortcuts } from './sections.js';
 import { heroWindowMarkup, heroTryMarkup, bindHeroTry } from './home.js';
 import { initSpotlight } from './showcase.js';
+import { initHighlights } from './highlights.js';
 import { PHOTOS, BY_HUE } from './photos.js';
 
 function initReveal() {
@@ -29,6 +30,7 @@ heroTry.innerHTML = heroTryMarkup();
 bindHeroTry(heroTry, document.getElementById('hero-window'));
 initExplorer(document.getElementById('explorer'), DEMOS);
 initProblems(document.getElementById('problem-grid'));
+initHighlights(document.getElementById('hl-grid'));
 initSpotlight(document.getElementById('spot-grid'), DEMOS);
 initShortcuts(document.getElementById('keys-grid'));
 initWaitlist(document.querySelector('.waitlist-form'), document.querySelector('.waitlist-status'));

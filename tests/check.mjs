@@ -523,6 +523,16 @@ check('organizerPickEachMove', async (b) => {
   assert((await p.textContent('#explorer .d-approve')).includes('Approve 181 moves'), 'unticking a move should lower the count');
 });
 
+check('highlightsOpenTheirFeature', async (b) => {
+  const p = await open(b);
+  const tiles = p.locator('#highlights .hl-tile');
+  assert(await tiles.count() === 7, `expected 7 highlight tiles, got ${await tiles.count()}`);
+  assert(await p.locator('#highlights .hl-tile .ph[data-photo]').count() === 9, 'highlight pictures should use real photos');
+  await p.locator('#highlights .hl-tile[data-id="duplicates"]').click();
+  await p.waitForTimeout(300);
+  assert(await p.locator('#tab-duplicates').getAttribute('aria-selected') === 'true', 'clicking a tile should open that feature in the explorer');
+});
+
 check('featureSpotlightCards', async (b) => {
   const p = await open(b);
   const { n } = await p.evaluate(async () => ({ n: (await import('/js/features.js')).FEATURES.length }));
