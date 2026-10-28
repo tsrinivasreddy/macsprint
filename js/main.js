@@ -3,6 +3,7 @@ import { initExplorer } from './explorer.js';
 import { DEMOS } from './demos.js';
 import { initProblems, initWaitlist, initShortcuts } from './sections.js';
 import { heroWindowMarkup, heroTryMarkup, bindHeroTry } from './home.js';
+import { initSpotlight } from './showcase.js';
 
 function initReveal() {
   const els = document.querySelectorAll('.reveal');
@@ -27,6 +28,7 @@ heroTry.innerHTML = heroTryMarkup();
 bindHeroTry(heroTry, document.getElementById('hero-window'));
 initExplorer(document.getElementById('explorer'), DEMOS);
 initProblems(document.getElementById('problem-grid'));
+initSpotlight(document.getElementById('spot-grid'), DEMOS);
 initShortcuts(document.getElementById('keys-grid'));
 initWaitlist(document.querySelector('.waitlist-form'), document.querySelector('.waitlist-status'));
 initReveal();

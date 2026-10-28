@@ -55,7 +55,7 @@ check('heroHasTaglineAndCta', async (b) => {
   const body = await p.textContent('body');
   assert(body.includes('Your Mac. Smarter, faster, cleaner.'), 'tagline missing');
   assert(await p.locator('#overview a[href="#waitlist"]').count() > 0, 'hero CTA to #waitlist missing');
-  for (const id of ['overview', 'problems', 'explore', 'compare', 'shortcuts', 'privacy', 'trust', 'pricing', 'faq', 'waitlist']) {
+  for (const id of ['overview', 'problems', 'spotlight', 'explore', 'compare', 'shortcuts', 'privacy', 'trust', 'faq', 'waitlist']) {
     assert(await p.locator('#' + id).count() === 1, 'missing section #' + id);
   }
 });
@@ -212,9 +212,9 @@ check('trustPipelineHasEightSteps', async (b) => {
   assert((await p.textContent('#trust')).includes('never deletes, moves or renames'), 'safety promise missing');
 });
 
-check('pricingAndFaq', async (b) => {
+check('noPricingAndFaq', async (b) => {
   const p = await open(b);
-  assert((await p.textContent('#pricing')).includes('Price coming soon'), 'price copy missing');
+  assert(await p.locator('#pricing').count() === 0, 'pricing section should be gone');
   const first = p.locator('#faq details').first();
   assert(await p.locator('#faq details').count() >= 6, 'expected at least 6 FAQ items');
   await first.locator('summary').click();
@@ -521,6 +521,23 @@ check('organizerPickEachMove', async (b) => {
   await p.locator('#explorer .d-review').click();
   await p.locator('#explorer .d-moves-list input').first().uncheck();
   assert((await p.textContent('#explorer .d-approve')).includes('Approve 181 moves'), 'unticking a move should lower the count');
+});
+
+check('featureSpotlightCards', async (b) => {
+  const p = await open(b);
+  const { n } = await p.evaluate(async () => ({ n: (await import('/js/features.js')).FEATURES.length }));
+  const cards = p.locator('#spotlight .spot-card');
+  assert(await cards.count() === n, `expected ${n} spotlight cards, got ${await cards.count()}`);
+  for (let i = 0; i < n; i++) {
+    const c = cards.nth(i);
+    assert(await c.locator('.spot-problem').count() === 1 && await c.locator('.spot-use').count() === 1, 'card ' + i + ' needs a problem and a use case');
+    assert(await c.locator('.spot-shot .mac-window').count() === 1, 'card ' + i + ' needs a product shot');
+  }
+  await cards.first().locator('.spot-try').click();
+  await p.waitForTimeout(300);
+  const top = await p.evaluate(() => document.getElementById('explore').getBoundingClientRect().top);
+  assert(Math.abs(top) < 120, 'Try it did not open the explorer');
+  assert(p.errors.length === 0, 'errors: ' + p.errors.join(' | '));
 });
 
 check('libraryUsesStorageCards', async (b) => {
