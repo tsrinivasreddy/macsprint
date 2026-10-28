@@ -24,6 +24,15 @@ Nothing here needs a third-party service or a paid plan: storage is Cloudflare D
 
 In Discord: create a server → a channel → **Edit Channel → Integrations → Webhooks → New Webhook → Copy Webhook URL**. In Cloudflare, open the Worker → **Settings → Variables and secrets → Add → Secret**: name `DISCORD_WEBHOOK`, value the URL. With the Discord phone app, every new sign-up then pings you. The test link above also checks it. Never paste the URL anywhere public.
 
+### Telegram
+
+1. In Telegram, message **@BotFather** → `/newbot` → pick a name. It replies with a bot token.
+2. Open your new bot and press **Start**, then send it any message.
+3. Open `https://api.telegram.org/bot<TOKEN>/getUpdates` in a browser (on your own machine) and copy `"chat":{"id":…}`: that number is your chat id.
+4. In Cloudflare, Worker → **Settings → Variables and secrets → Add → Secret**: `TELEGRAM_BOT_TOKEN` (the token) and `TELEGRAM_CHAT_ID` (the number). The token lets anyone send as your bot, so keep it private.
+
+The test link checks Discord and Telegram.
+
 ## Using it
 
 - **New sign-ups**: you get an email for each one, with the running total.

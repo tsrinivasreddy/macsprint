@@ -5,7 +5,7 @@
 //   GET  /api/waitlist/test-email ?key=EXPORT_KEY → sends one test email to NOTIFY_TO and shows the result
 //
 // Bindings (wrangler.jsonc): ASSETS (static site), DB (D1), EMAIL (send_email, free via Email Routing).
-// Variables: MAIL_FROM (an address on your domain), NOTIFY_TO (your inbox, verified in Email Routing). Secrets: EXPORT_KEY, DISCORD_WEBHOOK (optional).
+// Variables: MAIL_FROM (an address on your domain), NOTIFY_TO (your inbox, verified in Email Routing). Secrets: EXPORT_KEY; optional phone alerts: DISCORD_WEBHOOK, or TELEGRAM_BOT_TOKEN + TELEGRAM_CHAT_ID.
 // Email Routing can only send to addresses you have verified, so the alert goes to you and subscribers get no email.
 
 import { EmailMessage } from 'cloudflare:email';
@@ -76,9 +76,20 @@ async function sendDiscord(env, content) {
   if (!res.ok) throw new Error(`Discord returned ${res.status}`);
 }
 
+// Phone alert: a Telegram bot message (free). Secrets TELEGRAM_BOT_TOKEN and TELEGRAM_CHAT_ID; leave them unset to skip.
+async function sendTelegram(env, text) {
+  if (!env.TELEGRAM_BOT_TOKEN || !env.TELEGRAM_CHAT_ID) return;
+  const res = await fetch(`https://api.telegram.org/bot${env.TELEGRAM_BOT_TOKEN}/sendMessage`, {
+    method: 'POST', headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ chat_id: env.TELEGRAM_CHAT_ID, text, disable_web_page_preview: true }),
+  });
+  if (!res.ok) throw new Error(`Telegram returned ${res.status}${res.status === 403 ? ' (open the bot and press Start)' : ''}`);
+}
+
 async function notify(env, email, when, country) {
   const { count } = await env.DB.prepare('SELECT COUNT(*) AS count FROM signups').first();
   await Promise.allSettled([
+    sendTelegram(env, `New waitlist sign-up: ${email}${country ? ` (${country})` : ''}. Total: ${count}.`),
     sendDiscord(env, `New waitlist sign-up: **${email.replace(/[*_`~|>\\]/g, '\\$&')}**${country ? ` (${country})` : ''}. Total: ${count}.`),
     emailOwner(env, email, when, country, count),
   ]).then((rs) => rs.forEach((r) => r.status === 'rejected' && console.error('waitlist alert failed', r.reason?.code || '', r.reason?.message || r.reason)));
@@ -102,14 +113,15 @@ const authorized = (url, request, env) => {
 // (domain not onboarded, plan without Email Sending, unverified address) shows up as a readable code.
 async function testEmail(url, request, env) {
   if (!authorized(url, request, env)) return json({ error: 'Unauthorized' }, 401);
-  const setup = { MAIL_FROM: env.MAIL_FROM || null, NOTIFY_TO: env.NOTIFY_TO || null, EMAIL_binding: Boolean(env.EMAIL), DISCORD_WEBHOOK: Boolean(env.DISCORD_WEBHOOK) };
+  const setup = { MAIL_FROM: env.MAIL_FROM || null, NOTIFY_TO: env.NOTIFY_TO || null, EMAIL_binding: Boolean(env.EMAIL), DISCORD_WEBHOOK: Boolean(env.DISCORD_WEBHOOK), TELEGRAM: Boolean(env.TELEGRAM_BOT_TOKEN && env.TELEGRAM_CHAT_ID) };
   const discord = await sendDiscord(env, 'Test from MacSprint: waitlist alerts reach this channel.').then(() => (env.DISCORD_WEBHOOK ? 'sent' : 'not set up'), (e) => `failed: ${e.message}`);
-  if (!env.EMAIL || !env.MAIL_FROM || !env.NOTIFY_TO) return json({ ok: false, setup, discord, error: 'Missing EMAIL binding, MAIL_FROM or NOTIFY_TO' }, 500);
+  const telegram = await sendTelegram(env, 'Test from MacSprint: waitlist alerts reach this chat.').then(() => (setup.TELEGRAM ? 'sent' : 'not set up'), (e) => `failed: ${e.message.replace(/bot\S+/, 'bot…')}`);
+  if (!env.EMAIL || !env.MAIL_FROM || !env.NOTIFY_TO) return json({ ok: false, setup, discord, telegram, error: 'Missing EMAIL binding, MAIL_FROM or NOTIFY_TO' }, 500);
   try {
     await sendMail(env, { to: env.NOTIFY_TO, subject: 'MacSprint waitlist: test email', text: 'If you can read this, waitlist emails work.' });
-    return json({ ok: true, setup, discord });
+    return json({ ok: true, setup, discord, telegram });
   } catch (e) {
-    return json({ ok: false, setup, discord, code: e?.code || null, error: e?.message || String(e) }, 502);
+    return json({ ok: false, setup, discord, telegram, code: e?.code || null, error: e?.message || String(e) }, 502);
   }
 }
 
