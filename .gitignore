@@ -1,2 +1,5 @@
 .superpowers/
 dist/
+site/
+.wrangler/
+node_modules/

@@ -128,7 +128,7 @@ export function heroWindowMarkup() {
     </div>`;
 }
 
-// Example searches under the hero window (idea from Seek): each one shows how the
+// Example searches under the hero window: each one shows how the
 // search reads the query, as tokens, and a few sample results. "Home" goes back.
 const TRY = [
   { q: 'videos from september', tokens: ['Videos', 'September'], rest: '', files: [['Trip.mov', 'Video · Sep 20', 200], ['Wedding-highlights.mov', 'Video · Sep 6', 330], ['Drone-footage.mp4', 'Video · Sep 2', 150]] },

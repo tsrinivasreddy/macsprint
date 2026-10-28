@@ -1,12 +1,6 @@
-// Single source of truth for MacSprint features. The Explorer, ⌘K palette,
-// problem cards and roadmap are all generated from these arrays.
+// Single source of truth for MacSprint features. The Explorer, ⌘K palette
+// and problem cards are all generated from these arrays.
 
-export const RELEASES = [
-  { id: 'At launch', title: 'Release 1.0', name: 'File, Image & Storage Essentials' },
-  { id: '1.1', title: 'Release 1.1', name: 'Smart Organization' },
-  { id: '1.2', title: 'Release 1.2', name: 'Everyday Productivity' },
-  { id: '2.0', title: 'Release 2.0', name: 'Smarter Photos' },
-];
 
 // 24×24 stroke icons (inner SVG markup).
 const I = {
@@ -26,7 +20,7 @@ const I = {
 export const FEATURES = [
   // ---------- Discover ----------
   {
-    id: 'home', group: 'Discover', icon: I.home, release: 'At launch', source: 'MacSprint',
+    id: 'home', group: 'Discover', icon: I.home,
     title: 'Home Dashboard', short: 'Storage, scans and quick actions',
     headline: 'Your Mac at a glance — measured, never guessed.',
     points: [
@@ -37,7 +31,7 @@ export const FEATURES = [
     ],
   },
   {
-    id: 'recents', group: 'Discover', icon: I.recents, release: 'At launch', source: 'Seek + Homy',
+    id: 'recents', group: 'Discover', icon: I.recents,
     title: 'Recents', short: 'Newest first, grouped by day',
     headline: 'The file you just downloaded is always first.',
     points: [
@@ -48,18 +42,18 @@ export const FEATURES = [
     ],
   },
   {
-    id: 'library', group: 'Discover', icon: I.library, release: 'At launch', source: 'Homy', meta: { text: '2,880' },
+    id: 'library', group: 'Discover', icon: I.library, meta: { text: '2,880' },
     title: 'Visual Library', short: 'Your whole Mac as big thumbnails',
     headline: 'Everything on your Mac, sorted by what it is.',
     points: [
-      'Browse Images, Videos, Music, Documents, Apps and Screenshots as large, clear thumbnails.',
+      'Browse images, videos, music, documents, apps and screenshots as large, clear thumbnails.',
       'Covers every folder you choose — not just one window at a time.',
-      'Groups downloads by where they came from — Safari, Mail, Slack and more.',
+      'Pin any folder to the sidebar under Locations.',
       'Works alongside Finder, not instead of it.',
     ],
   },
   {
-    id: 'images', group: 'Discover', icon: I.images, release: 'At launch', source: 'MacSprint', meta: { text: '2,280' },
+    id: 'images', group: 'Discover', icon: I.images, meta: { text: '2,280' },
     title: 'Smart Image Viewer', short: 'Open one image, browse the folder',
     headline: 'Open one photo. Press → for the next.',
     points: [
@@ -70,18 +64,18 @@ export const FEATURES = [
     ],
   },
   {
-    id: 'search', group: 'Discover', icon: I.search, release: 'At launch', source: 'MacSprint + Homy',
+    id: 'search', group: 'Discover', icon: I.search,
     title: 'Search', short: 'Names, meaning and text in images',
     headline: 'One search field. It reads your screenshots too.',
     points: [
       'Plain English becomes precise filters you can edit: type, date, size, folder and text.',
       'Finds words inside screenshots and photos with on-device text recognition.',
       'Every result says why it matched: by name, by meaning, or by text in the image.',
-      'Copy recognised text in one click. Without Apple Intelligence, name and text search still work.',
+      'Copy recognized text in one click. Without Apple Intelligence, name and text search still work.',
     ],
   },
   {
-    id: 'downloaded', group: 'Discover', icon: I.downloaded, release: 'At launch', source: 'Seek + Homy', meta: { text: '913' },
+    id: 'downloaded', group: 'Discover', icon: I.downloaded, meta: { text: '913' },
     title: 'Downloaded From', short: 'Files grouped by where they came from',
     headline: 'Remember who sent it, not what it was called.',
     points: [
@@ -92,19 +86,19 @@ export const FEATURES = [
     ],
   },
   {
-    id: 'clipboard', group: 'Discover', icon: I.clipboard, release: '1.2', source: 'MacSprint',
+    id: 'clipboard', group: 'Discover', icon: I.clipboard,
     title: 'Clipboard History', short: 'Never lose a copied item',
     headline: 'Everything you copied, searchable.',
     points: [
       'Text and image history with pinned snippets.',
-      'A quick-paste panel from the keyboard.',
+      'A quick-paste panel with ⇧⌘V, and a Copy button on every item.',
       'Pause anytime, exclude apps and set how long history is kept.',
-      'Stored locally; password fields are never recorded on purpose.',
+      'Stored only on your Mac. Password fields are never recorded.',
     ],
   },
   // ---------- Clean up ----------
   {
-    id: 'cleanup', group: 'Clean up', icon: I.cleanup, release: 'At launch', source: 'MacSprint + Homy', meta: { text: '14.1 GB', tone: 'good', label: 'up to 14.1 GB to review' },
+    id: 'cleanup', group: 'Clean up', icon: I.cleanup, meta: { text: '14.1 GB', tone: 'good', label: 'up to 14.1 GB to review' },
     title: 'Clean Up', short: 'Where space went, and getting it back',
     headline: 'See where your space went. Get it back safely.',
     points: [
@@ -115,27 +109,27 @@ export const FEATURES = [
     ],
   },
   {
-    id: 'duplicates', group: 'Clean up', icon: I.duplicates, release: '1.1 · 2.0', source: 'MacSprint + Homy',
+    id: 'duplicates', group: 'Clean up', icon: I.duplicates,
     title: 'Duplicate Finder', short: 'Exact copies and similar photos',
     headline: 'Same file, saved three times? Keep one.',
     points: [
       'Finds exact copies by size, then a partial check, then a full fingerprint.',
       'Groups copies with previews, locations and dates; protected files are never pre-selected.',
-      'Similar photos (bursts, small edits) get their own tab: compare side by side and keep the best. Coming in 2.0.',
+      'Similar photos (bursts, small edits) get their own tab: compare side by side and keep the best.',
     ],
   },
   {
-    id: 'organizer', group: 'Clean up', icon: I.organizer, release: '1.1', source: 'MacSprint',
+    id: 'organizer', group: 'Clean up', icon: I.organizer,
     title: 'Smart File Organizer', short: 'Tidy Downloads with a preview',
     headline: 'A tidy Downloads folder, on your approval.',
     points: [
-      'Suggests groups such as Documents, Images, Archives, Installers and Screenshots by month.',
-      'Dry-run preview of every move, with rename suggestions from file contents.',
-      'Never overwrites; name collisions are handled and every action is logged.',
+      'Suggests folders such as Documents, Images, Archives and Installers, plus screenshots sorted by month.',
+      'Shows every move before anything happens. Untick any file to leave it where it is.',
+      'Never overwrites a file: if a name is taken, a number is added. Every move is logged and can be undone.',
     ],
   },
   {
-    id: 'rename', group: 'Clean up', icon: I.rename, release: '1.1', source: 'Seek',
+    id: 'rename', group: 'Clean up', icon: I.rename,
     title: 'Smart Rename', short: 'Clear names for junk downloads',
     headline: '“document (2).pdf” becomes “Lease agreement 2026.pdf”.',
     points: [
@@ -165,10 +159,6 @@ export const PROBLEMS = [
 
 export const iconSvg = (inner, size = 18) =>
   `<svg viewBox="0 0 24 24" width="${size}" height="${size}" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">${inner}</svg>`;
-
-export const badgeClass = (release) =>
-  release === 'At launch' ? 'badge badge-launch' : release.startsWith('2') ? 'badge badge-later' : 'badge badge-soon';
-export const badgeLabel = (release) => (release === 'At launch' ? 'At launch' : 'Coming in ' + release);
 
 export const SHORTCUTS = [
   { group: 'Go', items: [['Home', ['⇧', '⌘', 'H']], ['Recents', ['⇧', '⌘', 'R']], ['Library', ['⇧', '⌘', 'L']], ['Downloaded From', ['⇧', '⌘', 'J']], ['Clipboard', ['⇧', '⌘', 'V']], ['Clean Up', ['⇧', '⌘', 'K']], ['Duplicates', ['⇧', '⌘', 'D']], ['Organizer', ['⇧', '⌘', 'O']]] },

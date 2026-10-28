@@ -1,6 +1,6 @@
 // Feature Explorer: a Mac-style window whose sidebar navigates every feature,
 // plus a ⌘K command palette. Selection is mirrored to #feature-<id>.
-import { FEATURES, iconSvg, badgeClass, badgeLabel } from './features.js';
+import { FEATURES, iconSvg } from './features.js';
 
 const HASH_PREFIX = '#feature-';
 const DEFAULT_ID = 'home';
@@ -19,8 +19,7 @@ function sidebarHtml() {
         <button type="button" role="tab" id="tab-${f.id}" data-id="${f.id}" aria-selected="false" aria-controls="ex-pane" tabindex="-1">
           <span class="ex-tab-icon">${iconSvg(f.icon)}</span>
           <span class="ex-tab-text">${esc(f.title)}</span>
-          ${f.release !== 'At launch' ? `<span class="ex-tab-rel">${esc(f.release.split(' ')[0])}</span>`
-            : f.meta ? `<span class="ex-tab-meta${f.meta.tone ? ' is-' + f.meta.tone : ''}"${f.meta.label ? ` aria-label="${esc(f.meta.label)}"` : ''}>${esc(f.meta.text)}</span>` : ''}
+          ${f.meta ? `<span class="ex-tab-meta${f.meta.tone ? ' is-' + f.meta.tone : ''}"${f.meta.label ? ` aria-label="${esc(f.meta.label)}"` : ''}>${esc(f.meta.text)}</span>` : ''}
         </button>`).join('')}
     </div>`).join('');
 }
@@ -61,14 +60,12 @@ function render(root) {
           <header class="ex-pane-head">
             <span class="ex-pane-icon"></span>
             <div class="ex-pane-titles"><h3></h3><p class="ex-pane-short"></p></div>
-            <span class="ex-pane-badge"></span>
           </header>
           <div class="ex-demo"></div>
           <p class="ex-demo-note">Interactive preview with sample files — not your data.</p>
           <div class="ex-info">
             <p class="ex-headline"></p>
             <ul class="ex-points"></ul>
-            <p class="ex-source"></p>
           </div>
           <footer class="ex-pane-foot">
             <button type="button" class="ex-nav" data-step="-1" aria-label="Previous feature">‹ <span></span></button>
@@ -108,10 +105,8 @@ export function selectFeature(id, { focus = false, updateHash = true, param = nu
     pane.querySelector('.ex-pane-icon').innerHTML = iconSvg(f.icon, 26);
     pane.querySelector('h3').textContent = f.title;
     pane.querySelector('.ex-pane-short').textContent = f.short;
-    pane.querySelector('.ex-pane-badge').innerHTML = `<span class="${badgeClass(f.release)}">${esc(badgeLabel(f.release))}</span>`;
     pane.querySelector('.ex-headline').textContent = f.headline;
     pane.querySelector('.ex-points').innerHTML = f.points.map((p) => `<li>${esc(p)}</li>`).join('');
-    pane.querySelector('.ex-source').textContent = { Homy: 'Inspired by Homy', Seek: 'Inspired by Seek', 'Seek + Homy': 'Seen in both Seek and Homy, done the MacSprint way' }[f.source] || (f.source.includes('Homy') ? 'Combines ideas from MacSprint and Homy' : '');
 
     const i = FEATURES.indexOf(f);
     const prev = FEATURES[(i - 1 + FEATURES.length) % FEATURES.length];
@@ -244,7 +239,6 @@ function initPalette() {
         <span class="ex-tab-icon">${iconSvg(f.icon)}</span>
         <span class="pal-title">${esc(f.title)}</span>
         <span class="pal-short">${esc(f.short)}</span>
-        <span class="${badgeClass(f.release)}">${esc(f.release)}</span>
       </li>`).join('');
     empty.hidden = results.length > 0;
     input.setAttribute('aria-activedescendant', results.length ? 'pal-' + results[active].id : '');

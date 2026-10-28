@@ -53,9 +53,9 @@ check('heroHasTaglineAndCta', async (b) => {
   const h1 = await p.textContent('h1');
   assert(h1 && h1.includes('MacSprint AI'), 'h1 missing MacSprint AI: ' + h1);
   const body = await p.textContent('body');
-  assert(body.includes('Your Mac. Smarter, Faster, Cleaner.'), 'tagline missing');
+  assert(body.includes('Your Mac. Smarter, faster, cleaner.'), 'tagline missing');
   assert(await p.locator('#overview a[href="#waitlist"]').count() > 0, 'hero CTA to #waitlist missing');
-  for (const id of ['overview', 'problems', 'explore', 'compare', 'shortcuts', 'privacy', 'trust', 'roadmap', 'pricing', 'faq', 'waitlist']) {
+  for (const id of ['overview', 'problems', 'explore', 'compare', 'shortcuts', 'privacy', 'trust', 'pricing', 'faq', 'waitlist']) {
     assert(await p.locator('#' + id).count() === 1, 'missing section #' + id);
   }
 });
@@ -212,16 +212,6 @@ check('trustPipelineHasEightSteps', async (b) => {
   assert((await p.textContent('#trust')).includes('never deletes, moves or renames'), 'safety promise missing');
 });
 
-check('roadmapListsAllFeatures', async (b) => {
-  const p = await open(b);
-  const features = await getFeatures(p);
-  const cols = p.locator('#roadmap .roadmap-col');
-  assert(await cols.count() === 4, 'expected 4 roadmap columns');
-  const text = await p.textContent('#roadmap');
-  for (const label of ['At launch', '1.1', '1.2', '2.0']) assert(text.includes(label), 'missing release ' + label);
-  for (const f of features) assert(text.includes(f.title), 'roadmap missing ' + f.title);
-});
-
 check('pricingAndFaq', async (b) => {
   const p = await open(b);
   assert((await p.textContent('#pricing')).includes('Price coming soon'), 'price copy missing');
@@ -243,7 +233,7 @@ check('waitlistHonestWithoutEndpoint', async (b) => {
   await p.locator('#waitlist button[type=submit]').click();
   await p.waitForTimeout(200);
   const status = await p.textContent('#waitlist [role=status]');
-  assert(status.includes("Waitlist isn't connected yet"), 'honest not-connected message missing: ' + status);
+  assert(status.includes("doesn't send your email anywhere"), 'honest not-connected message missing: ' + status);
   assert(!/you're on the list|thanks for joining/i.test(status), 'fake success shown');
   assert(external.length === 0, 'unexpected network requests: ' + external.join(','));
 });
@@ -330,7 +320,7 @@ check('textContrastAA', async (b) => {
         const [l1, l2] = [lum(f), lum(bg)].sort((x, y) => y - x);
         return (l1 + 0.05) / (l2 + 0.05);
       };
-      const sels = ['.ex-demo-note', '.ex-group-label', '.ex-tab-rel', '.d-label', '.badge-launch', '.btn', '[role=tab][aria-selected=true]', '.d-results mark'];
+      const sels = ['.ex-demo-note', '.ex-group-label', '.d-label', '.btn', '[role=tab][aria-selected=true]', '.d-results mark'];
       const fails = [];
       for (const s of sels) {
         const el = document.querySelector(s);
@@ -341,36 +331,12 @@ check('textContrastAA', async (b) => {
       return fails;
     });
     assert(bad.length === 0, `${scheme}: low contrast: ` + bad.join(', '));
-    for (const [hash, sel] of [['#feature-duplicates', '.ex-pane .badge-soon'], ['#feature-search', '.ex-pane .badge-launch']]) {
-      await p.evaluate((h) => { location.hash = h; }, hash);
-      await p.waitForTimeout(100);
-      const r = await p.evaluate((s) => {
-        const el = document.querySelector(s);
-        const rgb = (c) => c.match(/[\d.]+/g).map(Number);
-        const lum = ([r, g, b]) => [r, g, b].map((v) => { v /= 255; return v <= 0.03928 ? v / 12.92 : ((v + 0.055) / 1.055) ** 2.4; }).reduce((a, v, i) => a + v * [0.2126, 0.7152, 0.0722][i], 0);
-        const pane = rgb(getComputedStyle(document.querySelector('.ex-window')).backgroundColor);
-        const bgc = rgb(getComputedStyle(el).backgroundColor); const a = bgc[3] ?? 1;
-        const bg = pane.slice(0, 3).map((v, i) => v * (1 - a) + bgc[i] * a);
-        const [l1, l2] = [lum(rgb(getComputedStyle(el).color)), lum(bg)].sort((x, y) => y - x);
-        return (l1 + 0.05) / (l2 + 0.05);
-      }, sel);
-      assert(r >= 4.5, `${scheme}: ${sel} contrast ${r.toFixed(2)}`);
-    }
   }
 });
 
 check('sampleResultsNotCalledReal', async (b) => {
   const p = await open(b, { hash: '#feature-search' });
   assert(!(await p.textContent('#explorer .ex-demo')).includes('Real files'), 'sample results labelled as real files');
-});
-
-check('roadmapLinkToCurrentFeatureScrolls', async (b) => {
-  const p = await open(b, { hash: '#feature-images' });
-  await p.locator('#roadmap a', { hasText: 'Smart Image Viewer' }).scrollIntoViewIfNeeded();
-  await p.locator('#roadmap a', { hasText: 'Smart Image Viewer' }).click();
-  await p.waitForTimeout(200);
-  const top = await p.evaluate(() => document.getElementById('explore').getBoundingClientRect().top);
-  assert(Math.abs(top) < 120, 'roadmap link did not scroll to explorer, top=' + top);
 });
 
 check('mobileSelectedPillVisible', async (b) => {
@@ -536,6 +502,25 @@ check('heroTrySearchChips', async (b) => {
   assert((await p.textContent('#hero-window .hw-content')).includes('Invoice 0412.pdf'), 'hero results missing');
   await p.locator('#hero-try .hero-try-chip', { hasText: 'Home' }).click();
   assert((await p.textContent('#hero-window .hw-content')).includes('Library'), 'Home chip did not restore the dashboard');
+});
+
+check('noVersionsOrOtherAppNames', async (b) => {
+  const p = await open(b);
+  const t = await p.evaluate(() => document.body.innerText);
+  for (const w of [/\bHomy\b/, /\bSeek\b/, /inspired/i, /At launch/, /Coming in/, /\b1\.x\b/, /\bRelease \d/, /\b[12]\.[0-9]\b(?! ?[GMK]B)/]) assert(!w.test(t), 'page still shows ' + w);
+});
+
+check('clipboardCopyEachItem', async (b) => {
+  const p = await open(b, { hash: '#feature-clipboard' });
+  const n = await p.locator('#explorer .d-clip-list li').count();
+  assert(await p.locator('#explorer .d-copyitem').count() === n, 'every clipboard item needs a Copy button');
+});
+
+check('organizerPickEachMove', async (b) => {
+  const p = await open(b, { hash: '#feature-organizer' });
+  await p.locator('#explorer .d-review').click();
+  await p.locator('#explorer .d-moves-list input').first().uncheck();
+  assert((await p.textContent('#explorer .d-approve')).includes('Approve 181 moves'), 'unticking a move should lower the count');
 });
 
 check('libraryUsesStorageCards', async (b) => {

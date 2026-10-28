@@ -148,7 +148,7 @@ const QUERIES = [
 // Why a result matched: one search covers names, meaning (AI) and text inside images.
 const WHY = { name: 'Matched by name', meaning: 'Matched by meaning', text: 'Text in image' };
 // The AI's reading of a query is shown as removable tokens in the field, with any leftover
-// words after them, and a status bar under the results (ideas adapted from Seek).
+// words after them, and a status bar under the results.
 function search(el) {
   let idx = 0, timer = null, removed = 0;
   el.innerHTML = `
@@ -449,28 +449,38 @@ function duplicates(el) {
 function organizer(el) {
   const groups = [['Documents', 64, 'doc'], ['Images', 48, 'img'], ['Archives', 31, 'arc'], ['Installers', 22, 'dmg'], ['Screenshots', 17, 'vid']];
   const moves = [
-    ['Q3-report-final.pdf', 'Documents/'], ['IMG_4471.jpeg', 'Images/'], ['Screenshot 2026-10-02.png', 'Screenshots/2026-10/'],
-    ['fonts-pack.zip', 'Archives/'], ['Figma-installer.dmg', 'Installers/'], ['scan0012.pdf', 'Documents/ → “Electricity-bill-Sep-2026.pdf”'],
+    ['Q3-report-final.pdf', 'Documents'], ['IMG_4471.jpeg', 'Images'], ['Screenshot 2026-10-02.png', 'Screenshots/2026-10'],
+    ['fonts-pack.zip', 'Archives'], ['Figma-installer.dmg', 'Installers'], ['scan0012.pdf', 'Documents, renamed “Electricity-bill-Sep-2026.pdf”'],
   ];
+  const TOTAL = 182, shown = moves.length;
   el.innerHTML = `
     <div class="d-org">
-      <p class="d-org-sum"><b>Downloads</b> — 210 files found · <b>182 proposed moves</b> · 28 left unchanged</p>
+      <p class="d-org-sum"><b>Downloads</b>: 210 files found · <b>${TOTAL} proposed moves</b> · 28 left unchanged</p>
       <div class="d-org-bars">${groups.map(([n, c, k]) => `<div><span>${n}</span><i style="--w:${(c / 64) * 100}%;background:var(--c-${k})"></i><b>${c}</b></div>`).join('')}</div>
-      <ul class="d-moves" hidden>${moves.map(([f, d]) => `<li><span>${esc(f)}</span><em>→ ${esc(d)}</em></li>`).join('')}<li class="d-more">…and 176 more</li></ul>
+      <div class="d-moves-wrap" hidden>
+        <div class="d-row-head"><p class="d-label">Choose what moves</p><span><button type="button" class="btn btn-small btn-ghost" data-all="1">Select all</button> <button type="button" class="btn btn-small btn-ghost" data-all="0">Select none</button></span></div>
+        <ul class="d-checks d-moves-list">${moves.map(([f, d], i) => `<li><label><input type="checkbox" data-i="${i}" checked> <span>${esc(f)}<small>→ ${esc(d)}</small></span></label></li>`).join('')}<li class="d-muted">…and ${TOTAL - shown} more, all selected</li></ul>
+      </div>
       <div class="d-clean-foot">
         <span class="d-total" role="status">Nothing moves until you approve.</span>
-        <span><button type="button" class="btn btn-small btn-ghost d-review">Review moves</button> <button type="button" class="btn btn-small d-approve" disabled>Approve 182 moves</button></span>
+        <span><button type="button" class="btn btn-small btn-ghost d-review">Review moves</button> <button type="button" class="btn btn-small d-approve" disabled>Approve ${TOTAL} moves</button></span>
       </div>
     </div>`;
   const approve = el.querySelector('.d-approve');
-  el.querySelector('.d-review').addEventListener('click', () => {
-    el.querySelector('.d-moves').hidden = false;
-    approve.disabled = false;
-    el.querySelector('.d-total').textContent = 'Reviewed. Collisions are renamed, never overwritten.';
-  });
+  const picked = () => TOTAL - shown + el.querySelectorAll('.d-moves-list input:checked').length;
+  const count = () => {
+    const n = picked();
+    approve.textContent = `Approve ${n} move${n === 1 ? '' : 's'}`;
+    approve.disabled = n === 0;
+    el.querySelector('.d-total').textContent = `${n} of ${TOTAL} selected. Untick any file to leave it where it is.`;
+  };
+  el.querySelector('.d-review').addEventListener('click', () => { el.querySelector('.d-moves-wrap').hidden = false; count(); });
+  bindAll(el, '.d-moves-list input', 'change', count);
+  bindAll(el, '[data-all]', 'click', (e) => { el.querySelectorAll('.d-moves-list input').forEach((x) => { x.checked = e.currentTarget.dataset.all === '1'; }); count(); });
   approve.addEventListener('click', () => {
+    const n = picked();
     approve.disabled = true;
-    el.querySelector('.d-total').textContent = 'Done — 182 files moved. Undo from File Action History.';
+    el.querySelector('.d-total').textContent = `Done: ${n} files moved. Undo any of it from File Action History.`;
   });
 }
 
@@ -498,10 +508,20 @@ function clipboard(el) {
     const list = [...items.filter((x) => x.pin), ...items.filter((x) => !x.pin)].filter((x) => x.t.toLowerCase().includes(q));
     el.querySelector('.d-clip-list').innerHTML = list.length ? list.map((x) => `
       <li>${x.img !== undefined ? ph(x.img, 'aria-hidden="true"') : ''}<span>${esc(x.t)}</span>
+        <button type="button" class="d-copyitem" aria-label="Copy ${esc(x.t)}" data-t="${esc(x.t)}">${svg(ICON.copy, 13)}<span>Copy</span></button>
         <button type="button" class="d-pin" aria-pressed="${x.pin}" aria-label="${x.pin ? 'Unpin' : 'Pin'} ${esc(x.t)}" data-t="${esc(x.t)}">${svg(ICON.pin, 14)}</button></li>`).join('') : '<li class="d-muted">Nothing here</li>';
   };
   input.addEventListener('input', draw);
-  el.querySelector('.d-clip-list').addEventListener('click', (e) => {
+  el.querySelector('.d-clip-list').addEventListener('click', async (e) => {
+    const c = e.target.closest('.d-copyitem');
+    if (c) {
+      const status = el.querySelector('.d-status');
+      try { await navigator.clipboard.writeText(c.dataset.t); status.textContent = `Copied “${c.dataset.t}”. Paste it anywhere with ⌘V.`; }
+      catch { status.textContent = 'Copy is unavailable in this browser.'; }
+      c.querySelector('span').textContent = 'Copied';
+      setTimeout(() => { if (c.isConnected) c.querySelector('span').textContent = 'Copy'; }, 1500);
+      return;
+    }
     const b = e.target.closest('.d-pin'); if (!b) return;
     const it = items.find((x) => x.t === b.dataset.t); it.pin = !it.pin; draw();
   });
@@ -523,7 +543,7 @@ function similar(el) {
           <div class="d-sim-row">${[0, 1, 2, 3].map((k) => `<button type="button" class="ph${k === 1 ? ' best' : ''}" style="--h:${h + k * 6};filter:brightness(${1 - k * 0.06})" aria-label="${n} shot ${k + 1}${k === 1 ? ', suggested best' : ''}" data-g="${gi}" data-k="${k}">${k === 1 ? `<em>${svg(ICON.star, 12)} Best</em>` : ''}</button>`).join('')}</div>
         </div>`).join('')}
       <div class="d-compare" hidden><span class="ph"></span><span class="ph"></span><p>Side-by-side compare</p></div>
-      <p class="d-foot">Similar is not identical, so nothing is selected for you: compare, then keep the best. Coming in 2.0.</p>
+      <p class="d-foot">Similar is not identical, so nothing is selected for you: compare, then keep the best.</p>
     </div>`;
   bindAll(el, '.d-sim-row .ph', 'click', (e) => {
     const g = +e.currentTarget.dataset.g, k = +e.currentTarget.dataset.k, h = sets[g][0];

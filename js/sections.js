@@ -1,5 +1,5 @@
-// Generated page sections: problem cards, roadmap, and the waitlist form.
-import { FEATURES, PROBLEMS, RELEASES, SHORTCUTS, iconSvg } from './features.js';
+// Generated page sections: problem cards, shortcuts and the waitlist form.
+import { FEATURES, PROBLEMS, SHORTCUTS, iconSvg } from './features.js';
 import { selectFeature } from './explorer.js';
 
 const byId = new Map(FEATURES.map((f) => [f.id, f]));
@@ -25,26 +25,6 @@ export function initProblems(grid) {
   });
 }
 
-export function initRoadmap(grid) {
-  grid.innerHTML = RELEASES.map((r) => {
-    const items = FEATURES.filter((f) => f.release.split(' · ').includes(r.id) || f.release === r.id);
-    return `
-      <article class="roadmap-col reveal">
-        <p class="roadmap-rel">${r.id === 'At launch' ? 'At launch' : r.id}</p>
-        <h3>${r.name}</h3>
-        <ul>${items.map((f) => `<li><a href="#feature-${f.id}" data-id="${f.id}">${iconSvg(f.icon, 16)}<span>${f.title}</span></a></li>`).join('')}</ul>
-      </article>`;
-  }).join('');
-  grid.addEventListener('click', (e) => {
-    const a = e.target.closest('a[data-id]');
-    if (!a) return;
-    e.preventDefault();
-    selectFeature(a.dataset.id);
-    document.getElementById('explore').scrollIntoView({ block: 'start' });
-    document.getElementById('tab-' + a.dataset.id).focus({ preventScroll: true });
-  });
-}
-
 export function initWaitlist(form, status) {
   const input = form.querySelector('input[type=email]');
   form.addEventListener('submit', async (e) => {
@@ -58,7 +38,7 @@ export function initWaitlist(form, status) {
     }
     const endpoint = form.dataset.endpoint?.trim();
     if (!endpoint) {
-      status.textContent = "Waitlist isn't connected yet — sign-ups open soon. Your email was not sent anywhere.";
+      status.textContent = "The waitlist opens soon. This preview doesn't send your email anywhere.";
       status.classList.add('is-info');
       return;
     }
@@ -70,12 +50,13 @@ export function initWaitlist(form, status) {
         headers: { 'Content-Type': 'application/json', Accept: 'application/json' },
         body: JSON.stringify({ email: input.value }),
       });
-      if (!res.ok) throw new Error(String(res.status));
-      status.textContent = "You're on the list. We'll email you once, when MacSprint AI is ready.";
+      const data = await res.json().catch(() => ({}));
+      if (!res.ok) throw new Error(data.error || '');
+      status.textContent = data.already ? "You're already on the list. We'll email you once, when MacSprint AI is ready." : "You're on the list. Check your inbox for a confirmation. We'll email you once more, when MacSprint AI is ready.";
       status.classList.add('is-ok');
       form.reset();
-    } catch {
-      status.textContent = 'Something went wrong. Please try again in a moment.';
+    } catch (err) {
+      status.textContent = err.message || 'Something went wrong. Please try again in a moment.';
       status.classList.add('is-error');
     } finally {
       btn.disabled = false;

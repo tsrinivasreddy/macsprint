@@ -8,7 +8,7 @@ See [`design/README.md`](design/README.md) for the feature flows, design course 
 
 # Website
 
-A single-page, Apple-style marketing site for **MacSprint AI** ("Your Mac. Smarter, Faster, Cleaner.").
+A single-page, Apple-style marketing site for **MacSprint AI** ("Your Mac. Smarter, faster, cleaner.").
 Its centerpiece is the **Feature Explorer**: a Mac-style app window where every one of the 10 features
 (from the MacSprint product brief plus the unique ideas from Homy) can be explored from one interface.
 
@@ -39,7 +39,7 @@ python3 -m http.server 8000
 | `js/features.js` | **Single source of truth** for features, releases and problem cards |
 | `js/explorer.js` | Feature Explorer, keyboard navigation, deep links, ⌘K palette |
 | `js/demos.js` | One interactive demo per feature id |
-| `js/sections.js` | Problem cards, roadmap and waitlist form |
+| `js/sections.js` | Problem cards, shortcuts and waitlist form |
 | `tests/check.mjs` | Browser checks (Playwright) |
 | `tests/screens.mjs` | Screenshots at desktop/mobile × light/dark |
 
@@ -50,17 +50,13 @@ python3 -m http.server 8000
 
 The sidebar, palette, roadmap and release badges update automatically.
 
-## Connect the waitlist
+## Waitlist and hosting
 
-The form never fakes success. Until it is connected, it tells the visitor
-"Waitlist isn't connected yet" and sends nothing.
+The site is deployed to Cloudflare as one Worker that also runs the waitlist (D1 storage, email to you
+and the subscriber, and a CSV export for Excel). Setup and use: [docs/DEPLOY.md](docs/DEPLOY.md).
 
-To collect sign-ups, set `data-endpoint` on the form in `index.html` to any service that accepts a
-JSON `POST` of `{ "email": "…" }` (for example Formspree):
-
-```html
-<form class="waitlist-form" data-endpoint="https://formspree.io/f/your-id" novalidate>
-```
+Opened straight from the repo (or as a claude.ai preview), the form keeps `data-endpoint=""` and honestly
+says it sends nothing; `tools/build-site.mjs` points it at `/api/waitlist` for the live site.
 
 ## Deploy
 

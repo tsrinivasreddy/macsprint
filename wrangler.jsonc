@@ -1,0 +1,22 @@
+{
+  // MacSprint website + waitlist API. See docs/DEPLOY.md.
+  "name": "macsprint",
+  "main": "worker/index.js",
+  "compatibility_date": "2026-10-01",
+  "build": { "command": "node tools/build-site.mjs" },
+  "assets": { "directory": "./site", "binding": "ASSETS", "run_worker_first": ["/api/*"] },
+  "routes": [
+    { "pattern": "macsprint.com", "custom_domain": true },
+    { "pattern": "www.macsprint.com", "custom_domain": true }
+  ],
+  "d1_databases": [
+    { "binding": "DB", "database_name": "macsprint-waitlist", "database_id": "REPLACE_WITH_D1_DATABASE_ID" }
+  ],
+  "send_email": [{ "name": "EMAIL" }],
+  "vars": {
+    "MAIL_FROM": "waitlist@macsprint.com",
+    "NOTIFY_TO": "REPLACE_WITH_YOUR_EMAIL",
+    "SEND_CONFIRMATION": "true"
+  },
+  "observability": { "enabled": true }
+}
