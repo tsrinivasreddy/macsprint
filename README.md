@@ -1,4 +1,12 @@
-# MacSprint AI — website
+# MacSprint AI
+
+Marketing website (this folder) and design workspace (`design/`).
+
+## Design workspace
+
+See [`design/README.md`](design/README.md) for the feature flows, design course and style sample.
+
+# Website
 
 A single-page, Apple-style marketing site for **MacSprint AI** ("Your Mac. Smarter, Faster, Cleaner.").
 Its centerpiece is the **Feature Explorer**: a Mac-style app window where every one of the 16 features

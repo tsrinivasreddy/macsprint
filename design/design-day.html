@@ -1,0 +1,733 @@
+<title>MacSprint Design Day</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500;12..96,700;12..96,800&family=IBM+Plex+Mono:wght@400;500;600&family=IBM+Plex+Sans:wght@400;500;600&display=swap">
+<style>
+/* Layout: a day planner. A proportional day strip on top, a sticky timetable rail on the left, lessons on the right. */
+:root {
+  --paper: #f4f5f8;
+  --sheet: #ffffff;
+  --ink: #14161b;
+  --ink-2: #4e5461;
+  --ink-3: #626877;
+  --rule: rgba(20, 22, 27, 0.1);
+  --accent: #3346d3;
+  --accent-ink: #2b3bb8;
+  --accent-soft: rgba(51, 70, 211, 0.09);
+  --done: #1d7a4b;
+  --done-soft: rgba(29, 122, 75, 0.1);
+  --wrong: #b4232f;
+  --wrong-soft: rgba(180, 35, 47, 0.09);
+  --break: rgba(20, 22, 27, 0.05);
+  --code-bg: #f0f1f5;
+  --display: "Bricolage Grotesque", "Avenir Next", system-ui, sans-serif;
+  --body: "IBM Plex Sans", -apple-system, "Segoe UI", system-ui, sans-serif;
+  --mono: "IBM Plex Mono", ui-monospace, "SF Mono", Menlo, monospace;
+}
+@media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) {
+  --paper: #0f1115; --sheet: #171a20; --ink: #e9ebf0; --ink-2: #b0b5c1; --ink-3: #959baa; --rule: rgba(255,255,255,0.09);
+  --accent: #8fa0ff; --accent-ink: #a9b6ff; --accent-soft: rgba(143,160,255,0.13); --done: #4cd38a; --done-soft: rgba(76,211,138,0.12);
+  --wrong: #ff7a85; --wrong-soft: rgba(255,122,133,0.12); --break: rgba(255,255,255,0.04); --code-bg: #1e222a; color-scheme: dark; } }
+:root[data-theme="dark"] {
+  --paper: #0f1115; --sheet: #171a20; --ink: #e9ebf0; --ink-2: #b0b5c1; --ink-3: #959baa; --rule: rgba(255,255,255,0.09);
+  --accent: #8fa0ff; --accent-ink: #a9b6ff; --accent-soft: rgba(143,160,255,0.13); --done: #4cd38a; --done-soft: rgba(76,211,138,0.12);
+  --wrong: #ff7a85; --wrong-soft: rgba(255,122,133,0.12); --break: rgba(255,255,255,0.04); --code-bg: #1e222a; color-scheme: dark; }
+
+* { box-sizing: border-box; }
+body { background: var(--paper); color: var(--ink); font: 16px/1.6 var(--body); -webkit-font-smoothing: antialiased; overflow-x: hidden;
+  padding-left: max(16px, env(safe-area-inset-left, 0px)); padding-right: max(16px, env(safe-area-inset-right, 0px)); padding-block: 0 64px; }
+h1, h2, h3, h4 { font-family: var(--display); line-height: 1.12; margin: 0; text-wrap: balance; letter-spacing: -0.02em; }
+p { margin: 0; }
+a { color: var(--accent-ink); }
+button, input, select, textarea { font: inherit; color: inherit; }
+button { cursor: pointer; }
+:focus-visible { outline: 2.5px solid var(--accent); outline-offset: 2px; border-radius: 6px; }
+code, kbd, .mono { font-family: var(--mono); font-size: 0.86em; }
+kbd { padding: 1px 6px; border: 1px solid var(--rule); border-bottom-width: 2px; border-radius: 5px; background: var(--sheet); }
+.wrap { max-width: 1180px; margin: 0 auto; }
+.label { font: 600 11.5px/1 var(--mono); letter-spacing: 0.08em; text-transform: uppercase; color: var(--ink-3); }
+
+/* header */
+header.top { padding-block: 44px 24px; display: grid; gap: 18px; }
+header.top h1 { font-size: clamp(38px, 6vw, 64px); font-weight: 800; letter-spacing: -0.035em; }
+header.top h1 span { color: var(--accent); }
+.intro { max-width: 68ch; color: var(--ink-2); font-size: 17px; }
+.controls { display: flex; flex-wrap: wrap; gap: 12px 24px; align-items: center; }
+.ctl { display: inline-flex; align-items: center; gap: 10px; font-size: 14px; color: var(--ink-2); }
+.ctl select, .ctl input[type=time] { border: 1px solid var(--rule); background: var(--sheet); border-radius: 8px; padding: 6px 10px; font-family: var(--mono); font-size: 14px; }
+.progress { display: flex; align-items: center; gap: 12px; flex: 1; min-width: 220px; }
+.bar { flex: 1; height: 8px; border-radius: 99px; background: var(--rule); overflow: hidden; }
+.bar i { display: block; height: 100%; width: 0; background: var(--done); border-radius: 99px; transition: width .5s ease; }
+.assume { font-size: 13.5px; color: var(--ink-3); }
+.assume b { color: var(--ink-2); font-weight: 600; }
+
+/* day strip */
+.strip-wrap { overflow-x: auto; padding-bottom: 6px; }
+.strip { position: relative; display: flex; min-width: 760px; height: 74px; border-radius: 12px; overflow: hidden; border: 1px solid var(--rule); background: var(--sheet); }
+.seg { position: relative; display: flex; flex-direction: column; justify-content: space-between; padding: 8px 8px 7px; border-right: 1px solid var(--rule); text-decoration: none; color: var(--ink); min-width: 0; transition: background .2s; }
+.seg:last-child { border-right: 0; }
+.seg:hover { background: var(--accent-soft); }
+.seg .t { font: 500 11px/1 var(--mono); color: var(--ink-3); }
+.seg .n { font: 600 12.5px/1.15 var(--body); overflow: hidden; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; }
+.seg.brk { background: repeating-linear-gradient(135deg, var(--break) 0 6px, transparent 6px 12px); }
+.seg.brk .n { color: var(--ink-3); font-weight: 500; }
+.seg.done { box-shadow: inset 0 -4px 0 var(--done); }
+.now-line { position: absolute; top: 0; bottom: 0; width: 2px; background: var(--accent); pointer-events: none; }
+.now-line::before { content: "now"; position: absolute; top: 4px; left: 5px; font: 600 10px/1 var(--mono); color: var(--accent); background: var(--sheet); padding: 2px 3px; border-radius: 3px; }
+
+/* layout */
+.layout { display: grid; grid-template-columns: 260px minmax(0, 1fr); gap: 36px; margin-top: 30px; align-items: start; }
+.rail { position: sticky; top: calc(16px + env(safe-area-inset-top, 0px)); display: grid; gap: 2px; max-height: calc(100vh - 32px); overflow-y: auto; padding-right: 4px; }
+.rail a { display: grid; grid-template-columns: 48px 1fr 16px; align-items: center; gap: 8px; text-decoration: none; color: var(--ink-2); padding: 7px 8px; border-radius: 8px; font-size: 14px; line-height: 1.25; }
+.rail a:hover { background: var(--accent-soft); color: var(--ink); }
+.rail a.cur { background: var(--sheet); color: var(--ink); box-shadow: 0 0 0 1px var(--rule); font-weight: 600; }
+.rail .rt { font: 500 11.5px/1 var(--mono); color: var(--ink-3); }
+.rail .dot { width: 10px; height: 10px; border-radius: 50%; border: 1.5px solid var(--ink-3); justify-self: end; }
+.rail a.done .dot { background: var(--done); border-color: var(--done); }
+.rail .sep { height: 1px; background: var(--rule); margin: 8px 6px; }
+.rail .brkrow { font-size: 12.5px; color: var(--ink-3); padding: 4px 8px 4px 64px; font-family: var(--mono); }
+
+main { display: grid; gap: 28px; min-width: 0; }
+
+/* module */
+.mod { background: var(--sheet); border: 1px solid var(--rule); border-radius: 16px; padding: 28px clamp(18px, 3vw, 34px); display: grid; gap: 22px; scroll-margin-top: 16px; }
+.mod-head { display: grid; gap: 10px; }
+.mod-meta { display: flex; flex-wrap: wrap; gap: 8px 16px; align-items: center; }
+.time { font: 600 13px/1 var(--mono); color: var(--accent-ink); background: var(--accent-soft); padding: 6px 9px; border-radius: 6px; }
+.dur { font: 500 12.5px/1 var(--mono); color: var(--ink-3); }
+.lvl { font-size: 12.5px; color: var(--ink-3); }
+.mod h2 { font-size: clamp(26px, 3.4vw, 34px); font-weight: 700; }
+.why { color: var(--ink-2); max-width: 68ch; }
+.blocks { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 14px; }
+.blk { border: 1px solid var(--rule); border-radius: 12px; padding: 16px; display: grid; gap: 10px; align-content: start; min-width: 0; }
+.blk.wide { grid-column: 1 / -1; }
+.blk h3 { font-size: 17px; font-weight: 700; }
+.blk ul { margin: 0; padding-left: 18px; display: grid; gap: 6px; color: var(--ink-2); font-size: 15px; }
+.blk li b { color: var(--ink); font-weight: 600; }
+.mins { font: 500 11.5px/1 var(--mono); color: var(--ink-3); margin-left: 6px; }
+.terms { display: flex; flex-wrap: wrap; gap: 6px; }
+.term { border: 1px solid var(--rule); background: var(--paper); border-radius: 99px; padding: 3px 10px; font-size: 13px; }
+.term:hover { border-color: var(--accent); color: var(--accent-ink); }
+pre { margin: 0; background: var(--code-bg); border-radius: 10px; padding: 14px 16px; overflow-x: auto; font: 13px/1.55 var(--mono); }
+.links { display: flex; flex-wrap: wrap; gap: 6px 14px; font-size: 14.5px; }
+.task { background: var(--accent-soft); border: 0; }
+.task p { color: var(--ink); font-size: 15px; }
+.task .deliver { font-size: 13.5px; color: var(--ink-2); }
+
+/* quiz */
+.quiz { display: grid; gap: 14px; }
+.q { display: grid; gap: 8px; }
+.q p { font-weight: 600; font-size: 15px; }
+.opts { display: grid; gap: 6px; }
+.opt { text-align: left; border: 1px solid var(--rule); background: var(--sheet); border-radius: 9px; padding: 8px 12px; font-size: 14.5px; transition: border-color .2s, background .2s; }
+.opt:hover { border-color: var(--accent); }
+.opt.right { background: var(--done-soft); border-color: var(--done); }
+.opt.wrong { background: var(--wrong-soft); border-color: var(--wrong); }
+.explain { font-size: 14px; color: var(--ink-2); }
+
+.mod-foot { display: flex; flex-wrap: wrap; gap: 14px; align-items: center; justify-content: space-between; border-top: 1px solid var(--rule); padding-top: 16px; }
+.check { display: inline-flex; align-items: center; gap: 10px; font-weight: 600; font-size: 15px; cursor: pointer; }
+.check input { width: 18px; height: 18px; accent-color: var(--done); }
+textarea { width: 100%; min-height: 84px; border: 1px solid var(--rule); background: var(--paper); border-radius: 10px; padding: 10px 12px; font-size: 14.5px; resize: vertical; }
+
+/* breaks */
+.break { display: flex; gap: 14px; align-items: center; padding: 14px 18px; border-radius: 12px; background: repeating-linear-gradient(135deg, var(--break) 0 8px, transparent 8px 16px); border: 1px dashed var(--rule); color: var(--ink-2); font-size: 14.5px; }
+
+/* tools sections */
+.tool { background: var(--sheet); border: 1px solid var(--rule); border-radius: 16px; padding: 28px clamp(18px, 3vw, 34px); display: grid; gap: 18px; scroll-margin-top: 16px; }
+.tool h2 { font-size: clamp(24px, 3vw, 30px); font-weight: 700; }
+.tool .sub { color: var(--ink-2); max-width: 70ch; }
+.gl-controls { display: flex; flex-wrap: wrap; gap: 8px; align-items: center; }
+.gl-controls input { flex: 1; min-width: 200px; border: 1px solid var(--rule); background: var(--paper); border-radius: 9px; padding: 8px 12px; }
+.chip { border: 1px solid var(--rule); background: var(--paper); border-radius: 99px; padding: 5px 12px; font-size: 13px; }
+.chip[aria-pressed=true] { background: var(--ink); color: var(--sheet); border-color: var(--ink); }
+.gl { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 10px; }
+.gl-item { border: 1px solid var(--rule); border-radius: 12px; padding: 14px; display: grid; gap: 6px; min-width: 0; transition: box-shadow .3s; }
+.gl-item.flash { box-shadow: 0 0 0 3px var(--accent); }
+.gl-item h4 { font-size: 16px; font-family: var(--body); font-weight: 600; letter-spacing: 0; display: flex; justify-content: space-between; gap: 8px; }
+.gl-item h4 small { font: 500 11px/1.6 var(--mono); color: var(--ink-3); text-transform: uppercase; letter-spacing: .06em; }
+.gl-item p { font-size: 14.5px; color: var(--ink-2); }
+.gl-item code { color: var(--accent-ink); }
+.empty { color: var(--ink-3); font-size: 14.5px; }
+
+.chooser { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1.15fr); gap: 18px; }
+.needs { display: grid; gap: 6px; align-content: start; }
+.need { text-align: left; border: 1px solid var(--rule); background: var(--paper); border-radius: 9px; padding: 9px 12px; font-size: 14.5px; }
+.need[aria-pressed=true] { border-color: var(--accent); background: var(--accent-soft); font-weight: 600; }
+.answer { border: 1px solid var(--rule); border-radius: 12px; padding: 18px; display: grid; gap: 12px; align-content: start; min-width: 0; }
+.answer h3 { font-size: 22px; }
+.answer .alt { font-size: 14px; color: var(--ink-2); }
+
+.dirs { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 16px; }
+.dir { border: 1px solid var(--rule); border-radius: 14px; overflow: hidden; display: grid; min-width: 0; }
+.dir.pick { box-shadow: 0 0 0 2px var(--accent); }
+.dir-body { padding: 16px; display: grid; gap: 10px; }
+.dir h3 { font-size: 20px; display: flex; gap: 10px; align-items: baseline; flex-wrap: wrap; }
+.dir h3 em { font: 600 11px/1 var(--mono); font-style: normal; color: var(--accent-ink); background: var(--accent-soft); padding: 4px 7px; border-radius: 5px; letter-spacing: .04em; }
+.dir dl { margin: 0; display: grid; grid-template-columns: 92px 1fr; gap: 4px 10px; font-size: 14px; }
+.dir dt { color: var(--ink-3); }
+.dir dd { margin: 0; color: var(--ink-2); }
+/* mini mockups: deliberately fixed colours, they depict each direction's own palette */
+.mock { height: 150px; display: grid; grid-template-columns: 30% 1fr; border-bottom: 1px solid var(--rule); }
+.mock .ms { padding: 10px 8px; display: grid; gap: 5px; align-content: start; }
+.mock .ms i { display: block; height: 8px; border-radius: 3px; }
+.mock .mc { padding: 10px; display: grid; gap: 8px; align-content: start; }
+.mock .row { display: grid; gap: 6px; }
+.mock .tile { border-radius: 6px; height: 34px; }
+.mock .line { height: 6px; border-radius: 3px; }
+.m-native { background: #fbfbfc; } .m-native .ms { background: #ececef; } .m-native .ms i { background: #c9cad1; } .m-native .ms i.on { background: #0a84ff; }
+.m-native .tile { background: #e6e7eb; } .m-native .line { background: #d8d9de; }
+.m-glass { background: #ffffff; } .m-glass .ms { background: #f3f3f6; } .m-glass .ms i { background: #d4d6de; } .m-glass .ms i.on { background: #fff; box-shadow: 0 1px 3px rgba(0,0,0,.18); }
+.m-glass .tile { background: linear-gradient(180deg, #d9dcea, #c3c7d8); border-radius: 6px 6px 8px 8px; } .m-glass .line { background: #dde0ea; }
+.m-play { background: #fff; } .m-play .ms { background: #f6f3fb; } .m-play .ms i { background: #e2dbf2; } .m-play .ms i.on { background: #cfc3f0; }
+.m-play .tile:nth-child(1) { background: #e6e0fb; } .m-play .tile:nth-child(2) { background: #dcebfc; } .m-play .tile:nth-child(3) { background: #fde3d8; } .m-play .tile:nth-child(4) { background: #d8f2e4; } .m-play .line { background: #efe9fa; }
+.m-dense { background: #1c1d21; } .m-dense .ms { background: #232429; } .m-dense .ms i { background: #3a3c44; height: 6px; } .m-dense .ms i.on { background: #5e7bff; }
+.m-dense .line { background: #34363e; height: 5px; } .m-dense .line.h { background: #4a4d57; }
+.pickbtn { justify-self: start; border: 1px solid var(--rule); background: var(--paper); border-radius: 8px; padding: 6px 12px; font-size: 14px; }
+.dir.pick .pickbtn { background: var(--accent); color: #fff; border-color: var(--accent); }
+
+.notes-out { display: flex; flex-wrap: wrap; gap: 10px; align-items: center; }
+.btn { border: 0; background: var(--ink); color: var(--sheet); border-radius: 9px; padding: 9px 16px; font-weight: 600; font-size: 14.5px; }
+.btn-quiet { background: var(--paper); color: var(--ink); border: 1px solid var(--rule); }
+.status { font-size: 14px; color: var(--done); }
+#allnotes { min-height: 120px; font-family: var(--mono); font-size: 13px; }
+
+@media (max-width: 900px) {
+  .layout { grid-template-columns: 1fr; }
+  .rail { display: none; }
+  .blocks, .gl, .dirs, .chooser { grid-template-columns: 1fr; }
+}
+@media (prefers-reduced-motion: reduce) { * { transition: none !important; scroll-behavior: auto !important; } }
+html { scroll-behavior: smooth; }
+</style>
+
+<div class="wrap">
+  <header class="top">
+    <p class="label">A one-day course for the MacSprint app</p>
+    <h1>MacSprint <span>Design Day</span></h1>
+    <p class="intro">Go from "what is a sidebar?" to choosing every button, font and screen for MacSprint yourself. Each block has a time, things to learn, the SwiftUI name of what you are learning, a hands-on task for MacSprint and a quick self-check. Tick a block when you finish it; your progress and notes stay in this browser.</p>
+    <div class="controls">
+      <label class="ctl" for="start">Start my day at <input type="time" id="start" value="09:00" step="900"></label>
+      <div class="progress"><span class="label" id="progress-label">0 of 9 done</span><div class="bar" aria-hidden="true"><i id="progress-bar"></i></div></div>
+    </div>
+    <p class="assume"><b>Assumptions:</b> you are building with <b>SwiftUI</b> for <b>macOS 14 or later</b>, designing in <b>Figma</b> (free plan is enough), and you have about <b>9 hours</b> including breaks. Change the start time and every block re-times itself.</p>
+  </header>
+
+  <div class="strip-wrap"><nav class="strip" id="strip" aria-label="Day timeline"></nav></div>
+
+  <div class="layout">
+    <nav class="rail" id="rail" aria-label="Timetable"></nav>
+    <main id="main"></main>
+  </div>
+</div>
+
+<script>
+(() => {
+  /* ---------------- storage ---------------- */
+  const KEY = 'macsprint-design-day-v1';
+  let saved = {};
+  try { saved = JSON.parse(localStorage.getItem(KEY) || '{}') || {}; } catch (e) { saved = {}; }
+  saved.done = saved.done || {}; saved.notes = saved.notes || {}; saved.quiz = saved.quiz || {};
+  const persist = () => { try { localStorage.setItem(KEY, JSON.stringify(saved)); } catch (e) {} };
+
+  const HIG = 'https://developer.apple.com/design/human-interface-guidelines/';
+  const esc = (s) => String(s).replace(/[&<>"]/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]));
+
+  /* ---------------- curriculum ---------------- */
+  const DAY = [
+    { id: 'm0', mins: 30, level: 'Basics', title: 'How designers think about Mac apps',
+      why: 'Before choosing any button, learn the rulebook (Apple’s Human Interface Guidelines) and the difference between designing a Mac app, an iPhone app and a website. MacSprint is a Mac app first.',
+      learn: [
+        ['Read the HIG “Designing for macOS” page', 10, 'Mac users have a big screen, a pointer, a keyboard, menus and multiple windows. Design for all of them.'],
+        ['Mac vs iPhone vs web', 10, 'Mac: dense, keyboard-first, menu bar, resizable windows. iPhone: one thing at a time, big touch targets. Web: free-form, anything goes.'],
+        ['The design process', 10, 'Research → wireframe (boxes, no colour) → mockup (real look) → prototype (clickable) → spec (exact numbers) → build.'],
+      ],
+      terms: ['HIG', 'Wireframe', 'Mockup', 'Prototype', 'Point (pt)'],
+      swift: '// Every Mac app starts from an App with one or more scenes\n@main\nstruct MacSprintApp: App {\n    var body: some Scene {\n        WindowGroup { ContentView() }   // the main window\n        Settings { SettingsView() }     // the Settings window (⌘,)\n    }\n}',
+      links: [['Designing for macOS', HIG + 'designing-for-macos'], ['HIG home', HIG], ['Apple design resources (Figma kits)', 'https://developer.apple.com/design/resources/']],
+      task: 'Open three Mac apps you like (for example Finder, Photos, Notes). Screenshot each main window and label its parts: sidebar, toolbar, content, inspector.',
+      deliver: 'Deliverable: 3 annotated screenshots in a Figma page called “References”.',
+      quiz: [
+        ['Which document is Apple’s official guide to how Mac apps should look and behave?', ['The App Store Review Guidelines', 'The Human Interface Guidelines (HIG)', 'The Swift Language Guide'], 1, 'The HIG covers layout, components, colour, type and behaviour. Review Guidelines are about App Store rules.'],
+        ['What comes first in the design process?', ['A polished mockup in full colour', 'A wireframe made of simple boxes', 'Writing SwiftUI code'], 1, 'Wireframes settle structure cheaply; colour and polish come later.'],
+      ] },
+    { id: 'm1', mins: 60, level: 'Basics', title: 'Layout, spacing and visual hierarchy',
+      why: 'Good layout is mostly consistent spacing and a clear order of importance. MacSprint shows lots of files, so it lives or dies on clean grids and hierarchy.',
+      learn: [
+        ['Points, pixels and Retina', 10, 'Design in points (pt). On a Retina screen 1 pt = 2 pixels. All sizes you send me should be in points.'],
+        ['A spacing scale', 15, 'Use a fixed set like 4, 8, 12, 16, 20, 24, 32. Mac windows usually keep 20 pt margins. Never invent a 13 pt gap.'],
+        ['Alignment and grids', 15, 'Line things up on shared edges. A grid of file tiles needs equal gaps and equal tile sizes.'],
+        ['Visual hierarchy', 20, 'Size, weight, colour and position tell people what matters. One most-important thing per screen (the greeting, the big number, the primary button).'],
+      ],
+      terms: ['Spacing scale', 'Alignment', 'Visual hierarchy', 'Whitespace', 'Proximity', 'Point (pt)'],
+      swift: 'VStack(alignment: .leading, spacing: 16) {   // spacing from your scale\n    Text("Good afternoon").font(.largeTitle)\n    Text("2,880 files · 30.19 GB").foregroundStyle(.secondary)\n}\n.padding(20)                                   // window margin\n\nLazyVGrid(columns: [GridItem(.adaptive(minimum: 120), spacing: 12)],\n          spacing: 12) { /* file tiles */ }',
+      links: [['Layout', HIG + 'layout'], ['Collections', HIG + 'collections']],
+      task: 'Wireframe the MacSprint Home screen in greys only: sidebar, toolbar, greeting, 6 Library folders, 4 Clean Up cards. Use only spacing values from your scale.',
+      deliver: 'Deliverable: one grey wireframe at 1280 × 800 pt with your spacing scale written beside it.',
+      quiz: [
+        ['On a Retina display, a 16 pt icon is how many pixels wide?', ['16', '32', '8'], 1, '1 point = 2 pixels at @2x, so 16 pt = 32 px.'],
+        ['What is the main job of visual hierarchy?', ['Make every element equally noticeable', 'Show what matters most first', 'Add decoration'], 1, 'Hierarchy guides the eye in order of importance.'],
+      ] },
+    { brk: true, mins: 15, title: 'Break' },
+    { id: 'm2', mins: 60, level: 'Basics', title: 'Type, colour and icons',
+      why: 'These three decide whether MacSprint feels “native Apple” or like a website. Apple gives you strong defaults: learn them before customising.',
+      learn: [
+        ['macOS text styles', 15, 'SF Pro with built-in roles: Large Title 26, Title 22, Title 2 17, Title 3 15, Headline 13 bold, Body 13, Callout 12, Subheadline 11, Caption 10. Mac body text is 13 pt, smaller than the web.'],
+        ['Semantic colours', 15, 'Use colours by role (label, secondary label, separator, window background), not fixed hex values. They adapt to light and dark automatically.'],
+        ['One accent colour', 10, 'The accent marks selection and the main action. Users can choose their own accent in System Settings, and native controls follow it.'],
+        ['SF Symbols', 15, 'Apple’s 6,000+ icons that match SF Pro. Pick weights and sizes to match text. Use “photo”, “trash”, “doc.on.doc”, “magnifyingglass”.'],
+        ['Contrast', 5, 'Text needs at least 4.5:1 contrast with its background (3:1 for large text). Check both themes.'],
+      ],
+      terms: ['Text style', 'SF Pro', 'SF Symbols', 'Semantic colour', 'Accent colour', 'Contrast ratio', 'Dark mode'],
+      swift: 'Text("Library").font(.title2).bold()\nText("2,280 items").font(.callout).foregroundStyle(.secondary)\n\nLabel("Duplicates", systemImage: "doc.on.doc")      // SF Symbol + text\n    .foregroundStyle(.tint)                          // follows accent colour\n\nImage(systemName: "trash")\n    .symbolRenderingMode(.hierarchical)',
+      links: [['Typography', HIG + 'typography'], ['Color', HIG + 'color'], ['Dark Mode', HIG + 'dark-mode'], ['SF Symbols (free app)', 'https://developer.apple.com/sf-symbols/']],
+      task: 'Install the SF Symbols app. Choose one symbol for each MacSprint sidebar item (Home, Images, Videos, Music, Documents, Archives, Apps, Large Files, Duplicates, Clean Up). Then make a type sheet: one line of sample text per text style you will use.',
+      deliver: 'Deliverable: an icon list with symbol names, and a type + colour sheet in light and dark.',
+      quiz: [
+        ['What is the default body text size in macOS apps?', ['17 pt', '13 pt', '11 pt'], 1, 'macOS Body is 13 pt; iPhone Body is 17 pt.'],
+        ['Why use semantic colours like “secondary label” instead of a fixed grey hex?', ['They load faster', 'They adapt to light/dark mode and accessibility settings', 'Apple requires hex codes'], 1, 'Semantic colours change automatically with appearance and Increase Contrast.'],
+      ] },
+    { id: 'm3', mins: 60, level: 'Intermediate', title: 'Mac app anatomy and navigation',
+      why: 'MacSprint has 16 features. Navigation decides how people find them. This module covers the window structure every screen shares.',
+      learn: [
+        ['Split view: sidebar · content · inspector', 20, 'The standard Mac layout. Sidebar picks a section, content shows it, inspector shows details of the selection.'],
+        ['Toolbar', 10, 'Holds search and the most-used actions for the current section. Keep it short.'],
+        ['Menu bar and commands', 10, 'Every action should also live in a menu with its shortcut. Menus are where people discover features.'],
+        ['Menu bar extra and floating panels', 10, 'Tiny always-available UI: Recent Downloads in the menu bar, Quick Search as a floating panel.'],
+        ['Settings window', 10, 'Preferences live in a separate window with tabs, opened with ⌘,.'],
+      ],
+      terms: ['Window', 'Sidebar', 'Toolbar', 'Split view', 'Inspector', 'Menu bar', 'Menu bar extra', 'Settings window'],
+      swift: 'NavigationSplitView {\n    List(selection: $section) {\n        Label("Home", systemImage: "house").tag(Section.home)\n        Section("Library") {\n            Label("Images", systemImage: "photo").badge(2280)\n        }\n    }\n} detail: {\n    HomeView()\n        .toolbar { ToolbarItem { Button("Refresh", systemImage: "arrow.clockwise") { } } }\n        .inspector(isPresented: $showInfo) { FileInfoView() }\n}\n\n// In the App body:\nMenuBarExtra("Recent Downloads", systemImage: "arrow.down.circle") { RecentList() }',
+      links: [['Sidebars', HIG + 'sidebars'], ['Toolbars', HIG + 'toolbars'], ['Split views', HIG + 'split-views'], ['The menu bar', HIG + 'the-menu-bar'], ['Settings', HIG + 'settings']],
+      task: 'Decide MacSprint’s sidebar: which sections, in what groups, with which counts or badges. Then list the toolbar items for Home, Images and Clean Up.',
+      deliver: 'Deliverable: a sidebar spec (groups, items, icons, badges) and a toolbar list per screen.',
+      quiz: [
+        ['Where should details about a selected file appear in a Mac app?', ['In an alert', 'In an inspector on the right', 'In the menu bar'], 1, 'The inspector shows details of the current selection without leaving the screen.'],
+        ['Which SwiftUI view gives you sidebar + detail navigation?', ['TabView', 'NavigationSplitView', 'ScrollView'], 1, 'NavigationSplitView is the standard Mac sidebar layout.'],
+      ] },
+    { brk: true, mins: 45, title: 'Lunch' },
+    { id: 'm4', mins: 60, level: 'Intermediate', title: 'Controls and components',
+      why: 'Now the building blocks: buttons, pickers, fields, lists, grids. Knowing which one to use where is most of “being good at UI”.',
+      learn: [
+        ['Buttons and their roles', 15, 'One prominent (primary) button per view; bordered for secondary; destructive role for delete/trash; plain for links.'],
+        ['Choosing one option', 10, '2–5 always-visible options → segmented control. Many options → pop-up button (menu). On/off → checkbox or switch.'],
+        ['Text input and search', 10, 'Search fields belong in the toolbar. Text fields need a label, placeholder and error state.'],
+        ['Lists, tables and grids', 15, 'Table for sortable columns (name, size, date). Grid for visual browsing (photos). List for simple rows.'],
+        ['Menus, context menus and tooltips', 10, 'Right-click menus for actions on items; tooltips (help tags) explain icon-only buttons.'],
+      ],
+      terms: ['Primary button', 'Destructive role', 'Segmented control', 'Pop-up button', 'Toggle', 'Search field', 'Table', 'Grid', 'Context menu', 'Tooltip', 'Badge'],
+      swift: 'Button("Move to Trash", role: .destructive) { trash() }\n    .buttonStyle(.borderedProminent)\n\nPicker("Kind", selection: $kind) {\n    ForEach(Kind.allCases) { Text($0.name).tag($0) }\n}.pickerStyle(.segmented)\n\nTable(files, selection: $picked) {\n    TableColumn("Name", value: \\.name)\n    TableColumn("Size") { Text($0.size, format: .byteCount(style: .file)) }\n}\n.contextMenu(forSelectionType: FileItem.ID.self) { _ in\n    Button("Show in Finder") { }\n}\n\nButton { rotate() } label: { Image(systemName: "rotate.right") }\n    .help("Rotate")   // tooltip',
+      links: [['Buttons', HIG + 'buttons'], ['Segmented controls', HIG + 'segmented-controls'], ['Pop-up buttons', HIG + 'pop-up-buttons'], ['Toggles', HIG + 'toggles'], ['Search fields', HIG + 'search-fields'], ['Lists and tables', HIG + 'lists-and-tables'], ['Context menus', HIG + 'context-menus']],
+      task: 'Use the “Which component do I need?” tool below. For the Duplicate Finder and Safe Cleanup screens, list every control and why you chose it.',
+      deliver: 'Deliverable: a component inventory table for 2 screens (component · purpose · states).',
+      quiz: [
+        ['Users choose between Grid and List view. Best control?', ['Two separate primary buttons', 'A segmented control', 'A text field'], 1, 'Two to five mutually exclusive, always-visible options → segmented control.'],
+        ['Which role should “Move 12 items to Trash” use?', ['.cancel', '.destructive', 'No role'], 1, 'The destructive role colours and orders it as a risky action.'],
+      ] },
+    { id: 'm5', mins: 60, level: 'Intermediate', title: 'States, feedback, safety and accessibility',
+      why: 'Designs usually break in the in-between moments: loading, empty, errors, permissions. MacSprint moves and trashes files, so trust depends on these screens.',
+      learn: [
+        ['Control states', 10, 'Draw default, hover, pressed, focused, disabled and loading for every interactive component.'],
+        ['Screen states', 10, 'Loading, empty (“No duplicates found”), error, no permission and filled. Design all five per screen.'],
+        ['Confirming risky actions', 15, 'Preview first, then confirm with a clear count and size, then report the result, then offer Undo where possible.'],
+        ['Accessibility', 15, 'Full keyboard use, visible focus ring, VoiceOver labels on icons, support Reduce Motion and Increase Contrast.'],
+        ['Writing UI text', 10, 'Buttons say what happens (“Move to Trash”, not “OK”). Errors say what went wrong and how to fix it.'],
+      ],
+      terms: ['State', 'Empty state', 'Confirmation dialog', 'Undo', 'Focus ring', 'VoiceOver', 'Reduce Motion', 'Progress indicator'],
+      swift: '.confirmationDialog("Move 12 items (6.4 GB) to Trash?", isPresented: $confirm) {\n    Button("Move to Trash", role: .destructive) { trash() }\n} message: { Text("You can put them back from the Trash.") }\n\nContentUnavailableView("No duplicates found",\n    systemImage: "checkmark.circle",\n    description: Text("Your chosen folders have no exact copies."))\n\nProgressView(value: scanned, total: total) { Text("Scanning Downloads…") }\n\nImage(systemName: "pin").accessibilityLabel("Pin item")',
+      links: [['Alerts', HIG + 'alerts'], ['Sheets', HIG + 'sheets'], ['Progress indicators', HIG + 'progress-indicators'], ['Accessibility', HIG + 'accessibility'], ['Writing', HIG + 'writing']],
+      task: 'Design the Safe Cleanup flow end to end: review list → confirmation → progress → result report with Undo. Then design the empty and no-permission states of the Duplicates screen.',
+      deliver: 'Deliverable: 6 frames for the cleanup flow + 2 state frames.',
+      quiz: [
+        ['Which is the best label for a confirm button that deletes files?', ['OK', 'Yes', 'Move to Trash'], 2, 'Labels should name the action so people know exactly what happens.'],
+        ['An icon-only button needs what for VoiceOver users?', ['A tooltip only', 'An accessibility label', 'A brighter colour'], 1, 'VoiceOver reads the accessibility label; without it, the button is just “button”.'],
+      ] },
+    { brk: true, mins: 15, title: 'Break' },
+    { id: 'm6', mins: 60, level: 'Advanced', title: 'Design systems, materials and motion',
+      why: 'To stay consistent across 16 features, turn your choices into a small design system: tokens and reusable components. Then add the polish: materials and motion.',
+      learn: [
+        ['Design tokens', 15, 'Name every value by role: color.accent, text.secondary, radius.card = 16, space.m = 16. Components use tokens, never raw values.'],
+        ['Components and variants in Figma', 15, 'Build each component once with variants (size, state, style). Use Auto Layout so it resizes like SwiftUI stacks.'],
+        ['Materials and vibrancy', 10, 'Frosted backgrounds for sidebars, toolbars and panels. Apple’s 2025 design update (macOS 26) adds the new Liquid Glass material; check the HIG Materials page for current guidance.'],
+        ['Motion with purpose', 10, 'Animate to explain a change (a highlight sliding, a card opening), keep it short (0.2–0.4 s), and turn it off for Reduce Motion.'],
+        ['Mapping design to SwiftUI', 10, 'A Figma component ≈ a SwiftUI View. Variants ≈ parameters. Tokens ≈ a Theme struct or asset-catalog colours. A button look ≈ a ButtonStyle.'],
+      ],
+      terms: ['Design token', 'Design system', 'Component', 'Variant', 'Auto Layout', 'Material', 'Liquid Glass', 'Motion'],
+      swift: 'enum Theme {\n    static let radiusCard: CGFloat = 16\n    static let spaceM: CGFloat = 16\n}\n\nstruct CleanCard: View {            // one reusable component\n    let title: String; let size: String; let icon: String\n    var body: some View {\n        VStack(alignment: .leading, spacing: 8) {\n            Label(title, systemImage: icon).foregroundStyle(.secondary)\n            Text(size).font(.title).bold().monospacedDigit()\n        }\n        .padding(Theme.spaceM)\n        .background(.regularMaterial, in: .rect(cornerRadius: Theme.radiusCard))\n    }\n}\n\nwithAnimation(.smooth) { selected = item }',
+      links: [['Materials', HIG + 'materials'], ['Motion', HIG + 'motion'], ['SwiftUI tutorials', 'https://developer.apple.com/tutorials/swiftui'], ['Figma: Auto Layout guide', 'https://help.figma.com/hc/en-us/articles/360040451373-Guide-to-auto-layout']],
+      task: 'Turn your type sheet, colours and spacing into named tokens. Build 4 Figma components with variants: Sidebar item, Primary button, Folder tile, Clean Up card.',
+      deliver: 'Deliverable: a “MacSprint Design System” Figma page with tokens and 4 components.',
+      quiz: [
+        ['What is a design token?', ['A login password', 'A named design value reused everywhere', 'An App Store fee'], 1, 'Tokens like radius.card = 16 keep every screen consistent and easy to change.'],
+        ['When should motion be removed?', ['When Reduce Motion is on', 'Never', 'Only in dark mode'], 0, 'Respect the system Reduce Motion setting.'],
+      ] },
+    { id: 'm7', mins: 75, level: 'Advanced', title: 'Studio: design MacSprint',
+      why: 'Put it all together. Pick a visual direction, design the three most important screens, and write specs I can build from.',
+      learn: [
+        ['Pick a direction', 10, 'Compare the four UI directions below. Choose one, or mix two on purpose (for example native structure + Graphite cards).'],
+        ['Design 3 key screens', 45, 'Home, Smart Image Viewer and Safe Cleanup review, in light and dark, using only your components.'],
+        ['Critique yourself', 10, 'Squint test (does hierarchy survive blur?), 5-second test (what is this screen for?), keyboard test (can you reach everything?).'],
+        ['Write specs', 10, 'Use the spec template from the MacSprint UI Component Guide for your 4 components.'],
+      ],
+      terms: ['Mockup', 'Prototype', 'Visual hierarchy', 'Design system'],
+      swift: '// What I will build from your specs, screen by screen:\n// Home        → NavigationSplitView + LazyVGrid(FolderTile) + CleanCard row\n// Image viewer → Image + keyboard (←/→) + filmstrip ScrollView + .inspector\n// Cleanup     → Table with checkboxes + .confirmationDialog + result sheet',
+      links: [['Apple design resources', 'https://developer.apple.com/design/resources/'], ['Onboarding', HIG + 'onboarding'], ['Privacy', HIG + 'privacy']],
+      task: 'Design Home, Image Viewer and Cleanup review in light and dark. Run the three self-critique tests and fix what fails.',
+      deliver: 'Deliverable: 6 frames (3 screens × 2 themes) + 4 component specs, sent to me.',
+      quiz: [
+        ['In the squint test you blur your eyes at a screen. What are you checking?', ['Spelling', 'Whether the visual hierarchy still reads', 'Icon sharpness'], 1, 'If the important things still stand out when blurred, hierarchy works.'],
+      ] },
+    { id: 'm8', mins: 15, level: 'Wrap-up', title: 'Review and next steps',
+      why: 'Check what you learned and plan the next sessions. Design skill grows by repeating this loop on real screens.',
+      learn: [
+        ['Score yourself', 5, 'Retake any quiz you missed and re-read that module’s HIG pages.'],
+        ['Collect your notes', 5, 'Use “Copy all notes” at the bottom and paste them to me with your Figma link.'],
+        ['Plan practice', 5, 'Next week: one screen per day (Library, Search, Storage, Duplicates, Organizer).'],
+      ],
+      terms: ['Prototype', 'Design system'],
+      swift: '// Next: share your Figma link + specs, and I will build the SwiftUI screens.',
+      links: [['HIG home', HIG]],
+      task: 'Write the three things you found hardest today and one question for me.',
+      deliver: 'Deliverable: your notes, pasted into our chat.',
+      quiz: [] },
+  ];
+
+  /* ---------------- glossary ---------------- */
+  const GL = [
+    ['HIG', 'Basics', 'Human Interface Guidelines: Apple’s official guide to designing for its platforms.'],
+    ['Wireframe', 'Process', 'A rough layout made of grey boxes to settle structure before colour or detail.'],
+    ['Mockup', 'Process', 'A static, realistic picture of a screen with real colours, type and content.'],
+    ['Prototype', 'Process', 'A clickable mockup that simulates how the app behaves.'],
+    ['Point (pt)', 'Basics', 'The unit for designing Apple UI. On Retina screens 1 pt = 2 pixels.'],
+    ['Spacing scale', 'Layout', 'A fixed set of gap sizes (4, 8, 12, 16, 24…) used everywhere.', '.padding(16), VStack(spacing: 8)'],
+    ['Alignment', 'Layout', 'Lining elements up on shared edges or centres so the screen looks ordered.', 'VStack(alignment: .leading)'],
+    ['Visual hierarchy', 'Layout', 'Using size, weight, colour and position to show what matters most first.'],
+    ['Whitespace', 'Layout', 'Empty space that separates groups and gives content room to breathe.'],
+    ['Proximity', 'Layout', 'Things placed close together are read as a group (a Gestalt principle).'],
+    ['Text style', 'Type', 'A named text role with a set size and weight, such as Body or Headline.', '.font(.headline)'],
+    ['SF Pro', 'Type', 'Apple’s system typeface. SF Mono is its fixed-width sibling for numbers and code.'],
+    ['SF Symbols', 'Icons', 'Apple’s library of thousands of icons designed to match SF Pro.', 'Image(systemName: "trash")'],
+    ['Semantic colour', 'Colour', 'A colour named by its role (label, separator) that adapts to light/dark and contrast settings.', '.foregroundStyle(.secondary)'],
+    ['Accent colour', 'Colour', 'The single brand colour used for selection and primary actions; users can set their own.', '.tint(.indigo)'],
+    ['Contrast ratio', 'Accessibility', 'How different text is from its background. Aim for at least 4.5:1 for body text.'],
+    ['Dark mode', 'Colour', 'The dark appearance of macOS. Every colour needs a dark version.'],
+    ['Window', 'Structure', 'A rectangular frame for app content with traffic-light buttons.', 'WindowGroup'],
+    ['Sidebar', 'Structure', 'The left column for moving between sections.', 'NavigationSplitView { List { … } }'],
+    ['Toolbar', 'Structure', 'The row of frequently used controls at the top of a window.', '.toolbar { ToolbarItem { … } }'],
+    ['Split view', 'Structure', 'A window divided into resizable columns: sidebar, content, inspector.', 'NavigationSplitView'],
+    ['Inspector', 'Structure', 'A right-side panel showing details of the current selection.', '.inspector(isPresented:)'],
+    ['Menu bar', 'Structure', 'The bar across the top of the screen with app menus (File, Edit, View…).', '.commands { … }'],
+    ['Menu bar extra', 'Structure', 'A small icon on the right of the menu bar that opens a menu or window.', 'MenuBarExtra'],
+    ['Settings window', 'Structure', 'A separate window for app preferences, opened with ⌘,.', 'Settings { … }'],
+    ['Primary button', 'Controls', 'The most important action on a view, shown with the accent fill.', '.buttonStyle(.borderedProminent)'],
+    ['Destructive role', 'Controls', 'Marks a button that removes or deletes something, shown in red.', 'Button(role: .destructive)'],
+    ['Segmented control', 'Controls', 'A row of 2–5 joined buttons where exactly one is selected.', '.pickerStyle(.segmented)'],
+    ['Pop-up button', 'Controls', 'A button that opens a list to choose one value.', '.pickerStyle(.menu)'],
+    ['Toggle', 'Controls', 'An on/off control. On macOS usually a checkbox; a switch for prominent settings.', 'Toggle(isOn:)'],
+    ['Search field', 'Controls', 'A text field for searching, usually in the toolbar.', '.searchable(text:)'],
+    ['Table', 'Data', 'Rows with sortable columns, ideal for file lists.', 'Table { TableColumn … }'],
+    ['Grid', 'Data', 'Items laid out in rows and columns, ideal for photos.', 'LazyVGrid'],
+    ['Badge', 'Data', 'A small count or label on a row or icon.', '.badge(10)'],
+    ['Context menu', 'Controls', 'The menu that appears on right-click.', '.contextMenu { … }'],
+    ['Tooltip', 'Controls', 'A short label shown when hovering a control (Apple calls it a help tag).', '.help("Rotate")'],
+    ['Sheet', 'Overlays', 'A dialog that slides down over one window and must be finished or cancelled.', '.sheet(isPresented:)'],
+    ['Alert', 'Overlays', 'A small dialog for important information or a decision.', '.alert(…)'],
+    ['Confirmation dialog', 'Overlays', 'Asks people to confirm an action, often a destructive one.', '.confirmationDialog(…)'],
+    ['Popover', 'Overlays', 'A floating bubble anchored to the control that opened it.', '.popover(isPresented:)'],
+    ['State', 'Interaction', 'How a component looks in a situation: default, hover, pressed, focused, disabled, loading.'],
+    ['Empty state', 'Interaction', 'What a screen shows when there is nothing to display yet.', 'ContentUnavailableView'],
+    ['Progress indicator', 'Interaction', 'A bar or spinner showing that work is happening.', 'ProgressView(value:)'],
+    ['Undo', 'Interaction', 'Reversing the last action; essential for anything that changes files.', 'UndoManager'],
+    ['Focus ring', 'Accessibility', 'The visible outline on the control that keyboard input goes to.', '.focusable()'],
+    ['VoiceOver', 'Accessibility', 'Apple’s screen reader. Every control needs a readable label.', '.accessibilityLabel("…")'],
+    ['Reduce Motion', 'Accessibility', 'A system setting asking apps to minimise animation.', '@Environment(\\.accessibilityReduceMotion)'],
+    ['Design token', 'Systems', 'A named, reusable design value such as color.accent or radius.card.'],
+    ['Design system', 'Systems', 'Tokens + components + rules that keep an app consistent.'],
+    ['Component', 'Systems', 'A reusable UI piece, like a button or card, built once and used everywhere.', 'struct CleanCard: View'],
+    ['Variant', 'Systems', 'A version of a component: size, state or style.'],
+    ['Auto Layout', 'Systems', 'Figma’s feature that stacks and spaces items like SwiftUI stacks.'],
+    ['Material', 'Visual', 'A translucent, blurred background (vibrancy) used by sidebars and panels.', '.background(.regularMaterial)'],
+    ['Liquid Glass', 'Visual', 'The translucent material introduced in Apple’s 2025 design update (macOS 26).'],
+    ['Motion', 'Visual', 'Animation used to explain change; short and purposeful.', 'withAnimation(.smooth)'],
+  ];
+
+  /* ---------------- component chooser ---------------- */
+  const NEEDS = [
+    ['Move between the main sections of the app', 'Sidebar', 'NavigationSplitView + List(selection:)', 'sidebars', 'Tabs (TabView) are for a few peer views; Mac apps with many sections use a sidebar.'],
+    ['Pick one of 2–5 options that are always visible', 'Segmented control', 'Picker(…).pickerStyle(.segmented)', 'segmented-controls', 'More than 5 options → pop-up button.'],
+    ['Pick one of many options', 'Pop-up button', 'Picker(…).pickerStyle(.menu)', 'pop-up-buttons', 'Few options that must stay visible → segmented control.'],
+    ['Turn a setting on or off', 'Checkbox or switch', 'Toggle(isOn:) — .toggleStyle(.checkbox) or .switch', 'toggles', 'Mac forms usually use checkboxes; switches suit a single prominent setting.'],
+    ['Search the current view', 'Search field in the toolbar', '.searchable(text:)', 'search-fields', 'Searching the whole Mac from any app → a floating Quick Search panel.'],
+    ['Show many files with details to sort', 'Table', 'Table { TableColumn(…) }', 'lists-and-tables', 'Visual browsing of photos → grid.'],
+    ['Browse photos and visual files', 'Grid', 'LazyVGrid(columns: [GridItem(.adaptive(minimum: 120))])', 'collections', 'Need sortable columns → table.'],
+    ['Show details of the selected file', 'Inspector', '.inspector(isPresented:) { … }', 'inspectors', 'A one-off quick look anchored to a control → popover.'],
+    ['Confirm something risky (moving files to Trash)', 'Confirmation dialog', '.confirmationDialog(…) with Button(role: .destructive)', 'alerts', 'A multi-step review of many changes → a sheet or a full review screen.'],
+    ['A short focused task (rename, choose folders)', 'Sheet', '.sheet(isPresented:) { … }', 'sheets', 'Tiny edits next to a control → popover.'],
+    ['Extra options next to a control', 'Popover', '.popover(isPresented:) { … }', 'popovers', 'Critical decisions → alert or confirmation dialog.'],
+    ['Actions on an item (Open, Copy Path, Trash)', 'Context menu + toolbar buttons', '.contextMenu { … }', 'context-menus', 'Also add them to the menu bar with keyboard shortcuts.'],
+    ['Show progress of a long scan', 'Progress indicator', 'ProgressView(value:total:)', 'progress-indicators', 'Unknown duration → indeterminate spinner: ProgressView().'],
+    ['Nothing to show yet', 'Empty state', 'ContentUnavailableView(…)', 'writing', 'Tell people why it is empty and what to do next.'],
+    ['Quick access from anywhere, even other apps', 'Menu bar extra', 'MenuBarExtra("…", systemImage:) { … }', 'the-menu-bar', 'A global search panel is an NSPanel bridged into SwiftUI (more advanced).'],
+    ['Let people change app preferences', 'Settings window', 'Settings { SettingsView() }', 'settings', 'Use TabView inside Settings for multiple pages.'],
+    ['Explain an icon-only button', 'Tooltip (help tag)', '.help("Rotate")', 'buttons', 'Also set .accessibilityLabel for VoiceOver.'],
+  ];
+
+  /* ---------------- UI directions ---------------- */
+  const DIRS = [
+    { id: 'native', name: 'Native Classic', tag: 'Least effort', cls: 'm-native',
+      look: 'Stock macOS: system accent, SF Symbols, standard sidebar, tables and grids.',
+      good: 'Feels instantly at home on a Mac; fastest to build in SwiftUI; accessibility comes for free.',
+      watch: 'Less distinctive; can look like any utility.', effort: 'Low: mostly built-in SwiftUI views.' },
+    { id: 'glass', name: 'Graphite & Glass', tag: 'Current draft', cls: 'm-glass',
+      look: 'Native structure with custom cards, macOS-style folder art, frosted sidebar and one indigo accent.',
+      good: 'Premium and calm while still native; matches our website.', watch: 'Custom cards and folder art need careful dark-mode work.',
+      effort: 'Medium: native layout plus ~6 custom components.' },
+    { id: 'play', name: 'Playful Shelves', tag: 'Homy-like', cls: 'm-play',
+      look: 'Colourful pastel cards per file kind, large thumbnails, friendly tone.',
+      good: 'Approachable for students and switchers from Windows; very scannable.', watch: 'Risk of looking non-native; colours compete with photos.',
+      effort: 'Medium–high: many custom views and colours to maintain.' },
+    { id: 'dense', name: 'Pro Dense', tag: 'Power users', cls: 'm-dense',
+      look: 'List- and table-first, compact rows, inspector always on, keyboard everywhere.',
+      good: 'Handles huge libraries; fast for experts.', watch: 'Intimidating for beginners; less visual.',
+      effort: 'Low–medium: Table + inspector heavy.' },
+  ];
+
+  /* ---------------- timing ---------------- */
+  const toMin = (hhmm) => { const [h, m] = hhmm.split(':').map(Number); return h * 60 + m; };
+  const fmt = (m) => `${String(Math.floor(m / 60) % 24).padStart(2, '0')}:${String(m % 60).padStart(2, '0')}`;
+  const startInput = document.getElementById('start');
+  if (saved.start) startInput.value = saved.start;
+  const schedule = () => {
+    let t = toMin(startInput.value || '09:00');
+    return DAY.map((d) => { const s = t; t += d.mins; return { ...d, s, e: t }; });
+  };
+  const total = DAY.reduce((a, d) => a + d.mins, 0);
+
+  /* ---------------- render ---------------- */
+  const main = document.getElementById('main');
+  const glossaryNames = new Set(GL.map((g) => g[0]));
+
+  function moduleHtml(d) {
+    const qs = d.quiz.map((q, qi) => {
+      const key = `${d.id}-${qi}`, picked = saved.quiz[key];
+      return `<div class="q" data-key="${key}">
+        <p>${esc(q[0])}</p>
+        <div class="opts">${q[1].map((o, oi) => {
+          const cls = picked === undefined ? '' : oi === q[2] ? ' right' : oi === picked ? ' wrong' : '';
+          return `<button type="button" class="opt${cls}" data-oi="${oi}">${esc(o)}</button>`; }).join('')}</div>
+        <p class="explain" ${picked === undefined ? 'hidden' : ''}>${picked === q[2] ? 'Correct. ' : picked !== undefined ? 'Not quite. ' : ''}${esc(q[3])}</p>
+      </div>`; }).join('');
+    return `<section class="mod" id="${d.id}" aria-labelledby="${d.id}-h">
+      <div class="mod-head">
+        <div class="mod-meta"><span class="time" data-time="${d.id}"></span><span class="dur">${d.mins} min</span><span class="lvl">${d.level}</span></div>
+        <h2 id="${d.id}-h">${esc(d.title)}</h2>
+        <p class="why">${esc(d.why)}</p>
+      </div>
+      <div class="blocks">
+        <div class="blk wide"><h3>Learn</h3><ul>${d.learn.map(([t, m, x]) => `<li><b>${esc(t)}</b><span class="mins">${m} min</span><br>${esc(x)}</li>`).join('')}</ul></div>
+        <div class="blk"><h3>Key terms</h3><div class="terms">${d.terms.map((t) => glossaryNames.has(t) ? `<button type="button" class="term" data-term="${esc(t)}">${esc(t)}</button>` : `<span class="term">${esc(t)}</span>`).join('')}</div>
+          <h3>Read</h3><div class="links">${d.links.map(([t, u]) => `<a href="${u}" target="_blank" rel="noopener">${esc(t)} ↗</a>`).join('')}</div></div>
+        <div class="blk"><h3>In SwiftUI</h3><pre><code>${esc(d.swift)}</code></pre></div>
+        <div class="blk wide task"><h3>Do it for MacSprint</h3><p>${esc(d.task)}</p><p class="deliver">${esc(d.deliver)}</p></div>
+        ${d.quiz.length ? `<div class="blk wide"><h3>Check yourself</h3><div class="quiz">${qs}</div></div>` : ''}
+        <div class="blk wide"><h3><label for="note-${d.id}">Your notes and findings</label></h3><textarea id="note-${d.id}" data-note="${d.id}" placeholder="What you learned, links you found, questions for Claude…">${esc(saved.notes[d.id] || '')}</textarea></div>
+      </div>
+      <div class="mod-foot">
+        <label class="check"><input type="checkbox" id="done-${d.id}" data-done="${d.id}" ${saved.done[d.id] ? 'checked' : ''}> I finished this block</label>
+        <a href="#${(DAY.filter((x) => !x.brk)[DAY.filter((x) => !x.brk).findIndex((x) => x.id === d.id) + 1] || { id: 'glossary' }).id}">Next ↓</a>
+      </div>
+    </section>`;
+  }
+
+  let html = '';
+  for (const d of DAY) html += d.brk ? `<div class="break" data-brk><span class="mono" data-time-brk></span><span>${esc(d.title)} · ${d.mins} min. Step away from the screen.</span></div>` : moduleHtml(d);
+
+  html += `
+  <section class="tool" id="glossary" aria-labelledby="gl-h">
+    <p class="label">Reference</p>
+    <h2 id="gl-h">Glossary</h2>
+    <p class="sub">${GL.length} terms you will meet today, with the SwiftUI name where one exists. Click any key term in a lesson to jump here.</p>
+    <div class="gl-controls"><label class="visually-hidden" for="gl-q">Search terms</label><input id="gl-q" type="search" placeholder="Search terms, e.g. sidebar, contrast, token"></div>
+    <div class="gl-controls" id="gl-cats" role="group" aria-label="Filter by category"></div>
+    <div class="gl" id="gl-list"></div>
+    <p class="empty" id="gl-empty" hidden>No terms match. Try another word.</p>
+  </section>
+
+  <section class="tool" id="chooser" aria-labelledby="ch-h">
+    <p class="label">Decision helper</p>
+    <h2 id="ch-h">Which component do I need?</h2>
+    <p class="sub">Pick what you are trying to let people do. You get the Mac component, its SwiftUI name, when to choose something else, and the HIG page.</p>
+    <div class="chooser"><div class="needs" id="needs" role="group" aria-label="I need to…"></div><div class="answer" id="answer" aria-live="polite"></div></div>
+  </section>
+
+  <section class="tool" id="directions" aria-labelledby="dir-h">
+    <p class="label">For MacSprint</p>
+    <h2 id="dir-h">Four UI directions to choose from</h2>
+    <p class="sub">My recommendation: start from <b>Native Classic</b> structure and add the <b>Graphite &amp; Glass</b> cards and folders. SwiftUI gives you most of it for free, and the custom pieces make MacSprint recognisable. Mark your favourite.</p>
+    <div class="dirs" id="dirs"></div>
+  </section>
+
+  <section class="tool" id="notes-all" aria-labelledby="notes-h">
+    <p class="label">Hand-off</p>
+    <h2 id="notes-h">Copy all notes for Claude</h2>
+    <p class="sub">Collects your notes, quiz score, finished blocks and chosen direction into one text you can paste into our chat.</p>
+    <div class="notes-out"><button type="button" class="btn" id="copy-notes">Copy all notes</button><button type="button" class="btn btn-quiet" id="reset">Reset progress</button><span class="status" id="copy-status" role="status"></span></div>
+    <label class="visually-hidden" for="allnotes">All notes</label>
+    <textarea id="allnotes" readonly></textarea>
+  </section>`;
+  main.innerHTML = html;
+
+  /* visually-hidden helper */
+  const st = document.createElement('style');
+  st.textContent = '.visually-hidden{position:absolute!important;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap}';
+  document.head.appendChild(st);
+
+  /* ---------------- times, strip, rail ---------------- */
+  const strip = document.getElementById('strip');
+  const rail = document.getElementById('rail');
+  function drawTimes() {
+    const sch = schedule();
+    strip.innerHTML = sch.map((d) => `<a class="seg${d.brk ? ' brk' : ''}${!d.brk && saved.done[d.id] ? ' done' : ''}" style="flex:${d.mins}" ${d.brk ? 'tabindex="-1" aria-hidden="true"' : `href="#${d.id}"`} title="${esc(d.title)}"><span class="t">${fmt(d.s)}</span><span class="n">${esc(d.brk ? d.title : d.title)}</span></a>`).join('') + '<span class="now-line" id="now" hidden></span>';
+    rail.innerHTML = sch.map((d) => d.brk
+      ? `<div class="brkrow">${esc(d.title)} · ${d.mins}m</div>`
+      : `<a href="#${d.id}" data-rail="${d.id}" class="${saved.done[d.id] ? 'done' : ''}"><span class="rt">${fmt(d.s)}</span><span>${esc(d.title)}</span><span class="dot" aria-label="${saved.done[d.id] ? 'done' : 'not done'}"></span></a>`).join('')
+      + '<div class="sep"></div><a href="#glossary"><span class="rt">ref</span><span>Glossary</span><span></span></a><a href="#chooser"><span class="rt">tool</span><span>Which component?</span><span></span></a><a href="#directions"><span class="rt">pick</span><span>UI directions</span><span></span></a><a href="#notes-all"><span class="rt">send</span><span>Copy notes</span><span></span></a>';
+    for (const d of sch) {
+      if (d.brk) continue;
+      const el = main.querySelector(`[data-time="${d.id}"]`);
+      if (el) el.textContent = `${fmt(d.s)}–${fmt(d.e)}`;
+    }
+    const brkEls = main.querySelectorAll('[data-time-brk]');
+    sch.filter((d) => d.brk).forEach((d, i) => { if (brkEls[i]) brkEls[i].textContent = `${fmt(d.s)}–${fmt(d.e)}`; });
+    placeNow();
+    updateProgress();
+  }
+  function placeNow() {
+    const now = document.getElementById('now');
+    if (!now) return;
+    const n = new Date(), mins = n.getHours() * 60 + n.getMinutes(), s = toMin(startInput.value || '09:00');
+    const frac = (mins - s) / total;
+    now.hidden = !(frac >= 0 && frac <= 1);
+    if (!now.hidden) now.style.left = `calc(${(frac * 100).toFixed(2)}% - 1px)`;
+  }
+  setInterval(placeNow, 60000);
+
+  function updateProgress() {
+    const mods = DAY.filter((d) => !d.brk), n = mods.filter((d) => saved.done[d.id]).length;
+    document.getElementById('progress-label').textContent = `${n} of ${mods.length} done`;
+    document.getElementById('progress-bar').style.width = `${(n / mods.length) * 100}%`;
+  }
+
+  startInput.addEventListener('change', () => { saved.start = startInput.value; persist(); drawTimes(); });
+
+  /* ---------------- module interactions ---------------- */
+  main.addEventListener('change', (e) => {
+    const id = e.target.dataset.done;
+    if (id) { saved.done[id] = e.target.checked; persist(); drawTimes(); }
+  });
+  let noteTimer;
+  main.addEventListener('input', (e) => {
+    const id = e.target.dataset.note;
+    if (!id) return;
+    saved.notes[id] = e.target.value;
+    clearTimeout(noteTimer); noteTimer = setTimeout(persist, 300);
+  });
+  main.addEventListener('click', (e) => {
+    const opt = e.target.closest('.opt');
+    if (opt) {
+      const q = opt.closest('.q'), key = q.dataset.key, [mid, qi] = key.split('-');
+      const quiz = DAY.find((d) => d.id === mid).quiz[+qi], oi = +opt.dataset.oi;
+      saved.quiz[key] = oi; persist();
+      q.querySelectorAll('.opt').forEach((b, i) => { b.classList.toggle('right', i === quiz[2]); b.classList.toggle('wrong', i === oi && oi !== quiz[2]); });
+      const ex = q.querySelector('.explain'); ex.hidden = false; ex.textContent = (oi === quiz[2] ? 'Correct. ' : 'Not quite. ') + quiz[3];
+      return;
+    }
+    const term = e.target.closest('.term[data-term]');
+    if (term) { showTerm(term.dataset.term); }
+  });
+
+  /* ---------------- glossary ---------------- */
+  const glList = document.getElementById('gl-list'), glQ = document.getElementById('gl-q'), glCats = document.getElementById('gl-cats');
+  const cats = ['All', ...new Set(GL.map((g) => g[1]))];
+  let cat = 'All';
+  glCats.innerHTML = cats.map((c) => `<button type="button" class="chip" data-cat="${c}" aria-pressed="${c === 'All'}">${c}</button>`).join('');
+  const slug = (t) => 'term-' + t.toLowerCase().replace(/[^a-z0-9]+/g, '-');
+  function drawGlossary() {
+    const q = glQ.value.trim().toLowerCase();
+    const items = GL.filter((g) => (cat === 'All' || g[1] === cat) && (!q || (g[0] + ' ' + g[2] + ' ' + (g[3] || '')).toLowerCase().includes(q)));
+    glList.innerHTML = items.map((g) => `<div class="gl-item" id="${slug(g[0])}"><h4>${esc(g[0])}<small>${esc(g[1])}</small></h4><p>${esc(g[2])}</p>${g[3] ? `<p><code>${esc(g[3])}</code></p>` : ''}</div>`).join('');
+    document.getElementById('gl-empty').hidden = items.length > 0;
+  }
+  glQ.addEventListener('input', drawGlossary);
+  glCats.addEventListener('click', (e) => {
+    const b = e.target.closest('[data-cat]'); if (!b) return;
+    cat = b.dataset.cat; glCats.querySelectorAll('[data-cat]').forEach((x) => x.setAttribute('aria-pressed', String(x === b))); drawGlossary();
+  });
+  function showTerm(t) {
+    glQ.value = ''; cat = 'All'; glCats.querySelectorAll('[data-cat]').forEach((x) => x.setAttribute('aria-pressed', String(x.dataset.cat === 'All'))); drawGlossary();
+    const el = document.getElementById(slug(t)); if (!el) return;
+    el.scrollIntoView({ block: 'center' });
+    el.classList.add('flash'); setTimeout(() => el.classList.remove('flash'), 1600);
+  }
+  drawGlossary();
+
+  /* ---------------- chooser ---------------- */
+  const needsEl = document.getElementById('needs'), answer = document.getElementById('answer');
+  needsEl.innerHTML = NEEDS.map((n, i) => `<button type="button" class="need" data-i="${i}" aria-pressed="${i === 0}">${esc(n[0])}</button>`).join('');
+  function drawAnswer(i) {
+    const [need, comp, api, page, alt] = NEEDS[i];
+    answer.innerHTML = `<p class="label">You need</p><h3>${esc(comp)}</h3><pre><code>${esc(api)}</code></pre><p class="alt"><b>Choose something else when:</b> ${esc(alt)}</p><p class="alt">For: “${esc(need)}”</p><a href="${HIG + page}" target="_blank" rel="noopener">Read the HIG page ↗</a>`;
+  }
+  needsEl.addEventListener('click', (e) => {
+    const b = e.target.closest('.need'); if (!b) return;
+    needsEl.querySelectorAll('.need').forEach((x) => x.setAttribute('aria-pressed', String(x === b))); drawAnswer(+b.dataset.i);
+  });
+  drawAnswer(0);
+
+  /* ---------------- directions ---------------- */
+  const dirsEl = document.getElementById('dirs');
+  const mock = (d) => d.id === 'dense'
+    ? `<div class="mock ${d.cls}" aria-hidden="true"><div class="ms"><i class="on"></i><i></i><i></i><i></i><i></i><i></i></div><div class="mc">${'<i class="line h"></i>' + '<i class="line"></i>'.repeat(9)}</div></div>`
+    : `<div class="mock ${d.cls}" aria-hidden="true"><div class="ms"><i class="on"></i><i></i><i></i><i></i><i></i></div><div class="mc"><i class="line" style="width:40%;height:9px"></i><div class="row" style="grid-template-columns:repeat(4,1fr)"><i class="tile"></i><i class="tile"></i><i class="tile"></i><i class="tile"></i></div><div class="row" style="grid-template-columns:repeat(2,1fr)"><i class="tile" style="height:26px"></i><i class="tile" style="height:26px"></i></div></div></div>`;
+  function drawDirs() {
+    dirsEl.innerHTML = DIRS.map((d) => `<article class="dir${saved.dir === d.id ? ' pick' : ''}">${mock(d)}<div class="dir-body"><h3>${esc(d.name)} <em>${esc(d.tag)}</em></h3><dl><dt>Looks like</dt><dd>${esc(d.look)}</dd><dt>Good for</dt><dd>${esc(d.good)}</dd><dt>Watch out</dt><dd>${esc(d.watch)}</dd><dt>SwiftUI effort</dt><dd>${esc(d.effort)}</dd></dl><button type="button" class="pickbtn" data-dir="${d.id}" aria-pressed="${saved.dir === d.id}">${saved.dir === d.id ? 'My pick' : 'Mark as my pick'}</button></div></article>`).join('');
+  }
+  dirsEl.addEventListener('click', (e) => {
+    const b = e.target.closest('[data-dir]'); if (!b) return;
+    saved.dir = saved.dir === b.dataset.dir ? undefined : b.dataset.dir; persist(); drawDirs();
+  });
+  drawDirs();
+
+  /* ---------------- notes export ---------------- */
+  function collect() {
+    const mods = DAY.filter((d) => !d.brk);
+    const qs = mods.flatMap((d) => d.quiz.map((q, i) => [q, saved.quiz[`${d.id}-${i}`]]));
+    const right = qs.filter(([q, p]) => p === q[2]).length;
+    const lines = ['MacSprint Design Day — my notes', `Finished: ${mods.filter((d) => saved.done[d.id]).length}/${mods.length} blocks · Quiz: ${right}/${qs.length} correct`, `UI direction: ${(DIRS.find((d) => d.id === saved.dir) || { name: 'not chosen yet' }).name}`, ''];
+    for (const d of mods) if ((saved.notes[d.id] || '').trim()) lines.push(`## ${d.title}`, saved.notes[d.id].trim(), '');
+    return lines.join('\n');
+  }
+  const allnotes = document.getElementById('allnotes'), status = document.getElementById('copy-status');
+  document.getElementById('copy-notes').addEventListener('click', () => {
+    const text = collect(); allnotes.value = text;
+    navigator.clipboard.writeText(text).then(() => { status.textContent = 'Copied. Paste it into our chat.'; }, () => { allnotes.focus(); allnotes.select(); status.textContent = 'Copy is blocked here: the text is selected, press ⌘C.'; });
+  });
+  let armed = false;
+  document.getElementById('reset').addEventListener('click', (e) => {
+    if (!armed) { armed = true; e.target.textContent = 'Click again to erase progress'; setTimeout(() => { armed = false; e.target.textContent = 'Reset progress'; }, 4000); return; }
+    saved = { done: {}, notes: {}, quiz: {} }; persist(); location.reload();
+  });
+  allnotes.value = collect();
+
+  /* ---------------- current section highlight ---------------- */
+  if ('IntersectionObserver' in window) {
+    const io = new IntersectionObserver((ents) => {
+      for (const en of ents) if (en.isIntersecting) rail.querySelectorAll('a').forEach((a) => a.classList.toggle('cur', a.getAttribute('href') === '#' + en.target.id));
+    }, { rootMargin: '-30% 0px -60% 0px' });
+    main.querySelectorAll('.mod, .tool').forEach((s) => io.observe(s));
+  }
+
+  drawTimes();
+})();
+</script>
