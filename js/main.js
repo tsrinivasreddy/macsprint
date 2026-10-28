@@ -4,7 +4,7 @@ import { DEMOS } from './demos.js';
 import { initProblems, initWaitlist, initShortcuts } from './sections.js';
 import { heroWindowMarkup, heroTryMarkup, bindHeroTry } from './home.js';
 import { initSpotlight } from './showcase.js';
-import { PHOTOS } from './photos.js';
+import { PHOTOS, BY_HUE } from './photos.js';
 
 function initReveal() {
   const els = document.querySelectorAll('.reveal');
@@ -34,13 +34,13 @@ initShortcuts(document.getElementById('keys-grid'));
 initWaitlist(document.querySelector('.waitlist-form'), document.querySelector('.waitlist-status'));
 initReveal();
 
-// Real photos in every thumbnail: each .ph keeps its colour (--h) and, when photos are
-// available, gets one picked from that colour so the same file always shows the same photo.
+// Real photos in every thumbnail: each .ph gets the photo for its colour value (--h),
+// so the same file always shows the same photo, and copies show the same picture.
 if (PHOTOS.length) {
   const paint = (el) => {
     if (el.dataset.photo) return;
     const h = parseInt(getComputedStyle(el).getPropertyValue('--h'), 10) || 0;
-    el.dataset.photo = PHOTOS[Math.abs(h) % PHOTOS.length];
+    el.dataset.photo = BY_HUE[h] ? `assets/photos/${BY_HUE[h]}.jpg` : PHOTOS[Math.abs(h) % PHOTOS.length];
     el.style.backgroundImage = `url("${el.dataset.photo}")`;
   };
   const scan = (root) => root.querySelectorAll?.('.ph:not([data-photo])').forEach(paint);

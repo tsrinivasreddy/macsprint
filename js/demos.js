@@ -413,7 +413,7 @@ function duplicates(el) {
       ${groups.map(([n, size, copies, h], gi) => `
         <div class="d-cgroup" role="group" aria-label="${esc(n)}: choose the copy to keep"><p><b>${esc(n)}</b> · ${copies.length} copies · ${mb(size)} each</p>
           <div class="d-cards">${copies.map(([folder, file], i) => `<button type="button" class="d-ccard" data-g="${gi}" data-i="${i}" aria-pressed="${i === 0}">
-            <span class="d-ccard-art${h === undefined ? '' : ' ph'}" ${h === undefined ? '' : `style="--h:${h + i * 4}"`}>${h === undefined ? svg(ICON.doc, 20) : ''}<em></em></span>
+            <span class="d-ccard-art${h === undefined ? '' : ' ph'}" ${h === undefined ? '' : `style="--h:${h}"`}>${h === undefined ? svg(ICON.doc, 20) : ''}<em></em></span>
             <b>${esc(file)}</b><small>${esc(folder)} · ${mb(size)}</small></button>`).join('')}</div>
         </div>`).join('')}
       <p class="d-foot">Click a copy to keep it instead. Everything else goes to the Trash, so you can put it back.</p>
@@ -540,7 +540,7 @@ function similar(el) {
     <div class="d-sim">
       ${sets.map(([h, n], gi) => `
         <div class="d-sim-group"><p><b>${n}</b> · 4 similar shots</p>
-          <div class="d-sim-row">${[0, 1, 2, 3].map((k) => `<button type="button" class="ph${k === 1 ? ' best' : ''}" style="--h:${h + k * 6};filter:brightness(${1 - k * 0.06})" aria-label="${n} shot ${k + 1}${k === 1 ? ', suggested best' : ''}" data-g="${gi}" data-k="${k}">${k === 1 ? `<em>${svg(ICON.star, 12)} Best</em>` : ''}</button>`).join('')}</div>
+          <div class="d-sim-row">${[0, 1, 2, 3].map((k) => `<button type="button" class="ph${k === 1 ? ' best' : ''}" style="--h:${h};filter:brightness(${1 - k * 0.06})" aria-label="${n} shot ${k + 1}${k === 1 ? ', suggested best' : ''}" data-g="${gi}" data-k="${k}">${k === 1 ? `<em>${svg(ICON.star, 12)} Best</em>` : ''}</button>`).join('')}</div>
         </div>`).join('')}
       <div class="d-compare" hidden><span class="ph"></span><span class="ph"></span><p>Side-by-side compare</p></div>
       <p class="d-foot">Similar is not identical, so nothing is selected for you: compare, then keep the best.</p>
@@ -549,7 +549,7 @@ function similar(el) {
     const g = +e.currentTarget.dataset.g, k = +e.currentTarget.dataset.k, h = sets[g][0];
     const cmp = el.querySelector('.d-compare');
     const [l, r] = cmp.querySelectorAll('.ph');
-    l.style.setProperty('--h', h + 6); r.style.setProperty('--h', h + k * 6);
+    l.style.setProperty('--h', h); r.style.setProperty('--h', h); r.style.filter = `brightness(${1 - k * 0.06})`;
     cmp.querySelector('p').textContent = `Comparing best shot with shot ${k + 1}`;
     cmp.hidden = false;
   });
