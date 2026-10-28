@@ -27,3 +27,4 @@ them when publishing; browsers still open the files directly.
 
 - [`FOUNDATIONS.md`](FOUNDATIONS.md): the final foundations and tokens every feature uses.
 - [`lab/`](lab/README.md): removed experiments (hover fan + Quick Look, logo marks, pastel website) kept for reuse.
+- [`inspiration/`](inspiration/): studies of reference sites (what to take, adapt or skip, mapped to the foundations). First: [Seek](inspiration/seek.md).
