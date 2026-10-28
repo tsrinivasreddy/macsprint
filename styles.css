@@ -876,3 +876,7 @@ mark { background: var(--mark); color: var(--text); border-radius: 3px; padding:
   .spot-wide .spot-shot .mac-window { border-radius: 12px 12px 0 0; }
 }
 @media (max-width: 520px) { .spot-shot { padding: 18px 16px 0; height: 250px; } .spot-text { padding: 18px 18px 22px; } .spot-demo { zoom: .62; } }
+
+/* real photos (see js/photos.js) */
+.ph[data-photo] { background-size: cover; background-position: center; }
+.ph[data-photo]::before, .ph[data-photo]::after { display: none; }

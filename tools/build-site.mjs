@@ -10,6 +10,7 @@ rmSync(out, { recursive: true, force: true });
 mkdirSync(out);
 cpSync(join(root, 'styles.css'), join(out, 'styles.css'));
 cpSync(join(root, 'js'), join(out, 'js'), { recursive: true });
+cpSync(join(root, 'assets'), join(out, 'assets'), { recursive: true });
 const html = readFileSync(join(root, 'index.html'), 'utf8').replace('data-endpoint=""', 'data-endpoint="/api/waitlist"');
 if (!html.includes('data-endpoint="/api/waitlist"')) throw new Error('waitlist form not found in index.html');
 writeFileSync(join(out, 'index.html'), html);
