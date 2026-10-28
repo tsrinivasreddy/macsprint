@@ -52,7 +52,7 @@ export function initWaitlist(form, status) {
       });
       const data = await res.json().catch(() => ({}));
       if (!res.ok) throw new Error(data.error || '');
-      status.textContent = data.already ? "You're already on the list. We'll email you once, when MacSprint AI is ready." : "You're on the list. Check your inbox for a confirmation. We'll email you once more, when MacSprint AI is ready.";
+      status.textContent = data.already ? "You're already on the list. We'll email you once, when MacSprint AI is ready." : "You're on the list. We'll email you once, when MacSprint AI is ready.";
       status.classList.add('is-ok');
       form.reset();
     } catch (err) {
