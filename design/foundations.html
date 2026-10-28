@@ -623,7 +623,7 @@ function varsFor(dark) {
 }
 const varStyle = (dark) => Object.entries(varsFor(dark)).map(([k, v]) => `${k}:${String(v).replace(/"/g, "'")}`).join(';') + ';min-width:0;padding:4px;background:transparent;border-radius:0';
 function previewHtml() {
-  const c = state.choices, sb = [['house', 'Home', '', '#3a8dff', true], ['grid', 'Library', '2,880', '#6a6ff0'], ['photo', 'Images', '2,280', '#3a8dff'], ['search', 'AI Search', '', '#a46bf5'], ['text', 'Text in Images', '589', '#3fb985'], '-', ['drive', 'Storage', '10', '#f0a23b', false, 'alert'], ['trash', 'Clean Up', '14.1 GB', '#f2647e', false, 'good'], ['dup', 'Duplicates', '44.8 MB', '#3aa7d9', false, 'good'], ['folder', 'Organizer', '', '#f0a23b'], '-', ['clip', 'Clipboard', '', '#6a6ff0'], ['cam', 'Screenshots', '', '#3fb985']];
+  const c = state.choices, sb = [['house', 'Home', '', '#3a8dff', true], ['grid', 'Library', '2,880', '#6a6ff0'], ['photo', 'Images', '2,280', '#3a8dff'], '-', ['drive', 'Storage', '10', '#f0a23b', false, 'alert'], ['trash', 'Clean Up', '14.1 GB', '#f2647e', false, 'good'], ['dup', 'Duplicates', '44.8 MB', '#3aa7d9', false, 'good'], ['folder', 'Organizer', '', '#f0a23b'], '-', ['clip', 'Clipboard', '', '#6a6ff0']];
   const folders = KINDS.map((kind) => folderHtml(c.folders, kind)).join('');
   const aiOn = c.ai === 'on';
   return `<div class="win">

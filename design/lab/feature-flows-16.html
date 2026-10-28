@@ -1,0 +1,978 @@
+<title>MacSprint Lab · 16 feature flows</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Atkinson+Hyperlegible:wght@400;700&family=Nunito:wght@800;900&family=JetBrains+Mono:wght@400;600&family=Schibsted+Grotesk:wght@600;800&display=swap">
+<style>
+/* Layout: a design-review desk. Feature index on the left; a live Mac mock-up marked up with red review pins; the parts list below it. */
+:root {
+  --paper: #eceff3;
+  --sheet: #ffffff;
+  --ink: #15171c;
+  --ink-2: #4f5562;
+  --ink-3: #5f6573;
+  --rule: rgba(21, 23, 28, 0.12);
+  --red: #d22f3d;
+  --red-soft: rgba(210, 47, 61, 0.1);
+  --blue: #3346c8;
+  --blue-soft: rgba(51, 70, 200, 0.09);
+  --code: #f1f3f6;
+  --display: "Schibsted Grotesk", "Avenir Next", system-ui, sans-serif;
+  --body: "Atkinson Hyperlegible", "Segoe UI", system-ui, sans-serif;
+  --mono: "JetBrains Mono", ui-monospace, Menlo, monospace;
+  --mac-font: -apple-system, BlinkMacSystemFont, "SF Pro Text", "Helvetica Neue", "Segoe UI", sans-serif;
+}
+@media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) {
+  --paper: #111317; --sheet: #191c21; --ink: #eceef2; --ink-2: #b0b6c2; --ink-3: #99a0ad; --rule: rgba(255,255,255,0.1);
+  --red: #ff6b76; --red-soft: rgba(255,107,118,0.14); --blue: #93a3ff; --blue-soft: rgba(147,163,255,0.13); --code: #20242b; color-scheme: dark; } }
+:root[data-theme="dark"] {
+  --paper: #111317; --sheet: #191c21; --ink: #eceef2; --ink-2: #b0b6c2; --ink-3: #99a0ad; --rule: rgba(255,255,255,0.1);
+  --red: #ff6b76; --red-soft: rgba(255,107,118,0.14); --blue: #93a3ff; --blue-soft: rgba(147,163,255,0.13); --code: #20242b; color-scheme: dark; }
+
+/* Mock-up tokens: the MacSprint app itself (Graphite & Glass). Follows the page theme unless forced. */
+.mscope {
+  --m-bg: #ffffff; --m-side: #f4f4f7; --m-alt: #f0f1f5; --m-line: rgba(20,20,30,0.1); --m-menu: rgba(250,250,252,0.97);
+  --m-text: #16161a; --m-text2: #5f6068; --m-text3: #6c6d76; --m-accent: #3b5bdb; --m-btn: #2f4bc4; --m-soft: rgba(59,91,219,0.11);
+  --m-good: #1f7a4d; --m-alert: #c4223b; --m-fold: #c9ccd6; --m-fold2: #b4b8c4; --m-paperc: #ffffff;
+  --m-menubar: rgba(255,255,255,0.62); --m-menubar-text: #111;
+  --m-desk: linear-gradient(135deg, #6d7be0, #4aa3dc 55%, #8fd6e6);
+}
+@media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) .mscope:not(.force-light) {
+  --m-bg: #18191d; --m-side: #1f2025; --m-alt: #25262c; --m-line: rgba(255,255,255,0.09); --m-menu: rgba(42,43,49,0.98);
+  --m-text: #ececf0; --m-text2: #a3a4ad; --m-text3: #92939f; --m-accent: #8399ff; --m-btn: #4a63e0; --m-soft: rgba(131,153,255,0.15);
+  --m-good: #4cd38a; --m-fold: #3b3e48; --m-fold2: #2c2e36; --m-paperc: #d9dbe3;
+  --m-menubar: rgba(30,30,36,0.62); --m-menubar-text: #f2f2f5; --m-desk: linear-gradient(135deg, #252a5c, #1d4a6a 55%, #24606e); } }
+:root[data-theme="dark"] .mscope:not(.force-light), .mscope.force-dark {
+  --m-bg: #18191d; --m-side: #1f2025; --m-alt: #25262c; --m-line: rgba(255,255,255,0.09); --m-menu: rgba(42,43,49,0.98);
+  --m-text: #ececf0; --m-text2: #a3a4ad; --m-text3: #92939f; --m-accent: #8399ff; --m-btn: #4a63e0; --m-soft: rgba(131,153,255,0.15);
+  --m-good: #4cd38a; --m-fold: #3b3e48; --m-fold2: #2c2e36; --m-paperc: #d9dbe3;
+  --m-menubar: rgba(30,30,36,0.62); --m-menubar-text: #f2f2f5; --m-desk: linear-gradient(135deg, #252a5c, #1d4a6a 55%, #24606e); }
+.mscope.force-light {
+  --m-bg: #ffffff; --m-side: #f4f4f7; --m-alt: #f0f1f5; --m-line: rgba(20,20,30,0.1); --m-menu: rgba(250,250,252,0.97);
+  --m-text: #16161a; --m-text2: #5f6068; --m-text3: #6c6d76; --m-accent: #3b5bdb; --m-btn: #2f4bc4; --m-soft: rgba(59,91,219,0.11);
+  --m-good: #1f7a4d; --m-fold: #c9ccd6; --m-fold2: #b4b8c4; --m-paperc: #ffffff;
+  --m-menubar: rgba(255,255,255,0.62); --m-menubar-text: #111; --m-desk: linear-gradient(135deg, #6d7be0, #4aa3dc 55%, #8fd6e6); }
+
+* { box-sizing: border-box; }
+html { scroll-behavior: smooth; }
+body { margin: 0; background: var(--paper); color: var(--ink); font: 16px/1.55 var(--body); -webkit-font-smoothing: antialiased; overflow-x: hidden;
+  padding-left: max(16px, env(safe-area-inset-left, 0px)); padding-right: max(16px, env(safe-area-inset-right, 0px)); padding-block: 0 72px; }
+h1, h2, h3, h4 { font-family: var(--display); margin: 0; line-height: 1.12; text-wrap: balance; }
+p { margin: 0; }
+a { color: var(--blue); }
+button { font: inherit; color: inherit; cursor: pointer; }
+:focus-visible { outline: 2.5px solid var(--blue); outline-offset: 2px; border-radius: 6px; }
+code { font-family: var(--mono); font-size: 0.84em; }
+.wrap { max-width: 1240px; margin: 0 auto; }
+
+header.top { padding-block: 40px 22px; display: grid; gap: 12px; max-width: 78ch; }
+header.top h1 { font-size: clamp(36px, 5.6vw, 58px); font-weight: 800; letter-spacing: -0.03em; }
+header.top p { color: var(--ink-2); font-size: 17px; }
+.legend { display: flex; flex-wrap: wrap; gap: 10px 22px; font-size: 14.5px; color: var(--ink-2); align-items: center; }
+.legend span { display: inline-flex; align-items: center; gap: 8px; }
+.lg-pin { width: 20px; height: 20px; border-radius: 50%; background: var(--red); color: #fff; font: 700 11px/20px var(--body); text-align: center; }
+.lg-hot { width: 28px; height: 16px; border: 2px dashed var(--red); border-radius: 5px; }
+
+.layout { display: grid; grid-template-columns: 236px minmax(0, 1fr); gap: 32px; align-items: start; }
+.rail { position: sticky; top: calc(16px + env(safe-area-inset-top, 0px)); display: grid; gap: 2px; max-height: calc(100vh - 32px); overflow-y: auto; padding-right: 4px; }
+.rail h4 { font: 700 13px/1 var(--body); color: var(--ink-3); margin: 14px 8px 6px; }
+.rail h4:first-child { margin-top: 0; }
+.rail a { display: flex; align-items: center; gap: 10px; padding: 7px 9px; border-radius: 8px; text-decoration: none; color: var(--ink-2); font-size: 15px; line-height: 1.25; }
+.rail a:hover { background: var(--sheet); color: var(--ink); }
+.rail a.cur { background: var(--sheet); color: var(--ink); font-weight: 700; box-shadow: 0 0 0 1px var(--rule); }
+.rail a svg { flex: none; color: var(--ink-3); }
+.rail a.cur svg { color: var(--blue); }
+.rail a span { flex: 1; }
+.rail a em { font-style: normal; font: 600 11px/1 var(--mono); color: var(--ink-3); }
+.picker { display: none; }
+.picker select { width: 100%; padding: 10px 12px; border-radius: 10px; border: 1px solid var(--rule); background: var(--sheet); font-size: 16px; }
+
+main { min-width: 0; display: grid; grid-template-columns: minmax(0, 1fr); gap: 22px; }
+.feat-head { display: grid; gap: 8px; }
+.feat-head h2 { font-size: clamp(30px, 4vw, 42px); font-weight: 800; letter-spacing: -0.025em; }
+.feat-head .what { font-size: 18px; color: var(--ink-2); max-width: 70ch; }
+.feat-meta { display: flex; flex-wrap: wrap; gap: 8px 18px; font-size: 14.5px; color: var(--ink-3); }
+.feat-meta b { color: var(--ink); }
+
+.steps { display: flex; gap: 6px; flex-wrap: wrap; counter-reset: s; }
+.stepbtn { display: inline-flex; align-items: center; gap: 8px; border: 1px solid var(--rule); background: var(--sheet); border-radius: 99px; padding: 6px 14px 6px 6px; font-size: 14.5px; color: var(--ink-2); }
+.stepbtn b { width: 24px; height: 24px; border-radius: 50%; display: grid; place-items: center; background: var(--paper); font-size: 12.5px; color: var(--ink-2); }
+.stepbtn[aria-current=step] { border-color: var(--blue); color: var(--ink); font-weight: 700; }
+.stepbtn[aria-current=step] b { background: var(--blue); color: var(--sheet); }
+.stepbtn.seen b { background: var(--blue-soft); color: var(--blue); }
+
+.stage-card { background: var(--sheet); border: 1px solid var(--rule); border-radius: 18px; padding: 18px; display: grid; gap: 14px; }
+.stage-tools { display: flex; flex-wrap: wrap; gap: 10px; align-items: center; justify-content: space-between; }
+.seg { display: inline-flex; border: 1px solid var(--rule); border-radius: 9px; overflow: hidden; }
+.seg button { border: 0; background: transparent; padding: 6px 12px; font-size: 13.5px; color: var(--ink-2); }
+.seg button[aria-pressed=true] { background: var(--ink); color: var(--sheet); }
+.tgl { display: inline-flex; align-items: center; gap: 8px; font-size: 14px; color: var(--ink-2); }
+.tgl input { width: 16px; height: 16px; accent-color: var(--red); }
+.stage-scroll { overflow-x: auto; border-radius: 14px; }
+.stage-inner { position: relative; min-width: 760px; padding: 10px; }
+.pin { position: absolute; z-index: 20; width: 22px; height: 22px; border-radius: 50%; background: var(--red); color: #fff; border: 2px solid var(--sheet);
+  font: 700 11.5px/18px var(--body); text-align: center; transform: translate(-50%, -50%); cursor: pointer; transition: transform .2s; box-shadow: 0 2px 6px rgba(0,0,0,.25); }
+.pin.hl { transform: translate(-50%, -50%) scale(1.35); }
+.hlbox { position: absolute; z-index: 19; border: 2px solid var(--red); border-radius: 7px; background: var(--red-soft); pointer-events: none; }
+.hide-pins .pin { display: none; }
+[data-hot] { cursor: pointer; outline: 2px dashed var(--red) !important; outline-offset: 3px; animation: hot 1.6s ease-in-out infinite; }
+@keyframes hot { 50% { outline-offset: 6px; } }
+.nav-row { display: flex; gap: 10px; align-items: center; justify-content: space-between; flex-wrap: wrap; }
+.navbtn { border: 1px solid var(--rule); background: var(--sheet); border-radius: 10px; padding: 8px 16px; font-weight: 700; font-size: 15px; }
+.navbtn.pri { background: var(--blue); border-color: var(--blue); color: var(--sheet); }
+.navbtn:disabled { opacity: .4; cursor: default; }
+.kbdhint { font-size: 13.5px; color: var(--ink-3); }
+
+.explain { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 14px; }
+.ex { border-top: 3px solid var(--rule); padding-top: 10px; display: grid; gap: 4px; align-content: start; }
+.ex h4 { font: 700 14px/1.2 var(--body); color: var(--ink-3); }
+.ex p { font-size: 15.5px; }
+.ex.do { border-top-color: var(--red); }
+.ex.why { border-top-color: var(--blue); }
+
+.parts h3 { font-size: 26px; font-weight: 800; letter-spacing: -0.02em; }
+.parts > p { color: var(--ink-2); margin-top: 6px; max-width: 72ch; }
+.part-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 14px; margin-top: 16px; }
+.part { background: var(--sheet); border: 1px solid var(--rule); border-radius: 16px; overflow: hidden; display: grid; grid-template-rows: auto auto 1fr; min-width: 0; transition: box-shadow .2s; }
+.part.hl { box-shadow: 0 0 0 2px var(--red); }
+.part-head { display: flex; align-items: center; gap: 10px; padding: 14px 16px 10px; }
+.part-head .num { width: 26px; height: 26px; border-radius: 50%; background: var(--red); color: #fff; display: grid; place-items: center; font-weight: 700; font-size: 13px; flex: none; }
+.part-head h4 { font-size: 19px; font-weight: 800; }
+.part-head small { margin-left: auto; font-size: 12.5px; color: var(--ink-3); text-align: right; }
+.sample { margin: 0 16px; border-radius: 12px; background: var(--m-alt); padding: 18px; display: grid; place-items: center; min-height: 96px; overflow: hidden; font-family: var(--mac-font); color: var(--m-text); }
+.spec { display: grid; grid-template-columns: 92px minmax(0, 1fr); gap: 7px 12px; padding: 14px 16px 16px; font-size: 14.5px; align-content: start; }
+.spec dt { color: var(--ink-3); }
+.spec dd { margin: 0; min-width: 0; }
+.spec dd code { display: block; background: var(--code); border-radius: 7px; padding: 6px 8px; white-space: pre-wrap; word-break: break-word; font-size: 12.5px; }
+.sf { display: inline-flex; align-items: center; gap: 6px; background: var(--code); border-radius: 6px; padding: 2px 8px 2px 6px; margin: 0 6px 4px 0; font: 12.5px var(--mono); }
+.states { display: flex; flex-wrap: wrap; gap: 4px; }
+.states span { font-size: 12.5px; border: 1px solid var(--rule); border-radius: 99px; padding: 1px 8px; color: var(--ink-2); }
+.done-card[hidden] { display: none; }
+.done-card { display: flex; flex-wrap: wrap; gap: 12px; align-items: center; justify-content: space-between; padding: 14px 16px; border-radius: 12px; background: var(--blue-soft); }
+
+/* ------------- MOCK-UP: MacSprint ------------- */
+.mac { position: relative; width: 100%; height: 520px; border-radius: 14px; overflow: hidden; background: var(--m-bg); color: var(--m-text);
+  font: 13px/1.35 var(--mac-font); display: grid; grid-template-columns: 188px minmax(0, 1fr); box-shadow: 0 2px 6px rgba(0,0,0,.08), 0 24px 60px -24px rgba(20,30,80,.35), 0 0 0 1px var(--m-line); }
+.mac.insp { grid-template-columns: 188px minmax(0, 1fr) 210px; }
+.mac svg { flex: none; }
+.m-side { background: var(--m-side); border-right: 1px solid var(--m-line); padding: 10px 8px; display: flex; flex-direction: column; gap: 1px; overflow: hidden; }
+.m-lights { display: flex; gap: 7px; padding: 2px 6px 12px; }
+.m-lights i { width: 11px; height: 11px; border-radius: 50%; background: #ff5f57; }
+.m-lights i:nth-child(2) { background: #febc2e; } .m-lights i:nth-child(3) { background: #28c840; }
+.m-mark { width: 20px; height: 20px; border-radius: 6px; background: linear-gradient(160deg, #6f86ff, #2f4bc4); position: relative; flex: none; }
+.m-mark::after { content: ""; position: absolute; inset: 5px 5px 5px; border: 2px solid #fff; border-top: 0; border-radius: 0 0 3px 3px; }
+.m-row { display: flex; align-items: center; gap: 8px; height: 25px; padding: 0 8px; border-radius: 7px; color: var(--m-text2); white-space: nowrap; }
+.m-row svg { color: var(--m-text3); }
+.m-row.sel { background: var(--m-bg); color: var(--m-text); font-weight: 600; box-shadow: 0 1px 2px rgba(0,0,0,.08), 0 0 0 1px var(--m-line); }
+.m-row.sel svg { color: var(--m-accent); }
+.m-row em { margin-left: auto; font-style: normal; font-size: 10.5px; color: var(--m-text3); }
+.m-row em.alert { background: var(--m-alert); color: #fff; border-radius: 99px; padding: 0 6px; font-weight: 700; line-height: 15px; }
+.m-row em.good { color: var(--m-good); font-weight: 600; }
+.m-sep { height: 1px; background: var(--m-line); margin: 5px 6px; flex: none; }
+.m-main { display: flex; flex-direction: column; min-width: 0; min-height: 0; }
+.m-toolbar { display: flex; align-items: center; gap: 10px; padding: 9px 16px; border-bottom: 1px solid var(--m-line); min-height: 48px; }
+.m-search { display: flex; align-items: center; gap: 7px; flex: 1; max-width: 320px; background: var(--m-alt); border-radius: 9px; padding: 5px 9px; color: var(--m-text3); font-size: 12.5px; min-width: 0; }
+.m-search span { flex: 1; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.m-search .m-kbd, .m-search .m-ai { flex: none; overflow: visible; }
+.m-search.focus { background: var(--m-bg); box-shadow: 0 0 0 3px var(--m-soft), 0 0 0 1px var(--m-accent); }
+/* foundations: search centred in the toolbar, white with a hairline */
+.m-toolbar > .m-search { margin: 0 auto; max-width: 380px; background: var(--m-bg); box-shadow: 0 0 0 1px var(--m-line), 0 2px 6px rgba(0,0,0,.05); }
+.m-toolbar > .m-search.focus { box-shadow: 0 0 0 3px var(--m-soft), 0 0 0 1px var(--m-accent); }
+.m-toolbar > .m-libsize { margin-left: 0; }
+.m-search .typed { color: var(--m-text); }
+.m-kbd { font-size: 10px; border: 1px solid var(--m-line); border-radius: 4px; padding: 0 4px; color: var(--m-text3); background: var(--m-bg); line-height: 15px; }
+.m-libsize { margin-left: auto; font-size: 11.5px; color: var(--m-text2); white-space: nowrap; }
+.m-libsize b { color: var(--m-text); }
+.m-content { flex: 1; min-height: 0; overflow: hidden; padding: 14px 18px; display: flex; flex-direction: column; gap: 11px; position: relative; }
+.m-h1 { font-size: 22px; font-weight: 700; letter-spacing: -0.02em; }
+.m-sub { font-size: 11.5px; color: var(--m-text2); }
+.m-h2 { font-size: 14px; font-weight: 650; display: flex; gap: 8px; align-items: center; }
+.m-count { font-size: 10px; font-weight: 600; background: var(--m-alt); border-radius: 99px; padding: 1px 7px; color: var(--m-text2); }
+.m-pill { font-size: 10.5px; font-weight: 600; color: var(--m-good); background: color-mix(in oklab, var(--m-good) 14%, transparent); padding: 1px 8px; border-radius: 99px; }
+.m-row2 { display: flex; align-items: center; justify-content: space-between; gap: 10px; }
+.m-folders { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 8px; }
+/* foundations: Library folders as storage cards */
+.m-fcard { border: 1px solid var(--m-line); border-radius: 16px; padding: 8px 11px 9px; display: grid; gap: 5px; background: var(--m-bg); box-shadow: 0 1px 2px rgba(0,0,0,.05), 0 8px 20px -12px rgba(0,0,0,.25); min-width: 0; }
+.m-fcard .top { display: flex; align-items: center; gap: 7px; min-width: 0; }
+.m-fcard .gl { flex: none; width: 22px; height: 22px; border-radius: 7px; display: grid; place-items: center; color: var(--t); background: color-mix(in oklab, var(--t) 15%, var(--m-bg)); }
+.m-fcard .nm { min-width: 0; font-size: 12px; font-weight: 600; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.m-fcard .ct { margin-left: auto; font-size: 10px; color: var(--m-text3); white-space: nowrap; }
+.m-fcard b { font-size: 17px; font-weight: 700; letter-spacing: -0.03em; font-variant-numeric: tabular-nums; line-height: 1.1; }
+.m-fcard .meter { height: 4px; border-radius: 99px; background: color-mix(in oklab, var(--m-text) 9%, transparent); overflow: hidden; }
+.m-fcard .meter i { display: block; height: 100%; border-radius: inherit; background: var(--t); min-width: 4px; }
+.m-fcard .foot { display: flex; justify-content: space-between; gap: 8px; font-size: 10px; color: var(--m-text3); white-space: nowrap; min-width: 0; }
+.m-fcard .foot span:last-child { min-width: 0; overflow: hidden; text-overflow: ellipsis; }
+.m-fcard.skel > * { opacity: .35; } .m-fcard.skel b, .m-fcard.skel .foot { color: transparent; background: var(--m-line); border-radius: 4px; }
+.m-cards { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 8px; }
+.m-stat { border: 1px solid var(--m-line); border-radius: 16px; padding: 9px 11px; display: grid; gap: 1px; background: var(--m-bg); box-shadow: 0 1px 2px rgba(0,0,0,.05), 0 8px 20px -12px rgba(0,0,0,.25); min-width: 0; }
+.m-stat span { font-size: 10.5px; color: var(--m-text2); display: flex; align-items: center; gap: 5px; }
+.m-stat b { font-size: 17px; font-weight: 700; letter-spacing: -0.03em; font-variant-numeric: tabular-nums; }
+.m-stat small { font-size: 10px; color: var(--m-text3); }
+.m-btn { display: inline-flex; align-items: center; gap: 5px; height: 24px; padding: 0 10px; border-radius: 9px; font-size: 11.5px; border: 1px solid var(--m-line); background: var(--m-bg); color: var(--m-text); white-space: nowrap; font-weight: 500; }
+.m-btn.pri { background: var(--m-btn); color: #fff; border-color: transparent; font-weight: 600; }
+.m-btn.danger { background: var(--m-alert); color: #fff; border-color: transparent; font-weight: 600; }
+.m-ibtn { width: 26px; height: 24px; border-radius: 9px; display: inline-grid; place-items: center; color: var(--m-text2); border: 1px solid var(--m-line); background: var(--m-bg); }
+.m-seg { display: inline-flex; background: var(--m-alt); border-radius: 7px; padding: 2px; gap: 2px; }
+.m-seg span { padding: 2px 9px; border-radius: 5px; font-size: 11px; color: var(--m-text2); white-space: nowrap; }
+.m-seg span.on { background: var(--m-bg); color: var(--m-text); font-weight: 600; box-shadow: 0 1px 2px rgba(0,0,0,.14); }
+.m-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(86px, 1fr)); gap: 10px; }
+.m-file { display: grid; gap: 4px; font-size: 10px; min-width: 0; }
+.m-file .ph { aspect-ratio: 4 / 3; border-radius: 7px; position: relative; }
+.m-file span { white-space: nowrap; overflow: hidden; text-overflow: ellipsis; text-align: center; padding: 0 3px; border-radius: 4px; }
+.m-file.sel .ph { box-shadow: 0 0 0 2.5px var(--m-accent); }
+.m-file.sel span { background: var(--m-btn); color: #fff; }
+.m-file .doc { aspect-ratio: 4 / 3; border-radius: 7px; background: var(--m-alt); display: grid; place-items: center; color: var(--m-text3); }
+.m-play { position: absolute; right: 4px; bottom: 4px; font-size: 9px; color: #fff; background: rgba(0,0,0,.55); border-radius: 4px; padding: 0 4px; }
+.ph { display: block; background: radial-gradient(circle at 30% 30%, hsl(calc(var(--h) + 40) 90% 75% / .9), transparent 55%), radial-gradient(circle at 75% 70%, hsl(calc(var(--h) - 30) 80% 45% / .9), transparent 60%), linear-gradient(135deg, hsl(var(--h) 75% 58%), hsl(calc(var(--h) + 60) 70% 40%)); }
+.m-insp { border-left: 1px solid var(--m-line); padding: 14px; display: flex; flex-direction: column; gap: 10px; font-size: 11px; background: var(--m-bg); min-width: 0; }
+.m-insp .ph { aspect-ratio: 4 / 3; border-radius: 8px; }
+.m-insp b { font-size: 12.5px; }
+.m-dl { display: grid; grid-template-columns: 60px 1fr; gap: 4px 8px; margin: 0; }
+.m-dl dt { color: var(--m-text3); } .m-dl dd { margin: 0; }
+.m-menu { position: absolute; z-index: 8; background: var(--m-menu); border-radius: 9px; padding: 4px; min-width: 190px; font-size: 12px; box-shadow: 0 12px 32px rgba(0,0,0,.28), 0 0 0 1px var(--m-line); -webkit-backdrop-filter: blur(20px); backdrop-filter: blur(20px); }
+.m-menu div { padding: 3px 10px; border-radius: 5px; display: flex; justify-content: space-between; gap: 18px; align-items: center; white-space: nowrap; }
+.m-menu div small { color: var(--m-text3); font-size: 11px; }
+.m-menu div.hl { background: var(--m-btn); color: #fff; }
+.m-menu div.hl small { color: rgba(255,255,255,.8); }
+.m-menu hr { border: 0; height: 1px; background: var(--m-line); margin: 4px 6px; }
+.m-dim { position: absolute; inset: 0; z-index: 7; background: rgba(0,0,0,.22); display: flex; justify-content: center; align-items: flex-start; }
+.m-dialog { margin-top: 70px; width: 270px; background: var(--m-menu); border-radius: 13px; padding: 18px 16px 14px; text-align: center; display: grid; gap: 7px; box-shadow: 0 24px 60px rgba(0,0,0,.4), 0 0 0 1px var(--m-line); }
+.m-dialog b { font-size: 13px; }
+.m-dialog p { font-size: 11px; color: var(--m-text2); }
+.m-dialog .m-btn { justify-content: center; height: 26px; }
+.m-appicon { width: 40px; height: 40px; margin: 0 auto 2px; border-radius: 10px; background: linear-gradient(160deg, #6f86ff, #2f4bc4); }
+.m-sheet { width: 470px; background: var(--m-bg); border-radius: 0 0 12px 12px; padding: 16px; display: grid; gap: 10px; box-shadow: 0 24px 60px rgba(0,0,0,.4), 0 0 0 1px var(--m-line); }
+.m-toast { position: absolute; left: 50%; bottom: 18px; transform: translateX(-50%); z-index: 9; background: var(--m-text); color: var(--m-bg); border-radius: 99px; padding: 7px 8px 7px 14px; font-size: 12px; display: flex; gap: 10px; align-items: center; white-space: nowrap; box-shadow: 0 10px 30px rgba(0,0,0,.3); }
+.m-toast .m-btn { height: 20px; background: transparent; color: inherit; border-color: color-mix(in oklab, var(--m-bg) 40%, transparent); }
+.m-progress { height: 5px; background: var(--m-alt); border-radius: 99px; overflow: hidden; width: 150px; box-shadow: inset 0 0 0 1px var(--m-line); }
+.m-progress i { display: block; height: 100%; background: var(--m-accent); border-radius: 99px; }
+.m-tr { display: grid; grid-template-columns: 16px 24px minmax(0, 1fr) 150px 70px; align-items: center; gap: 8px; padding: 5px 8px; border-bottom: 1px solid var(--m-line); font-size: 11.5px; }
+.m-tr span { white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.m-tr.head { font-size: 10px; font-weight: 600; color: var(--m-text3); padding-block: 3px; }
+.m-tr.sel { background: var(--m-soft); }
+.m-tr .r { text-align: right; font-variant-numeric: tabular-nums; }
+.m-tr .mut { color: var(--m-text2); }
+.m-tr .ph, .m-tr .ico { width: 22px; height: 17px; border-radius: 3px; display: grid; place-items: center; color: var(--m-text3); }
+.m-check { width: 13px; height: 13px; border-radius: 4px; border: 1.5px solid var(--m-text3); position: relative; display: inline-block; flex: none; }
+.m-check.on { background: var(--m-btn); border-color: var(--m-btn); }
+.m-check.on::after { content: ""; position: absolute; left: 3px; top: 0px; width: 4px; height: 7px; border: solid #fff; border-width: 0 2px 2px 0; transform: rotate(45deg); }
+.m-radio { width: 13px; height: 13px; border-radius: 50%; border: 1.5px solid var(--m-text3); display: inline-block; flex: none; }
+.m-radio.on { border: 4px solid var(--m-btn); }
+.m-footer { display: flex; align-items: center; justify-content: space-between; gap: 8px; padding: 9px 16px; border-top: 1px solid var(--m-line); background: var(--m-alt); font-size: 11.5px; }
+.m-chip { font-size: 10.5px; font-weight: 600; color: var(--m-accent); background: var(--m-soft); border-radius: 99px; padding: 2px 9px; white-space: nowrap; }
+.m-pop { font-size: 10.5px; border: 1px solid var(--m-line); border-radius: 6px; padding: 2px 8px; background: var(--m-bg); color: var(--m-text2); white-space: nowrap; display: inline-flex; gap: 4px; align-items: center; }
+.m-pop b { color: var(--m-text); font-weight: 600; }
+.m-mk { background: rgba(255, 214, 10, .5); color: inherit; border-radius: 2px; padding: 0 1px; }
+.m-banner { display: flex; align-items: center; gap: 10px; padding: 8px 10px; border-radius: 9px; background: var(--m-soft); font-size: 11.5px; }
+.m-banner span { flex: 1; }
+.m-bar { display: flex; height: 12px; border-radius: 6px; overflow: hidden; gap: 1px; }
+.m-legend { display: flex; flex-wrap: wrap; gap: 4px 12px; font-size: 10.5px; color: var(--m-text2); }
+.m-legend i { display: inline-block; width: 8px; height: 8px; border-radius: 2px; margin-right: 4px; }
+.m-steps { display: grid; grid-template-columns: repeat(4, 1fr); gap: 6px; }
+.m-steps div { border: 1px solid var(--m-line); border-radius: 9px; padding: 7px; text-align: center; font-size: 10px; color: var(--m-text2); }
+.m-steps b { display: block; font-size: 15px; color: var(--m-text); }
+.m-steps div.on { border-color: var(--m-accent); }
+.m-empty { flex: 1; display: grid; place-content: center; text-align: center; gap: 6px; color: var(--m-text2); font-size: 11.5px; }
+.m-empty svg { margin: 0 auto; color: var(--m-good); }
+.m-empty b { font-size: 15px; color: var(--m-text); }
+.m-shot { background: #1e1e1e; color: #d4d4d4; border-radius: 8px; font: 10.5px/1.7 ui-monospace, Menlo, monospace; padding: 10px 12px; position: relative; }
+.m-ocrbox { outline: 2px solid #ffd60a; background: rgba(255,214,10,.3); border-radius: 2px; }
+
+/* brand (foundations): no logo, the name "Mac S P R I N T" in indigo */
+.m-brand { padding: 0 6px 10px; display: flex; align-items: center; min-width: 0; }
+.wm2 { font-family: -apple-system, BlinkMacSystemFont, "SF Pro Display", "Helvetica Neue", Arial, sans-serif; white-space: nowrap; line-height: 1.05; letter-spacing: -0.01em; display: inline-block; color: var(--m-accent); }
+.wm2 .m { font-weight: 400; }
+.wm2 .s { font-weight: 500; letter-spacing: 0.16em; }
+.m-ai { display: inline-flex; align-items: center; gap: 3px; flex: none; font-size: 10.5px; font-weight: 700; border-radius: 6px; padding: 2px 6px; border: 1px solid var(--m-line); color: var(--m-text3); background: var(--m-bg); cursor: pointer; }
+.m-ai.on { color: var(--m-accent); background: var(--m-soft); border-color: transparent; }
+.fnd { display: grid; grid-template-columns: repeat(auto-fill, minmax(210px, 1fr)); gap: 8px 16px; margin: 0; }
+.fnd div { border-top: 1px solid var(--rule); padding-top: 6px; }
+.fnd dt { font-size: 12.5px; color: var(--ink-3); }
+.fnd dd { margin: 0; font-weight: 600; font-size: 14.5px; }
+
+/* brand picker (page UI) */
+.brand-card { background: var(--sheet); border: 1px solid var(--rule); border-radius: 18px; padding: 20px; display: grid; grid-template-columns: minmax(0, 1fr); gap: 18px; }
+.brand-card h3 { font-size: 24px; font-weight: 800; }
+.brand-card > p { color: var(--ink-2); max-width: 74ch; }
+.brand-card h4 { font: 700 16px/1.2 var(--body); margin-bottom: 10px; }
+.sheetrow { display: flex; flex-wrap: wrap; gap: 14px; align-items: flex-end; }
+.sheetrow figure { margin: 0; display: grid; gap: 6px; justify-items: center; font-size: 12.5px; color: var(--ink-3); }
+.tile-l, .tile-d { border-radius: 12px; padding: 14px; display: flex; gap: 14px; align-items: center; }
+.tile-l { background: #ffffff; box-shadow: 0 0 0 1px var(--rule); }
+.tile-d { background: #17181c; }
+.tile-l .wm { color: #16161a; } .tile-d .wm { color: #ececf0; }
+.ai-demo { display: flex; flex-wrap: wrap; gap: 12px; align-items: center; }
+.ai-demo .m-search { width: 330px; max-width: 100%; }
+
+/* desktop scenes */
+.desk { position: relative; width: 100%; height: 520px; border-radius: 12px; overflow: hidden; background: var(--m-desk); font: 13px/1.35 var(--mac-font); color: var(--m-text); box-shadow: 0 0 0 1px var(--m-line); }
+.menubar { height: 24px; background: var(--m-menubar); -webkit-backdrop-filter: blur(20px); backdrop-filter: blur(20px); display: flex; align-items: center; gap: 16px; padding: 0 12px; font-size: 12px; color: var(--m-menubar-text); }
+.menubar b { font-weight: 700; }
+.menubar .r { margin-left: auto; display: flex; gap: 12px; align-items: center; }
+.mb-icon { display: inline-grid; place-items: center; width: 22px; height: 18px; border-radius: 5px; color: var(--m-menubar-text); }
+.mb-icon.on { background: rgba(127,127,127,.35); }
+.awin { position: absolute; background: var(--m-bg); border-radius: 10px; overflow: hidden; display: flex; flex-direction: column; box-shadow: 0 20px 50px rgba(0,0,0,.35), 0 0 0 1px var(--m-line); }
+.awin .bar { height: 28px; flex: none; display: flex; align-items: center; gap: 6px; padding: 0 10px; border-bottom: 1px solid var(--m-line); font-size: 11.5px; color: var(--m-text2); background: var(--m-side); }
+.awin .bar i { width: 10px; height: 10px; border-radius: 50%; background: #ff5f57; } .awin .bar i:nth-child(2) { background: #febc2e; } .awin .bar i:nth-child(3) { background: #28c840; }
+.awin .bar span { margin-left: 6px; }
+.awin .body { flex: 1; padding: 12px; font-size: 11.5px; display: grid; gap: 6px; align-content: start; }
+.line { height: 7px; border-radius: 4px; background: var(--m-alt); }
+.panel { position: absolute; z-index: 6; left: 50%; transform: translateX(-50%); top: 84px; width: 450px; background: var(--m-menu); border-radius: 15px; padding: 8px; box-shadow: 0 30px 70px rgba(0,0,0,.45), 0 0 0 1px var(--m-line); -webkit-backdrop-filter: blur(24px); backdrop-filter: blur(24px); }
+.panel .m-search { max-width: none; background: transparent; font-size: 15px; padding: 6px 8px 10px; border-bottom: 1px solid var(--m-line); border-radius: 0; }
+.p-lbl { font-size: 10px; font-weight: 600; color: var(--m-text3); padding: 8px 8px 3px; }
+.p-row { display: flex; align-items: center; gap: 9px; padding: 5px 8px; border-radius: 8px; font-size: 12px; }
+.p-row .ph, .p-row .ico { width: 24px; height: 24px; border-radius: 6px; display: grid; place-items: center; background: var(--m-alt); color: var(--m-text3); flex: none; }
+.p-row small { margin-left: auto; color: var(--m-text3); font-size: 10.5px; }
+.p-row.hl { background: var(--m-btn); color: #fff; }
+.p-row.hl small { color: rgba(255,255,255,.8); }
+.p-foot { display: flex; gap: 14px; justify-content: flex-end; padding: 8px 8px 2px; border-top: 1px solid var(--m-line); margin-top: 6px; font-size: 10.5px; color: var(--m-text3); }
+.keycap-big { position: absolute; z-index: 6; left: 50%; top: 52%; transform: translate(-50%, -50%); display: flex; gap: 8px; align-items: center; background: rgba(0,0,0,.55); color: #fff; padding: 14px 18px; border-radius: 16px; font-size: 13px; }
+.keycap-big kbd { font: 600 18px/1 var(--mac-font); background: #fff; color: #111; border-radius: 8px; padding: 9px 12px; box-shadow: 0 3px 0 #9aa0aa; }
+.selrect { position: absolute; border: 1.5px solid #fff; box-shadow: 0 0 0 9999px rgba(0,0,0,.42); z-index: 5; }
+.selrect small { position: absolute; right: 4px; bottom: -22px; background: rgba(0,0,0,.7); color: #fff; font-size: 10.5px; padding: 1px 6px; border-radius: 4px; }
+.capbar { position: absolute; z-index: 6; left: 50%; bottom: 22px; transform: translateX(-50%); display: flex; gap: 8px; align-items: center; background: var(--m-menu); border-radius: 12px; padding: 6px 8px; box-shadow: 0 16px 40px rgba(0,0,0,.4); }
+
+/* image viewer */
+.mac.viewer { grid-template-columns: minmax(0, 1fr); grid-template-rows: auto 1fr auto; background: #121316; color: #ececf0; }
+.mac.viewer.vinsp { grid-template-columns: minmax(0, 1fr) 200px; }
+.v-top { grid-column: 1 / -1; display: flex; align-items: center; gap: 12px; padding: 8px 12px; background: #1c1d21; font-size: 12px; }
+.v-top .m-lights { padding: 0; }
+.v-top b { font-weight: 600; }
+.v-top .cnt { color: #a3a4ad; font-variant-numeric: tabular-nums; }
+.v-top .tools { margin-left: auto; display: flex; gap: 4px; }
+.v-top .m-ibtn { background: #2a2b31; border-color: #3a3b42; color: #e3e3e8; }
+.v-stage { display: grid; place-items: center; min-height: 0; padding: 16px; }
+.v-stage .ph { width: 72%; aspect-ratio: 4 / 3; max-height: 100%; border-radius: 3px; }
+.v-strip { grid-column: 1; display: flex; gap: 6px; justify-content: center; padding: 10px; background: #1c1d21; }
+.v-strip .ph { width: 46px; height: 34px; border-radius: 4px; opacity: .55; }
+.v-strip .ph.on { opacity: 1; box-shadow: 0 0 0 2px #8399ff; }
+.v-info { grid-row: 2 / span 2; background: #1c1d21; border-left: 1px solid #2a2b31; padding: 14px; font-size: 11px; display: grid; gap: 8px; align-content: start; }
+.v-info dt { color: #92939f; }
+
+@media (max-width: 960px) {
+  .layout { grid-template-columns: 1fr; }
+  .rail { display: none; }
+  .picker { display: block; }
+  .part-grid, .explain { grid-template-columns: 1fr; }
+}
+@media (prefers-reduced-motion: reduce) { [data-hot] { animation: none; } html { scroll-behavior: auto; } * { transition: none !important; } }
+</style>
+
+<div class="wrap">
+  <header class="top">
+    <h1>MacSprint Feature Flows</h1>
+    <p>Each page walks through one MacSprint feature as you would use it. Click the dashed red outline in the mock-up to do the next step, then read the numbered parts list underneath to learn what every piece is called, how it is styled and how to build it in SwiftUI.</p>
+    <div class="legend">
+      <span><i class="lg-hot"></i>Click here to do the next step</span>
+      <span><i class="lg-pin">1</i>A part, explained below</span>
+      <span>Keys: <b>←</b> <b>→</b> move between steps</span>
+    </div>
+  </header>
+
+  <div class="picker"><label for="feat-select" style="font-size:14px;color:var(--ink-3)">Feature</label><select id="feat-select"></select></div>
+
+  <div class="layout">
+    <nav class="rail" id="rail" aria-label="Features"></nav>
+    <main id="main" aria-live="polite"></main>
+  </div>
+</div>
+
+<script>
+(() => {
+/* =================== icons (drawn to resemble SF Symbols) =================== */
+const P = {
+  'house': '<path d="M3 11.5 12 4l9 7.5"/><path d="M5.5 10v9.5h13V10"/>',
+  'square.grid.2x2': '<rect x="4" y="4" width="7" height="7" rx="1.5"/><rect x="13" y="4" width="7" height="7" rx="1.5"/><rect x="4" y="13" width="7" height="7" rx="1.5"/><rect x="13" y="13" width="7" height="7" rx="1.5"/>',
+  'photo': '<rect x="3" y="5" width="18" height="14" rx="2.5"/><circle cx="8.5" cy="10" r="1.6"/><path d="m21 16-5-5-9 8"/>',
+  'magnifyingglass': '<circle cx="10.5" cy="10.5" r="6"/><path d="m20 20-5-5"/>',
+  'text.viewfinder': '<path d="M4 8V6a2 2 0 0 1 2-2h2M16 4h2a2 2 0 0 1 2 2v2M20 16v2a2 2 0 0 1-2 2h-2M8 20H6a2 2 0 0 1-2-2v-2"/><path d="M8 10h8M8 14h5"/>',
+  'internaldrive': '<rect x="3" y="7" width="18" height="10" rx="2.5"/><path d="M7 13h.01M11 13h6"/>',
+  'trash': '<path d="M4 7h16M9 7V4.5h6V7M6 7l1 13h10l1-13"/>',
+  'doc.on.doc': '<rect x="8" y="8" width="11" height="13" rx="2"/><path d="M16 8V5a2 2 0 0 0-2-2H7a2 2 0 0 0-2 2v10a2 2 0 0 0 2 2h1"/>',
+  'folder': '<path d="M3 7.5V18a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V9.5a2 2 0 0 0-2-2h-7L10 5H5a2 2 0 0 0-2 2.5Z"/>',
+  'doc.on.clipboard': '<rect x="5" y="5" width="14" height="16" rx="2.5"/><rect x="9" y="3" width="6" height="4" rx="1.2"/><path d="M8.5 12h7M8.5 16h5"/>',
+  'camera.viewfinder': '<path d="M4 8V6a2 2 0 0 1 2-2h2M16 4h2a2 2 0 0 1 2 2v2M20 16v2a2 2 0 0 1-2 2h-2M8 20H6a2 2 0 0 1-2-2v-2"/><circle cx="12" cy="12" r="3"/>',
+  'square.stack': '<rect x="4" y="8" width="13" height="12" rx="2"/><path d="M8 5h10a2 2 0 0 1 2 2v9"/>',
+  'rectangle.split.2x1': '<rect x="3" y="5" width="18" height="14" rx="2.5"/><path d="M12 5v14"/>',
+  'arrow.down.circle': '<circle cx="12" cy="12" r="9"/><path d="M12 7.5v9M8.5 13l3.5 3.5 3.5-3.5"/>',
+  'command': '<path d="M9 9V6.5A2.5 2.5 0 1 0 6.5 9H9Zm0 0v6m0-6h6m-6 6v2.5A2.5 2.5 0 1 1 6.5 15H9Zm0 0h6m0 0v2.5a2.5 2.5 0 1 0 2.5-2.5H15Zm0 0V9m0 0V6.5A2.5 2.5 0 1 1 17.5 9H15Z"/>',
+  'chevron.left': '<path d="m15 5-7 7 7 7"/>', 'chevron.right': '<path d="m9 5 7 7-7 7"/>',
+  'rotate.right': '<path d="M20 12a8 8 0 1 1-2.3-5.7"/><path d="M20 4v4h-4"/>',
+  'plus.magnifyingglass': '<circle cx="10.5" cy="10.5" r="6"/><path d="m20 20-5-5M10.5 8v5M8 10.5h5"/>',
+  'info.circle': '<circle cx="12" cy="12" r="9"/><path d="M12 11v6M12 7.5h.01"/>',
+  'pin': '<path d="M12 17v5M8 3h8l-1 6 3 4H6l3-4z"/>',
+  'arrow.clockwise': '<path d="M20 12a8 8 0 1 1-2.3-5.7"/><path d="M20 4v4h-4"/>',
+  'checkmark.circle': '<circle cx="12" cy="12" r="9"/><path d="m8 12.5 3 3 5-6"/>',
+  'gearshape': '<circle cx="12" cy="12" r="3"/><path d="M12 2.5v3M12 18.5v3M2.5 12h3M18.5 12h3M5.3 5.3l2.1 2.1M16.6 16.6l2.1 2.1M5.3 18.7l2.1-2.1M16.6 7.4l2.1-2.1"/>',
+  'arrow.uturn.backward': '<path d="M9 14 4 9l5-5"/><path d="M4 9h10a6 6 0 0 1 0 12h-3"/>',
+  'eye.slash': '<path d="M3 3l18 18M10.6 6.1A9.6 9.6 0 0 1 12 6c5 0 9 6 9 6a17 17 0 0 1-3 3.5M6.6 6.6C4.3 8.2 3 12 3 12s4 6 9 6a8.7 8.7 0 0 0 4.4-1.2"/>',
+  'arrow.up.right': '<path d="M7 17 17 7M8 7h9v9"/>',
+  'textformat': '<path d="M4 18 9 6l5 12M5.8 14h6.4M15 18v-6.5a2.5 2.5 0 0 1 5 0V18M15 14.5h5"/>',
+  'crop': '<path d="M6 2v14a2 2 0 0 0 2 2h14M2 6h14a2 2 0 0 1 2 2v14"/>',
+  'star.fill': '<path fill="currentColor" d="m12 3 2.8 5.7 6.2.9-4.5 4.4 1 6.2L12 17.3 6.5 20.2l1-6.2L3 9.6l6.2-.9z"/>',
+  'doc': '<path d="M14 3H7a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V8z"/><path d="M14 3v5h5"/>',
+  'doc.zipper': '<path d="M14 3H7a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V8z"/><path d="M11 5h2M11 8h2M11 11h2M10.5 14h3v3h-3z"/>',
+  'film': '<rect x="3" y="4" width="18" height="16" rx="2"/><path d="M7 4v16M17 4v16M3 9h4M3 15h4M17 9h4M17 15h4"/>',
+  'music.note': '<path d="M9 18V5l11-2v13"/><circle cx="6" cy="18" r="3"/><circle cx="17" cy="16" r="3"/>',
+  'app': '<rect x="4" y="4" width="16" height="16" rx="4.5"/>',
+  'keyboard': '<rect x="2.5" y="6" width="19" height="12" rx="2"/><path d="M6 10h.01M10 10h.01M14 10h.01M18 10h.01M7 14h10"/>',
+  'menubar.arrow.down.rectangle': '<rect x="3" y="4" width="18" height="16" rx="2.5"/><path d="M3 8h18M12 11v6M9 14l3 3 3-3"/>',
+  'sparkles': '<path d="M12 3l1.8 4.7L18.5 9.5l-4.7 1.8L12 16l-1.8-4.7L5.5 9.5l4.7-1.8z"/><path d="M19 15l.8 2 2 .8-2 .8-.8 2-.8-2-2-.8 2-.8z"/>',
+  'line.3.horizontal.decrease': '<path d="M4 7h16M7 12h10M10 17h4"/>',
+  'pause.fill': '<path fill="currentColor" d="M7 5h3.5v14H7zM13.5 5H17v14h-3.5z"/>',
+  'square.and.arrow.down': '<path d="M12 3v12M8 11l4 4 4-4"/><path d="M5 14v4a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2v-4"/>',
+  'checkmark': '<path d="m5 12.5 4.5 4.5L19 7.5"/>',
+  'play.fill': '<path fill="currentColor" d="M8 5v14l11-7z"/>',
+  'chevron.down': '<path d="m6 9 6 6 6-6"/>',
+  'clock': '<circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/>',
+  'safari': '<circle cx="12" cy="12" r="9"/><path d="m15.5 8.5-2 5-5 2 2-5z"/>',
+  'envelope': '<rect x="3" y="5" width="18" height="14" rx="2.5"/><path d="m4 7 8 6 8-6"/>',
+  'paperclip': '<path d="M20 11.5 12 19.5a5 5 0 0 1-7-7l8.5-8.5a3.5 3.5 0 0 1 5 5L10 17.5a2 2 0 0 1-3-3l7.5-7.5"/>',
+  'square.on.square.dashed': '<rect x="4" y="4" width="11" height="11" rx="2" stroke-dasharray="3 2"/><rect x="9" y="9" width="11" height="11" rx="2"/>',
+};
+const ic = (n, s = 14, extra = '') => `<svg viewBox="0 0 24 24" width="${s}" height="${s}" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" ${extra}>${P[n] || ''}</svg>`;
+const esc = (s) => String(s).replace(/[&<>"]/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]));
+
+/* =================== brand (final foundations) =================== */
+let brand = { ai: true };   // AI search is on by default
+try { const s = JSON.parse(localStorage.getItem('msff-lab16-ai') || '{}'); brand = { ...brand, ...s }; } catch (e) {}
+const saveBrand = () => { try { localStorage.setItem('msff-lab16-ai', JSON.stringify(brand)); } catch (e) {} };
+let gid = 0;
+const wordmark = (size = 17, color = '') => `<span class="wm2" style="font-size:${size}px${color ? ';color:' + color : ''}"><span class="m">Mac</span> <span class="s">SPRINT</span></span>`;
+const aiToggle = (on = brand.ai) => `<span class="m-ai${on ? ' on' : ''}" data-c="aiToggle" data-ai-toggle role="switch" aria-checked="${on}" title="AI search ${on ? 'on' : 'off'}">${ic('sparkles', 11)}AI</span>`;
+
+/* =================== component library (the "parts") =================== */
+const C = {
+  brand: { name: 'Name (wordmark)', swift: '(Text("Mac ")\n + Text("SPRINT").fontWeight(.medium).kerning(2.7))\n  .font(.system(size: 17))\n  .foregroundStyle(Color.accentColor)   // indigo', sf: [], size: '17 pt in the sidebar; 40 pt on large headers and the website', type: 'SF Pro: “Mac” regular, “SPRINT” medium with 0.16 em letter spacing', color: 'Indigo #3b5bdb (dark #8399ff)', shape: 'Name only, no logo mark', states: ['Light', 'Dark'],
+    sample: () => wordmark(26) },
+  aiToggle: { name: 'AI search toggle', swift: 'Toggle(isOn: $aiSearch) {\n  Label("AI", systemImage: "sparkles")\n}\n.toggleStyle(.button)\n.help(aiSearch ? "AI search on" : "AI search off")\n.disabled(!appleIntelligenceAvailable)', sf: ['sparkles'], size: 'Height 18 pt, inside the search field', type: '10.5–11 pt bold', color: 'On: accent text on 11% accent; off: grey outline', shape: '6 pt corners', states: ['On (plain-English search)', 'Off (file names only)', 'Unavailable (no Apple Intelligence)'],
+    sample: () => `<div style="display:flex;gap:10px">${aiToggle(true)}${aiToggle(false)}</div>` },
+  window: { name: 'Window', swift: 'WindowGroup { ContentView() }', sf: [], size: 'Opens at about 1100 × 700 pt; minimum 900 × 560 pt', type: 'Uses the system font throughout', color: 'Window background (white / graphite)', shape: 'System corners; shadow drawn by macOS', states: ['Active', 'Inactive', 'Full screen'],
+    sample: () => `<div class="m-lights" style="padding:0"><i></i><i></i><i></i></div>` },
+  sidebar: { name: 'Sidebar', swift: 'NavigationSplitView {\n  List(selection: $section) { … }\n} detail: { … }', sf: [], size: '188–220 pt wide, resizable', type: 'Rows 13 pt; group labels 11 pt semibold', color: 'Translucent sidebar material', shape: 'Full height, divider line on the right', states: ['Expanded', 'Collapsed', 'Resizing'],
+    sample: () => `<div class="m-side" style="width:170px;border-radius:10px;border:1px solid var(--m-line)"><div class="m-row sel">${ic('house')}Home</div><div class="m-row">${ic('photo')}Images<em>2,280</em></div><div class="m-row">${ic('trash')}Clean Up<em class="good">14.1 GB</em></div></div>` },
+  sideRow: { name: 'Sidebar row', swift: 'Label("Images", systemImage: "photo")\n  .badge(2280)', sf: ['house', 'photo', 'trash'], size: 'Height 25–28 pt; icon 15 pt; 8 pt gap', type: '13 pt regular, selected semibold', color: 'Selected: raised white pill, accent icon', shape: '7 pt corners', states: ['Default', 'Hover', 'Selected', 'Keyboard focus'],
+    sample: () => `<div style="display:grid;gap:4px;width:170px"><div class="m-row">${ic('photo')}Images</div><div class="m-row sel">${ic('photo')}Images</div></div>` },
+  badge: { name: 'Badge', swift: '.badge(10)            // a count\n.badge(Text("14.1 GB"))', sf: [], size: 'Height 15 pt; padding 6 pt', type: '10.5 pt; bold when alert', color: 'Count grey · Alert red fill · Size green text', shape: 'Capsule', states: ['Count', 'Alert', 'Good news'],
+    sample: () => `<div style="display:flex;gap:14px;align-items:center" class="m-row"><em>2,280</em><em class="alert">10</em><em class="good">14.1 GB</em></div>` },
+  toolbar: { name: 'Toolbar', swift: '.toolbar {\n  ToolbarItem(placement: .primaryAction) { … }\n}', sf: [], size: 'Height about 48–52 pt', type: '—', color: 'Window background, hairline below', shape: 'Search centred, library size on the right (foundations)', states: ['Normal', 'Compact (narrow window)'],
+    sample: () => `<div class="m-toolbar" style="width:100%;border:1px solid var(--m-line);border-radius:10px;background:var(--m-bg)"><div class="m-search">${ic('magnifyingglass', 12)}<span>Search</span></div><span class="m-libsize">Library size <b>30.19 GB</b></span></div>` },
+  search: { name: 'Search field', swift: '.searchable(text: $query,\n  prompt: "Search, or try “pdfs from last week”")', sf: ['magnifyingglass'], size: 'Height 26–28 pt; 240–340 pt wide', type: '13 pt; placeholder in secondary grey', color: 'White with a hairline, centred in the toolbar; focused: accent ring', shape: '9 pt corners', states: ['Empty', 'Focused', 'Typing', 'Clear (×) button'],
+    sample: () => `<div style="display:grid;gap:8px;width:240px"><div class="m-search">${ic('magnifyingglass', 12)}<span>Search</span><span class="m-kbd">⌘F</span></div><div class="m-search focus">${ic('magnifyingglass', 12)}<span class="typed">invoice march</span></div></div>` },
+  title: { name: 'Large title', swift: 'Text("Good afternoon")\n  .font(.largeTitle).bold()', sf: [], size: '—', type: '22 pt bold; tight letter spacing', color: 'Primary label colour', shape: '—', states: ['Morning / afternoon / evening'],
+    sample: () => `<div><div class="m-h1">Good afternoon</div><div class="m-sub">2,880 files · 30.19 GB across your Mac</div></div>` },
+  secHead: { name: 'Section header', swift: 'HStack {\n  Text("Library").font(.title3).bold()\n  Text("6").font(.caption).padding(…)\n    .background(.quaternary, in: .capsule)\n}', sf: [], size: '—', type: '14 pt semibold + 10 pt count', color: 'Count in a grey capsule', shape: 'Capsule count', states: ['With count', 'With status pill', 'With “See all”'],
+    sample: () => `<div class="m-h2">Library <span class="m-count">6</span></div>` },
+  pill: { name: 'Status pill', swift: 'Text("Free up to 14.1 GB")\n  .font(.caption.weight(.semibold))\n  .foregroundStyle(.green)\n  .padding(.horizontal, 8)\n  .background(.green.opacity(0.14), in: .capsule)', sf: [], size: 'Height 16–20 pt', type: '10.5–12 pt semibold', color: 'Green text on 14% green', shape: 'Capsule', states: ['Good', 'Warning', 'Info'],
+    sample: () => `<span class="m-pill">Free up to 14.1 GB</span>` },
+  folder: { name: 'Library storage card', swift: 'struct KindCard: View   // custom\n  let kind: FileKind\n  VStack(alignment: .leading, spacing: 6) {\n    Label(kind.name, systemImage: kind.symbol)\n    Text(kind.size, format: .byteCount(style: .file))\n      .font(.title3.bold()).monospacedDigit()\n    ProgressView(value: kind.share).tint(kind.color)\n    HStack { Text(kind.shareText); Spacer(); Text(kind.newest) }\n      .font(.caption2).foregroundStyle(.secondary)\n  }\n  .padding(10)\n  .background(.background, in: .rect(cornerRadius: 16))\n  .shadow(color: .black.opacity(0.12), radius: 10, y: 6)', sf: ['photo', 'film', 'music.note', 'doc', 'doc.zipper', 'app'], size: '3 per row; padding 9–11 pt', type: 'Name 12 pt semibold; size 17 pt bold, monospaced digits; footer 10 pt grey', color: 'Icon on 15% of the kind’s colour; bar in the kind’s colour', shape: '16 pt corners, soft shadow (foundations)', states: ['Default', 'Hover (shadow deepens)', 'Selected', 'Loading (placeholder)'],
+    sample: () => `<div style="display:grid;grid-template-columns:repeat(2,minmax(0,170px));gap:8px;width:100%;justify-content:center">${fold(...FOLDERS[0])}${fold(...FOLDERS[1])}</div>` },
+  stat: { name: 'Stat card', swift: 'struct StatCard: View   // custom\n  VStack(alignment: .leading) {\n    Label(title, systemImage: icon)\n    Text(size).font(.title2).bold()\n      .monospacedDigit()\n  }\n  .padding(12)\n  .background(.background, in: .rect(cornerRadius: 14))', sf: ['doc.on.doc', 'arrow.down.circle', 'camera.viewfinder', 'internaldrive'], size: 'Padding 10–14 pt', type: 'Label 11 pt grey; number 17–25 pt bold, monospaced digits', color: 'Card white / graphite, 1 pt hairline', shape: '16 pt corners, soft shadow (foundations)', states: ['Default', 'Hover (lifts 3 pt)', 'Loading', 'Zero'],
+    sample: () => `<div class="m-stat" style="width:150px"><span>${ic('doc.on.doc', 11)}Duplicates</span><b>44.8 MB</b><small>24 extra copies</small></div>` },
+  bordered: { name: 'Bordered button', swift: 'Button("Refresh", systemImage: "arrow.clockwise") { … }\n  .buttonStyle(.bordered)', sf: ['arrow.clockwise'], size: 'Height 22–28 pt; padding 10 pt', type: '12–13 pt medium', color: 'Background fill, hairline border', shape: '9 pt corners', states: ['Default', 'Hover', 'Pressed', 'Disabled'],
+    sample: () => `<span class="m-btn">${ic('arrow.clockwise', 11)}Refresh</span>` },
+  primary: { name: 'Primary button', swift: 'Button("Review moves") { … }\n  .buttonStyle(.borderedProminent)\n  .keyboardShortcut(.defaultAction)', sf: [], size: 'Height 24–28 pt; padding 12 pt', type: '12–13 pt semibold, white', color: 'Accent fill (indigo)', shape: '9 pt corners', states: ['Default', 'Hover', 'Pressed', 'Disabled', 'Loading'],
+    sample: () => `<div style="display:flex;gap:8px"><span class="m-btn pri">Review moves</span><span class="m-btn pri" style="opacity:.4">Disabled</span></div>` },
+  destructive: { name: 'Destructive button', swift: 'Button("Move to Trash", role: .destructive) { … }\n  .buttonStyle(.borderedProminent)', sf: ['trash'], size: 'Same as primary', type: '12–13 pt semibold, white', color: 'Red fill', shape: '9 pt corners', states: ['Default', 'Hover', 'Pressed', 'Disabled'],
+    sample: () => `<span class="m-btn danger">${ic('trash', 11)}Move to Trash…</span>` },
+  secondary: { name: 'Secondary button', swift: 'Button("Cancel", role: .cancel) { … }\n  .keyboardShortcut(.cancelAction)', sf: [], size: 'Same height as the primary next to it', type: '12–13 pt', color: 'Neutral fill', shape: '9 pt corners', states: ['Default', 'Hover', 'Pressed'],
+    sample: () => `<div style="display:flex;gap:8px"><span class="m-btn">Cancel</span><span class="m-btn pri">Approve</span></div>` },
+  iconBtn: { name: 'Icon button', swift: 'Button { rotate() } label: {\n  Image(systemName: "rotate.right")\n}\n.help("Rotate")   // tooltip', sf: ['chevron.left', 'chevron.right', 'rotate.right', 'info.circle', 'pin'], size: '24–28 pt square; icon 13–15 pt', type: '—', color: 'Grey icon; accent when active', shape: '9 pt corners', states: ['Default', 'Hover', 'Pressed', 'Active (on)'],
+    sample: () => `<div style="display:flex;gap:6px"><span class="m-ibtn">${ic('chevron.left', 13)}</span><span class="m-ibtn">${ic('chevron.right', 13)}</span><span class="m-ibtn">${ic('rotate.right', 13)}</span><span class="m-ibtn">${ic('info.circle', 13)}</span></div>` },
+  progress: { name: 'Progress bar', swift: 'ProgressView(value: 0.62) {\n  Text("Scanning Downloads…")\n}', sf: [], size: 'Height 5–6 pt; 120–200 pt wide', type: 'Label 11–12 pt', color: 'Accent fill on grey track', shape: 'Capsule', states: ['Determinate (%)', 'Indeterminate', 'Paused', 'Finished'],
+    sample: () => `<div style="display:grid;gap:6px;font-size:11.5px">Scanning Downloads… 62%<div class="m-progress"><i style="width:62%"></i></div></div>` },
+  skeleton: { name: 'Placeholder (loading)', swift: 'FolderTile(kind: .images)\n  .redacted(reason: .placeholder)', sf: [], size: 'Same size as the real content', type: 'Text replaced by grey bars', color: 'Grey bars, gentle shimmer', shape: 'Same shape as the real content', states: ['Loading', 'Loaded'],
+    sample: () => `<div style="display:grid;gap:6px;width:140px"><div style="height:10px;border-radius:4px;background:var(--m-line)"></div><div style="height:10px;width:60%;border-radius:4px;background:var(--m-line)"></div></div>` },
+  toast: { name: 'Toast (brief message)', swift: '// macOS has no built-in toast: a small custom overlay\n.overlay(alignment: .bottom) {\n  if showToast { ToastView(text: "Updated") }\n}\n.animation(.smooth, value: showToast)', sf: ['checkmark.circle', 'arrow.uturn.backward'], size: 'Height ~30 pt', type: '12 pt', color: 'Inverted: dark on light, light on dark', shape: 'Capsule, strong shadow', states: ['Appearing', 'Visible 3–4 s', 'With Undo'],
+    sample: () => `<div class="m-toast" style="position:static;transform:none">${ic('checkmark.circle', 13)}3 items moved to Trash<span class="m-btn">Undo</span></div>` },
+  segmented: { name: 'Segmented control', swift: 'Picker("Kind", selection: $kind) {\n  ForEach(Kind.allCases) { Text($0.name).tag($0) }\n}\n.pickerStyle(.segmented)', sf: [], size: 'Height 22–24 pt', type: '11–12 pt; selected semibold', color: 'Grey track; selected segment raised white', shape: '7 pt outer, 5 pt inner corners', states: ['Each segment selected', 'Hover', 'Disabled'],
+    sample: () => `<div class="m-seg"><span>All</span><span>Images</span><span class="on">Videos</span><span>Music</span></div>` },
+  grid: { name: 'Grid', swift: 'LazyVGrid(columns: [GridItem(.adaptive(minimum: 110))],\n          spacing: 12) {\n  ForEach(files) { FileCard(file: $0) }\n}', sf: [], size: 'Tiles min 86–120 pt; 10–12 pt gaps', type: '—', color: '—', shape: 'Columns adapt to window width', states: ['Loading', 'Filled', 'Empty'],
+    sample: () => `<div class="m-grid" style="width:220px;grid-template-columns:repeat(3,1fr)">${[200, 30, 150, 280, 330, 100].map((h) => `<i class="ph" style="--h:${h};aspect-ratio:4/3;border-radius:6px"></i>`).join('')}</div>` },
+  fileCard: { name: 'File card', swift: 'VStack(spacing: 4) {\n  Image(nsImage: thumb).resizable().scaledToFill()\n    .frame(height: 70).clipShape(.rect(cornerRadius: 7))\n  Text(file.name).lineLimit(1).truncationMode(.middle)\n}', sf: ['play.fill'], size: 'Thumbnail 4 : 3; ~90 pt wide', type: 'Name 10–12 pt, one line, cut in the middle', color: 'Selected: accent ring + accent name', shape: '7 pt corners', states: ['Default', 'Hover', 'Selected', 'Multi-selected'],
+    sample: () => `<div style="display:flex;gap:10px"><div class="m-file" style="width:90px"><i class="ph" style="--h:200"></i><span>Beach.heic</span></div><div class="m-file sel" style="width:90px"><i class="ph" style="--h:330"></i><span>Party.mov</span></div></div>` },
+  inspector: { name: 'Inspector', swift: '.inspector(isPresented: $showInfo) {\n  FileInfoView(file: selected)\n}', sf: ['info.circle'], size: '200–260 pt wide, on the right', type: 'Labels 11 pt grey; values 12–13 pt', color: 'Window background, divider on the left', shape: 'Full height panel', states: ['Open', 'Closed', 'Nothing selected', 'Many selected'],
+    sample: () => `<div class="m-insp" style="width:170px;border:1px solid var(--m-line);border-radius:10px"><i class="ph" style="--h:330"></i><b>Party.mov</b><dl class="m-dl"><dt>Size</dt><dd>1.3 GB</dd><dt>From</dt><dd>Messages</dd></dl></div>` },
+  ctxMenu: { name: 'Context menu', swift: '.contextMenu {\n  Button("Open", systemImage: "arrow.up.right") { … }\n  Button("Show in Finder", systemImage: "folder") { … }\n  Divider()\n  Button("Move to Trash", systemImage: "trash", role: .destructive) { … }\n}', sf: ['arrow.up.right', 'folder', 'doc.on.doc', 'trash'], size: 'Rows ~22 pt; 180–240 pt wide', type: '12–13 pt; shortcuts in grey on the right', color: 'Translucent menu; hovered row accent', shape: '9–10 pt corners, separators', states: ['Row hover', 'Disabled row', 'Submenu', 'Separator'],
+    sample: () => `<div class="m-menu" style="position:static"><div>Open<small>⌘O</small></div><div class="hl">Show in Finder<small>⇧⌘R</small></div><hr><div>Move to Trash<small>⌘⌫</small></div></div>` },
+  viewerStage: { name: 'Image stage', swift: 'Image(nsImage: current)\n  .resizable()\n  .scaledToFit()\n  .onKeyPress(.rightArrow) { next(); return .handled }', sf: [], size: 'Fills the window; image fitted', type: '—', color: 'Near-black backdrop so photos stand out', shape: '—', states: ['Fit', 'Actual size', 'Zoomed', 'Loading'],
+    sample: () => `<div style="background:#121316;padding:12px 30px;border-radius:8px"><i class="ph" style="--h:20;display:block;width:110px;aspect-ratio:4/3"></i></div>` },
+  counter: { name: 'Position counter', swift: 'Text("\\(index) of \\(count)")\n  .monospacedDigit()\n  .foregroundStyle(.secondary)', sf: [], size: '—', type: '12 pt, monospaced digits so it does not jiggle', color: 'Secondary grey', shape: '—', states: ['First', 'Middle', 'Last'],
+    sample: () => `<span style="font-variant-numeric:tabular-nums;color:var(--m-text2)">15 of 120</span>` },
+  filmstrip: { name: 'Filmstrip', swift: 'ScrollView(.horizontal) {\n  LazyHStack(spacing: 6) {\n    ForEach(photos) { Thumb($0) }\n  }\n}', sf: [], size: 'Thumbnails 46 × 34 pt; 6 pt gap', type: '—', color: 'Current: 2 pt accent ring, others 55% opacity', shape: '4 pt corners', states: ['Current', 'Hover', 'Scrolling'],
+    sample: () => `<div class="v-strip" style="border-radius:8px">${[10, 40, 70, 100, 130].map((h, i) => `<i class="ph${i === 2 ? ' on' : ''}" style="--h:${h}"></i>`).join('')}</div>` },
+  chip: { name: 'Filter chip', swift: 'Text("PDF")\n  .font(.caption.weight(.semibold))\n  .foregroundStyle(.tint)\n  .padding(.horizontal, 9)\n  .background(.tint.opacity(0.12), in: .capsule)', sf: ['sparkles'], size: 'Height 18–22 pt', type: '10.5–12 pt semibold', color: 'Accent text on 12% accent', shape: 'Capsule', states: ['AI-understood', 'Removable (×)', 'Hover'],
+    sample: () => `<div style="display:flex;gap:6px;align-items:center;font-size:11px;color:var(--m-text2)">${ic('sparkles', 12)}Understood as <span class="m-chip">Screenshot</span><span class="m-chip">“login error”</span><span class="m-chip">Last month</span></div>` },
+  popup: { name: 'Pop-up button', swift: 'Picker("Kind", selection: $kind) { … }\n  .pickerStyle(.menu)', sf: ['chevron.down'], size: 'Height 20–24 pt', type: '10.5–12 pt; value semibold', color: 'Bordered, neutral', shape: '6 pt corners', states: ['Closed', 'Open (menu)', 'Changed value'],
+    sample: () => `<div style="display:flex;gap:6px"><span class="m-pop">Kind: <b>Image</b> ▾</span><span class="m-pop">Date: <b>Last month</b> ▾</span></div>` },
+  snippet: { name: 'Match snippet', swift: 'var text = AttributedString(snippet)\nif let r = text.range(of: query) {\n  text[r].backgroundColor = .yellow.opacity(0.5)\n}\nText(text)', sf: [], size: '—', type: '11–12 pt grey with highlighted words', color: 'Yellow highlight, 50%', shape: '2 pt corners on the highlight', states: ['One match', 'Many matches'],
+    sample: () => `<span style="font-size:12px;color:var(--m-text2)">…<span class="m-mk">Login</span> failed: invalid token <span class="m-mk">error</span> 401…</span>` },
+  ocrBox: { name: 'Text highlight on image', swift: 'Image(nsImage: shot)\n  .overlay(alignment: .topLeading) {\n    Rectangle().stroke(.yellow, lineWidth: 2)\n      .frame(width: box.width, height: box.height)\n      .offset(x: box.minX, y: box.minY)\n  }  // box comes from the Vision framework', sf: ['text.viewfinder'], size: 'Matches the found text exactly', type: '—', color: 'Yellow outline + 30% yellow fill', shape: '2 pt corners', states: ['Match', 'Selected text'],
+    sample: () => `<div class="m-shot" style="width:220px">Error: <span class="m-ocrbox">connection timed out</span></div>` },
+  banner: { name: 'Inline banner', swift: 'HStack { Image(systemName: "text.viewfinder"); Text(…); Spacer(); Button("Pause") { … } }\n  .padding(10)\n  .background(.tint.opacity(0.1), in: .rect(cornerRadius: 9))', sf: ['text.viewfinder', 'pause.fill'], size: 'Full width; ~36 pt tall', type: '11.5–13 pt', color: 'Accent 10% (info), yellow (warning), red (error)', shape: '9 pt corners', states: ['Info', 'Warning', 'Error', 'Dismissible'],
+    sample: () => `<div class="m-banner" style="width:260px">${ic('text.viewfinder', 13)}<span>Reading text in images…</span><span class="m-btn">Pause</span></div>` },
+  storageBar: { name: 'Storage bar', swift: 'GeometryReader { geo in\n  HStack(spacing: 1) {\n    ForEach(categories) { c in\n      Rectangle().fill(c.color)\n        .frame(width: geo.size.width * c.share)\n    }\n  }\n}\n.frame(height: 12).clipShape(.capsule)', sf: [], size: 'Height 12–14 pt, full width', type: 'Legend 10.5–11 pt', color: 'One colour per file kind; free space grey', shape: 'Capsule', states: ['Normal', 'Nearly full (red)', 'Hover tooltip'],
+    sample: () => `<div style="width:240px;display:grid;gap:6px">${storageBarHtml()}</div>` },
+  table: { name: 'Table', swift: 'Table(files, selection: $picked) {\n  TableColumn("Name", value: \\.name)\n  TableColumn("Size") { Text($0.size, format: .byteCount(style: .file)) }\n  TableColumn("Modified", value: \\.ageLabel)\n}', sf: [], size: 'Rows ~24–28 pt', type: 'Header 10–11 pt semibold grey; rows 11.5–13 pt', color: 'Selected row accent 11%', shape: 'Hairline row dividers', states: ['Sorted ↑ / ↓', 'Row selected', 'Empty'],
+    sample: () => `<div style="width:280px;border:1px solid var(--m-line);border-radius:8px;overflow:hidden;background:var(--m-bg)"><div class="m-tr head" style="grid-template-columns:1fr 60px"><span>Name</span><span class="r">Size</span></div><div class="m-tr sel" style="grid-template-columns:1fr 60px"><span>macOS-Installer.dmg</span><span class="r">12.9 GB</span></div></div>` },
+  checkbox: { name: 'Checkbox', swift: 'Toggle("", isOn: $file.isPicked)\n  .toggleStyle(.checkbox)', sf: [], size: '14 pt square', type: 'Label 12–13 pt', color: 'On: accent fill + white tick', shape: '4 pt corners', states: ['Off', 'On', 'Mixed (some)', 'Disabled'],
+    sample: () => `<div style="display:flex;gap:14px;align-items:center;font-size:12px"><span class="m-check"></span>Off <span class="m-check on"></span>On</div>` },
+  radio: { name: 'Radio button', swift: 'Picker("Keep", selection: $keep) {\n  ForEach(copies) { Text($0.path).tag($0.id) }\n}\n.pickerStyle(.radioGroup)', sf: [], size: '14 pt circle', type: 'Label 12–13 pt', color: 'Selected: thick accent ring', shape: 'Circle', states: ['Selected', 'Not selected', 'Disabled'],
+    sample: () => `<div style="display:flex;gap:14px;align-items:center;font-size:12px"><span class="m-radio on"></span>Keep <span class="m-radio"></span>Trash</div>` },
+  footerBar: { name: 'Selection footer', swift: '.safeAreaInset(edge: .bottom) {\n  HStack { Text("3 items · 12.6 GB selected"); Spacer(); Button(…) }\n    .padding(.horizontal, 16).padding(.vertical, 9)\n    .background(.bar)\n}', sf: [], size: 'Height ~44 pt, full width', type: '11.5–13 pt', color: 'Bar material, hairline on top', shape: 'Pinned to the bottom', states: ['Nothing selected (button disabled)', 'Items selected'],
+    sample: () => `<div class="m-footer" style="width:280px;border-radius:8px;border:1px solid var(--m-line)"><span>3 items · 12.6 GB</span><span class="m-btn danger">Move to Trash…</span></div>` },
+  confirm: { name: 'Confirmation dialog', swift: '.confirmationDialog("Move 3 items to Trash?",\n    isPresented: $asking) {\n  Button("Move to Trash", role: .destructive) { trash() }\n} message: {\n  Text("12.6 GB. You can put them back from the Trash.")\n}', sf: [], size: '~270 pt wide, system layout', type: 'Title 13 pt bold; message 11 pt', color: 'Window dims behind it', shape: 'System dialog', states: ['Asking', 'Confirmed', 'Cancelled (Esc)'],
+    sample: () => `<div class="m-dialog" style="margin:0;width:200px;padding:12px"><b>Move 3 items to Trash?</b><p>You can put them back.</p><span class="m-btn danger">Move to Trash</span></div>` },
+  sheet: { name: 'Sheet', swift: '.sheet(isPresented: $reviewing) {\n  ReviewMovesView()\n    .frame(width: 520, height: 420)\n}', sf: [], size: '420–560 pt wide', type: 'Title 13–15 pt bold', color: 'Window background; window behind dims', shape: 'Slides down from the top edge', states: ['Open', 'Closing', 'Blocking the window'],
+    sample: () => `<div class="m-sheet" style="width:220px;border-radius:0 0 10px 10px;padding:10px"><b style="font-size:12px">Review 182 moves</b><div style="display:flex;gap:6px;justify-content:flex-end"><span class="m-btn">Cancel</span><span class="m-btn pri">Approve</span></div></div>` },
+  empty: { name: 'Empty state', swift: 'ContentUnavailableView("This group is clean",\n  systemImage: "checkmark.circle",\n  description: Text("1 copy kept, 2 moved to Trash."))', sf: ['checkmark.circle'], size: 'Centred in the content area', type: 'Title 15–17 pt bold; text 11.5–13 pt', color: 'Icon tinted (green = good news)', shape: '—', states: ['Nothing found (good)', 'No results', 'No access yet'],
+    sample: () => `<div class="m-empty" style="padding:4px">${ic('checkmark.circle', 26)}<b>This group is clean</b><span>1 copy kept</span></div>` },
+  scanSteps: { name: 'Scan steps', swift: 'HStack {\n  ForEach(stages) { StageCard(count: $0.count, label: $0.label) }\n}  // custom', sf: [], size: '4 equal cards', type: 'Number 15 pt bold; label 10 pt', color: 'Finished stage: accent border', shape: '9 pt corners', states: ['Waiting', 'Running', 'Done'],
+    sample: () => `<div class="m-steps" style="width:260px"><div><b>48k</b>files</div><div><b>1,204</b>same size</div><div><b>131</b>partial</div><div class="on"><b>27</b>groups</div></div>` },
+  panel: { name: 'Floating panel', swift: '// An NSPanel that floats over every app, hosting SwiftUI\nlet panel = NSPanel(contentRect: …,\n  styleMask: [.nonactivatingPanel, .fullSizeContentView], …)\npanel.contentView = NSHostingView(rootView: QuickSearchView())', sf: ['magnifyingglass'], size: '~450–600 pt wide', type: 'Search text 15–17 pt; rows 12–13 pt', color: 'Strong blur material, big shadow', shape: '14–16 pt corners', states: ['Empty (recents)', 'Results', 'No results', 'Hidden'],
+    sample: () => `<div class="panel" style="position:static;transform:none;width:240px"><div class="m-search typed">${ic('magnifyingglass', 13)}<span class="typed">invoice</span></div><div class="p-row hl"><span class="ico">${ic('doc', 13)}</span>Invoice-March.pdf</div></div>` },
+  pRow: { name: 'Result row', swift: 'HStack(spacing: 9) {\n  Image(nsImage: icon).frame(width: 24, height: 24)\n  Text(file.name)\n  Spacer()\n  Text(file.folder).foregroundStyle(.secondary)\n}', sf: ['doc', 'photo'], size: 'Height ~32 pt', type: '12–13 pt; folder 10.5 pt grey', color: 'Highlighted: accent fill, white text', shape: '8 pt corners', states: ['Default', 'Highlighted (arrow keys)', 'Hover'],
+    sample: () => `<div style="width:240px"><div class="p-row"><span class="ico">${ic('doc', 13)}</span>Tax-return.pdf<small>Documents</small></div><div class="p-row hl"><span class="ico">${ic('doc', 13)}</span>Invoice-March.pdf<small>Downloads</small></div></div>` },
+  keycap: { name: 'Keyboard shortcut', swift: 'Button("Quick Search") { … }\n  .keyboardShortcut(.space, modifiers: .option)\n// Global (from any app) needs a hotkey library or Carbon API', sf: ['keyboard'], size: '—', type: 'Shown as ⌘ ⌥ ⇧ ⌃ symbols', color: '—', shape: 'Drawn as keycaps in help text', states: ['Shown in menus', 'Shown in tooltips'],
+    sample: () => `<div style="display:flex;gap:6px"><span class="m-kbd" style="font-size:13px;padding:3px 7px">⌥</span><span class="m-kbd" style="font-size:13px;padding:3px 7px">Space</span></div>` },
+  menubarExtra: { name: 'Menu bar extra', swift: 'MenuBarExtra("Recent Downloads",\n             systemImage: "arrow.down.circle") {\n  RecentDownloadsView()\n}\n.menuBarExtraStyle(.window)', sf: ['arrow.down.circle'], size: 'Icon 16–18 pt; window ~300 pt wide', type: 'Rows 12 pt; details 10 pt grey', color: 'Menu material', shape: '10–12 pt corners', states: ['Icon idle', 'Open', 'Empty (no downloads)'],
+    sample: () => `<div style="display:flex;gap:10px;align-items:center"><span class="mb-icon on" style="color:var(--m-text)">${ic('arrow.down.circle', 15)}</span><span style="font-size:11.5px;color:var(--m-text2)">in the menu bar</span></div>` },
+  dragRow: { name: 'Draggable row', swift: 'DownloadRow(file: file)\n  .draggable(file.url)   // drop into Mail, Slack…', sf: [], size: 'Height ~34 pt', type: 'Name 12 pt; size + time 10 pt grey', color: 'Hover: accent 10%', shape: '7 pt corners', states: ['Default', 'Hover', 'Dragging (lifted)'],
+    sample: () => `<div class="p-row" style="width:220px;background:var(--m-soft)"><i class="ph" style="--h:30;width:24px;height:24px;border-radius:5px"></i>Team-photo.jpg<small>3.4 MB</small></div>` },
+  toggle: { name: 'Switch', swift: 'Toggle("Pause clipboard history", isOn: $paused)\n  .toggleStyle(.switch)', sf: [], size: '~32 × 18 pt', type: 'Label 12–13 pt', color: 'On: accent; off: grey', shape: 'Capsule with round knob', states: ['On', 'Off', 'Disabled'],
+    sample: () => `<div style="display:flex;gap:10px;align-items:center;font-size:12px"><span style="width:30px;height:17px;border-radius:99px;background:var(--m-btn);position:relative;display:inline-block"><i style="position:absolute;right:2px;top:2px;width:13px;height:13px;border-radius:50%;background:#fff"></i></span>Pause history</div>` },
+  toolPalette: { name: 'Tool palette', swift: 'Picker("Tool", selection: $tool) {\n  Image(systemName: "arrow.up.right").tag(Tool.arrow)\n  Image(systemName: "textformat").tag(Tool.text)\n  Image(systemName: "eye.slash").tag(Tool.blur)\n}\n.pickerStyle(.segmented)', sf: ['arrow.up.right', 'textformat', 'eye.slash', 'crop', 'text.viewfinder'], size: 'Height 24–28 pt', type: 'Icons only, tooltips explain them', color: 'Selected tool raised white', shape: '7 pt corners', states: ['Tool selected', 'Hover with tooltip'],
+    sample: () => `<div class="m-seg"><span>${ic('arrow.up.right', 12)}</span><span>${ic('textformat', 12)}</span><span class="on">${ic('eye.slash', 12)}</span><span>${ic('crop', 12)}</span></div>` },
+  selection: { name: 'Capture overlay', swift: '// A borderless full-screen window that dims the screen\n// and lets you drag a rectangle; ScreenCaptureKit captures it', sf: ['camera.viewfinder'], size: 'Full screen', type: 'Size readout 10.5 pt', color: 'Screen dimmed 42%; selection clear, white edge', shape: 'Rectangle', states: ['Dragging', 'Selected', 'Window hover'],
+    sample: () => `<div style="width:200px;height:90px;background:rgba(0,0,0,.45);position:relative;border-radius:6px"><div style="position:absolute;inset:20px 40px;border:1.5px solid #fff;background:var(--m-bg)"></div></div>` },
+  textField: { name: 'Text field', swift: 'TextField("Workspace name", text: $name)\n  .textFieldStyle(.roundedBorder)', sf: [], size: 'Height 22–26 pt', type: '13 pt', color: 'White field; focused accent ring', shape: '5–6 pt corners', states: ['Empty', 'Focused', 'Filled', 'Error'],
+    sample: () => `<div class="m-search focus" style="width:200px;background:var(--m-bg)"><span class="typed">Writing</span></div>` },
+  layoutPick: { name: 'Layout picker', swift: 'LazyVGrid(columns: Array(repeating: .init(.fixed(46)), count: 3)) {\n  ForEach(Layout.all) { l in Button { snap(l) } label: { LayoutIcon(l) } }\n}', sf: ['rectangle.split.2x1'], size: 'Buttons 46 × 30 pt', type: 'Labels in tooltips', color: 'Selected half accent', shape: '5 pt corners', states: ['Default', 'Hover preview', 'Applied'],
+    sample: () => `<div style="display:grid;grid-template-columns:repeat(3,40px);gap:5px">${['0 50', '50 50', '0 100'].map((x, i) => `<span style="height:26px;border:1px solid var(--m-line);border-radius:5px;position:relative;background:var(--m-bg)"><i style="position:absolute;top:3px;bottom:3px;left:${i === 1 ? '50%' : '3px'};width:${i === 2 ? 'calc(100% - 6px)' : 'calc(50% - 4px)'};background:var(--m-accent);border-radius:2px;opacity:.75"></i></span>`).join('')}</div>` },
+  compare: { name: 'Compare view', swift: 'HStack(spacing: 2) {\n  PhotoPane(photo: best, label: "Best")\n  PhotoPane(photo: other)\n}', sf: ['star.fill'], size: 'Two equal halves', type: 'Labels 11–12 pt', color: 'Best shot: yellow star', shape: '2 pt divider', states: ['Comparing', 'Picking'],
+    sample: () => `<div style="display:flex;gap:3px"><i class="ph" style="--h:200;width:80px;aspect-ratio:4/3;border-radius:5px"></i><i class="ph" style="--h:212;width:80px;aspect-ratio:4/3;border-radius:5px;filter:brightness(.9)"></i></div>` },
+};
+const fold = (k, t, h, n, size, pct, latest, sym, skel) => `<div class="m-fcard${skel ? ' skel' : ''}" data-c="${skel ? 'skeleton' : 'folder'}" style="--t:${t}"><div class="top"><span class="gl">${ic(sym, 12)}</span><span class="nm">${k}</span><span class="ct">${n} items</span></div><b>${size}</b><div class="meter"><i style="width:${pct}%"></i></div><div class="foot"><span>${pct || '<1'}% of library</span><span>${latest}</span></div></div>`;
+function storageBarHtml() {
+  const c = [['Images', '#3a8dff', 98], ['Videos', '#a46bf5', 74], ['Docs', '#f0a23b', 41], ['Archives', '#3fb985', 33], ['Installers', '#3aa7d9', 29], ['Other', '#a1a1a6', 66]];
+  return `<div class="m-bar" data-c="storageBar">${c.map((x) => `<i style="flex:${x[2]};background:${x[1]}"></i>`).join('')}<i style="flex:171;background:var(--m-line)"></i></div><div class="m-legend">${c.map((x) => `<span><i style="background:${x[1]}"></i>${x[0]} ${x[2]} GB</span>`).join('')}</div>`;
+}
+
+/* =================== mock-up builders =================== */
+const SIDE = [
+  ['home', 'house', 'Home'], ['library', 'square.grid.2x2', 'Library', '2,880'], ['viewer', 'photo', 'Images', '2,280'], ['ai-search', 'magnifyingglass', 'AI Search'], ['text-in-images', 'text.viewfinder', 'Text in Images', '589'], '-',
+  ['storage', 'internaldrive', 'Storage', '10', 'alert'], ['cleanup', 'trash', 'Clean Up', '14.1 GB', 'good'], ['duplicates', 'doc.on.doc', 'Duplicates', '44.8 MB', 'good'], ['organizer', 'folder', 'Organizer'], '-',
+  ['clipboard', 'doc.on.clipboard', 'Clipboard'], ['screenshots', 'camera.viewfinder', 'Screenshots'], ['similar-images', 'square.stack', 'Similar Images'],
+];
+function sidebar(sel) {
+  return `<aside class="m-side" data-c="sidebar"><div class="m-lights" data-c="window"><i></i><i></i><i></i></div><div class="m-brand" data-c="brand">${wordmark(17)}</div>${SIDE.map((r) => r === '-' ? '<div class="m-sep"></div>'
+    : `<div class="m-row${r[0] === sel ? ' sel' : ''}" ${r[0] === sel ? 'data-c="sideRow"' : ''}>${ic(r[1], 14)}${r[2]}${r[3] ? `<em class="${r[4] || ''}" ${r[4] === 'alert' ? 'data-c="badge"' : ''}>${r[3]}</em>` : ''}</div>`).join('')}</aside>`;
+}
+function toolbar({ q = '', focus = false, right = '', hot = false } = {}) {
+  const ph = brand.ai ? 'Ask anything, e.g. “pdfs from last week”' : 'Search file names';
+  return `<div class="m-toolbar" data-c="toolbar"><div class="m-search${focus ? ' focus' : ''}" data-c="search" ${hot ? 'data-hot' : ''}>${ic(brand.ai ? 'sparkles' : 'magnifyingglass', 12)}<span ${q ? 'class="typed"' : ''}>${q || ph}</span>${q ? '' : '<span class="m-kbd">⌘F</span>'}${aiToggle()}</div>${right || '<span class="m-libsize">Library size <b>30.19 GB</b></span>'}</div>`;
+}
+function win({ sel, tb, body, insp, footer, over }) {
+  return `<div class="mac${insp ? ' insp' : ''}">${sidebar(sel)}<div class="m-main">${tb === undefined ? toolbar() : tb}<div class="m-content">${body}</div>${footer || ''}</div>${insp ? `<aside class="m-insp" data-c="inspector">${insp}</aside>` : ''}${over || ''}</div>`;
+}
+const dim = (inner) => `<div class="m-dim">${inner}</div>`;
+const toast = (t, undo) => `<div class="m-toast" data-c="toast">${ic('checkmark.circle', 13)}${t}${undo ? '<span class="m-btn">Undo</span>' : ''}</div>`;
+const menubar = (right = '') => `<div class="menubar"><b></b><b>${ic('app', 12)}</b><b>Safari</b><span>File</span><span>Edit</span><span>View</span><span>Window</span><div class="r">${right}<span>Tue 9:41</span></div></div>`;
+const awin = (style, title, body) => `<div class="awin" style="${style}"><div class="bar"><i></i><i></i><i></i><span>${title}</span></div><div class="body">${body}</div></div>`;
+const lines = (n, w = [90, 70, 80, 60, 85, 50]) => Array.from({ length: n }, (_, i) => `<i class="line" style="width:${w[i % w.length]}%"></i>`).join('');
+
+/* Home pieces */
+// [kind, colour, hue, count, size, % of library, newest item, SF Symbol]
+const FOLDERS = [['Images', '#5b7cfa', 215, '2,280', '2.81 GB', 9, 'Screenshot 9.41.png', 'photo'], ['Videos', '#a46bf5', 275, '162', '11.21 GB', 37, 'Trip.mov', 'film'], ['Music', '#f2647e', 345, '34', '82.7 MB', 0, 'Mix.m4a', 'music.note'], ['Documents', '#f0a23b', 35, '201', '1.16 GB', 4, 'Brief.pdf', 'doc'], ['Archives', '#3fb985', 150, '93', '630 MB', 2, 'Backup.zip', 'doc.zipper'], ['Apps', '#3aa7d9', 195, '110', '14.31 GB', 47, 'Figma.app', 'app']];
+const STATS = [['doc.on.doc', 'Duplicates', '44.8 MB', '24 extra copies'], ['arrow.down.circle', 'Old Downloads', '11.5 GB', '1,227 items'], ['camera.viewfinder', 'Old Screenshots', '321 MB', '480 items'], ['internaldrive', 'Large Files', '2.2 GB', '10 items']];
+function homeBody({ loading = false, updated = false, hotRefresh = false } = {}) {
+  return `<div class="m-row2"><div data-c="title"><div class="m-h1">Good afternoon</div><div class="m-sub">${updated ? '2,893 files · 30.24 GB · updated just now' : '2,880 files · 30.19 GB across your Mac'}</div></div><span class="m-btn" data-c="bordered" ${hotRefresh ? 'data-hot' : ''}>${ic('arrow.clockwise', 11)}Refresh</span></div>
+    <div class="m-h2" data-c="secHead">Library <span class="m-count">6</span></div>
+    <div class="m-folders">${FOLDERS.map((f) => fold(...f, loading)).join('')}</div>
+    <div class="m-h2">Clean Up <span class="m-pill" data-c="pill">Free up to 14.1 GB</span></div>
+    <div class="m-cards">${STATS.map((s) => `<div class="m-stat" data-c="stat"><span>${ic(s[0], 11)}${s[1]}</span><b>${loading ? '—' : s[2]}</b><small>${s[3]}</small></div>`).join('')}</div>`;
+}
+
+/* Library pieces */
+const LIB = [['Beach-sunset.heic', 'Images', 200], ['Birthday.mov', 'Videos', 330], ['Lease.pdf', 'Documents'], ['Trail.jpg', 'Images', 120], ['Product-demo.mp4', 'Videos', 10], ['Podcast.mp3', 'Music'], ['City.png', 'Images', 280], ['Drone.mov', 'Videos', 150], ['Resume.docx', 'Documents'], ['Coffee.webp', 'Images', 30], ['Keynote.app', 'Apps'], ['Wedding.mov', 'Videos', 300]];
+function libBody(kind, selName, hotKind, hotFile) {
+  const kinds = ['All', 'Images', 'Videos', 'Music', 'Documents', 'Apps'];
+  const items = LIB.filter((f) => kind === 'All' || f[1] === kind);
+  return `<div class="m-row2"><div class="m-h1" data-c="title">Library</div><div class="m-seg" data-c="segmented">${kinds.map((k) => `<span class="${k === kind ? 'on' : ''}" ${k === hotKind ? 'data-hot' : ''}>${k}</span>`).join('')}</div></div>
+  <div class="m-grid" data-c="grid">${items.map((f) => `<div class="m-file${f[0] === selName ? ' sel' : ''}" ${f[0] === selName || (!selName && f[0] === items[0][0]) ? 'data-c="fileCard"' : ''} ${f[0] === hotFile ? 'data-hot' : ''}>${f[2] !== undefined ? `<i class="ph" style="--h:${f[2]}">${f[1] === 'Videos' ? '<em class="m-play">▶ 0:42</em>' : ''}</i>` : `<i class="doc">${ic(f[1] === 'Music' ? 'music.note' : f[1] === 'Apps' ? 'app' : 'doc', 22)}</i>`}<span>${f[0]}</span></div>`).join('')}</div>`;
+}
+
+/* =================== features + flows =================== */
+const F = [
+  { id: 'home', group: 'Discover', icon: 'house', name: 'Home Dashboard', rel: '1.0',
+    what: 'A calm overview of your Mac: what kinds of files you have and how much space you could free.',
+    when: 'Every time you open MacSprint.',
+    steps: [
+      { t: 'Open the app', do: 'Open MacSprint. Home is selected in the sidebar.', see: 'A greeting, six Library storage cards (size, share of the library, newest item) and four Clean Up cards.', why: 'One glance answers two questions: what do I have, and what can I clean? Big numbers are used only where they matter.',
+        comps: ['window', 'brand', 'sidebar', 'sideRow', 'badge', 'search', 'aiToggle', 'title', 'bordered', 'folder', 'pill', 'stat'], screen: () => win({ sel: 'home', body: homeBody({ hotRefresh: true }) }) },
+      { t: 'Refresh the scan', do: 'Click Refresh. Click the progress bar to finish the scan.', see: 'The toolbar shows progress; the Library cards turn into grey placeholders while numbers update.', why: 'Placeholders keep the layout still while loading, so nothing jumps around. Progress lives in the toolbar so the page stays readable.',
+        comps: ['progress', 'skeleton', 'bordered'], screen: () => win({ sel: 'home', tb: toolbar({ right: `<span style="display:flex;gap:8px;align-items:center;font-size:11.5px;color:var(--m-text2)" data-c="progress" data-hot>Scanning Downloads… 62%<span class="m-progress"><i style="width:62%"></i></span></span><span class="m-btn" data-c="bordered">Pause</span>` }), body: homeBody({ loading: true }) }) },
+      { t: 'Scan finished', do: 'Nothing to do: the scan finished.', see: 'Updated numbers and a short message at the bottom that fades away.', why: 'A toast confirms the result without interrupting. Messages name what happened (“Updated”) instead of a vague “Done”.',
+        comps: ['toast', 'title'], screen: () => win({ sel: 'home', body: homeBody({ updated: true }), over: toast('Library updated · 13 new files') }) },
+    ] },
+  { id: 'library', group: 'Discover', icon: 'square.grid.2x2', name: 'Visual Library', rel: '1.0',
+    what: 'All your files shown as big thumbnails, filtered by kind: images, videos, music, documents and apps.',
+    when: 'When you want to see what you have rather than dig through folders.',
+    steps: [
+      { t: 'See everything', do: 'Click “Videos” in the segmented control.', see: 'A grid of every file with large thumbnails.', why: 'A segmented control suits 2–6 options that should always be visible. The grid adapts its columns to the window width.',
+        comps: ['segmented', 'grid', 'fileCard', 'title'], screen: () => win({ sel: 'library', body: libBody('All', null, 'Videos') }) },
+      { t: 'Filter to videos', do: 'Click the “Wedding.mov” card to select it.', see: 'Only videos remain, each with a play badge and duration.', why: 'The play badge tells videos apart from photos at a glance without opening them.',
+        comps: ['segmented', 'fileCard'], screen: () => win({ sel: 'library', body: libBody('Videos', null, null, 'Wedding.mov') }) },
+      { t: 'Inspect a file', do: 'Click the selected card again to open its menu.', see: 'An inspector slides in on the right with preview, size, dates and where it came from.', why: 'The inspector shows detail without leaving the grid, so you keep your place.',
+        comps: ['inspector', 'fileCard'], screen: () => win({ sel: 'library', body: libBody('Videos', 'Wedding.mov', null, 'Wedding.mov'), insp: `<i class="ph" style="--h:300"></i><b>Wedding.mov</b><dl class="m-dl"><dt>Kind</dt><dd>Video · 4K</dd><dt>Size</dt><dd>4.8 GB</dd><dt>Length</dt><dd>12:04</dd><dt>Modified</dt><dd>Jan 2025</dd><dt>From</dt><dd>AirDrop</dd></dl>` }) },
+      { t: 'Act on it', do: 'Done. This is the end of the flow.', see: 'A right-click menu with the common actions and their shortcuts.', why: 'Context menus keep actions close to the item. Each action also lives in the menu bar so people can find the shortcut.',
+        comps: ['ctxMenu', 'inspector'], screen: () => win({ sel: 'library', body: libBody('Videos', 'Wedding.mov'), insp: `<i class="ph" style="--h:300"></i><b>Wedding.mov</b><dl class="m-dl"><dt>Size</dt><dd>4.8 GB</dd></dl>`, over: `<div class="m-menu" data-c="ctxMenu" style="left:330px;top:210px"><div>Open<small>⌘O</small></div><div>Quick Look<small>Space</small></div><div class="hl">Show in Finder<small>⇧⌘R</small></div><div>Copy Path<small>⌥⌘C</small></div><hr><div>Move to Trash<small>⌘⌫</small></div></div>` }) },
+    ] },
+  { id: 'viewer', group: 'Discover', icon: 'photo', name: 'Smart Image Viewer', rel: '1.0',
+    what: 'Open one photo and step through every photo in the same folder with the arrow keys.',
+    when: 'Browsing a folder of photos or screenshots.',
+    steps: [
+      { t: 'Open a photo', do: 'In Finder, click “Open With MacSprint”.', see: 'A Finder folder with one photo selected and its menu open.', why: 'MacSprint registers as a viewer for JPEG, PNG, HEIC and WebP, so it appears in Open With.',
+        comps: ['ctxMenu'], screen: () => `<div class="desk">${menubar()}${awin('left:40px;top:44px;width:560px;height:430px', 'Vacation 2026', `<div style="display:grid;gap:2px">${['IMG_0013.HEIC', 'IMG_0014.HEIC', 'IMG_0015.HEIC', 'IMG_0016.HEIC', 'IMG_0017.HEIC'].map((n, i) => `<div class="m-tr${i === 2 ? ' sel' : ''}" style="grid-template-columns:24px 1fr 70px"><i class="ph" style="--h:${i * 47}"></i><span>${n}</span><span class="r mut">2.4 MB</span></div>`).join('')}</div>`)}<div class="m-menu" data-c="ctxMenu" style="left:250px;top:160px"><div>Open</div><div class="hl" data-hot>Open With MacSprint</div><div>Quick Look</div><hr><div>Copy</div></div></div>` },
+      { t: 'Browse with →', do: 'Click the → button (or press the right arrow key).', see: 'The photo fills the window; the counter says 15 of 120; a filmstrip shows neighbours.', why: 'A dark backdrop lets photos stand out. The counter uses monospaced digits so it does not wobble as numbers change.',
+        comps: ['viewerStage', 'counter', 'iconBtn', 'filmstrip'], screen: () => viewer(15, { hotNext: true }) },
+      { t: 'Next photo', do: 'Click the ⓘ button to see the details.', see: '16 of 120. The filmstrip highlight moves along.', why: 'Nearby photos are loaded in advance so the next one appears instantly.',
+        comps: ['counter', 'filmstrip', 'iconBtn'], screen: () => viewer(16, { hotInfo: true }) },
+      { t: 'See details', do: 'Done. This is the end of the flow.', see: 'An info panel with dimensions, format, size and camera.', why: 'Details stay out of the way until asked for; the photo keeps most of the space.',
+        comps: ['inspector', 'viewerStage'], screen: () => viewer(16, { info: true }) },
+    ] },
+  { id: 'ai-search', group: 'Discover', icon: 'magnifyingglass', name: 'AI Search', rel: '1.0',
+    what: 'Describe a file in plain English. MacSprint turns it into filters and finds real files.',
+    when: 'You remember what a file was about, not its name.',
+    steps: [
+      { t: 'Start typing', do: 'Click the suggested search.', see: 'A focused search field with recent and suggested searches.', why: 'Suggestions teach people what kinds of questions work.',
+        comps: ['search', 'aiToggle', 'pRow'], screen: () => win({ sel: 'ai-search', tb: toolbar({ focus: true, q: '' }), body: `<div class="m-h2">Try asking</div><div style="display:grid;gap:2px;max-width:420px">${['screenshots with login errors from last month', 'videos larger than 1 GB', 'pdfs mentioning my university', 'old zip files in Downloads'].map((s, i) => `<div class="p-row" ${i === 0 ? 'data-hot data-c="pRow"' : ''}><span class="ico">${ic('sparkles', 13)}</span>${s}</div>`).join('')}</div>` }) },
+      { t: 'See how it understood you', do: 'Click the first result.', see: '“Understood as” chips, editable filters and matching files with the words that matched.', why: 'Showing the interpretation builds trust: the AI never invents files, it only builds filters. People can fix a wrong filter with one click.',
+        comps: ['chip', 'popup', 'grid', 'fileCard', 'snippet'], screen: () => win({ sel: 'ai-search', tb: toolbar({ q: 'screenshots with login errors from last month' }), body: `<div class="m-h1" style="font-size:17px">Results for “screenshots with login errors from last month”</div><div style="display:flex;gap:6px;align-items:center;font-size:11px;color:var(--m-text2)" data-c="chip">${ic('sparkles', 12)}Understood as <span class="m-chip">Screenshot</span><span class="m-chip">“login”, “error”</span><span class="m-chip">September 2026</span></div><div style="display:flex;gap:6px" data-c="popup"><span class="m-pop">From: <b>Anywhere</b> ▾</span><span class="m-pop">Kind: <b>Image</b> ▾</span><span class="m-pop">Date: <b>Last month</b> ▾</span><span class="m-pop">Sort: <b>Relevance</b> ▾</span></div><div class="m-grid" style="grid-template-columns:repeat(3,1fr)" data-c="grid">${[['Screenshot 09-18 10.42.png', 260, '…<span class="m-mk">Login</span> failed: invalid token <span class="m-mk">error</span> 401…'], ['IMG_3310.png', 220, '…<span class="m-mk">Error</span> signing in. Check your <span class="m-mk">login</span>…'], ['Screenshot 09-02 18.07.png', 190, '…session <span class="m-mk">error</span>: please <span class="m-mk">log in</span>…']].map((r, i) => `<div class="m-file" ${i === 0 ? 'data-c="fileCard" data-hot' : ''}><i class="ph" style="--h:${r[1]}"></i><span style="text-align:left;font-weight:600">${r[0]}</span><span style="text-align:left;white-space:normal;color:var(--m-text2)" ${i === 0 ? 'data-c="snippet"' : ''}>${r[2]}</span></div>`).join('')}</div>` }) },
+      { t: 'Preview the match', do: 'Done. This is the end of the flow.', see: 'A preview with the matching words outlined, plus Open and Show in Finder.', why: 'One primary action (Open) and one secondary keep the choice simple.',
+        comps: ['inspector', 'ocrBox', 'primary', 'secondary'], screen: () => win({ sel: 'ai-search', tb: toolbar({ q: 'screenshots with login errors from last month' }), body: `<div class="m-h1" style="font-size:17px">3 results</div>${lines(3)}`, insp: `<div class="m-shot" data-c="ocrBox"><span class="m-ocrbox">Login failed</span>: invalid<br>token error 401</div><b>Screenshot 09-18 10.42.png</b><dl class="m-dl"><dt>Folder</dt><dd>Desktop</dd><dt>Taken</dt><dd>Sep 18, 2026</dd></dl><div style="display:flex;gap:6px"><span class="m-btn pri" data-c="primary">Open</span><span class="m-btn" data-c="secondary">Show in Finder</span></div>` }) },
+    ] },
+  { id: 'text-in-images', group: 'Discover', icon: 'text.viewfinder', name: 'Text in Images', rel: '1.0',
+    what: 'MacSprint reads the words inside screenshots and photos on your Mac, so you can search and copy them.',
+    when: 'Finding a Wi-Fi password, tracking number or error message you once screenshotted.',
+    steps: [
+      { t: 'Reading in the background', do: 'Click the search field.', see: 'A banner shows text recognition progress with a Pause button.', why: 'Long work happens in the background and can be paused, so the app never feels busy or stuck.',
+        comps: ['banner', 'progress', 'bordered'], screen: () => win({ sel: 'text-in-images', tb: toolbar({ hot: true }), body: `<div class="m-banner" data-c="banner">${ic('text.viewfinder', 13)}<span>Reading text in images · 412 of 589</span><span class="m-progress" data-c="progress"><i style="width:70%"></i></span><span class="m-btn" data-c="bordered">${ic('pause.fill', 10)}Pause</span></div><div class="m-h1">Screenshots</div><div class="m-grid">${[260, 220, 190, 160, 120, 90, 60, 30].map((h) => `<div class="m-file"><i class="ph" style="--h:${h}"></i><span>Screenshot.png</span></div>`).join('')}</div>` }) },
+      { t: 'Search the words', do: 'Click the matching screenshot.', see: 'One result: IMG_2048.png, even though its name says nothing about the text.', why: 'The snippet shows why it matched, so people trust the result.',
+        comps: ['search', 'table', 'snippet'], screen: () => win({ sel: 'text-in-images', tb: toolbar({ q: 'connection timed out', focus: true }), body: `<div class="m-h2">1 match <span class="m-count">text in images</span></div><div data-c="table" style="border:1px solid var(--m-line);border-radius:8px;overflow:hidden"><div class="m-tr head" style="grid-template-columns:24px 1fr 1.4fr 70px"><span></span><span>Name</span><span>Matching text</span><span class="r">Size</span></div><div class="m-tr" style="grid-template-columns:24px 1fr 1.4fr 70px" data-hot><i class="ph" style="--h:230"></i><span>IMG_2048.png</span><span class="mut" data-c="snippet">Error: <span class="m-mk">connection timed out</span> after…</span><span class="r mut">1.2 MB</span></div></div>` }) },
+      { t: 'Copy the text', do: 'Click Copy Text.', see: 'The screenshot with the found words outlined in yellow.', why: 'The outline proves where the words are. Copy Text is the one main action here.',
+        comps: ['ocrBox', 'primary'], screen: () => win({ sel: 'text-in-images', tb: toolbar({ q: 'connection timed out' }), body: `<div class="m-row2"><div class="m-h2">IMG_2048.png</div><span class="m-btn pri" data-c="primary" data-hot>${ic('doc.on.doc', 11)}Copy Text</span></div><div class="m-shot" data-c="ocrBox">$ npm run deploy<br>&gt; build ok (2.3s)<br>&gt; uploading bundle…<br>Error: <span class="m-ocrbox">connection timed out</span> after 30000ms<br>&nbsp;&nbsp;at Socket.timeout (net.js:412)<br>Retrying in 5s…</div>` }) },
+      { t: 'Copied', do: 'Done. This is the end of the flow.', see: 'A short confirmation at the bottom.', why: 'The toast repeats the button’s words (“Copy Text” → “Copied text”), so people know exactly what happened.',
+        comps: ['toast'], screen: () => win({ sel: 'text-in-images', tb: toolbar({ q: 'connection timed out' }), body: `<div class="m-h2">IMG_2048.png</div><div class="m-shot">Error: <span class="m-ocrbox">connection timed out</span> after 30000ms</div>`, over: toast('Copied text from 1 image') }) },
+    ] },
+  { id: 'storage', group: 'Clean up', icon: 'internaldrive', name: 'Storage Intelligence', rel: '1.0',
+    what: 'See what fills your disk and find files you have not changed in a long time.',
+    when: 'Your Mac says the disk is almost full.',
+    steps: [
+      { t: 'Where the space went', do: 'Click “Old files” in the segmented control.', see: 'A storage bar by category with sizes, and the largest folders.', why: 'One bar shows parts of a whole better than a list of numbers. Each kind keeps the same colour everywhere in the app.',
+        comps: ['segmented', 'storageBar', 'title'], screen: () => win({ sel: 'storage', body: `<div class="m-row2"><div data-c="title"><div class="m-h1">Macintosh HD</div><div class="m-sub">341 GB used · 171 GB available · 512 GB</div></div><div class="m-seg" data-c="segmented"><span class="on">Overview</span><span>Large files</span><span data-hot>Old files</span></div></div>${storageBarHtml()}<div class="m-h2">Largest folders</div><div style="border:1px solid var(--m-line);border-radius:8px;overflow:hidden">${[['Movies', '74 GB'], ['Downloads', '41 GB'], ['Pictures', '38 GB']].map((r) => `<div class="m-tr" style="grid-template-columns:24px 1fr 70px"><span class="ico">${ic('folder', 14)}</span><span>${r[0]}</span><span class="r">${r[1]}</span></div>`).join('')}</div>` }) },
+      { t: 'Old files', do: 'Tick the first checkbox.', see: 'Files not modified for over a year, with honest labels and sizes.', why: 'Labels say “Not modified for 18 months”, never “unused”, because the Mac cannot always prove a file was not opened.',
+        comps: ['segmented', 'table', 'checkbox'], screen: () => win({ sel: 'storage', body: oldFiles([], true) }) },
+      { t: 'Choose what to review', do: 'Done. Next, the Safe Cleanup flow trashes them safely.', see: 'Ticked files and a footer with the total size and a review button.', why: 'The total updates live, so people see the effect before acting. Nothing is deleted from this screen.',
+        comps: ['checkbox', 'footerBar', 'primary'], screen: () => win({ sel: 'storage', body: oldFiles([0, 1, 2]), footer: `<div class="m-footer" data-c="footerBar"><span>3 items · 45.8 GB selected</span><span class="m-btn pri" data-c="primary">Review in Clean Up</span></div>` }) },
+    ] },
+  { id: 'cleanup', group: 'Clean up', icon: 'trash', name: 'Safe Cleanup', rel: '1.0',
+    what: 'Review files, confirm, and move them to the Trash. Nothing is ever deleted outright.',
+    when: 'After choosing files in Storage, Duplicates or Clean Up cards.',
+    steps: [
+      { t: 'Review the list', do: 'Click “Move to Trash…”.', see: 'The selected files, each with a checkbox, and the total in a footer.', why: 'The button ends with “…” because it opens a confirmation before anything happens (a Mac convention).',
+        comps: ['table', 'checkbox', 'footerBar', 'destructive'], screen: () => win({ sel: 'cleanup', body: cleanList(), footer: `<div class="m-footer" data-c="footerBar"><span>3 of 4 items · 24.3 GB selected</span><span class="m-btn danger" data-c="destructive" data-hot>${ic('trash', 11)}Move to Trash…</span></div>` }) },
+      { t: 'Confirm', do: 'Click “Move to Trash” in the dialog.', see: 'A dialog with the exact count, size and a reminder that it can be undone.', why: 'The dialog names the action and the amount. Cancel is the safe default; the red button needs a deliberate click.',
+        comps: ['confirm', 'destructive', 'secondary'], screen: () => win({ sel: 'cleanup', body: cleanList(), over: dim(`<div class="m-dialog" data-c="confirm"><span class="m-appicon"></span><b>Move 3 items to Trash?</b><p>24.3 GB. You can put them back from the Trash.</p><span class="m-btn danger" data-c="destructive" data-hot>Move to Trash</span><span class="m-btn" data-c="secondary">Cancel</span></div>`) }) },
+      { t: 'Working', do: 'Click the progress bar to finish.', see: 'Progress with how many items are done.', why: 'Showing “2 of 3” is more reassuring than a spinner because people can see it moving.',
+        comps: ['progress'], screen: () => win({ sel: 'cleanup', body: `<div class="m-empty"><b>Moving to Trash…</b><span>2 of 3 items</span><span class="m-progress" style="width:220px;margin:0 auto" data-c="progress" data-hot><i style="width:66%"></i></span></div>` }) },
+      { t: 'Report and undo', do: 'Done. This is the end of the flow.', see: 'A result screen and a toast with Undo.', why: 'Every change to files ends with a clear report and a way back. Trust comes from being able to undo.',
+        comps: ['empty', 'toast'], screen: () => win({ sel: 'cleanup', body: `<div class="m-empty" data-c="empty">${ic('checkmark.circle', 30)}<b>3 items moved to Trash</b><span>24.3 GB · added to Cleanup History</span></div>`, over: toast('Moved 3 items to Trash', true) }) },
+    ] },
+  { id: 'duplicates', group: 'Clean up', icon: 'doc.on.doc', name: 'Duplicate Finder', rel: '1.1',
+    what: 'Finds exact copies of the same file and lets you keep one.',
+    when: 'The same download, photo or installer saved several times.',
+    steps: [
+      { t: 'Scan', do: 'Click “View 27 groups”.', see: 'Four stages narrowing 48,210 files down to 27 groups of exact copies.', why: 'Showing the stages explains how it decides “exact copy” (same size, then same content), which builds trust.',
+        comps: ['scanSteps', 'progress', 'primary'], screen: () => win({ sel: 'duplicates', body: `<div class="m-h1">Duplicate Finder</div><div class="m-steps" data-c="scanSteps"><div class="on"><b>48,210</b>files scanned</div><div class="on"><b>1,204</b>same size</div><div class="on"><b>131</b>partial match</div><div class="on"><b>27</b>exact groups</div></div><div style="display:flex;gap:10px;align-items:center;font-size:11.5px;color:var(--m-text2)">Finished<span class="m-progress" data-c="progress"><i style="width:100%"></i></span></div><span class="m-btn pri" data-c="primary" data-hot style="justify-self:start;align-self:flex-start">View 27 groups</span>` }) },
+      { t: 'Pick a group', do: 'Click the first group.', see: 'Groups sorted by space you would get back.', why: 'Sorting by space saved puts the most useful work first.',
+        comps: ['table'], screen: () => win({ sel: 'duplicates', body: `<div class="m-h2">27 groups <span class="m-pill">44.8 MB to free</span></div><div data-c="table" style="border:1px solid var(--m-line);border-radius:8px;overflow:hidden"><div class="m-tr head" style="grid-template-columns:24px 1fr 70px 80px"><span></span><span>File</span><span class="r">Copies</span><span class="r">Can free</span></div>${[['Zoom-installer.pkg', 3, '172 MB', 'app'], ['Family-photo.heic', 2, '3.8 MB', 200], ['Invoice-March.pdf', 3, '4.8 MB', 'doc']].map((r, i) => `<div class="m-tr" style="grid-template-columns:24px 1fr 70px 80px" ${i === 0 ? 'data-hot' : ''}>${typeof r[3] === 'number' ? `<i class="ph" style="--h:${r[3]}"></i>` : `<span class="ico">${ic(r[3], 14)}</span>`}<span>${r[0]}</span><span class="r mut">${r[1]}</span><span class="r">${r[2]}</span></div>`).join('')}</div>` }) },
+      { t: 'Choose what to keep', do: 'Click “Move 2 copies to Trash”.', see: 'Each copy with its folder and date; one marked Keep, the others ticked.', why: 'A radio button means “exactly one keeps”. Checkboxes mean “any number go”. Different controls make the rule visible.',
+        comps: ['radio', 'checkbox', 'destructive'], screen: () => win({ sel: 'duplicates', body: `<div class="m-h2">Zoom-installer.pkg <span class="m-count">3 copies · 86 MB each</span></div><div style="border:1px solid var(--m-line);border-radius:8px;overflow:hidden">${[['~/Downloads/Zoom-installer.pkg', 'Oct 2, 2026', true], ['~/Downloads/Zoom-installer (1).pkg', 'Oct 2, 2026'], ['~/Desktop/Zoom-installer copy.pkg', 'Sep 30, 2026']].map((r, i) => `<div class="m-tr" style="grid-template-columns:16px 16px 1fr 90px">${r[2] ? '<span class="m-radio on" data-c="radio"></span><span></span>' : `<span class="m-radio"></span><span class="m-check on" ${i === 1 ? 'data-c="checkbox"' : ''}></span>`}<span>${r[0]}</span><span class="r mut">${r[1]}</span></div>`).join('')}</div><span class="m-btn danger" data-c="destructive" data-hot style="align-self:flex-start">Move 2 copies to Trash</span>` }) },
+      { t: 'Group cleaned', do: 'Done. This is the end of the flow.', see: 'A friendly empty state and a toast with Undo.', why: 'An empty state is good news here, so the icon is green and the words are positive.',
+        comps: ['empty', 'toast'], screen: () => win({ sel: 'duplicates', body: `<div class="m-empty" data-c="empty">${ic('checkmark.circle', 30)}<b>This group is clean</b><span>1 copy kept · 172 MB freed</span></div>`, over: toast('Moved 2 copies to Trash', true) }) },
+    ] },
+  { id: 'organizer', group: 'Clean up', icon: 'folder', name: 'Smart File Organizer', rel: '1.1',
+    what: 'Suggests where messy files should go and moves them only after you approve.',
+    when: 'Your Downloads folder is full of everything.',
+    steps: [
+      { t: 'Suggestions', do: 'Click “Review moves”.', see: 'How many files would move where, and how many stay.', why: 'A summary first lets people judge the plan before the detail.',
+        comps: ['title', 'primary'], screen: () => win({ sel: 'organizer', body: `<div data-c="title"><div class="m-h1">Downloads</div><div class="m-sub">210 files · 182 proposed moves · 28 left unchanged</div></div>${[['Documents', 64, '#f0a23b'], ['Images', 48, '#3a8dff'], ['Archives', 31, '#3fb985'], ['Installers', 22, '#3aa7d9'], ['Screenshots by month', 17, '#a46bf5']].map((r) => `<div style="display:grid;grid-template-columns:140px 1fr 30px;gap:8px;align-items:center;font-size:11.5px"><span>${r[0]}</span><i style="display:block;height:9px;border-radius:5px;width:${r[1] / 64 * 100}%;background:${r[2]}"></i><b style="text-align:right">${r[1]}</b></div>`).join('')}<span class="m-btn pri" data-c="primary" data-hot style="align-self:flex-start">Review moves</span>` }) },
+      { t: 'Review in a sheet', do: 'Click “Approve 182 moves”.', see: 'A sheet listing each move, including smart renames.', why: 'A sheet keeps people focused on one decision. Nothing moves until they approve.',
+        comps: ['sheet', 'table', 'primary', 'secondary'], screen: () => win({ sel: 'organizer', body: lines(6), over: dim(`<div class="m-sheet" data-c="sheet"><b>Review 182 moves</b><div data-c="table" style="border:1px solid var(--m-line);border-radius:8px;overflow:hidden">${[['Q3-report-final.pdf', 'Documents/'], ['IMG_4471.jpeg', 'Images/'], ['Screenshot 2026-10-02.png', 'Screenshots/2026-10/'], ['scan0012.pdf', 'Documents/Electricity-bill-Sep.pdf']].map((r) => `<div class="m-tr" style="grid-template-columns:1fr 1fr"><span>${r[0]}</span><span class="mut">→ ${r[1]}</span></div>`).join('')}</div><span style="font-size:10.5px;color:var(--m-text3)">If a name already exists, MacSprint adds a number. Nothing is overwritten.</span><div style="display:flex;gap:6px;justify-content:flex-end"><span class="m-btn" data-c="secondary">Cancel</span><span class="m-btn pri" data-c="primary" data-hot>Approve 182 moves</span></div></div>`) }) },
+      { t: 'Done, with undo', do: 'Done. This is the end of the flow.', see: 'A result and a toast with Undo.', why: 'Every move is logged in File Action History, so even a big change can be reversed.',
+        comps: ['empty', 'toast'], screen: () => win({ sel: 'organizer', body: `<div class="m-empty" data-c="empty">${ic('checkmark.circle', 30)}<b>182 files organized</b><span>28 left unchanged · saved to File Action History</span></div>`, over: toast('Moved 182 files', true) }) },
+    ] },
+  { id: 'quick-search', group: 'Everyday', icon: 'command', name: 'Quick Search', rel: '1.2',
+    what: 'A search panel that opens over any app with a keyboard shortcut.',
+    when: 'You are in another app and need a file now.',
+    steps: [
+      { t: 'From any app', do: 'Click the ⌥ Space keys to press the shortcut.', see: 'You are working in Safari.', why: 'A global shortcut means no switching apps. People can change the keys in Settings.',
+        comps: ['keycap'], screen: () => `<div class="desk">${menubar()}${awin('left:40px;top:44px;width:640px;height:440px', 'Safari', lines(10))}<div class="keycap-big" data-c="keycap" data-hot>Press <kbd>⌥</kbd><kbd>Space</kbd></div></div>` },
+      { t: 'Panel appears', do: 'Click the search field to type “invoice”.', see: 'A floating panel with recent files and actions.', why: 'Recents appear before typing, so often you can pick without typing at all.',
+        comps: ['panel', 'search', 'pRow'], screen: () => `<div class="desk">${menubar()}${awin('left:40px;top:44px;width:640px;height:440px', 'Safari', lines(10))}<div class="panel" data-c="panel"><div class="m-search" data-c="search" data-hot>${ic('magnifyingglass', 15)}<span>Search files and actions</span></div><div class="p-lbl">Recent</div>${['Boarding-pass.pdf', 'Team-photo.jpg', 'Budget-2026.numbers'].map((n, i) => `<div class="p-row" ${i === 0 ? 'data-c="pRow"' : ''}><span class="ico">${ic(i === 1 ? 'photo' : 'doc', 13)}</span>${n}<small>Downloads</small></div>`).join('')}<div class="p-lbl">Actions</div><div class="p-row"><span class="ico">${ic('camera.viewfinder', 13)}</span>Capture screenshot</div></div></div>` },
+      { t: 'Results', do: 'Click the highlighted result (or press Return).', see: 'Matching files; the first one is highlighted; key hints at the bottom.', why: 'The first result is already selected so Return opens it. Hints teach the extra shortcuts.',
+        comps: ['pRow', 'keycap', 'panel'], screen: () => `<div class="desk">${menubar()}${awin('left:40px;top:44px;width:640px;height:440px', 'Safari', lines(10))}<div class="panel" data-c="panel"><div class="m-search">${ic('magnifyingglass', 15)}<span class="typed">invoice</span></div><div class="p-lbl">Files</div>${[['Invoice-March.pdf', 'Downloads'], ['Invoice-Feb.pdf', 'Documents/Bills'], ['invoice-template.pages', 'Documents']].map((r, i) => `<div class="p-row${i === 0 ? ' hl' : ''}" ${i === 0 ? 'data-c="pRow" data-hot' : ''}><span class="ico">${ic('doc', 13)}</span>${r[0]}<small>${r[1]}</small></div>`).join('')}<div class="p-foot" data-c="keycap"><span>↩ Open</span><span>⌘↩ Show in MacSprint</span><span>⌥↩ Show in Finder</span></div></div></div>` },
+      { t: 'Opened', do: 'Done. This is the end of the flow.', see: 'The invoice opens in Preview and the panel disappears.', why: 'The panel gets out of the way the moment its job is done.',
+        comps: [], screen: () => `<div class="desk">${menubar()}${awin('left:40px;top:44px;width:640px;height:440px', 'Safari', lines(10))}${awin('left:180px;top:70px;width:420px;height:400px', 'Invoice-March.pdf — Preview', `<b style="font-size:14px">Invoice</b>${lines(8)}`)}</div>` },
+    ] },
+  { id: 'recent-downloads', group: 'Everyday', icon: 'arrow.down.circle', name: 'Menu-bar Downloads', rel: '1.2',
+    what: 'Your 10 newest downloads live in the menu bar, ready to drag into any app.',
+    when: 'Attaching something you just downloaded.',
+    steps: [
+      { t: 'The icon', do: 'Click the MacSprint icon in the menu bar.', see: 'A small download icon at the top right of the screen.', why: 'A menu bar extra is always one click away without opening the full app.',
+        comps: ['menubarExtra'], screen: () => `<div class="desk">${menubar(`<span class="mb-icon" data-c="menubarExtra" data-hot>${ic('arrow.down.circle', 15)}</span>`)}${awin('left:40px;top:44px;width:520px;height:420px', 'New Message — Mail', `<div style="font-size:11.5px;color:var(--m-text2)">To: hotel@example.com</div><div style="font-size:11.5px;color:var(--m-text2)">Subject: My booking</div>${lines(5)}`)}</div>` },
+      { t: 'Recent list', do: 'Click “Boarding-pass.pdf” to drag it into the email.', see: 'The newest files with thumbnails, sizes and when they arrived.', why: 'Ordered by when files arrived, not when they changed, which is what “recent download” means to people.',
+        comps: ['menubarExtra', 'dragRow'], screen: () => `<div class="desk">${menubar(`<span class="mb-icon on">${ic('arrow.down.circle', 15)}</span>`)}${awin('left:40px;top:44px;width:520px;height:420px', 'New Message — Mail', `<div style="font-size:11.5px;color:var(--m-text2)">To: hotel@example.com</div>${lines(5)}`)}<div class="panel" data-c="menubarExtra" style="left:auto;right:60px;transform:none;top:30px;width:290px"><div class="p-lbl">Recent Downloads</div>${[['Boarding-pass.pdf', '210 KB · 2 min ago', 'doc'], ['Team-photo.jpg', '3.4 MB · 18 min ago', 30], ['Contract-v3.docx', '88 KB · 1 hr ago', 'doc'], ['Figma-installer.dmg', '214 MB · 3 hr ago', 'app'], ['Logo-final.png', '640 KB · Yesterday', 250]].map((r, i) => `<div class="p-row" ${i === 0 ? 'data-c="dragRow" data-hot style="background:var(--m-soft)"' : ''}>${typeof r[2] === 'number' ? `<i class="ph" style="--h:${r[2]};width:24px;height:24px;border-radius:5px"></i>` : `<span class="ico">${ic(r[2], 13)}</span>`}<span>${r[0]}<br><small style="margin:0">${r[1]}</small></span></div>`).join('')}</div></div>` },
+      { t: 'Dropped into Mail', do: 'Done. This is the end of the flow.', see: 'The file is attached to the email.', why: 'Drag and drop is the Mac’s universal way to move files between apps, so no new skill is needed.',
+        comps: [], screen: () => `<div class="desk">${menubar(`<span class="mb-icon">${ic('arrow.down.circle', 15)}</span>`)}${awin('left:40px;top:44px;width:520px;height:420px', 'New Message — Mail', `<div style="font-size:11.5px;color:var(--m-text2)">To: hotel@example.com</div>${lines(3)}<div style="display:inline-flex;gap:6px;align-items:center;border:1px solid var(--m-line);border-radius:8px;padding:6px 10px;width:max-content">${ic('paperclip', 13)}Boarding-pass.pdf · 210 KB</div>`)}</div>` },
+    ] },
+  { id: 'finder-tools', group: 'Everyday', icon: 'folder', name: 'Finder Tools', rel: '1.2',
+    what: 'Handy extra actions in Finder’s right-click menu: copy path, new file, move to a favourite folder.',
+    when: 'Repetitive file chores.',
+    steps: [
+      { t: 'Right-click a file', do: 'Click the selected file to open its menu.', see: 'A Finder window with Plan.md selected.', why: 'MacSprint adds to Finder instead of replacing it, so habits stay the same.',
+        comps: [], screen: () => `<div class="desk">${menubar()}${awin('left:40px;top:44px;width:560px;height:430px', 'Documents', `<div style="display:grid;gap:2px">${['Projects', 'Plan.md', 'Budget.numbers', 'Archive'].map((n, i) => `<div class="m-tr${i === 1 ? ' sel' : ''}" style="grid-template-columns:24px 1fr 80px" ${i === 1 ? 'data-hot' : ''}><span class="ico">${ic(i === 0 || i === 3 ? 'folder' : 'doc', 14)}</span><span>${n}</span><span class="r mut">${i === 1 ? '4 KB' : '—'}</span></div>`).join('')}</div>`)}</div>` },
+      { t: 'MacSprint actions', do: 'Click “Copy Full Path”.', see: 'A MacSprint submenu with Copy Full Path, New Text File, Move to Favourite and Open Terminal Here.', why: 'Grouping extra actions in one submenu keeps Finder’s menu tidy.',
+        comps: ['ctxMenu', 'keycap'], screen: () => `<div class="desk">${menubar()}${awin('left:40px;top:44px;width:560px;height:430px', 'Documents', `<div style="display:grid;gap:2px">${['Projects', 'Plan.md', 'Budget.numbers', 'Archive'].map((n, i) => `<div class="m-tr${i === 1 ? ' sel' : ''}" style="grid-template-columns:24px 1fr 80px"><span class="ico">${ic(i === 0 || i === 3 ? 'folder' : 'doc', 14)}</span><span>${n}</span><span class="r mut"></span></div>`).join('')}</div>`)}<div class="m-menu" style="left:200px;top:140px"><div>Open</div><div>Quick Look</div><hr><div class="hl">MacSprint<small>▸</small></div></div><div class="m-menu" data-c="ctxMenu" style="left:394px;top:186px"><div data-hot>Copy Full Path<small data-c="keycap">⌥⌘C</small></div><div>New Text File</div><div>Move to Favourite<small>▸</small></div><div>Open Terminal Here</div></div></div>` },
+      { t: 'Copied', do: 'Done. This is the end of the flow.', see: 'A toast shows the exact path copied.', why: 'Showing the path itself confirms it copied the right thing.',
+        comps: ['toast'], screen: () => `<div class="desk" style="position:relative">${menubar()}${awin('left:40px;top:44px;width:560px;height:430px', 'Documents', lines(6))}<div class="m-toast" data-c="toast">${ic('checkmark.circle', 13)}Copied /Users/you/Documents/Plan.md</div></div>` },
+    ] },
+  { id: 'clipboard', group: 'Everyday', icon: 'doc.on.clipboard', name: 'Clipboard History', rel: '1.2',
+    what: 'Everything you copied, searchable, with pinned favourites.',
+    when: 'You copied something new and lost what you copied before.',
+    steps: [
+      { t: 'Open history', do: 'Click the ⇧⌘V keys.', see: 'You are writing in Notes.', why: 'A shortcut close to Paste (⌘V) is easy to remember.',
+        comps: ['keycap'], screen: () => `<div class="desk">${menubar()}${awin('left:40px;top:44px;width:600px;height:440px', 'Notes', lines(9))}<div class="keycap-big" data-c="keycap" data-hot>Press <kbd>⇧</kbd><kbd>⌘</kbd><kbd>V</kbd></div></div>` },
+      { t: 'Find and pin', do: 'Click the pin next to the address.', see: 'A panel of copied items, pinned ones on top, with a search field.', why: 'Pins keep snippets you reuse (an address, a sign-off) from scrolling away.',
+        comps: ['panel', 'search', 'pRow', 'iconBtn'], screen: () => clipPanel(false) },
+      { t: 'Pinned', do: 'Click the gear to open Clipboard settings.', see: 'The address moved into Pinned.', why: 'Moving the item shows the result of the action without any message.',
+        comps: ['pRow', 'iconBtn'], screen: () => clipPanel(true) },
+      { t: 'Privacy settings', do: 'Done. This is the end of the flow.', see: 'Switches and options: pause history, how long to keep it, apps to ignore.', why: 'Clipboard history is sensitive, so controls are clear and easy to reach. Password fields are never recorded on purpose.',
+        comps: ['toggle', 'popup', 'table'], screen: () => `<div class="desk">${menubar()}<div class="awin" style="left:120px;top:50px;width:480px;height:400px"><div class="bar"><i></i><i></i><i></i><span>Settings — Clipboard</span></div><div class="body" style="gap:12px;font-size:12px"><div class="m-row2" data-c="toggle"><span>Pause clipboard history</span><span style="width:30px;height:17px;border-radius:99px;background:var(--m-line);position:relative;display:inline-block"><i style="position:absolute;left:2px;top:2px;width:13px;height:13px;border-radius:50%;background:#fff"></i></span></div><div class="m-row2"><span>Keep history for</span><span class="m-pop" data-c="popup"><b>30 days</b> ▾</span></div><div><div style="margin-bottom:6px">Never record from these apps</div><div data-c="table" style="border:1px solid var(--m-line);border-radius:8px;overflow:hidden">${['1Password', 'Keychain Access', 'Banking app'].map((n) => `<div class="m-tr" style="grid-template-columns:24px 1fr"><span class="ico">${ic('app', 13)}</span><span>${n}</span></div>`).join('')}</div></div></div></div></div>` },
+    ] },
+  { id: 'screenshots', group: 'Everyday', icon: 'camera.viewfinder', name: 'Screenshot Toolkit', rel: '1.2 / 2.0',
+    what: 'Capture part of the screen, blur private details, mark it up and copy it in one place.',
+    when: 'Sharing a screenshot that contains personal information.',
+    steps: [
+      { t: 'Select an area', do: 'Click Capture.', see: 'The screen dims; you drag a rectangle; its size shows in points.', why: 'Dimming everything else makes the selected area obvious. The size readout helps exact captures.',
+        comps: ['selection', 'segmented', 'primary'], screen: () => `<div class="desk">${menubar()}${awin('left:40px;top:44px;width:600px;height:440px', 'Order confirmation — Safari', `<b style="font-size:14px">Order confirmed</b><div>Payment successful — $48.20</div><div>Card •••• 4242 · jane.doe@example.com</div>${lines(5)}`)}<div class="selrect" data-c="selection" style="left:56px;top:80px;width:300px;height:96px"><small>300 × 96</small></div><div class="capbar"><div class="m-seg" data-c="segmented"><span class="on">Region</span><span>Window</span><span>Display</span></div><span class="m-btn pri" data-c="primary" data-hot>Capture</span></div></div>` },
+      { t: 'Edit', do: 'Click the Blur tool.', see: 'An editor with tools: arrow, text, blur, crop and copy text.', why: 'Icon-only tools save space; tooltips explain each one on hover.',
+        comps: ['toolPalette', 'iconBtn'], screen: () => shotEditor(false) },
+      { t: 'Blur private details', do: 'Click Copy.', see: 'The card number and email are blurred.', why: 'Blur hides details while keeping the screenshot readable, which is what people need when sharing.',
+        comps: ['toolPalette', 'primary'], screen: () => shotEditor(true) },
+      { t: 'Copied', do: 'Done. This is the end of the flow.', see: 'A toast confirms it is on the clipboard.', why: 'The same word on the button and the message (“Copy” → “Copied”).',
+        comps: ['toast'], screen: () => `<div class="desk">${menubar()}${awin('left:40px;top:44px;width:600px;height:440px', 'Order confirmation — Safari', lines(8))}<div class="m-toast" data-c="toast">${ic('checkmark.circle', 13)}Copied screenshot · 300 × 96</div></div>` },
+    ] },
+  { id: 'window-manager', group: 'Everyday', icon: 'rectangle.split.2x1', name: 'Window Manager', rel: '2.0',
+    what: 'Snap windows to halves and corners, and save layouts you can restore later.',
+    when: 'Working with two apps side by side, or on several displays.',
+    steps: [
+      { t: 'Messy windows', do: 'Click the ⌃⌥← keys to snap Safari left.', see: 'Safari and Notes overlap.', why: 'Shortcuts make snapping instant once learned; the menu (next step) helps people learn them.',
+        comps: ['keycap'], screen: () => `<div class="desk">${menubar()}${awin('left:60px;top:60px;width:420px;height:340px', 'Safari', lines(8))}${awin('left:300px;top:120px;width:380px;height:320px', 'Notes', lines(7))}<div class="keycap-big" data-c="keycap" data-hot>Press <kbd>⌃</kbd><kbd>⌥</kbd><kbd>←</kbd></div></div>` },
+      { t: 'Snapped, then save', do: 'Click “Save workspace…”.', see: 'Safari fills the left half. The layout picker in the menu bar shows all options.', why: 'Little pictures of each layout are faster to understand than words like “left third”.',
+        comps: ['layoutPick', 'menubarExtra'], screen: () => `<div class="desk">${menubar(`<span class="mb-icon on">${ic('rectangle.split.2x1', 15)}</span>`)}${awin('left:0;top:24px;width:50%;height:496px;border-radius:0', 'Safari', lines(10))}${awin('left:300px;top:120px;width:380px;height:320px', 'Notes', lines(7))}<div class="panel" data-c="menubarExtra" style="left:auto;right:50px;transform:none;top:30px;width:200px"><div class="p-lbl">Snap Notes</div><div data-c="layoutPick" style="display:grid;grid-template-columns:repeat(3,1fr);gap:5px;padding:4px 8px">${[[0, 50], [50, 50], [0, 100], [0, 33], [33, 34], [67, 33]].map((x) => `<span style="height:26px;border:1px solid var(--m-line);border-radius:5px;position:relative;background:var(--m-bg)"><i style="position:absolute;top:3px;bottom:3px;left:calc(${x[0]}% + 3px);width:calc(${x[1]}% - 6px);background:var(--m-accent);opacity:.75;border-radius:2px"></i></span>`).join('')}</div><div class="p-row" data-hot>Save workspace…</div><div class="p-row">Restore “Research”</div></div></div>` },
+      { t: 'Name it', do: 'Click Save.', see: 'A small sheet asks for a name.', why: 'Naming layouts by task (“Writing”) makes them easy to pick later.',
+        comps: ['sheet', 'textField', 'primary'], screen: () => `<div class="desk">${menubar()}${awin('left:0;top:24px;width:50%;height:496px;border-radius:0', 'Safari', lines(10))}${awin('left:50%;top:24px;width:50%;height:496px;border-radius:0', 'Notes', lines(9))}<div class="m-sheet" data-c="sheet" style="position:absolute;left:50%;transform:translateX(-50%);top:24px;width:320px;z-index:6"><b>Save workspace</b><div class="m-search focus" data-c="textField" style="max-width:none;background:var(--m-bg)"><span class="typed">Writing</span></div><span style="font-size:10.5px;color:var(--m-text3)">2 windows on 1 display</span><div style="display:flex;gap:6px;justify-content:flex-end"><span class="m-btn">Cancel</span><span class="m-btn pri" data-c="primary" data-hot>Save</span></div></div></div>` },
+      { t: 'Saved', do: 'Done. This is the end of the flow.', see: 'A toast confirms the workspace and how many windows it holds.', why: 'If an app refuses to be moved later, MacSprint says which one, instead of failing silently.',
+        comps: ['toast'], screen: () => `<div class="desk">${menubar()}${awin('left:0;top:24px;width:50%;height:496px;border-radius:0', 'Safari', lines(10))}${awin('left:50%;top:24px;width:50%;height:496px;border-radius:0', 'Notes', lines(9))}<div class="m-toast" data-c="toast" style="z-index:9">${ic('checkmark.circle', 13)}Saved “Writing” · 2 windows</div></div>` },
+    ] },
+  { id: 'similar-images', group: 'Everyday', icon: 'square.stack', name: 'Similar Images', rel: '2.0',
+    what: 'Groups near-identical photos (bursts, edits) so you can keep the best one.',
+    when: 'You took ten photos of the same sunset.',
+    steps: [
+      { t: 'Similar groups', do: 'Click Compare on the first group.', see: 'Groups of similar shots with the suggested best one starred.', why: 'Similar is not identical, so this lives apart from exact duplicates and always asks before removing anything.',
+        comps: ['fileCard', 'secHead', 'bordered'], screen: () => win({ sel: 'similar-images', body: ['Sunset at the pier', 'Birthday candles'].map((n, gi) => `<div class="m-row2"><div class="m-h2" ${gi === 0 ? 'data-c="secHead"' : ''}>${n} <span class="m-count">4 shots</span></div><span class="m-btn" ${gi === 0 ? 'data-c="bordered" data-hot' : ''}>Compare</span></div><div class="m-grid" style="grid-template-columns:repeat(4,1fr)">${[0, 1, 2, 3].map((k) => `<div class="m-file" ${gi === 0 && k === 1 ? 'data-c="fileCard"' : ''}><i class="ph" style="--h:${(gi ? 330 : 200) + k * 6};filter:brightness(${1 - k * 0.06})">${k === 1 ? `<em class="m-play" style="left:4px;right:auto;color:#ffd60a">${ic('star.fill', 9)} Best</em>` : ''}</i><span>IMG_${4100 + k}.heic</span></div>`).join('')}</div>`).join('') }) },
+      { t: 'Compare', do: 'Click “Keep best, trash 3”.', see: 'Two shots side by side at full size.', why: 'Side by side makes small differences (blur, closed eyes) easy to see.',
+        comps: ['compare', 'destructive', 'secondary'], screen: () => win({ sel: 'similar-images', body: `<div class="m-h2">Sunset at the pier</div><div style="display:grid;grid-template-columns:1fr 1fr;gap:3px;flex:1" data-c="compare"><div style="position:relative"><i class="ph" style="--h:206;height:100%;border-radius:6px 0 0 6px"></i><em class="m-play" style="left:8px;right:auto;top:8px;bottom:auto;color:#ffd60a">${ic('star.fill', 9)} Best</em></div><i class="ph" style="--h:212;height:100%;border-radius:0 6px 6px 0;filter:brightness(.88)"></i></div><div style="display:flex;gap:6px;justify-content:flex-end"><span class="m-btn" data-c="secondary">Keep all</span><span class="m-btn danger" data-c="destructive" data-hot>Keep best, trash 3</span></div>` }) },
+      { t: 'Kept the best', do: 'Done. This is the end of the flow.', see: 'One photo kept, three in the Trash, with Undo.', why: 'Undo is offered right where the change happened.',
+        comps: ['toast', 'empty'], screen: () => win({ sel: 'similar-images', body: `<div class="m-empty" data-c="empty">${ic('checkmark.circle', 30)}<b>Kept 1 of 4 shots</b><span>3 moved to Trash · 9.6 MB</span></div>`, over: toast('Moved 3 photos to Trash', true) }) },
+    ] },
+];
+
+/* screen helpers that need data */
+function viewer(n, { hotNext, hotInfo, info } = {}) {
+  const hue = (i) => (i * 47) % 360;
+  return `<div class="mac viewer${info ? ' vinsp' : ''}" data-c="window"><div class="v-top"><div class="m-lights"><i></i><i></i><i></i></div><b>IMG_${String(n).padStart(4, '0')}.HEIC</b><span class="cnt" data-c="counter">${n} of 120</span><div class="tools" data-c="iconBtn"><span class="m-ibtn">${ic('chevron.left', 13)}</span><span class="m-ibtn" ${hotNext ? 'data-hot' : ''}>${ic('chevron.right', 13)}</span><span class="m-ibtn">${ic('plus.magnifyingglass', 13)}</span><span class="m-ibtn">${ic('rotate.right', 13)}</span><span class="m-ibtn" ${hotInfo ? 'data-hot' : ''} style="${info ? 'color:#8399ff' : ''}">${ic('info.circle', 13)}</span></div></div><div class="v-stage" data-c="viewerStage"><i class="ph" style="--h:${hue(n)}"></i></div>${info ? `<div class="v-info" data-c="inspector"><b>Details</b><dl class="m-dl"><dt>Size</dt><dd>4032 × 3024</dd><dt>Format</dt><dd>HEIC</dd><dt>File</dt><dd>2.7 MB</dd><dt>Camera</dt><dd>iPhone 16</dd><dt>Taken</dt><dd>Jul 14, 2026</dd><dt>Folder</dt><dd>Vacation 2026</dd></dl></div>` : ''}<div class="v-strip" data-c="filmstrip">${Array.from({ length: 9 }, (_, k) => n - 4 + k).map((i) => `<i class="ph${i === n ? ' on' : ''}" style="--h:${hue(i)}"></i>`).join('')}</div></div>`;
+}
+function oldFiles(checked, hotFirst) {
+  const rows = [['Final-Cut-Library-2023', '24.6 GB', 'Not modified for 2 years 10 months', 'film'], ['macOS-Installer-old.dmg', '12.9 GB', 'Not modified for 2 years 2 months', 'app'], ['Photos-backup-2024.zip', '8.3 GB', 'Not modified for 18 months', 'doc.zipper'], ['Conference-talk.mov', '3.1 GB', 'Not modified for 13 months', 'film']];
+  return `<div class="m-row2"><div class="m-h1" style="font-size:18px">Old files</div><div class="m-seg" data-c="segmented"><span>30 days</span><span>6 months</span><span class="on">1 year</span><span>2 years</span></div></div><div data-c="table" style="border:1px solid var(--m-line);border-radius:8px;overflow:hidden"><div class="m-tr head"><span></span><span></span><span>Name</span><span>Why it is listed</span><span class="r">Size</span></div>${rows.map((r, i) => `<div class="m-tr${checked.includes(i) ? ' sel' : ''}"><span class="m-check${checked.includes(i) ? ' on' : ''}" ${i === 0 ? 'data-c="checkbox"' : ''} ${i === 0 && hotFirst ? 'data-hot' : ''}></span><span class="ico">${ic(r[3], 14)}</span><span>${r[0]}</span><span class="mut">${r[2]}</span><span class="r">${r[1]}</span></div>`).join('')}</div>`;
+}
+function cleanList() {
+  const rows = [['macOS-Installer-old.dmg', '12.9 GB', true, 'app'], ['Photos-backup-2024.zip', '8.3 GB', true, 'doc.zipper'], ['Conference-talk.mov', '3.1 GB', true, 'film'], ['Xcode-cache-copy', '2.4 GB', false, 'folder']];
+  return `<div class="m-h1" style="font-size:18px">Review before cleaning</div><div data-c="table" style="border:1px solid var(--m-line);border-radius:8px;overflow:hidden"><div class="m-tr head"><span></span><span></span><span>Name</span><span>Location</span><span class="r">Size</span></div>${rows.map((r, i) => `<div class="m-tr${r[2] ? ' sel' : ''}"><span class="m-check${r[2] ? ' on' : ''}" ${i === 0 ? 'data-c="checkbox"' : ''}></span><span class="ico">${ic(r[3], 14)}</span><span>${r[0]}</span><span class="mut">~/Downloads</span><span class="r">${r[1]}</span></div>`).join('')}</div>`;
+}
+function clipPanel(pinned) {
+  const items = [['221B Baker Street, London', 'doc'], ['Meeting at 3:30 in Room 4B', 'doc'], ['https://example.com/track/1Z999', 'safari'], ['npm install --save-dev vitest', 'doc']];
+  const pin = pinned ? [items[0], items[1]] : [items[1]];
+  const rest = pinned ? items.slice(2) : [items[0], ...items.slice(2)];
+  const row = (r, hot) => `<div class="p-row" ${hot ? 'data-c="pRow"' : ''}><span class="ico">${ic(r[1], 13)}</span><span style="flex:1;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">${r[0]}</span><span class="m-ibtn" ${hot ? `data-c="iconBtn" ${!pinned ? 'data-hot' : ''}` : ''} style="width:22px;height:20px;${pin.includes(r) ? 'color:var(--m-accent)' : ''}">${ic('pin', 11)}</span></div>`;
+  return `<div class="desk">${menubar()}${awin('left:40px;top:44px;width:600px;height:440px', 'Notes', lines(9))}<div class="panel" data-c="panel" style="top:70px"><div class="m-row2"><div class="m-search" data-c="search" style="flex:1">${ic('magnifyingglass', 15)}<span>Search clipboard history</span></div><span class="m-ibtn" style="margin-right:6px" ${pinned ? 'data-hot' : ''}>${ic('gearshape', 13)}</span></div><div class="p-lbl">Pinned</div>${pin.map((r) => row(r, pinned && r === items[0])).join('')}<div class="p-lbl">Recent</div>${rest.map((r) => row(r, !pinned && r === items[0])).join('')}</div></div>`;
+}
+function shotEditor(blurred) {
+  return `<div class="desk">${menubar()}<div class="awin" style="left:70px;top:44px;width:600px;height:430px"><div class="bar"><i></i><i></i><i></i><span>Screenshot — MacSprint</span><span style="margin-left:auto;display:flex;gap:6px"><div class="m-seg" data-c="toolPalette"><span>${ic('arrow.up.right', 12)}</span><span>${ic('textformat', 12)}</span><span class="${blurred ? 'on' : ''}" ${blurred ? '' : 'data-hot'}>${ic('eye.slash', 12)}</span><span>${ic('crop', 12)}</span><span>${ic('text.viewfinder', 12)}</span></div><span class="m-btn pri" ${blurred ? 'data-c="primary" data-hot' : ''}>Copy</span><span class="m-btn">Save</span></span></div><div class="body" style="place-items:center;background:var(--m-alt)"><div style="background:#fff;color:#1d1d1f;border-radius:10px;padding:16px 20px;display:grid;gap:4px;font-size:13px;box-shadow:0 0 0 2px var(--m-accent)"><b>Order confirmed</b><span>Payment successful — $48.20</span><span style="${blurred ? 'filter:blur(5px)' : ''}">Card •••• 4242 · jane.doe@example.com</span></div><span class="m-ibtn" data-c="iconBtn" style="justify-self:start">${ic('info.circle', 13)}</span></div></div></div>`;
+}
+
+/* =================== render =================== */
+const rail = document.getElementById('rail'), main = document.getElementById('main'), sel = document.getElementById('feat-select');
+const groups = [...new Set(F.map((f) => f.group))];
+rail.innerHTML = groups.map((g) => `<h4>${g}</h4>${F.filter((f) => f.group === g).map((f) => `<a href="#${f.id}" data-f="${f.id}">${ic(f.icon, 16)}<span>${f.name}</span><em>${f.rel}</em></a>`).join('')}`).join('');
+sel.innerHTML = F.map((f) => `<option value="${f.id}">${f.name}</option>`).join('');
+sel.addEventListener('change', () => { location.hash = sel.value; });
+
+let cur = F[0], step = 0, seen = new Set(), theme = 'match', showPins = true;
+try { const s = JSON.parse(localStorage.getItem('msff-lab16') || '{}'); if (s.theme) theme = s.theme; if (s.pins === false) showPins = false; } catch (e) {}
+const savePrefs = () => { try { localStorage.setItem('msff-lab16', JSON.stringify({ theme, pins: showPins })); } catch (e) {} };
+
+function renderFeature() {
+  rail.querySelectorAll('a').forEach((a) => a.classList.toggle('cur', a.dataset.f === cur.id));
+  sel.value = cur.id;
+  const idx = F.indexOf(cur), next = F[(idx + 1) % F.length];
+  main.innerHTML = `
+    <section class="feat-head">
+      <h2>${esc(cur.name)}</h2>
+      <p class="what">${esc(cur.what)}</p>
+      <p class="feat-meta"><span><b>When:</b> ${esc(cur.when)}</span><span><b>Release:</b> ${esc(cur.rel)}</span><span><b>Steps:</b> ${cur.steps.length}</span></p>
+    </section>
+    ${cur.id === 'home' ? brandPanel() : ''}
+    <nav class="steps" aria-label="Steps in this flow">${cur.steps.map((s, i) => `<button type="button" class="stepbtn" data-step="${i}"><b>${i + 1}</b>${esc(s.t)}</button>`).join('')}</nav>
+    <section class="stage-card">
+      <div class="stage-tools">
+        <div class="seg" role="group" aria-label="Mock-up appearance">${[['match', 'Match page'], ['light', 'Light app'], ['dark', 'Dark app']].map(([k, l]) => `<button type="button" data-theme-btn="${k}" aria-pressed="${theme === k}">${l}</button>`).join('')}</div>
+        <label class="tgl" for="pins-toggle"><input type="checkbox" id="pins-toggle" ${showPins ? 'checked' : ''}> Show numbered parts</label>
+      </div>
+      <div class="stage-scroll"><div class="stage-inner mscope" id="stage"></div></div>
+      <div class="explain" id="explain"></div>
+      <div class="nav-row"><button type="button" class="navbtn" id="prev">Previous step</button><span class="kbdhint" id="stepcount"></span><button type="button" class="navbtn pri" id="next">Next step</button></div>
+      <div class="done-card" id="done" hidden><span>You finished the <b>${esc(cur.name)}</b> flow.</span><a class="navbtn pri" style="text-decoration:none" href="#${next.id}">Next feature: ${esc(next.name)}</a></div>
+    </section>
+    <section class="parts">
+      <h3>Parts on this screen</h3>
+      <p>Every numbered marker in the mock-up is explained here: its name, how to build it in SwiftUI, the SF Symbol icons it uses and its style. Hover a card to find it in the mock-up.</p>
+      <div class="part-grid mscope" id="parts"></div>
+    </section>`;
+  main.querySelectorAll('[data-step]').forEach((b) => b.addEventListener('click', () => go(+b.dataset.step)));
+  main.querySelector('#prev').addEventListener('click', () => go(step - 1));
+  main.querySelector('#next').addEventListener('click', () => go(step + 1));
+  main.querySelectorAll('[data-theme-btn]').forEach((b) => b.addEventListener('click', () => { theme = b.dataset.themeBtn; savePrefs(); applyTheme(); main.querySelectorAll('[data-theme-btn]').forEach((x) => x.setAttribute('aria-pressed', String(x === b))); }));
+  main.querySelector('#pins-toggle').addEventListener('change', (e) => { showPins = e.target.checked; savePrefs(); applyPins(); });
+  renderStep();
+}
+function applyTheme() {
+  main.querySelectorAll('.mscope').forEach((el) => { el.classList.toggle('force-light', theme === 'light'); el.classList.toggle('force-dark', theme === 'dark'); });
+}
+function applyPins() { document.getElementById('stage').classList.toggle('hide-pins', !showPins); }
+
+function brandPanel() {
+  const F = [['Name', 'Mac S P R I N T, indigo'], ['Accent', 'Indigo #3b5bdb / #8399ff'], ['Greys', 'Cool graphite'], ['Type', 'SF Pro, Mac standard (13 / 22 / 14 / 11)'], ['Corners', 'Soft: window 14, card 16, button 9, field 9'], ['Spacing', 'Regular'], ['Cards', 'Soft shadow'], ['Sidebar', 'Raised selection, outline icons'], ['Toolbar', 'Search centred'], ['Buttons', 'Filled'], ['Library', 'Storage cards'], ['AI search', 'On by default']];
+  return `<section class="brand-card mscope" id="brand-panel" aria-labelledby="brand-h">
+    <h3 id="brand-h">Foundations applied</h3>
+    <p>Every mock-up on this page now uses your final foundations. The full list lives in design/FOUNDATIONS.md in the repo.</p>
+    <div class="sheetrow"><figure><div class="tile-l">${wordmark(28, '#3b5bdb')}</div><figcaption>On light</figcaption></figure><figure><div class="tile-d">${wordmark(28, '#8399ff')}</div><figcaption>On dark</figcaption></figure></div>
+    <dl class="fnd">${F.map(([k, v]) => `<div><dt>${k}</dt><dd>${esc(v)}</dd></div>`).join('')}</dl>
+    <div><h4>AI toggle in the search field</h4><div class="ai-demo">
+      <div class="m-search" style="background:var(--m-alt)">${ic(brand.ai ? 'sparkles' : 'magnifyingglass', 12)}<span>${brand.ai ? 'Ask anything, e.g. “pdfs from last week”' : 'Search file names'}</span>${aiToggle()}</div>
+      <span style="font-size:14px;color:var(--ink-2)">On by default. Click <b>AI</b> to switch to classic file-name search. Greyed out on Macs without Apple Intelligence.</span>
+    </div></div>
+  </section>`;
+}
+function rerenderBrand() {
+  const old = document.getElementById('brand-panel');
+  if (old) { old.outerHTML = brandPanel(); applyTheme(); }
+  renderStep();
+}
+
+function renderStep() {
+  const s = cur.steps[step];
+  seen.add(cur.id + step);
+  const stage = document.getElementById('stage');
+  stage.innerHTML = s.screen();
+  main.querySelectorAll('[data-step]').forEach((b, i) => { b.setAttribute('aria-current', i === step ? 'step' : 'false'); b.classList.toggle('seen', seen.has(cur.id + i) && i !== step); });
+  document.getElementById('explain').innerHTML = `<div class="ex do"><h4>What you do</h4><p>${esc(s.do)}</p></div><div class="ex"><h4>What MacSprint shows</h4><p>${esc(s.see)}</p></div><div class="ex why"><h4>Why it is designed this way</h4><p>${esc(s.why)}</p></div>`;
+  document.getElementById('prev').disabled = step === 0;
+  const last = step === cur.steps.length - 1;
+  document.getElementById('next').disabled = last;
+  document.getElementById('stepcount').textContent = `Step ${step + 1} of ${cur.steps.length}`;
+  document.getElementById('done').hidden = !last;
+  const hot = stage.querySelector('[data-hot]');
+  if (hot) { hot.setAttribute('role', 'button'); hot.setAttribute('tabindex', '0'); hot.setAttribute('aria-label', 'Do this step: ' + s.do); }
+  // parts
+  const parts = document.getElementById('parts');
+  parts.innerHTML = s.comps.length ? s.comps.map((id, i) => partCard(id, i + 1)).join('') : '<p style="color:var(--ink-2)">This step happens outside MacSprint, so there are no MacSprint parts to label.</p>';
+  applyTheme(); applyPins();
+  requestAnimationFrame(placePins);
+}
+function partCard(id, n) {
+  const c = C[id];
+  return `<article class="part" data-part="${id}"><div class="part-head"><span class="num">${n}</span><h4>${esc(c.name)}</h4></div><div class="sample">${c.sample()}</div><dl class="spec">
+    <dt>SwiftUI</dt><dd><code>${esc(c.swift)}</code></dd>
+    ${c.sf.length ? `<dt>SF Symbols</dt><dd>${c.sf.map((s) => `<span class="sf">${ic(s, 14)}${s}</span>`).join('')}</dd>` : ''}
+    <dt>Size</dt><dd>${esc(c.size)}</dd><dt>Text</dt><dd>${esc(c.type)}</dd><dt>Colour</dt><dd>${esc(c.color)}</dd><dt>Shape</dt><dd>${esc(c.shape)}</dd>
+    <dt>States</dt><dd class="states">${c.states.map((x) => `<span>${esc(x)}</span>`).join('')}</dd></dl></article>`;
+}
+function placePins() {
+  const stage = document.getElementById('stage'); if (!stage) return;
+  stage.querySelectorAll('.pin, .hlbox').forEach((p) => p.remove());
+  const base = stage.getBoundingClientRect();
+  cur.steps[step].comps.forEach((id, i) => {
+    const el = stage.querySelector(`[data-c="${id}"]`); if (!el) return;
+    const r = el.getBoundingClientRect();
+    const pin = document.createElement('button');
+    pin.type = 'button'; pin.className = 'pin'; pin.textContent = i + 1; pin.dataset.part = id;
+    pin.setAttribute('aria-label', `Part ${i + 1}: ${C[id].name}`);
+    // sit just outside the part's top-left corner so it never covers what you click
+    pin.style.left = `${Math.max(12, r.left - base.left - 4)}px`;
+    pin.style.top = `${Math.max(12, r.top - base.top - 4)}px`;
+    stage.appendChild(pin);
+  });
+}
+function highlight(id, on) {
+  const stage = document.getElementById('stage');
+  stage.querySelectorAll('.hlbox').forEach((b) => b.remove());
+  main.querySelectorAll('.pin, .part').forEach((p) => p.classList.toggle('hl', on && p.dataset.part === id));
+  if (!on) return;
+  const el = stage.querySelector(`[data-c="${id}"]`); if (!el) return;
+  const base = stage.getBoundingClientRect(), r = el.getBoundingClientRect();
+  const b = document.createElement('div'); b.className = 'hlbox';
+  Object.assign(b.style, { left: `${r.left - base.left - 3}px`, top: `${r.top - base.top - 3}px`, width: `${r.width + 6}px`, height: `${r.height + 6}px` });
+  stage.appendChild(b);
+}
+function go(i) { if (i < 0 || i >= cur.steps.length) return; step = i; renderStep(); }
+
+main.addEventListener('mouseover', (e) => { const t = e.target.closest('[data-part]'); if (t) highlight(t.dataset.part, true); });
+main.addEventListener('mouseout', (e) => { const t = e.target.closest('[data-part]'); if (t && !t.contains(e.relatedTarget)) highlight(t.dataset.part, false); });
+main.addEventListener('click', (e) => {
+  const at = e.target.closest('[data-ai-toggle]'); if (at && !at.closest('.part')) { brand.ai = !brand.ai; saveBrand(); rerenderBrand(); return; }
+  const pin = e.target.closest('.pin');
+  if (pin) { const card = main.querySelector(`.part[data-part="${pin.dataset.part}"]`); if (card) { card.scrollIntoView({ block: 'center' }); highlight(pin.dataset.part, true); } return; }
+  if (e.target.closest('#stage [data-hot]')) go(step + 1);
+});
+main.addEventListener('keydown', (e) => { if ((e.key === 'Enter' || e.key === ' ') && e.target.matches('[data-hot]')) { e.preventDefault(); go(step + 1); } });
+document.addEventListener('keydown', (e) => {
+  if (e.target.matches('input, select, textarea')) return;
+  if (e.key === 'ArrowRight') go(step + 1);
+  if (e.key === 'ArrowLeft') go(step - 1);
+});
+window.addEventListener('resize', () => requestAnimationFrame(placePins));
+
+function route() {
+  const id = location.hash.slice(1);
+  cur = F.find((f) => f.id === id) || F[0];
+  step = 0; renderFeature();
+  if (id) window.scrollTo({ top: 0 });
+}
+window.addEventListener('hashchange', route);
+route();
+})();
+</script>
