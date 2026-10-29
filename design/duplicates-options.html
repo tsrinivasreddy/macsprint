@@ -1,0 +1,283 @@
+<title>MacSprint Duplicates Options</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Atkinson+Hyperlegible:wght@400;700&family=Schibsted+Grotesk:wght@600;800&display=swap">
+<style>
+/* Layout: a review sheet. Five Duplicates screens, ranked, each a full MacSprint window with what it is good for. One switch sets light or dark for every window. */
+:root {
+  --paper: #eceff3; --sheet: #ffffff; --ink: #15171c; --ink-2: #4f5562; --rule: rgba(21,23,28,.12);
+  --blue: #3346c8; --blue-soft: rgba(51,70,200,.09);
+  --display: "Schibsted Grotesk", "Avenir Next", system-ui, sans-serif;
+  --body: "Atkinson Hyperlegible", "Segoe UI", system-ui, sans-serif;
+  --mac: -apple-system, BlinkMacSystemFont, "SF Pro Text", "Helvetica Neue", "Segoe UI", sans-serif;
+}
+@media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) {
+  --paper: #111317; --sheet: #191c21; --ink: #eceef2; --ink-2: #b0b6c2; --rule: rgba(255,255,255,.1);
+  --blue: #93a3ff; --blue-soft: rgba(147,163,255,.13); color-scheme: dark; } }
+:root[data-theme="dark"] {
+  --paper: #111317; --sheet: #191c21; --ink: #eceef2; --ink-2: #b0b6c2; --rule: rgba(255,255,255,.1);
+  --blue: #93a3ff; --blue-soft: rgba(147,163,255,.13); color-scheme: dark; }
+
+/* MacSprint app (design/FOUNDATIONS.md), with the decided kind colours */
+.light { --m-bg: #ffffff; --m-side: #f4f4f7; --m-alt: #f3f4f7; --m-line: rgba(20,20,30,.1); --m-text: #16161a; --m-text2: #5f6068; --m-text3: #6c6d76;
+  --m-accent: #3b5bdb; --m-btn: #2f4bc4; --m-soft: rgba(59,91,219,.1); --m-good: #1f7a4d; --m-gray: #c9ccd4;
+  --m-card: #ffffff; --m-shadow: 0 1px 2px rgba(20,24,40,.06), 0 6px 18px rgba(20,24,40,.07); --m-raise: 0 1px 2px rgba(20,24,40,.1), 0 0 0 1px rgba(20,20,30,.06);
+  --k-app: #2a78d6; --k-video: #eb6834; --k-image: #1baf7a; --k-doc: #eda100; --k-zip: #e87ba4; --k-music: #008300; }
+.dark { --m-bg: #18191d; --m-side: #1f2025; --m-alt: #23242a; --m-line: rgba(255,255,255,.09); --m-text: #ececf0; --m-text2: #a3a4ad; --m-text3: #92939f;
+  --m-accent: #8399ff; --m-btn: #4a63e0; --m-soft: rgba(131,153,255,.14); --m-good: #4cd38a; --m-gray: #4a4c55;
+  --m-card: #212228; --m-shadow: 0 1px 2px rgba(0,0,0,.3), 0 6px 18px rgba(0,0,0,.28); --m-raise: 0 1px 2px rgba(0,0,0,.4), 0 0 0 1px rgba(255,255,255,.06);
+  --k-app: #3987e5; --k-video: #d95926; --k-image: #199e70; --k-doc: #c98500; --k-zip: #d55181; --k-music: #008300; }
+
+* { box-sizing: border-box; }
+body { margin: 0; background: var(--paper); color: var(--ink); font: 16px/1.55 var(--body); -webkit-font-smoothing: antialiased;
+  padding-left: max(16px, env(safe-area-inset-left, 0px)); padding-right: max(16px, env(safe-area-inset-right, 0px)); padding-block: 40px 72px; }
+h1, h2 { font-family: var(--display); margin: 0; line-height: 1.12; text-wrap: balance; }
+.wrap { max-width: 1120px; margin: 0 auto; display: grid; gap: 24px; }
+header { display: grid; gap: 10px; max-width: 74ch; }
+header h1 { font-size: clamp(28px, 4vw, 40px); font-weight: 800; }
+header p { margin: 0; color: var(--ink-2); }
+.eyebrow { font: 600 13px/1 var(--display); color: var(--blue); }
+.bar { display: flex; flex-wrap: wrap; gap: 12px 20px; align-items: center; }
+.seg { display: inline-flex; gap: 4px; padding: 3px; border: 1px solid var(--rule); border-radius: 999px; }
+.seg button { font: 600 14px/1 var(--body); color: var(--ink-2); background: transparent; border: 0; border-radius: 999px; padding: 7px 14px; cursor: pointer; }
+.seg button[aria-pressed="true"] { background: var(--blue); color: var(--sheet); }
+.seg button:focus-visible, .jump a:focus-visible { outline: 2px solid var(--blue); outline-offset: 2px; }
+.jump { display: flex; flex-wrap: wrap; gap: 6px; }
+.jump a { font-size: 14px; color: var(--ink); text-decoration: none; border: 1px solid var(--rule); border-radius: 999px; padding: 4px 11px; display: inline-flex; gap: 6px; align-items: center; }
+.jump a b { color: var(--blue); }
+.pick { background: var(--blue-soft); border-radius: 14px; padding: 14px 18px; font-size: 15px; max-width: 88ch; margin: 0; }
+.pick b { color: var(--blue); }
+
+.opt { background: var(--sheet); border: 1px solid var(--rule); border-radius: 16px; padding: 22px; display: grid; gap: 16px; scroll-margin-top: 16px; min-width: 0; }
+.opt-head { display: flex; align-items: center; gap: 12px; flex-wrap: wrap; }
+.rank { font: 800 15px/1 var(--display); width: 30px; height: 30px; border-radius: 9px; display: grid; place-items: center; background: var(--rule); color: var(--ink); flex: none; }
+.opt.top .rank { background: var(--blue); color: var(--sheet); }
+.opt h2 { font-size: 22px; font-weight: 800; }
+.tag { font: 600 12px/1 var(--body); color: var(--blue); background: var(--blue-soft); border-radius: 999px; padding: 5px 10px; }
+.opt-head p { margin: 0; color: var(--ink-2); flex: 1 1 100%; }
+.scroll { overflow-x: auto; padding: 4px; margin: -4px; }
+.notes { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 300px), 1fr)); gap: 8px 28px; font-size: 15px; }
+.notes h3 { font: 600 14px/1.2 var(--display); color: var(--ink-2); margin: 0; }
+.notes ul { margin: 6px 0 0; padding-left: 18px; }
+.notes li { margin-bottom: 3px; }
+
+/* Window */
+.win { font: 13px/1.35 var(--mac); color: var(--m-text); background: var(--m-bg); border-radius: 14px; overflow: hidden; display: grid; grid-template-columns: 200px 1fr;
+  min-width: 880px; box-shadow: 0 0 0 1px var(--m-line), 0 16px 40px rgba(20,24,40,.12); }
+.side { background: var(--m-side); border-right: 1px solid var(--m-line); padding: 12px 10px; display: grid; align-content: start; gap: 1px; }
+.lights { display: flex; gap: 6px; margin: 0 4px 14px; }
+.lights i { width: 11px; height: 11px; border-radius: 50%; background: #ff5f57; }
+.lights i:nth-child(2) { background: #febc2e; } .lights i:nth-child(3) { background: #28c840; }
+.wm { font-size: 17px; color: var(--m-accent); margin: 0 6px 12px; }
+.wm b { font-weight: 500; letter-spacing: .16em; }
+.sh { font-size: 11px; font-weight: 600; color: var(--m-text3); margin: 10px 8px 4px; }
+.srow { display: flex; align-items: center; gap: 8px; padding: 5px 8px; border-radius: 7px; white-space: nowrap; }
+.srow svg { color: var(--m-text2); flex: none; }
+.srow em { margin-left: auto; font-style: normal; font-size: 11px; color: var(--m-text3); }
+.srow em.good { color: var(--m-good); font-weight: 600; }
+.srow.sel { background: var(--m-bg); box-shadow: var(--m-raise); font-weight: 600; }
+.srow.sel svg { color: var(--m-accent); }
+.main { display: grid; grid-template-rows: auto 1fr; min-width: 0; }
+.tb { display: flex; align-items: center; padding: 10px 16px; border-bottom: 1px solid var(--m-line); }
+.field { margin: 0 auto; width: 320px; display: flex; align-items: center; gap: 7px; border-radius: 9px; padding: 6px 10px; color: var(--m-text3); font-size: 12.5px; box-shadow: 0 0 0 1px var(--m-line), 0 2px 6px rgba(0,0,0,.05); }
+.field span { flex: 1; }
+.field .kbd, .kbd { flex: none; font-size: 11px; border: 1px solid var(--m-line); border-radius: 5px; padding: 0 5px; color: var(--m-text3); }
+.view { display: inline-flex; padding: 2px; border-radius: 8px; background: var(--m-alt); gap: 2px; }
+.view span { padding: 3px 7px; border-radius: 6px; color: var(--m-text2); display: grid; place-items: center; }
+.view span.on { background: var(--m-bg); color: var(--m-text); box-shadow: var(--m-raise); }
+.content { padding: 18px 22px 22px; display: grid; gap: 14px; align-content: start; }
+.head { display: flex; align-items: center; gap: 10px; }
+.head h3 { font: 700 22px/1.15 var(--mac); margin: 0; letter-spacing: -.01em; }
+.head p { margin: 2px 0 0; color: var(--m-text2); font-size: 12.5px; }
+.ml { margin-left: auto; }
+.chips { display: flex; gap: 6px; flex-wrap: wrap; }
+.chip { font-size: 12px; font-weight: 600; color: var(--m-text2); border-radius: 999px; padding: 4px 10px; box-shadow: 0 0 0 1px var(--m-line); display: inline-flex; align-items: center; gap: 6px; }
+.chip i { width: 8px; height: 8px; border-radius: 50%; background: var(--c); }
+.chip.on { background: var(--m-text); color: var(--m-bg); box-shadow: none; }
+.day { display: flex; align-items: baseline; gap: 8px; font-size: 13px; font-weight: 700; margin-top: 2px; }
+.day small { font-size: 11px; font-weight: 500; color: var(--m-text3); }
+.btn { font: 600 12px/1 var(--mac); border-radius: 9px; padding: 7px 12px; display: inline-flex; gap: 6px; align-items: center; white-space: nowrap; }
+.btn.bord { color: var(--m-text); background: var(--m-bg); box-shadow: 0 0 0 1px var(--m-line); }
+.btn.pri { color: #fff; background: var(--m-btn); }
+.sm { font-size: 11px; color: var(--m-text3); }
+
+/* Thumbnails: photos and videos are drawn gradients; documents get a tinted page with the kind colour */
+.th { position: relative; border-radius: 10px; overflow: hidden; background: linear-gradient(135deg, hsl(var(--h) 62% 72%), hsl(calc(var(--h) + 40) 52% 46%)); box-shadow: 0 0 0 1px var(--m-line); }
+.th.doc { background: color-mix(in oklab, var(--c) 12%, var(--m-bg)); display: grid; place-items: center; color: var(--c); }
+.th em { position: absolute; left: 6px; bottom: 6px; font-style: normal; font-size: 10px; font-weight: 600; color: #fff; background: rgba(0,0,0,.5); border-radius: 6px; padding: 1px 6px; }
+.th .new { position: absolute; right: 6px; top: 6px; font-size: 9.5px; font-weight: 700; color: #fff; background: var(--m-btn); border-radius: 999px; padding: 1px 6px; }
+.kind { display: inline-flex; align-items: center; gap: 5px; font-size: 11px; color: var(--m-text2); white-space: nowrap; }
+.kind i { width: 7px; height: 7px; border-radius: 50%; background: var(--c); flex: none; }
+
+/* Static right-click menu, shown on one option */
+.menu { position: absolute; z-index: 3; width: 210px; background: var(--m-card); border-radius: 9px; box-shadow: 0 10px 30px rgba(0,0,0,.22), 0 0 0 1px var(--m-line); padding: 5px; font-size: 12.5px; }
+.menu div { display: flex; justify-content: space-between; padding: 4px 8px; border-radius: 5px; }
+.menu div small { color: var(--m-text3); }
+.menu div.hl { background: var(--m-btn); color: #fff; } .menu div.hl small { color: rgba(255,255,255,.8); }
+.menu hr { border: 0; border-top: 1px solid var(--m-line); margin: 4px 6px; }
+
+/* Duplicates */
+.lede { display: grid; gap: 3px; }
+.lede b { font-size: 18px; font-weight: 700; letter-spacing: -.01em; }
+.lede span { color: var(--m-text2); font-size: 12.5px; }
+.topbar { display: flex; align-items: center; gap: 12px; }
+.segk { display: inline-flex; padding: 2px; border-radius: 9px; background: var(--m-alt); gap: 2px; }
+.segk span { font-size: 12px; font-weight: 600; color: var(--m-text2); padding: 4px 10px; border-radius: 7px; }
+.segk span small { font-weight: 500; color: var(--m-text3); }
+.segk span.on { background: var(--m-bg); color: var(--m-text); box-shadow: var(--m-raise); }
+.th { position: relative; border-radius: 8px; overflow: hidden; background: linear-gradient(135deg, hsl(var(--h) 62% 72%), hsl(calc(var(--h) + 40) 52% 46%)); box-shadow: 0 0 0 1px var(--m-line); flex: none; }
+.th.doc { background: color-mix(in oklab, var(--c) 12%, var(--m-bg)); display: grid; place-items: center; color: var(--c); }
+.t b { display: block; font-size: 13px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.t small { display: block; font-size: 11.5px; color: var(--m-text3); }
+.sz { font-weight: 700; text-align: right; font-variant-numeric: tabular-nums; white-space: nowrap; }
+.foot { display: flex; gap: 8px; align-items: center; font-size: 11.5px; color: var(--m-text3); }
+.sumbar { display: flex; align-items: center; gap: 12px; padding: 12px 14px; border-radius: 14px; background: var(--m-alt); }
+.sumbar b { font-size: 13.5px; } .sumbar .sm { display: block; }
+/* 1 keep chips */
+.kr { display: grid; grid-template-columns: 44px 210px minmax(0, 1fr) 70px; gap: 14px; align-items: center; padding: 10px 6px; }
+.kr + .kr { border-top: 1px solid var(--m-line); }
+.kr .th { width: 44px; height: 34px; }
+.locs { display: flex; flex-wrap: wrap; gap: 6px; }
+.loc { display: inline-flex; align-items: center; gap: 6px; font-size: 11.5px; padding: 4px 9px; border-radius: 999px; box-shadow: 0 0 0 1px var(--m-line); color: var(--m-text2); white-space: nowrap; }
+.loc.keep { background: var(--m-btn); color: #fff; box-shadow: none; font-weight: 600; }
+.loc.lock { color: var(--m-text3); }
+.loc s { text-decoration-color: color-mix(in oklab, var(--m-text3) 60%, transparent); }
+/* 2 split */
+.split { display: grid; grid-template-columns: 250px minmax(0, 1fr); gap: 16px; min-width: 0; }
+.gl { display: grid; gap: 2px; align-content: start; }
+.gi { display: grid; grid-template-columns: 36px minmax(0, 1fr) auto; gap: 10px; align-items: center; padding: 6px 8px; border-radius: 9px; }
+.gi .th { width: 36px; height: 28px; border-radius: 6px; }
+.gi.on { background: var(--m-soft); }
+.copies { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; }
+.cp { border-radius: 14px; padding: 10px; box-shadow: 0 0 0 1px var(--m-line); display: grid; gap: 7px; position: relative; }
+.cp .th { width: 100%; aspect-ratio: 4/3; }
+.cp .tag { position: absolute; top: 16px; left: 16px; font-size: 10.5px; font-weight: 700; border-radius: 999px; padding: 2px 8px; background: var(--m-bg); color: var(--m-text2); }
+.cp.keep { box-shadow: 0 0 0 2px var(--m-accent); }
+.cp.keep .tag { background: var(--m-btn); color: #fff; }
+.cp dl { display: grid; grid-template-columns: auto 1fr; gap: 3px 8px; margin: 0; font-size: 11px; }
+.cp dt { color: var(--m-text3); } .cp dd { margin: 0; text-align: right; }
+/* 3 outline */
+.ot { border-radius: 12px; box-shadow: 0 0 0 1px var(--m-line); overflow: hidden; }
+.or { display: grid; grid-template-columns: 16px 18px 30px minmax(0, 1fr) 150px 90px 70px; gap: 10px; align-items: center; padding: 6px 10px; font-size: 12.5px; }
+.or.hd { font-size: 11px; color: var(--m-text3); font-weight: 600; background: var(--m-alt); }
+.or.grp { font-weight: 600; }
+.or.grp + .or.kid, .or.kid + .or.kid { padding-left: 34px; }
+.or .th { width: 30px; height: 22px; border-radius: 5px; }
+.or .mut { color: var(--m-text2); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.or.kid.on { background: color-mix(in oklab, var(--m-accent) 9%, transparent); }
+.chk { width: 14px; height: 14px; border-radius: 4px; box-shadow: inset 0 0 0 1.5px var(--m-gray); display: grid; place-items: center; color: #fff; }
+.chk.on { background: var(--m-btn); box-shadow: none; }
+.tw { color: var(--m-text3); font-size: 10px; }
+/* 4 stacks */
+.stacks { display: grid; grid-template-columns: repeat(4, 1fr); gap: 14px; }
+.stk { display: grid; gap: 8px; }
+.pile { position: relative; height: 110px; }
+.pile .th { position: absolute; inset: 0; border-radius: 12px; }
+.pile .th:nth-child(1) { transform: translate(10px, -8px); opacity: .45; }
+.pile .th:nth-child(2) { transform: translate(5px, -4px); opacity: .7; }
+.pile .x { position: absolute; right: 8px; bottom: 8px; font-size: 11px; font-weight: 700; color: #fff; background: rgba(0,0,0,.5); border-radius: 999px; padding: 1px 8px; z-index: 2; }
+.stk .row { display: flex; justify-content: space-between; align-items: center; gap: 6px; }
+/* 5 compare strip */
+.cmp { display: grid; gap: 10px; padding: 12px; border-radius: 16px; box-shadow: 0 0 0 1px var(--m-line); }
+.cmp .hd { display: flex; align-items: center; gap: 10px; }
+.cmp .hd .th { width: 40px; height: 30px; }
+.cmp .row3 { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; }
+.cmp .c { display: grid; gap: 5px; font-size: 11.5px; }
+.cmp .c .th { width: 100%; aspect-ratio: 16/10; border-radius: 10px; }
+.cmp .c.keep .th { box-shadow: 0 0 0 2px var(--m-bg), 0 0 0 4px var(--m-accent); }
+.diff { color: var(--m-accent); font-weight: 600; }
+</style>
+
+<div class="wrap">
+  <header>
+    <span class="eyebrow">Duplicates · options</span>
+    <h1>Five ways to keep one copy</h1>
+    <p>Duplicates finds the same file saved more than once, plus near-identical photos. The hard part is deciding which copy to keep, for many groups at once. Every option uses the same results (27 groups of exact copies, 31.2 MB; 9 groups of similar photos, 13.6 MB) and the same safety: MacSprint suggests a copy to keep, files in protected folders are never picked for the Trash, and everything goes to the Trash with Undo.</p>
+  </header>
+  <div class="bar">
+    <div class="seg" role="group" aria-label="App appearance"><button type="button" id="ap-light" data-ap="light" aria-pressed="true">Light app</button><button type="button" id="ap-dark" data-ap="dark" aria-pressed="false">Dark app</button></div>
+    <nav class="jump" id="jump" aria-label="Options"></nav>
+  </div>
+  <p class="pick"><b>My pick: 1, Keep chips.</b> Each group is one row: the file, how much you save, and a chip for every place a copy lives. The chip in blue is the copy you keep; click another chip to keep that one instead. The whole job fits on one screen and ends with one button. 2 (Side by side) is better when people want to look closely at every copy before deciding.</p>
+  <div id="opts" class="wrap" style="gap:20px"></div>
+</div>
+
+<script>
+const P = {
+  house: '<path d="M4 11.5 12 5l8 6.5V19a1 1 0 0 1-1 1h-4.5v-5h-5v5H5a1 1 0 0 1-1-1z"/>',
+  clock: '<circle cx="12" cy="12" r="8"/><path d="M12 7.5V12l3 2"/>',
+  grid: '<rect x="4.5" y="4.5" width="6" height="6" rx="1.5"/><rect x="13.5" y="4.5" width="6" height="6" rx="1.5"/><rect x="4.5" y="13.5" width="6" height="6" rx="1.5"/><rect x="13.5" y="13.5" width="6" height="6" rx="1.5"/>',
+  list: '<path d="M9 7h11M9 12h11M9 17h11"/><circle cx="5" cy="7" r="1"/><circle cx="5" cy="12" r="1"/><circle cx="5" cy="17" r="1"/>',
+  down: '<circle cx="12" cy="12" r="8"/><path d="M12 8v8M8.5 12.5 12 16l3.5-3.5"/>',
+  clip: '<rect x="6" y="5" width="12" height="15" rx="2"/><path d="M9.5 5V4a1 1 0 0 1 1-1h3a1 1 0 0 1 1 1v1M9 11h6M9 14.5h4"/>',
+  trash: '<path d="M5 7h14M10 7V5h4v2M7 7l1 12a1 1 0 0 0 1 1h6a1 1 0 0 0 1-1l1-12"/>',
+  dup: '<rect x="8" y="8" width="11" height="11" rx="2"/><path d="M5 15V6a1 1 0 0 1 1-1h9"/>',
+  folder: '<path d="M4 7.5A1.5 1.5 0 0 1 5.5 6h4l2 2h7A1.5 1.5 0 0 1 20 9.5v8a1.5 1.5 0 0 1-1.5 1.5h-13A1.5 1.5 0 0 1 4 17.5z"/>',
+  search: '<circle cx="10.5" cy="10.5" r="6"/><path d="m15 15 5 5"/>',
+  doc: '<path d="M7 4h7l4 4v11a1 1 0 0 1-1 1H7a1 1 0 0 1-1-1V5a1 1 0 0 1 1-1z"/><path d="M14 4v4h4M9 13h6M9 16h4"/>',
+  music: '<path d="M9 17.5V6l10-2v11.5"/><circle cx="7" cy="17.5" r="2"/><circle cx="17" cy="15.5" r="2"/>',
+  zip: '<path d="M7 4h10a1 1 0 0 1 1 1v14a1 1 0 0 1-1 1H7a1 1 0 0 1-1-1V5a1 1 0 0 1 1-1zM12 4v2M12 8v2M12 12v2"/><rect x="10.5" y="14" width="3" height="3" rx=".8"/>',
+  app: '<rect x="4.5" y="4.5" width="15" height="15" rx="4"/><path d="M9 15l3-6 3 6M10 13h4"/>',
+  photo: '<rect x="4" y="5" width="16" height="14" rx="2"/><circle cx="9" cy="10" r="1.6"/><path d="m5 17 4.5-4.5 3 3 2.5-2.5L19 17"/>',
+  film: '<rect x="4" y="5" width="16" height="14" rx="2"/><path d="M8 5v14M16 5v14M4 9.5h4M16 9.5h4M4 14.5h4M16 14.5h4"/>',
+  pin: '<path d="M9 4h6l-1 5 3 3H7l3-3zM12 12v8"/>',
+  chev: '<path d="m8 10 4 4 4-4"/>',
+};
+const ic = (k, s = 14, w = 1.8) => `<svg viewBox="0 0 24 24" width="${s}" height="${s}" fill="none" stroke="currentColor" stroke-width="${w}" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">${P[k]}</svg>`;
+
+
+Object.assign(P, { lock: '<rect x="5.5" y="10.5" width="13" height="9" rx="2"/><path d="M8.5 10.5V8a3.5 3.5 0 0 1 7 0v2.5"/>', star: '<path d="m12 4 2.4 5 5.4.6-4 3.7 1.1 5.3L12 16l-4.9 2.6 1.1-5.3-4-3.7 5.4-.6z"/>', check: '<path d="m6 12 4 4 8-8"/>' });
+// [name, hue or null, each size, copies: [folder, date, keep?, locked?], saves]
+const G = [['Brochure-final.pdf', null, '2.4 MB', [['Downloads', 'Oct 28', 1], ['Desktop', 'Oct 28'], ['Mail Downloads', 'Oct 27'], ['Documents › Clients', 'Oct 20', 0, 1]], '7.2 MB'],
+  ['Team photo.jpg', 120, '4.1 MB', [['Pictures', 'Oct 12', 1], ['Downloads', 'Oct 12']], '4.1 MB'],
+  ['Logo.png', 230, '1.9 MB', [['Documents › Brand', 'Sep 3', 1], ['Desktop', 'Sep 9'], ['Downloads', 'Sep 9']], '3.8 MB'],
+  ['Lease agreement 2026.pdf', null, '1.8 MB', [['Documents', 'Oct 28', 1], ['Downloads', 'Oct 28'], ['Mail Downloads', 'Oct 28']], '3.6 MB'],
+  ['Mix.m4a', null, '3.1 MB', [['Music', 'Oct 27', 1], ['Downloads', 'Oct 27']], '3.1 MB']];
+const KC = { pdf: ['k-doc', 'doc'], m4a: ['k-music', 'music'] };
+const th = (g, cls = '') => g[1] !== null ? `<span class="th ${cls}" style="--h:${g[1]}"></span>` : `<span class="th doc ${cls}" style="--c:var(--${KC[g[0].split('.').pop()][0]})">${ic(KC[g[0].split('.').pop()][1], 16, 1.5)}</span>`;
+const side = () => `<aside class="side"><div class="lights"><i></i><i></i><i></i></div><div class="wm">Mac <b>SPRINT</b></div>
+  <div class="sh">Discover</div>${[['house', 'Home'], ['clock', 'Recents'], ['grid', 'Library', '2,880'], ['down', 'Downloaded From', '913'], ['clip', 'Clipboard']].map(([i, n, b]) => `<div class="srow">${ic(i)}${n}${b ? `<em>${b}</em>` : ''}</div>`).join('')}
+  <div class="sh">Clean up</div>${[['trash', 'Free Up Space', '14.1 GB'], ['dup', 'Duplicates', '44.8 MB', 1], ['folder', 'Organizer']].map(([i, n, b, s]) => `<div class="srow${s ? ' sel' : ''}">${ic(i)}${n}${b ? `<em class="good">${b}</em>` : ''}</div>`).join('')}</aside>`;
+const win = (content) => `<div class="win">${side()}<div class="main"><div class="tb"><span style="width:58px"></span><div class="field">${ic('search', 13)}<span>Search or ask</span><span class="kbd">⌘F</span></div><span class="btn bord" style="padding:5px 10px">Rescan</span></div><div class="content">${content}</div></div></div>`;
+const head = () => `<div class="topbar"><div class="head"><div><h3>Duplicates</h3><p>48,210 files checked · 2 min ago</p></div></div><span class="ml segk"><span class="on">Exact copies <small>27</small></span><span>Similar photos <small>9</small></span></span></div>`;
+const foot = `<div class="foot">${ic('lock', 11)}Copies in protected folders are never picked for the Trash. Everything goes to the Trash, with Undo.</div>`;
+
+const OPTIONS = [
+  { name: 'Keep chips', tag: 'My pick', idea: 'One row per group, biggest saving first. Each copy is a chip named by its folder; the blue chip is the copy you keep, the others go to the Trash. A locked chip is in a protected folder and is never picked. One button at the bottom trashes every extra copy after a confirmation.',
+    good: ['The whole job on one screen, one button at the end', 'Folder names are what people recognise', 'Changing the keeper is one click on a chip', 'Protected copies are visibly locked'],
+    watch: ['Small previews; similar photos need the Compare view', 'Groups with many copies wrap to two lines'],
+    body: () => head() + `<div class="lede"><b>46 extra copies take 31.2 MB.</b><span>We picked one copy to keep in each group, usually the one in the best folder. Click a chip to keep another.</span></div><div>${G.map((g) => `<div class="kr">${th(g)}<span class="t"><b>${g[0]}</b><small>${g[3].length} copies · ${g[2]} each</small></span><span class="locs">${g[3].map(([f, d, k, l]) => `<span class="loc${k ? ' keep' : l ? ' lock' : ''}">${k ? ic('star', 10, 2) : l ? ic('lock', 10) : ''}${k ? `Keep · ${f}` : l ? f : `<s>${f}</s>`}</span>`).join('')}</span><span class="sz">${g[4]}</span></div>`).join('')}</div><div class="sumbar"><span><b>Trash 46 extra copies · 31.2 MB</b><span class="sm">27 groups · one copy kept in each</span></span><span class="ml btn pri">Trash 46 copies…</span></div>` + foot },
+  { name: 'Side by side', idea: 'Groups in a list on the left, biggest saving first. The chosen group fills the right side: every copy as a card with a preview, folder, date and size. The suggested keeper is outlined and says Keep.',
+    good: ['Look closely before deciding', 'Dates and folders side by side make the choice obvious', 'Works the same for files and photos'],
+    watch: ['One group at a time: slower for 27 groups', 'Needs “Trash all extra copies” for people in a hurry'],
+    body: () => head() + `<div class="split"><div class="gl">${G.map((g, i) => `<div class="gi${i === 0 ? ' on' : ''}">${th(g)}<span class="t"><b>${g[0]}</b><small>${g[3].length} copies</small></span><span class="sz" style="font-size:12px">${g[4]}</span></div>`).join('')}</div><div style="display:grid;gap:12px;align-content:start;min-width:0"><div class="lede"><b>Brochure-final.pdf · 4 copies</b><span>Keep one and free 7.2 MB.</span></div><div class="copies">${G[0][3].slice(0, 3).map(([f, d, k]) => `<div class="cp${k ? ' keep' : ''}">${th(G[0])}<span class="tag">${k ? 'Keep' : 'Trash'}</span><dl><dt>Folder</dt><dd>${f}</dd><dt>Added</dt><dd>${d}</dd><dt>Size</dt><dd>2.4 MB</dd></dl></div>`).join('')}</div><span class="sm">${ic('lock', 10)} 1 more copy in Documents › Clients is protected and kept.</span><div style="display:flex;gap:8px"><span class="btn pri">Trash 2 copies…</span><span class="btn bord">Skip</span></div></div></div>` + foot },
+  { name: 'Outline list', idea: 'A Finder-style list. Each group is a row you open with the arrow to see its copies; checkboxes mark the copies to trash, already ticked for the suggestions.',
+    good: ['Familiar from Finder list view', 'Dense: many groups on screen', 'Sortable columns'],
+    watch: ['Checkboxes mean “trash”, which some people read the other way', 'Plain; less eye-catching'],
+    body: () => head() + `<div class="ot"><div class="or hd"><span></span><span></span><span></span><span>Name</span><span>Folder</span><span>Added</span><span style="text-align:right">Size</span></div>${G.slice(0, 3).map((g, gi) => `<div class="or grp"><span class="tw">${gi === 0 ? '▼' : '▶'}</span><span></span>${th(g)}<span>${g[0]} <span class="sm">× ${g[3].length}</span></span><span class="mut"></span><span class="mut"></span><span class="sz">${g[4]}</span></div>${gi === 0 ? g[3].map(([f, d, k, l]) => `<div class="or kid${k || l ? '' : ' on'}"><span></span><span class="chk${k || l ? '' : ' on'}">${k || l ? '' : ic('check', 10, 3)}</span>${th(g)}<span>${g[0]}${k ? ' <span class="sm">(kept)</span>' : l ? ` <span class="sm">${ic('lock', 9)} protected</span>` : ''}</span><span class="mut">${f}</span><span class="mut">${d}</span><span class="sz" style="font-weight:500">${g[2]}</span></div>`).join('') : ''}`).join('')}</div><div class="sumbar"><span><b>46 copies ticked · 31.2 MB</b></span><span class="ml btn pri">Move 46 to Trash…</span></div>` },
+  { name: 'Copy stacks', idea: 'Each group is a small stack of its copies with a “× 3” badge, the saving and a Keep 1 button. Biggest saving first.',
+    good: ['Most eye-catching: copies look like copies', 'Big previews for photos', 'Quick to scan visually'],
+    watch: ['Folders are hidden until you open a stack', 'Documents look alike as stacks'],
+    body: () => head() + `<div class="lede"><b>46 extra copies take 31.2 MB.</b><span>Open a stack to choose which copy to keep.</span></div><div class="stacks">${G.slice(0, 4).map((g) => `<div class="stk"><div class="pile">${th(g)}${th(g)}${th(g)}<span class="x">× ${g[3].length}</span></div><span class="t"><b>${g[0]}</b><small>Keep 1, free ${g[4]}</small></span><span class="row"><span class="sm">${g[3][0][0]}</span><span class="btn bord">Keep 1</span></span></div>`).join('')}</div><div class="sumbar"><span><b>Keep 1 of each · free 31.2 MB</b></span><span class="ml btn pri">Trash 46 copies…</span></div>` },
+  { name: 'Compare strip', idea: 'Each group shows its copies as large previews in a row, with what differs between them highlighted (folder, date, name). The kept copy has a ring.',
+    good: ['Best for similar photos and edits', 'Highlights the one detail that differs', 'Honest: you see exactly what goes'],
+    watch: ['Two groups per screen', 'Too much for plain exact copies'],
+    body: () => head() + [G[1], G[2]].map((g) => `<div class="cmp"><div class="hd">${th(g, '')}<span class="t"><b>${g[0]}</b><small>${g[3].length} copies · free ${g[4]}</small></span><span class="ml btn bord">Keep ringed, trash ${g[3].length - 1}</span></div><div class="row3">${g[3].map(([f, d, k]) => `<div class="c${k ? ' keep' : ''}">${th(g)}<span>${k ? '<b>Keep</b> · ' : ''}<span class="diff">${f}</span> · ${d}</span></div>`).join('')}</div></div>`).join('') },
+];
+
+let ap = matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
+try { const s = localStorage.getItem('ms-home-ap'); if (s === 'light' || s === 'dark') ap = s; } catch (e) {}
+document.getElementById('jump').innerHTML = OPTIONS.map((o, i) => `<a href="#option-${i + 1}"><b>${i + 1}</b>${o.name}</a>`).join('');
+function render() {
+  document.getElementById('opts').innerHTML = OPTIONS.map((o, i) => `
+  <section class="opt${i === 0 ? ' top' : ''}" id="option-${i + 1}" aria-labelledby="h-${i}">
+    <div class="opt-head"><span class="rank">${i + 1}</span><h2 id="h-${i}">${o.name}</h2>${o.tag ? `<span class="tag">${o.tag}</span>` : ''}<p>${o.idea}</p></div>
+    <div class="scroll"><div class="${ap}">${win(o.body())}</div></div>
+    <div class="notes"><div><h3>Good for</h3><ul>${o.good.map((g) => `<li>${g}</li>`).join('')}</ul></div><div><h3>Watch for</h3><ul>${o.watch.map((g) => `<li>${g}</li>`).join('')}</ul></div></div>
+  </section>`).join('');
+  document.querySelectorAll('[data-ap]').forEach((b) => b.setAttribute('aria-pressed', String(b.dataset.ap === ap)));
+}
+document.querySelectorAll('[data-ap]').forEach((b) => b.addEventListener('click', () => { ap = b.dataset.ap; try { localStorage.setItem('ms-home-ap', ap); } catch (e) {} render(); }));
+render();
+</script>
