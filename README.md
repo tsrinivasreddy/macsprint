@@ -80,6 +80,5 @@ node tests/screens.mjs images # full-page screenshots + Explorer close-ups for t
 ## Notes
 
 - Feature demos use clearly fictional sample files. They illustrate the planned app and are not real measurements.
-- Release badges follow the product roadmap. Pro pricing shows "Price coming soon".
 - The design is inspired by Apple's product pages but uses no Apple logos or assets.
   The footer includes a non-affiliation and trademark notice.
