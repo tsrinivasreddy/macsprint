@@ -167,3 +167,6 @@ folders are grey, and System is locked ("macOS needs this"). Big blocks show the
 white veil, so one look goes two levels deep; small folders fold into Other. A path (Macintosh HD › Movies) sits above
 the map. The bar below names the selected block with its size and one insight, plus Show in Finder and Review in Files.
 Nothing is removed from the map itself.
+Inside a folder, file blocks show a poster frame. Click a file and it is ringed, the path grows to the file, and the bar
+becomes the file (poster, size, length, last opened) with Quick Look (Space), Show in Finder and Move to Trash… (same
+confirmation and Undo as Free Up Space). Quick Look opens over the map; ← → step through the folder's files.
