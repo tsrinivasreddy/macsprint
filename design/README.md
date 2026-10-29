@@ -19,6 +19,7 @@ Design pages for MacSprint AI. Each file is a standalone page you can open in a 
 | `free-up-space-options.html` | Free Up Space (was Clean Up): five ranked options (Biggest first, Cards, Checklist, Before and after, One at a time), light or dark | https://claude.ai/artifact/D2zd7doFCzMJVPamXBy7Qj |
 | `free-up-space-round2.html` | Free Up Space round 2: five takes on Biggest first (Running total, Show the files, Sized rows, One ruler, Size mosaic), light or dark | https://claude.ai/artifact/9nwTthEygNR3geS6ug4zRb |
 | `duplicates-options.html` | Duplicates: five ranked options (Keep chips, Side by side, Outline list, Copy stacks, Compare strip), light or dark | https://claude.ai/artifact/219NwZrnH81WhyvZK4DYch |
+| `duplicates-round2.html` | Duplicates round 2: Keep chips with preview and compare (Open in place, Preview panel, Compare window), light or dark | https://claude.ai/artifact/HAjCHGMPnt8owJHsii6DaS |
 | `graphite-glass-sample.html` | The "Graphite & Glass" style sample | https://claude.ai/artifact/4CZ9zh8ntYYZb5cdYpUH32 |
 
 Other references:
