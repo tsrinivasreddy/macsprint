@@ -38,6 +38,23 @@ Never trade file safety for speed, an animation, or optimistic UI.
 - Use Foundation Models only when available on a compatible device/OS with the model ready. If Intel or older-system generative AI is an explicit requirement, evaluate an optional, small quantized llama.cpp model; communicate download, memory, and performance trade-offs. Non-generative features must not depend on an LLM.
 - Avoid Electron, React wrappers, always-on backends, heavyweight architecture (TCA/VIPER), and unnecessary third-party SDKs unless a specific need justifies them.
 
+## Deployment target
+
+- **Minimum: macOS 13 Ventura**, on Apple silicon and Intel (Universal 2: `arm64` + `x86_64`). This is the owner's working preference.
+  There is no Xcode project yet, so nothing is set in a build file. When the project is created, set `MACOSX_DEPLOYMENT_TARGET = 13.0`
+  and write the real value here. After that, the Xcode project is the source of truth: check it before changing anything.
+- **Ask the owner before raising the minimum.** Say what the higher target gains and which Macs it drops.
+- Features that need a newer macOS are optional layers on top of a working macOS 13 app, never the core. Check these against Apple's current docs when you use them:
+
+| Needs | Minimum macOS | Fallback on older systems |
+|---|---|---|
+| `@Observable` (Observation framework) | 14 | A compatible observable model (`ObservableObject`) behind availability checks |
+| Foundation Models (on-device language model) | 26, on a device with Apple Intelligence enabled and the model ready | Plain search, rules and OCR text; no language-model answers. Ask Your Files, Explain This and Smart Rename suggestions show only their non-AI results |
+| Liquid Glass styling | 26 | Standard materials and controls |
+| Vision text recognition (OCR) | Available well before 13 | None needed |
+
+- The website says MacSprint works on Apple silicon and Intel. Keep that true: do not add a dependency that is `arm64` only.
+
 ## Compatibility
 
 - Target macOS 13+ as a working preference, not an excuse to break the current project's supported versions. Check the actual deployment target before changing it; ask before raising the minimum version.
