@@ -134,3 +134,14 @@ From [round 2](free-up-space-round2.html): one screen, three views in a switch a
   for what came before) and a "So far" column keeps the total. The headline says where most of the space is.
 - **Map**: the Space Map treemap.
 Every view ends with: "You review every group first. Files go to the Trash, and Undo puts them back."
+
+## Duplicates (decided 2026-10-29)
+
+From [round 2](duplicates-round2.html): option 1, **Keep chips, open in place**. Exact copies / Similar photos switch on
+top. One row per group, biggest saving first: a Reviewed tick (or empty circle), thumbnail, name, a chip per copy named
+by its folder (keeper in the button fill with a star, others struck through, protected copies locked and always kept),
+and the saving. Click a row or press Return and it opens in place: every copy side by side with a real preview, folder
+and date (differences in accent), a Keep / Trash switch under each, and "Identical contents, checked byte by byte".
+Space opens Quick Look on the focused copy; ↓ closes the group, marks it Reviewed and opens the next. The bottom bar
+trashes copies from reviewed groups only; "Trash all N suggested…" is a separate, plainer button. Keys: ↑↓ groups,
+←→ copies, K keep, Space Quick Look, Return open or close.
