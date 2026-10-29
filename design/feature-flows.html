@@ -404,6 +404,18 @@ main { min-width: 0; display: grid; grid-template-columns: minmax(0, 1fr); gap: 
 .v-info { grid-row: 2 / span 2; background: #1c1d21; border-left: 1px solid #2a2b31; padding: 14px; font-size: 11px; display: grid; gap: 8px; align-content: start; }
 .v-info dt { color: #92939f; }
 
+/* Kind colours: the colour-blind-safe order checked with the dataviz validator, light and dark steps. Fixed per kind, never by rank. */
+.mscope { --k1: #2a78d6; --k2: #eb6834; --k3: #1baf7a; --k4: #eda100; --k5: #e87ba4; --k6: #008300; }
+@media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) .mscope:not(.force-light) { --k1: #3987e5; --k2: #d95926; --k3: #199e70; --k4: #c98500; --k5: #d55181; } }
+:root[data-theme="dark"] .mscope:not(.force-light), .mscope.force-dark { --k1: #3987e5; --k2: #d95926; --k3: #199e70; --k4: #c98500; --k5: #d55181; }
+.mscope.force-light { --k1: #2a78d6; --k2: #eb6834; --k3: #1baf7a; --k4: #eda100; --k5: #e87ba4; }
+.m-space { border: 1px solid var(--m-line); border-radius: 16px; padding: 10px 12px 12px; background: var(--m-bg); box-shadow: 0 1px 2px rgba(0,0,0,.05), 0 8px 20px -12px rgba(0,0,0,.25); display: grid; gap: 8px; }
+.m-space .hd { display: flex; align-items: baseline; gap: 8px; }
+.m-space .hd b { font-size: 13px; } .m-space .hd span { font-size: 11px; color: var(--m-text3); }
+.m-sbar { display: flex; gap: 2px; height: 12px; border-radius: 99px; overflow: hidden; }
+.m-sbar i { min-width: 4px; }
+.m-sbar.skel i { background: var(--m-line) !important; }
+
 /* Review status */
 .rail-count { margin: 0 8px 4px; font-size: 13px; color: var(--ink-3); }
 .st { font: 700 11px/1 var(--body); font-style: normal; letter-spacing: .02em; border-radius: 999px; padding: 3px 7px; flex: none; color: var(--ink-3); background: var(--rule); vertical-align: middle; }
@@ -417,12 +429,12 @@ main { min-width: 0; display: grid; grid-template-columns: minmax(0, 1fr); gap: 
 :root[data-theme="dark"] .mscope:not(.force-light), .mscope.force-dark { --m-g1: #2b2d32; --m-g2: #1c1e22; --m-pill: rgba(255,255,255,.08); --m-fi: #e6e8ec; --m-rsel: #50545e; }
 .mscope.force-light { --m-g1: #cfd2d8; --m-g2: #aeb2bc; --m-pill: rgba(255,255,255,.86); --m-fi: #363940; --m-rsel: #3d4048; }
 .m-band { background: linear-gradient(110deg, var(--m-g1), var(--m-g2)); padding: 10px 16px; display: flex; align-items: center; gap: 10px; }
-.m-pill { flex: 1; min-width: 0; max-width: 460px; margin: 0 auto; display: flex; align-items: center; gap: 10px; min-height: 40px; padding: 4px 6px 4px 14px; border-radius: 999px; background: var(--m-pill);
+.m-spill { flex: 1; min-width: 0; max-width: 460px; margin: 0 auto; display: flex; align-items: center; gap: 10px; min-height: 40px; padding: 4px 6px 4px 14px; border-radius: 999px; background: var(--m-pill);
   -webkit-backdrop-filter: blur(18px) saturate(1.4); backdrop-filter: blur(18px) saturate(1.4); box-shadow: inset 0 1px 0 rgba(255,255,255,.35), 0 1px 2px rgba(0,0,0,.08); color: var(--m-fi); }
-.m-pill .q { flex: 1; min-width: 0; display: flex; align-items: center; gap: 6px; font-size: 14.5px; white-space: nowrap; overflow: hidden; }
-.m-pill .q .ph { opacity: .75; } .m-pill .q .typed { color: var(--m-fi); overflow: hidden; text-overflow: ellipsis; }
-.m-pill .m-tok { flex: none; display: inline-flex; align-items: center; gap: 4px; font-size: 11.5px; font-weight: 600; color: var(--m-fi); background: color-mix(in srgb, var(--m-fi) 13%, transparent); border-radius: 999px; padding: 2px 8px 2px 10px; }
-.m-pill .m-tok i { font-style: normal; opacity: .6; }
+.m-spill .q { flex: 1; min-width: 0; display: flex; align-items: center; gap: 6px; font-size: 14.5px; white-space: nowrap; overflow: hidden; }
+.m-spill .q .ph { opacity: .75; } .m-spill .q .typed { color: var(--m-fi); overflow: hidden; text-overflow: ellipsis; }
+.m-spill .m-tok { flex: none; display: inline-flex; align-items: center; gap: 4px; font-size: 11.5px; font-weight: 600; color: var(--m-fi); background: color-mix(in srgb, var(--m-fi) 13%, transparent); border-radius: 999px; padding: 2px 8px 2px 10px; }
+.m-spill .m-tok i { font-style: normal; opacity: .6; }
 .m-live { text-decoration: underline dotted; text-decoration-thickness: 2px; text-underline-offset: 4px; }
 .m-mic { flex: none; width: 30px; height: 30px; border-radius: 50%; display: grid; place-items: center; color: var(--m-fi); }
 .m-mic.on { background: var(--m-fi); color: var(--m-bg); }
@@ -591,6 +603,8 @@ const C = {
     sample: () => `<div class="m-h2">Library <span class="m-count">6</span></div>` },
   pill: { name: 'Status pill', swift: 'Text("Free up to 14.1 GB")\n  .font(.caption.weight(.semibold))\n  .foregroundStyle(.green)\n  .padding(.horizontal, 8)\n  .background(.green.opacity(0.14), in: .capsule)', sf: [], size: 'Height 16–20 pt', type: '10.5–12 pt semibold', color: 'Green text on 14% green', shape: 'Capsule', states: ['Good', 'Warning', 'Info'],
     sample: () => `<span class="m-pill">Free up to 14.1 GB</span>` },
+  spaceBar: { name: 'Space bar (Your files)', swift: 'HStack(spacing: 2) {\n  ForEach(kinds) { kind in\n    Rectangle().fill(kind.color)\n      .frame(width: max(4, geo.size.width * kind.share))\n      .help("\\(kind.name) · \\(kind.size.formatted(.byteCount(style: .file)))")\n  }\n}\n.frame(height: 12)\n.clipShape(.capsule)\n.accessibilityLabel(kinds.map { "\\($0.name) \\($0.sizeText)" }.joined(separator: ", "))', sf: [], size: 'Full width of the content column; bar 12 pt tall, 2 pt gaps', type: 'Title 13 pt bold; total 11 pt grey', color: 'One fixed colour per kind (Apps blue, Videos orange, Images green, Documents yellow, Archives pink, Music dark green); the storage cards below carry the names', shape: '16 pt card; capsule ends on the bar', states: ['Loaded', 'Updating (grey bar)', 'Hover a part: tooltip with kind and size'],
+    sample: () => `<div style="width:300px">${spaceBar()}</div>` },
   folder: { name: 'Library storage card', swift: 'struct KindCard: View   // custom\n  let kind: FileKind\n  VStack(alignment: .leading, spacing: 6) {\n    Label(kind.name, systemImage: kind.symbol)\n    Text(kind.size, format: .byteCount(style: .file))\n      .font(.title3.bold()).monospacedDigit()\n    ProgressView(value: kind.share).tint(kind.color)\n    HStack { Text(kind.shareText); Spacer(); Text(kind.newest) }\n      .font(.caption2).foregroundStyle(.secondary)\n  }\n  .padding(10)\n  .background(.background, in: .rect(cornerRadius: 16))\n  .shadow(color: .black.opacity(0.12), radius: 10, y: 6)', sf: ['photo', 'film', 'music.note', 'doc', 'doc.zipper', 'app'], size: '3 per row; padding 9–11 pt', type: 'Name 12 pt semibold; size 17 pt bold, monospaced digits; footer 10 pt grey', color: 'Icon on 15% of the kind’s colour; bar in the kind’s colour', shape: '16 pt corners, soft shadow (foundations)', states: ['Default', 'Hover (shadow deepens)', 'Selected', 'Loading (placeholder)'],
     sample: () => `<div style="display:grid;grid-template-columns:repeat(2,minmax(0,170px));gap:8px;width:100%;justify-content:center">${fold(...FOLDERS[0])}${fold(...FOLDERS[1])}</div>` },
   stat: { name: 'Stat card', swift: 'struct StatCard: View   // custom\n  VStack(alignment: .leading) {\n    Label(title, systemImage: icon)\n    Text(size).font(.title2).bold()\n      .monospacedDigit()\n  }\n  .padding(12)\n  .background(.background, in: .rect(cornerRadius: 14))', sf: ['doc.on.doc', 'arrow.down.circle', 'camera.viewfinder', 'internaldrive'], size: 'Padding 10–14 pt', type: 'Label 11 pt grey; number 17–25 pt bold, monospaced digits', color: 'Card white / graphite, 1 pt hairline', shape: '16 pt corners, soft shadow (foundations)', states: ['Default', 'Hover (lifts 3 pt)', 'Loading', 'Zero'],
@@ -739,7 +753,7 @@ function toolbar({ q = '', focus = false, right = '', hot = false, tokens = [] }
 }
 /* Search view (decided in design/search.html): Graphite band, frosted pill, microphone, big preview rows */
 function sband({ q = '', tokens = [], focus = true, listening = false, hot = '' } = {}) {
-  return `<div class="m-band" data-c="searchBand"><div class="m-pill${focus ? ' focus' : ''}" ${hot === 'field' ? 'data-hot' : ''}>${ic('magnifyingglass', 17)}<span class="q">${tokens.map((t, i) => `<span class="m-tok" ${i === 0 ? 'data-c="token"' : ''}>${t}<i>×</i></span>`).join('')}${listening ? '<span class="m-wave" aria-hidden="true"><i></i><i></i><i></i><i></i><i></i></span>' : ''}<span class="${q ? 'typed' : 'ph'}">${q || 'Search or ask a question'}</span></span><span class="m-mic${listening ? ' on' : ''}" data-c="micBtn" ${hot === 'mic' ? 'data-hot' : ''}>${ic(listening ? 'stop.fill' : 'mic.fill', listening ? 12 : 15)}</span></div></div>`;
+  return `<div class="m-band" data-c="searchBand"><div class="m-spill${focus ? ' focus' : ''}" ${hot === 'field' ? 'data-hot' : ''}>${ic('magnifyingglass', 17)}<span class="q">${tokens.map((t, i) => `<span class="m-tok" ${i === 0 ? 'data-c="token"' : ''}>${t}<i>×</i></span>`).join('')}${listening ? '<span class="m-wave" aria-hidden="true"><i></i><i></i><i></i><i></i><i></i></span>' : ''}<span class="${q ? 'typed' : 'ph'}">${q || 'Search or ask a question'}</span></span><span class="m-mic${listening ? ' on' : ''}" data-c="micBtn" ${hot === 'mic' ? 'data-hot' : ''}>${ic(listening ? 'stop.fill' : 'mic.fill', listening ? 12 : 15)}</span></div></div>`;
 }
 const WHY = { text: ['text.viewfinder', 'Text in image'], name: ['textformat', 'Name'], ai: ['sparkles', 'What it shows'] };
 // [name, thumbnail hue, reason, matched text, folder, date, red warning in the shot]
@@ -765,10 +779,12 @@ const lines = (n, w = [90, 70, 80, 60, 85, 50]) => Array.from({ length: n }, (_,
 const SOURCES = [['Safari', '#3a8dff', '131 files · 1.0 GB'], ['Mail', '#5b7cfa', '104 files · 120 MB'], ['Slack', '#a46bf5', '79 files · 103 MB'], ['WhatsApp', '#3fb985', '37 files · 212 MB'], ['AirDrop', '#3aa7d9', '22 files · 3.1 GB'], ['ChatGPT', '#16a07a', '63 files · 98 MB'], ['Figma', '#f2647e', '51 files · 7 MB'], ['Google Drive', '#f0a23b', '15 files · 457 MB'], ['Any website', '#8e8e93', '411 files · 1.4 GB']];
 const srcCard = ([n, t, sub], i, hot) => `<div class="m-src" style="--t:${t}" ${hot ? 'data-c="srcCard" data-hot' : ''}><span class="gl">${n[0]}</span><span><b>${n}</b><small>${sub}</small></span></div>`;
 // [kind, colour, hue, count, size, % of library, newest item, SF Symbol]
-const FOLDERS = [['Images', '#5b7cfa', 215, '2,280', '2.81 GB', 9, 'Screenshot 9.41.png', 'photo'], ['Videos', '#a46bf5', 275, '162', '11.21 GB', 37, 'Trip.mov', 'film'], ['Music', '#f2647e', 345, '34', '82.7 MB', 0, 'Mix.m4a', 'music.note'], ['Documents', '#f0a23b', 35, '201', '1.16 GB', 4, 'Brief.pdf', 'doc'], ['Archives', '#3fb985', 150, '93', '630 MB', 2, 'Backup.zip', 'doc.zipper'], ['Apps', '#3aa7d9', 195, '110', '14.31 GB', 47, 'Figma.app', 'app']];
+const FOLDERS = [['Apps', 'var(--k1)', 195, '110', '14.31 GB', 47, 'Figma.app', 'app'], ['Videos', 'var(--k2)', 275, '162', '11.21 GB', 37, 'Trip.mov', 'film'], ['Images', 'var(--k3)', 215, '2,280', '2.81 GB', 9, 'Screenshot 9.41.png', 'photo'], ['Documents', 'var(--k4)', 35, '201', '1.16 GB', 4, 'Brief.pdf', 'doc'], ['Archives', 'var(--k5)', 150, '93', '630 MB', 2, 'Backup.zip', 'doc.zipper'], ['Music', 'var(--k6)', 345, '34', '82.7 MB', 0, 'Mix.m4a', 'music.note']];
+const spaceBar = (loading) => `<div class="m-space" data-c="spaceBar"><div class="hd"><b>Your files</b><span>${loading ? 'Updating…' : '30.19 GB · 2,880 files'}</span></div><div class="m-sbar${loading ? ' skel' : ''}" role="img" aria-label="${FOLDERS.map((f) => `${f[0]} ${f[4]}`).join(', ')}">${FOLDERS.map((f) => `<i style="flex:${Math.max(f[5], 1)};background:${f[1]}" title="${f[0]} · ${f[4]}"></i>`).join('')}</div></div>`;
 const STATS = [['doc.on.doc', 'Duplicates', '44.8 MB', '24 extra copies'], ['arrow.down.circle', 'Old Downloads', '11.5 GB', '1,227 items'], ['camera.viewfinder', 'Old Screenshots', '321 MB', '480 items'], ['internaldrive', 'Large Files', '2.2 GB', '10 items']];
 function homeBody({ loading = false, updated = false, hotRefresh = false } = {}) {
   return `<div class="m-row2"><div data-c="title"><div class="m-h1">Good afternoon</div><div class="m-sub">${updated ? '2,893 files · 30.24 GB · updated just now' : '2,880 files · 30.19 GB across your Mac'}</div></div><span class="m-btn" data-c="bordered" ${hotRefresh ? 'data-hot' : ''}>${ic('arrow.clockwise', 11)}Refresh</span></div>
+    ${spaceBar(loading)}
     <div class="m-h2" data-c="secHead">Library <span class="m-count">6</span></div>
     <div class="m-folders">${FOLDERS.map((f) => fold(...f, loading)).join('')}</div>
     <div class="m-h2">Clean Up <span class="m-pill" data-c="pill">Free up to 14.1 GB</span></div>
@@ -791,7 +807,7 @@ const F = [
     when: 'Every time you open MacSprint.',
     steps: [
       { t: 'Open the app', do: 'Open MacSprint. Home is selected in the sidebar.', see: 'A greeting, six Library storage cards (size, share of the library, newest item) and four Clean Up cards.', why: 'One glance answers two questions: what do I have, and what can I clean? Big numbers are used only where they matter.',
-        comps: ['window', 'brand', 'sidebar', 'sideRow', 'badge', 'search', 'title', 'bordered', 'folder', 'pill', 'stat'], screen: () => win({ sel: 'home', body: homeBody({ hotRefresh: true }) }) },
+        comps: ['window', 'brand', 'sidebar', 'sideRow', 'badge', 'search', 'title', 'bordered', 'spaceBar', 'folder', 'pill', 'stat'], screen: () => win({ sel: 'home', body: homeBody({ hotRefresh: true }) }) },
       { t: 'Refresh the scan', do: 'Click Refresh. Click the progress bar to finish the scan.', see: 'The toolbar shows progress; the Library cards turn into grey placeholders while numbers update.', why: 'Placeholders keep the layout still while loading, so nothing jumps around. Progress lives in the toolbar so the page stays readable.',
         comps: ['progress', 'skeleton', 'bordered'], screen: () => win({ sel: 'home', tb: toolbar({ right: `<span style="display:flex;gap:8px;align-items:center;font-size:11.5px;color:var(--m-text2)" data-c="progress" data-hot>Scanning Downloads… 62%<span class="m-progress"><i style="width:62%"></i></span></span><span class="m-btn" data-c="bordered">Pause</span>` }), body: homeBody({ loading: true }) }) },
       { t: 'Scan finished', do: 'Click Go in the menu bar.', see: 'Updated numbers and a short message at the bottom that fades away.', why: 'A toast confirms the result without interrupting. Messages name what happened (“Updated”) instead of a vague “Done”.',

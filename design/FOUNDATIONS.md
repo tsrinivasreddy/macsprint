@@ -75,3 +75,23 @@ Needs `NSMicrophoneUsageDescription`, `NSSpeechRecognitionUsageDescription` and 
 Check these APIs against Apple's current docs when building.
 
 Note: the design page animates the voice demo to explain the states. The rest of the designs stay static.
+
+## Home (decided 2026-10-29)
+
+From the [Home options](home-options.html) page: option 3, **Storage cards**, with the **Your files** space bar from option 1
+added above the cards. Order: greeting and Refresh, Your files bar, Library storage cards (largest first), Clean Up cards.
+
+**Kind colours** (one fixed colour per kind, never by rank). They passed the colour-blindness check (dataviz validator,
+adjacent pairs) in light and dark; the earlier colours failed (Images and Videos looked the same). Every colour sits next to
+its name or a tooltip, so colour never carries meaning alone.
+
+| Kind | Light | Dark |
+|---|---|---|
+| Apps | `#2a78d6` | `#3987e5` |
+| Videos | `#eb6834` | `#d95926` |
+| Images | `#1baf7a` | `#199e70` |
+| Documents | `#eda100` | `#c98500` |
+| Archives | `#e87ba4` | `#d55181` |
+| Music | `#008300` | `#008300` |
+
+The website still uses the earlier colours; update it when the owner asks.
