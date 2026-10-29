@@ -49,7 +49,7 @@ Never trade file safety for speed, an animation, or optimistic UI.
 | Needs | Minimum macOS | Fallback on older systems |
 |---|---|---|
 | `@Observable` (Observation framework) | 14 | A compatible observable model (`ObservableObject`) behind availability checks |
-| Foundation Models (on-device language model) | 26, on a device with Apple Intelligence enabled and the model ready | Plain search, rules and OCR text; no language-model answers. Ask Your Files, Explain This and Smart Rename suggestions show only their non-AI results |
+| Foundation Models (on-device language model) | 26, on a device with Apple Intelligence enabled and the model ready | Plain search, rules and OCR text; no language-model answers. Ask Your Files, What’s This? and Smart Rename suggestions show only their non-AI results |
 | Liquid Glass styling | 26 | Standard materials and controls |
 | Vision text recognition (OCR) | Available well before 13 | None needed |
 
@@ -174,7 +174,7 @@ Do not refactor the repository during an audit unless explicitly asked.
 
 **Features** (16, in `js/features.js`)
 Home, Recents, Visual Library, Image Viewer, Search, Ask Your Files, Downloaded From, Clipboard, Paste Clean, Clean Up,
-Space Map, Explain This, Duplicates, Organizer, Screenshot Inbox, Smart Rename.
+Space Map, What’s This?, Duplicates, Organizer, Screenshot Inbox, Smart Rename.
 Every feature needs: a `FEATURES` entry, a `STORIES` entry (problem, use case, shortcut), a demo in `js/demos.js` with the same id,
 and a flow in `design/feature-flows.html` (Ask Your Files is covered by the Search flow). Each flow has a review status in `STATUS`:
 Draft, In review or Final. Only the owner marks a feature Final.

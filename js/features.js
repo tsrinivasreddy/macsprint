@@ -148,12 +148,12 @@ export const FEATURES = [
   },
   {
     id: 'explain', group: 'Clean up', icon: I.explain,
-    title: 'Explain This', short: 'What is it, and is it safe?',
+    title: 'What’s This?', short: 'What is it, and is it safe?',
     headline: '150 GB of “System Data”, finally explained.',
     points: [
       'Splits System Data into caches, backups, snapshots and more.',
       'Each part is labelled safe to clear, check first or leave it.',
-      'Right-click any file and choose Explain this file.',
+      'Right-click any file and choose What’s this?',
       'Says plainly what you will notice, so nothing is a surprise.',
     ],
   },
@@ -227,7 +227,7 @@ export const iconSvg = (inner, size = 18) =>
 export const SHORTCUTS = [
   { group: 'Go', items: [['Home', ['⇧', '⌘', 'H']], ['Recents', ['⇧', '⌘', 'R']], ['Library', ['⇧', '⌘', 'L']], ['Downloaded From', ['⌥', '⌘', 'L']], ['Clipboard', ['⇧', '⌘', 'V']], ['Clean Up', ['⇧', '⌘', 'K']], ['Space Map', ['⇧', '⌘', 'M']], ['Duplicates', ['⇧', '⌘', 'D']], ['Organizer', ['⇧', '⌘', 'O']], ['Screenshot Inbox', ['⇧', '⌘', 'I']]] },
   { group: 'Find and view', items: [['Search', ['⌘', 'F']], ['Ask Your Files', ['⇧', '⌘', 'A']], ['Copy text from images', ['⇧', '⌘', 'C']], ['Save search', ['⌘', 'S']], ['Quick Look', ['Space']], ['Grid / List', ['⌘', '1', '⌘', '2']], ['Inspector', ['⌘', 'I']], ['Back / Forward', ['⌘', '[', '⌘', ']']]] },
-  { group: 'Act', items: [['Open', ['⌘', 'O']], ['Show in Finder', ['⌥', '⌘', 'R']], ['Copy path', ['⌥', '⌘', 'C']], ['Paste clean', ['⌥', '⇧', '⌘', 'V']], ['Explain this file', ['⌥', '⌘', 'E']], ['Move to Trash', ['⌘', '⌫']], ['Undo', ['⌘', 'Z']]] },
+  { group: 'Act', items: [['Open', ['⌘', 'O']], ['Show in Finder', ['⌥', '⌘', 'R']], ['Copy path', ['⌥', '⌘', 'C']], ['Paste clean', ['⌥', '⇧', '⌘', 'V']], ['What’s this?', ['⌥', '⌘', '/']], ['Move to Trash', ['⌘', '⌫']], ['Undo', ['⌘', 'Z']]] },
 ];
 
 // Spotlight cards: the problem, the everyday use, three short points and the shortcut.
@@ -257,10 +257,10 @@ export const STORIES = [
     problem: 'A list of sizes doesn’t show what’s really big.',
     use: 'Open the map, spot the biggest block, and go inside it.',
     points: ['Block size matches folder size', 'Click to go in, click the path to go back', 'Move to the Trash with Undo'] },
-  { id: 'explain', label: 'Explain This', keys: ['⌥', '⌘', 'E'], title: 'Know before you delete.',
+  { id: 'explain', label: 'What’s This?', keys: ['⌥', '⌘', '/'], title: 'Know before you delete.',
     problem: '“System Data” is 150 GB and nobody says what’s in it.',
     use: 'See it split into parts, each marked safe to clear, check first or leave it.',
-    points: ['Plain words, no jargon', 'Right-click any file to explain it', 'Says what you will notice afterwards'] },
+    points: ['Plain words, no jargon', 'Right-click any file to ask about it', 'Says what you will notice afterwards'] },
   { id: 'duplicates', label: 'Duplicates', keys: ['⇧', '⌘', 'D'], title: 'One copy is plenty.',
     problem: 'The same file is saved three times, in three places.',
     use: 'Keep the best copy with one click and trash the rest.',

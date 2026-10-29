@@ -619,7 +619,7 @@ function spacemap(el) {
   root();
 }
 
-/* ---------------- Explain This (System Data and any file) ---------------- */
+/* ---------------- What’s This? (System Data and any file) ---------------- */
 function explain(el) {
   const ROWS = [
     ['App caches', '22 GB', 'ok', 'Safe to clear', 'Apps keep temporary copies of things they use often, like thumbnails and web pages. Clear them and apps rebuild them. The first launch afterwards can be a little slower. Largest: Xcode 8.2 GB, Chrome 6.1 GB, Spotify 2.9 GB.'],
