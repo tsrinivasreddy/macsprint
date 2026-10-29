@@ -167,6 +167,9 @@ Do not refactor the repository during an audit unless explicitly asked.
   New features live inside an existing place; they do not add sidebar rows. Quick Search, Command Panel, Menu Bar, Finder Tools,
   Screenshot Toolkit and Window Manager were removed on purpose.
 - Removed design experiments are kept in `design/lab/` (see its README). Do not delete them.
+- Keep every design Claude makes. Each new design page is its own file, committed locally. When a design is replaced, move
+  the old page to `design/lab/` with a README row; never delete it or overwrite it with a different design. Commit locally
+  as you go; push only when the owner asks.
 
 **Features** (16, in `js/features.js`)
 Home, Recents, Visual Library, Image Viewer, Search, Ask Your Files, Downloaded From, Clipboard, Paste Clean, Clean Up,
