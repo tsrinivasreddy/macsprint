@@ -24,6 +24,7 @@ Design pages for MacSprint AI. Each file is a standalone page you can open in a 
 | `space-map-options.html` | Space Map: five ranked options (Nested blocks, Columns, Rings, Layers, Bubbles), light or dark | https://claude.ai/artifact/F9cSUo6eQ6EPGZz3yGSaLD |
 | `whats-this-options.html` | What’s This?: five ranked options (Answers in place, One bar, Inspector, Three piles, Ask anywhere), light or dark | https://claude.ai/artifact/VJoTsxq9BJLhXWHeQeX5SC |
 | `whats-this-in-free-up-space.html` | What’s This? placed in the reviewed Free Up Space: Review table, System Data line, group rows, Map bar. Chosen: Review table and System Data line | https://claude.ai/artifact/Xh2RmG5YSJwXXTbCRr2fHH |
+| `image-viewer-options.html` | Image Viewer: five ranked options (Stage and filmstrip, Over the Library, Photo and folder, Grid and photo, Compare two), same keys in all, light or dark | https://claude.ai/artifact/DY1L2hWqoJS3K2q4nXrXEj |
 | `search-bar-options.html` | Search bar: five ranked options (Halo, Ink line, Smart chips, Center stage, Graphite refined) with live states (ready, listening, asking), light or dark | https://claude.ai/artifact/KqM9ARDDoEnrKTikuZWejH |
 | `search-bar-round2.html` | Search bar round 2: Halo made premium (Glass list, With preview, Night glass) plus states (ready, listening, thinking, asking), light or dark | https://claude.ai/artifact/9TkuFsfNGx4v5nE8WK46oN |
 | `graphite-glass-sample.html` | The "Graphite & Glass" style sample | https://claude.ai/artifact/4CZ9zh8ntYYZb5cdYpUH32 |
