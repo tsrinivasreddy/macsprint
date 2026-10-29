@@ -1,0 +1,254 @@
+<title>MacSprint Home Options</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Atkinson+Hyperlegible:wght@400;700&family=Schibsted+Grotesk:wght@600;800&display=swap">
+<style>
+/* Layout: a review sheet. Five Home screens, ranked, each a full MacSprint window with what it is good for. One switch sets light or dark for every window. */
+:root {
+  --paper: #eceff3; --sheet: #ffffff; --ink: #15171c; --ink-2: #4f5562; --rule: rgba(21,23,28,.12);
+  --blue: #3346c8; --blue-soft: rgba(51,70,200,.09); --ok: #1f7a4a;
+  --display: "Schibsted Grotesk", "Avenir Next", system-ui, sans-serif;
+  --body: "Atkinson Hyperlegible", "Segoe UI", system-ui, sans-serif;
+  --mac: -apple-system, BlinkMacSystemFont, "SF Pro Text", "Helvetica Neue", "Segoe UI", sans-serif;
+}
+@media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) {
+  --paper: #111317; --sheet: #191c21; --ink: #eceef2; --ink-2: #b0b6c2; --rule: rgba(255,255,255,.1);
+  --blue: #93a3ff; --blue-soft: rgba(147,163,255,.13); --ok: #7fd9a6; color-scheme: dark; } }
+:root[data-theme="dark"] {
+  --paper: #111317; --sheet: #191c21; --ink: #eceef2; --ink-2: #b0b6c2; --rule: rgba(255,255,255,.1);
+  --blue: #93a3ff; --blue-soft: rgba(147,163,255,.13); --ok: #7fd9a6; color-scheme: dark; }
+
+/* MacSprint app (design/FOUNDATIONS.md) */
+.light { --m-bg: #ffffff; --m-side: #f4f4f7; --m-alt: #f3f4f7; --m-line: rgba(20,20,30,.1); --m-text: #16161a; --m-text2: #5f6068; --m-text3: #6c6d76;
+  --m-accent: #3b5bdb; --m-btn: #2f4bc4; --m-soft: rgba(59,91,219,.1); --m-good: #1f7a4d; --m-good-soft: rgba(31,122,77,.1);
+  --m-card: #ffffff; --m-shadow: 0 1px 2px rgba(20,24,40,.06), 0 6px 18px rgba(20,24,40,.07); --m-raise: 0 1px 2px rgba(20,24,40,.1), 0 0 0 1px rgba(20,20,30,.06); }
+.dark { --m-bg: #18191d; --m-side: #1f2025; --m-alt: #23242a; --m-line: rgba(255,255,255,.09); --m-text: #ececf0; --m-text2: #a3a4ad; --m-text3: #92939f;
+  --m-accent: #8399ff; --m-btn: #4a63e0; --m-soft: rgba(131,153,255,.14); --m-good: #4cd38a; --m-good-soft: rgba(76,211,138,.12);
+  --m-card: #212228; --m-shadow: 0 1px 2px rgba(0,0,0,.3), 0 6px 18px rgba(0,0,0,.28); --m-raise: 0 1px 2px rgba(0,0,0,.4), 0 0 0 1px rgba(255,255,255,.06); }
+
+* { box-sizing: border-box; }
+body { margin: 0; background: var(--paper); color: var(--ink); font: 16px/1.55 var(--body); -webkit-font-smoothing: antialiased;
+  padding-left: max(16px, env(safe-area-inset-left, 0px)); padding-right: max(16px, env(safe-area-inset-right, 0px)); padding-block: 40px 72px; }
+h1, h2, h3 { font-family: var(--display); margin: 0; line-height: 1.12; text-wrap: balance; }
+.wrap { max-width: 1120px; margin: 0 auto; display: grid; gap: 24px; }
+header { display: grid; gap: 10px; max-width: 72ch; }
+header h1 { font-size: clamp(28px, 4vw, 40px); font-weight: 800; }
+header p { margin: 0; color: var(--ink-2); }
+.eyebrow { font: 600 12px/1 var(--display); letter-spacing: .08em; text-transform: uppercase; color: var(--blue); }
+.bar { display: flex; flex-wrap: wrap; gap: 12px 20px; align-items: center; }
+.seg { display: inline-flex; gap: 4px; padding: 3px; border: 1px solid var(--rule); border-radius: 999px; }
+.seg button { font: 600 14px/1 var(--body); color: var(--ink-2); background: transparent; border: 0; border-radius: 999px; padding: 7px 14px; cursor: pointer; }
+.seg button[aria-pressed="true"] { background: var(--blue); color: var(--sheet); }
+.seg button:focus-visible, .jump a:focus-visible { outline: 2px solid var(--blue); outline-offset: 2px; }
+.jump { display: flex; flex-wrap: wrap; gap: 6px; }
+.jump a { font-size: 14px; color: var(--ink); text-decoration: none; border: 1px solid var(--rule); border-radius: 999px; padding: 4px 11px; display: inline-flex; gap: 6px; align-items: center; }
+.jump a b { color: var(--blue); }
+.pick { background: var(--blue-soft); border-radius: 14px; padding: 14px 18px; font-size: 15px; max-width: 86ch; margin: 0; }
+.pick b { color: var(--blue); }
+
+.opt { background: var(--sheet); border: 1px solid var(--rule); border-radius: 16px; padding: 22px; display: grid; gap: 16px; scroll-margin-top: 16px; min-width: 0; }
+.opt-head { display: flex; align-items: center; gap: 12px; flex-wrap: wrap; }
+.rank { font: 800 15px/1 var(--display); width: 30px; height: 30px; border-radius: 9px; display: grid; place-items: center; background: var(--rule); color: var(--ink); flex: none; }
+.opt.top .rank { background: var(--blue); color: var(--sheet); }
+.opt h2 { font-size: 22px; font-weight: 800; }
+.tag { font: 600 12px/1 var(--body); color: var(--blue); background: var(--blue-soft); border-radius: 999px; padding: 5px 10px; }
+.opt-head p { margin: 0; color: var(--ink-2); flex: 1 1 100%; }
+.scroll { overflow-x: auto; padding: 4px; margin: -4px; }
+.notes { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 300px), 1fr)); gap: 8px 28px; font-size: 15px; }
+.notes b { font: 600 13px/1.2 var(--display); letter-spacing: .05em; text-transform: uppercase; color: var(--ink-2); }
+.notes ul { margin: 6px 0 0; padding-left: 18px; }
+.notes li { margin-bottom: 3px; }
+
+/* Window */
+.win { font: 13px/1.35 var(--mac); color: var(--m-text); background: var(--m-bg); border-radius: 14px; overflow: hidden; display: grid; grid-template-columns: 200px 1fr;
+  min-width: 860px; box-shadow: 0 0 0 1px var(--m-line), 0 16px 40px rgba(20,24,40,.12); }
+.side { background: var(--m-side); border-right: 1px solid var(--m-line); padding: 12px 10px; display: grid; align-content: start; gap: 1px; }
+.lights { display: flex; gap: 6px; margin: 0 4px 14px; }
+.lights i { width: 11px; height: 11px; border-radius: 50%; background: #ff5f57; }
+.lights i:nth-child(2) { background: #febc2e; } .lights i:nth-child(3) { background: #28c840; }
+.wm { font-size: 17px; color: var(--m-accent); margin: 0 6px 12px; letter-spacing: .01em; }
+.wm b { font-weight: 500; letter-spacing: .16em; }
+.sh { font-size: 11px; font-weight: 600; color: var(--m-text3); margin: 10px 8px 4px; }
+.srow { display: flex; align-items: center; gap: 8px; padding: 5px 8px; border-radius: 7px; color: var(--m-text); white-space: nowrap; }
+.srow svg { color: var(--m-text2); flex: none; }
+.srow em { margin-left: auto; font-style: normal; font-size: 11px; color: var(--m-text3); font-variant-numeric: tabular-nums; }
+.srow em.good { color: var(--m-good); font-weight: 600; }
+.srow.sel { background: var(--m-bg); box-shadow: var(--m-raise); font-weight: 600; }
+.srow.sel svg { color: var(--m-accent); }
+.main { display: grid; grid-template-rows: auto 1fr; min-width: 0; }
+.tb { display: flex; align-items: center; padding: 10px 16px; border-bottom: 1px solid var(--m-line); }
+.field { margin: 0 auto; width: 340px; max-width: 100%; display: flex; align-items: center; gap: 7px; background: var(--m-bg); border-radius: 9px; padding: 6px 10px; color: var(--m-text3); font-size: 12.5px;
+  box-shadow: 0 0 0 1px var(--m-line), 0 2px 6px rgba(0,0,0,.05); }
+.field span { flex: 1; min-width: 0; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.field .kbd { flex: none; }
+.kbd { font-size: 11px; color: var(--m-text3); border: 1px solid var(--m-line); border-radius: 5px; padding: 0 5px; }
+.content { padding: 20px 22px 24px; display: grid; gap: 18px; align-content: start; }
+.hello { display: flex; align-items: flex-end; gap: 12px; }
+.hello h3 { font: 700 22px/1.15 var(--mac); letter-spacing: -.01em; }
+.hello p { margin: 3px 0 0; color: var(--m-text2); font-size: 12.5px; }
+.btn { font: 600 12px/1 var(--mac); border-radius: 9px; padding: 7px 12px; display: inline-flex; gap: 6px; align-items: center; white-space: nowrap; }
+.btn.bord { color: var(--m-text); background: var(--m-bg); box-shadow: 0 0 0 1px var(--m-line); }
+.btn.pri { color: #fff; background: var(--m-btn); }
+.ml { margin-left: auto; }
+.h4 { display: flex; align-items: center; gap: 8px; font-size: 14px; font-weight: 700; }
+.h4 .pill { font-size: 11px; font-weight: 600; color: var(--m-good); background: var(--m-good-soft); border-radius: 999px; padding: 2px 8px; }
+.h4 .cnt { font-size: 11px; font-weight: 600; color: var(--m-text3); background: var(--m-alt); border-radius: 999px; padding: 1px 7px; }
+.card { background: var(--m-card); border-radius: 16px; box-shadow: var(--m-shadow), 0 0 0 1px var(--m-line); padding: 14px; min-width: 0; }
+.ico { width: 30px; height: 30px; border-radius: 9px; display: grid; place-items: center; color: #fff; background: var(--k); flex: none; }
+.sm { font-size: 11px; color: var(--m-text3); }
+.num { font-variant-numeric: tabular-nums; }
+.g3 { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; }
+.g4 { display: grid; grid-template-columns: repeat(4, 1fr); gap: 12px; }
+.g6 { display: grid; grid-template-columns: repeat(6, 1fr); gap: 10px; }
+.g2 { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+
+/* Space bar */
+.sbar { display: flex; height: 14px; border-radius: 999px; overflow: hidden; gap: 2px; background: var(--m-alt); }
+.sbar i { background: var(--k); min-width: 4px; }
+.leg { display: grid; grid-template-columns: auto 1fr; gap: 2px 10px; align-items: center; padding: 10px; border-radius: 12px; background: var(--m-alt); }
+.leg .dot { width: 10px; height: 10px; border-radius: 3px; background: var(--k); grid-row: span 2; }
+.leg b { font-size: 12.5px; display: flex; justify-content: space-between; gap: 8px; }
+.leg b span { font-weight: 600; color: var(--m-text2); }
+.leg .sm { white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.stat { display: grid; gap: 3px; }
+.stat .t { display: flex; align-items: center; gap: 6px; font-size: 12px; color: var(--m-text2); }
+.stat .v { font-size: 20px; font-weight: 700; letter-spacing: -.01em; }
+/* Storage card */
+.scard { display: grid; gap: 8px; }
+.scard .top { display: flex; gap: 10px; align-items: center; }
+.scard .v { font-size: 19px; font-weight: 700; margin-left: auto; }
+.meter { height: 6px; border-radius: 999px; background: var(--m-alt); overflow: hidden; }
+.meter i { display: block; height: 100%; border-radius: 999px; background: var(--k); }
+/* Today strip */
+.thumb { display: grid; gap: 6px; min-width: 0; }
+.thumb .ph { aspect-ratio: 4/3; border-radius: 10px; background: linear-gradient(135deg, hsl(var(--h) 62% 72%), hsl(calc(var(--h) + 40) 52% 48%)); position: relative; box-shadow: 0 0 0 1px var(--m-line); }
+.thumb .ph.doc { background: var(--m-alt); display: grid; place-items: center; color: var(--m-text3); }
+.thumb .ph em { position: absolute; left: 6px; bottom: 6px; font-style: normal; font-size: 10px; font-weight: 600; color: #fff; background: rgba(0,0,0,.45); border-radius: 6px; padding: 1px 6px; }
+.thumb b { font-size: 12px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.chip { display: flex; align-items: center; gap: 9px; padding: 9px; border-radius: 12px; background: var(--m-alt); min-width: 0; }
+.chip .ico { width: 26px; height: 26px; border-radius: 8px; }
+.chip b { display: block; font-size: 12.5px; }
+.list { display: grid; }
+.li { display: flex; align-items: center; gap: 10px; padding: 9px 2px; border-top: 1px solid var(--m-line); }
+.li:first-child { border-top: 0; }
+.li svg { color: var(--m-text2); flex: none; }
+.li .v { margin-left: auto; font-weight: 700; font-variant-numeric: tabular-nums; }
+/* Ring */
+.ring { display: grid; grid-template-columns: 170px 1fr; gap: 18px; align-items: center; }
+.ring svg { display: block; }
+.ring .lab { font: 700 20px var(--mac); fill: var(--m-text); }
+.ring .lab2 { font: 11px var(--mac); fill: var(--m-text3); }
+.kv { display: grid; grid-template-columns: auto 1fr auto; gap: 6px 10px; align-items: center; font-size: 12.5px; }
+.kv .dot { width: 9px; height: 9px; border-radius: 3px; background: var(--k); }
+.kv .r { color: var(--m-text2); font-variant-numeric: tabular-nums; text-align: right; }
+/* Quick tiles */
+.tile { display: grid; gap: 10px; align-content: space-between; min-height: 118px; }
+.tile .top { display: flex; align-items: center; gap: 10px; font-weight: 700; font-size: 14px; }
+.tile .v { font-size: 26px; font-weight: 700; letter-spacing: -.02em; }
+.tile .row { display: flex; align-items: flex-end; gap: 8px; }
+.tile.hero { background: linear-gradient(135deg, var(--m-btn), color-mix(in srgb, var(--m-btn) 70%, #7b5cff)); color: #fff; box-shadow: var(--m-shadow); }
+.tile.hero .sm { color: rgba(255,255,255,.8); }
+.tile.hero .field { margin: 0; width: 100%; color: var(--m-text3); }
+</style>
+
+<div class="wrap">
+  <header>
+    <span class="eyebrow">Home · options</span>
+    <h1>Five ways to open MacSprint</h1>
+    <p>Home is the first screen people see. Every option uses the final foundations, the same short sidebar and the same numbers: 2,880 files, 30.19 GB, and up to 14.1 GB that could be freed. Search stays the plain centred field here; it turns into the Graphite field once you start searching.</p>
+  </header>
+  <div class="bar">
+    <div class="seg" role="group" aria-label="App appearance"><button type="button" id="ap-light" data-ap="light" aria-pressed="true">Light app</button><button type="button" id="ap-dark" data-ap="dark" aria-pressed="false">Dark app</button></div>
+    <nav class="jump" id="jump" aria-label="Options"></nav>
+  </div>
+  <p class="pick"><b>My pick: 1, Space bar.</b> One coloured bar answers “what fills my Mac?” in a second, and the six kinds under it are the doors into Library. Clean Up sits right below with real sizes and one filled button. It reads well in light and dark and stays calm, with no motion. If people open MacSprint mostly to find new files, 2 (Today first) is the better start.</p>
+  <div id="opts" class="wrap" style="gap:20px"></div>
+</div>
+
+<script>
+const P = {
+  house: '<path d="M4 11.5 12 5l8 6.5V19a1 1 0 0 1-1 1h-4.5v-5h-5v5H5a1 1 0 0 1-1-1z"/>',
+  clock: '<circle cx="12" cy="12" r="8"/><path d="M12 7.5V12l3 2"/>',
+  grid: '<rect x="4.5" y="4.5" width="6" height="6" rx="1.5"/><rect x="13.5" y="4.5" width="6" height="6" rx="1.5"/><rect x="4.5" y="13.5" width="6" height="6" rx="1.5"/><rect x="13.5" y="13.5" width="6" height="6" rx="1.5"/>',
+  down: '<circle cx="12" cy="12" r="8"/><path d="M12 8v8M8.5 12.5 12 16l3.5-3.5"/>',
+  clip: '<rect x="6" y="5" width="12" height="15" rx="2"/><path d="M9.5 5V4a1 1 0 0 1 1-1h3a1 1 0 0 1 1 1v1M9 11h6M9 14.5h4"/>',
+  trash: '<path d="M5 7h14M10 7V5h4v2M7 7l1 12a1 1 0 0 0 1 1h6a1 1 0 0 0 1-1l1-12"/>',
+  dup: '<rect x="8" y="8" width="11" height="11" rx="2"/><path d="M5 15V6a1 1 0 0 1 1-1h9"/>',
+  folder: '<path d="M4 7.5A1.5 1.5 0 0 1 5.5 6h4l2 2h7A1.5 1.5 0 0 1 20 9.5v8a1.5 1.5 0 0 1-1.5 1.5h-13A1.5 1.5 0 0 1 4 17.5z"/>',
+  search: '<circle cx="10.5" cy="10.5" r="6"/><path d="m15 15 5 5"/>',
+  photo: '<rect x="4" y="5" width="16" height="14" rx="2"/><circle cx="9" cy="10" r="1.6"/><path d="m5 17 4.5-4.5 3 3 2.5-2.5L19 17"/>',
+  film: '<rect x="4" y="5" width="16" height="14" rx="2"/><path d="M8 5v14M16 5v14M4 9.5h4M16 9.5h4M4 14.5h4M16 14.5h4"/>',
+  music: '<path d="M9 17.5V6l10-2v11.5"/><circle cx="7" cy="17.5" r="2"/><circle cx="17" cy="15.5" r="2"/>',
+  doc: '<path d="M7 4h7l4 4v11a1 1 0 0 1-1 1H7a1 1 0 0 1-1-1V5a1 1 0 0 1 1-1z"/><path d="M14 4v4h4M9 13h6M9 16h4"/>',
+  zip: '<path d="M7 4h10a1 1 0 0 1 1 1v14a1 1 0 0 1-1 1H7a1 1 0 0 1-1-1V5a1 1 0 0 1 1-1zM12 4v2M12 8v2M12 12v2"/><rect x="10.5" y="14" width="3" height="3" rx=".8"/>',
+  app: '<rect x="4.5" y="4.5" width="15" height="15" rx="4"/><path d="M9 15l3-6 3 6M10 13h4"/>',
+  shot: '<path d="M4 8V6a2 2 0 0 1 2-2h2M16 4h2a2 2 0 0 1 2 2v2M20 16v2a2 2 0 0 1-2 2h-2M8 20H6a2 2 0 0 1-2-2v-2"/><circle cx="12" cy="12" r="3"/>',
+  drive: '<rect x="4" y="13" width="16" height="6" rx="2"/><path d="M6 13 8 5h8l2 8M16.5 16h.01"/>',
+  refresh: '<path d="M19 12a7 7 0 1 1-2.1-5M19 4.5V8h-3.5"/>',
+  chev: '<path d="m10 7 5 5-5 5"/>',
+};
+const ic = (k, s = 14, w = 1.8) => `<svg viewBox="0 0 24 24" width="${s}" height="${s}" fill="none" stroke="currentColor" stroke-width="${w}" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">${P[k]}</svg>`;
+
+// Sample numbers, the same as design/feature-flows.html. [kind, colour, icon, files, size, % of library, newest]
+const K = [['Apps', '#3aa7d9', 'app', '110', '14.31 GB', 47, 'Figma.app'], ['Videos', '#a46bf5', 'film', '162', '11.21 GB', 37, 'Trip.mov'], ['Images', '#5b7cfa', 'photo', '2,280', '2.81 GB', 9, 'Screenshot 9.41.png'],
+  ['Documents', '#f0a23b', 'doc', '201', '1.16 GB', 4, 'Brief.pdf'], ['Archives', '#3fb985', 'zip', '93', '630 MB', 2, 'Backup.zip'], ['Music', '#f2647e', 'music', '34', '82.7 MB', 1, 'Mix.m4a']];
+const CL = [['down', 'Old Downloads', '11.5 GB', '1,227 items'], ['drive', 'Large files', '2.2 GB', '10 items'], ['shot', 'Old screenshots', '321 MB', '480 items'], ['dup', 'Duplicates', '44.8 MB', '24 extra copies']];
+const NEW = [['Trip.mov', 'AirDrop', 200, '0:42'], ['Lease agreement 2026.pdf', 'Mail', null], ['Screenshot 9.41.png', 'Screenshot', 230], ['Invoice-March.pdf', 'Safari', null], ['Beach-sunset.heic', 'WhatsApp', 30]];
+
+const side = () => `<aside class="side"><div class="lights"><i></i><i></i><i></i></div><div class="wm">Mac <b>SPRINT</b></div>
+  <div class="sh">Discover</div>${[['house', 'Home', '', 1], ['clock', 'Recents'], ['grid', 'Library', '2,880'], ['down', 'Downloaded From', '913'], ['clip', 'Clipboard']].map(([i, n, b, s]) => `<div class="srow${s ? ' sel' : ''}">${ic(i)}${n}${b ? `<em>${b}</em>` : ''}</div>`).join('')}
+  <div class="sh">Clean up</div>${[['trash', 'Clean Up', '14.1 GB'], ['dup', 'Duplicates', '44.8 MB'], ['folder', 'Organizer']].map(([i, n, b]) => `<div class="srow">${ic(i)}${n}${b ? `<em class="good">${b}</em>` : ''}</div>`).join('')}</aside>`;
+const win = (content) => `<div class="win">${side()}<div class="main"><div class="tb"><div class="field">${ic('search', 13)}<span>Search or ask a question</span><span class="kbd">⌘F</span></div></div><div class="content">${content}</div></div></div>`;
+const hello = (btn = true) => `<div class="hello"><div><h3>Good afternoon</h3><p>2,880 files · 30.19 GB across your Mac · updated 2 min ago</p></div>${btn ? `<span class="btn bord ml">${ic('refresh', 12)}Refresh</span>` : ''}</div>`;
+const cleanHead = (cta = true) => `<div class="h4">Clean Up <span class="pill">Free up to 14.1 GB</span>${cta ? `<span class="btn pri ml">Review</span>` : ''}</div>`;
+const statCards = () => `<div class="g4">${CL.map(([i, n, v, s]) => `<div class="card stat"><span class="t">${ic(i, 13)}${n}</span><span class="v num">${v}</span><span class="sm">${s}</span></div>`).join('')}</div>`;
+
+const OPTIONS = [
+  { name: 'Space bar', tag: 'My pick', idea: 'One coloured bar shows what fills the Mac. The six kinds under it double as the doors into Library. Clean Up follows with real sizes and one filled button.',
+    good: ['Answers “what fills my Mac?” at a glance', 'Every number on screen is also a place to click', 'Calm and native: one bar, soft cards, no motion'],
+    watch: ['Music and Archives are thin slivers in the bar; the tiles below carry their numbers', 'Needs colour plus text labels for colour-blind people (done: every tile is labelled)'],
+    body: () => hello() + `<div class="card" style="display:grid;gap:12px"><div class="h4">Your files <span class="sm" style="font-weight:400">30.19 GB · 2,880 files</span></div><div class="sbar" role="img" aria-label="Apps 47%, Videos 37%, Images 9%, Documents 4%, Archives 2%, Music 1%">${K.map((k) => `<i style="--k:${k[1]};flex:${k[5]}"></i>`).join('')}</div>
+      <div class="g3">${K.map((k) => `<div class="leg" style="--k:${k[1]}"><span class="dot"></span><b>${k[0]}<span class="num">${k[4]}</span></b><span class="sm">${k[3]} files · newest ${k[6]}</span></div>`).join('')}</div></div>` + cleanHead() + statCards() },
+  { name: 'Today first', idea: 'Leads with what just arrived: the newest files with where they came from. Library becomes a slim row of six kinds, and Clean Up a short list with sizes.',
+    good: ['Best when people open MacSprint to grab a new file', 'Thumbnails make the screen feel alive without motion', 'Shows Downloaded From on the first screen'],
+    watch: ['Space use is less visible', 'Thumbnails must load lazily and be cached'],
+    body: () => hello() + `<div class="h4">New today <span class="cnt">13</span><span class="sm ml" style="display:inline-flex;align-items:center;gap:2px">See all in Recents ${ic('chev', 12)}</span></div><div class="g6" style="grid-template-columns:repeat(5,1fr)">${NEW.map(([n, src, h, dur]) => `<div class="thumb">${h !== null ? `<span class="ph" style="--h:${h}">${dur ? `<em>▶ ${dur}</em>` : ''}</span>` : `<span class="ph doc">${ic('doc', 26, 1.5)}</span>`}<b>${n}</b><span class="sm">${src}</span></div>`).join('')}</div>
+      <div class="h4">Library <span class="cnt">6</span></div><div class="g6">${K.map((k) => `<div class="chip"><span class="ico" style="--k:${k[1]}">${ic(k[2], 14, 2)}</span><span><b>${k[0]}</b><span class="sm num">${k[4]}</span></span></div>`).join('')}</div>
+      <div class="card">${cleanHead()}<div class="list" style="margin-top:6px">${CL.map(([i, n, v, s]) => `<div class="li">${ic(i)}<span>${n} <span class="sm">· ${s}</span></span><span class="v">${v}</span></div>`).join('')}</div></div>` },
+  { name: 'Storage cards', tag: 'Current design', idea: 'Today’s Home in the flows, polished: six storage cards, each with its size, a share-of-library meter and the newest item, then four Clean Up cards.',
+    good: ['Already in the flows and the Foundations (“Storage card”)', 'Every kind gets equal space, so small ones are easy to find', 'Simple grid, easy to build in SwiftUI'],
+    watch: ['Six equal cards hide that Apps and Videos fill 84%', 'Two grids of cards can feel busy'],
+    body: () => hello() + `<div class="h4">Library <span class="cnt">6</span></div><div class="g3">${K.map((k) => `<div class="card scard" style="--k:${k[1]}"><div class="top"><span class="ico">${ic(k[2], 15, 2)}</span><span><b>${k[0]}</b><br><span class="sm">${k[3]} files</span></span><span class="v num">${k[4]}</span></div><div class="meter"><i style="width:${Math.max(k[5], 2)}%"></i></div><span class="sm">${k[5]}% of library · newest ${k[6]}</span></div>`).join('')}</div>` + cleanHead() + statCards() },
+  { name: 'Ring', idea: 'A ring chart of space on the left, Clean Up as a checklist on the right with one button that names the total. Library kinds sit in the ring’s legend.',
+    good: ['Very eye-catching; looks like a disk tool', 'Space and the fix for it sit side by side'],
+    watch: ['Ring charts are harder to read than bars for close values', 'Library is only a legend, so it is a weaker way in', 'Feels closer to a cleaner app than a file app'],
+    body: () => { let acc = 0; const arcs = K.map((k) => { const a = `<circle cx="70" cy="70" r="54" fill="none" stroke="${k[1]}" stroke-width="16" pathLength="100" stroke-dasharray="${Math.max(k[5] - 1, .6)} ${100 - Math.max(k[5] - 1, .6)}" stroke-dashoffset="${-acc}" transform="rotate(-90 70 70)"/>`; acc += k[5]; return a; }).join('');
+      return hello() + `<div class="g2"><div class="card ring"><svg viewBox="0 0 140 140" width="170" height="170" role="img" aria-label="Space by kind"><circle cx="70" cy="70" r="54" fill="none" stroke="var(--m-alt)" stroke-width="16"/>${arcs}<text class="lab" x="70" y="70" text-anchor="middle">30.19 GB</text><text class="lab2" x="70" y="88" text-anchor="middle">2,880 files</text></svg>
+        <div class="kv">${K.map((k) => `<span class="dot" style="--k:${k[1]}"></span><span>${k[0]}</span><span class="r">${k[4]}</span>`).join('')}</div></div>
+        <div class="card" style="display:grid;gap:4px;align-content:start">${cleanHead(false)}<div class="list">${CL.map(([i, n, v, s]) => `<div class="li">${ic(i)}<span>${n}<br><span class="sm">${s}</span></span><span class="v">${v}</span></div>`).join('')}</div><span class="btn pri" style="justify-self:start;margin-top:6px">Review 14.1 GB</span></div></div>`; } },
+  { name: 'Quick actions', idea: 'Four big tiles for the main jobs: find, clean, remove copies, tidy Downloads. Library kinds follow as a slim row.',
+    good: ['The simplest to understand on first open', 'Big targets and clear verbs', 'Points new users at the most useful features'],
+    watch: ['The search tile repeats the toolbar field', 'Tells people little about their Mac', 'Hero gradient tile is bolder than the rest of the app'],
+    body: () => hello(false) + `<div class="g2"><div class="card tile hero"><div class="top">${ic('search', 18, 2)}Find anything</div><div class="field">${ic('search', 13)}<span>Search or ask a question</span><span class="kbd">⌘F</span></div><span class="sm">Names, words in screenshots and what photos show</span></div>
+      <div class="card tile"><div class="top"><span class="ico" style="--k:#1f7a4d">${ic('trash', 15, 2)}</span>Clean Up</div><div class="row"><span class="v num">14.1 GB</span><span class="sm" style="padding-bottom:5px">could be freed</span><span class="btn pri ml">Review</span></div></div>
+      <div class="card tile"><div class="top"><span class="ico" style="--k:#5b7cfa">${ic('dup', 15, 2)}</span>Duplicates</div><div class="row"><span class="v num">24</span><span class="sm" style="padding-bottom:5px">extra copies · 44.8 MB</span><span class="btn bord ml">Show</span></div></div>
+      <div class="card tile"><div class="top"><span class="ico" style="--k:#f0a23b">${ic('folder', 15, 2)}</span>Tidy Downloads</div><div class="row"><span class="v num">1,227</span><span class="sm" style="padding-bottom:5px">items to sort</span><span class="btn bord ml">Preview</span></div></div></div>
+      <div class="h4">Library <span class="cnt">6</span></div><div class="g6">${K.map((k) => `<div class="chip"><span class="ico" style="--k:${k[1]}">${ic(k[2], 14, 2)}</span><span><b>${k[0]}</b><span class="sm num">${k[4]}</span></span></div>`).join('')}</div>` },
+];
+
+let ap = matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
+try { const s = localStorage.getItem('ms-home-ap'); if (s === 'light' || s === 'dark') ap = s; } catch (e) {}
+document.getElementById('jump').innerHTML = OPTIONS.map((o, i) => `<a href="#option-${i + 1}"><b>${i + 1}</b>${o.name}</a>`).join('');
+function render() {
+  document.getElementById('opts').innerHTML = OPTIONS.map((o, i) => `
+  <section class="opt${i === 0 ? ' top' : ''}" id="option-${i + 1}" aria-labelledby="h-${i}">
+    <div class="opt-head"><span class="rank">${i + 1}</span><h2 id="h-${i}">${o.name}</h2>${o.tag ? `<span class="tag">${o.tag}</span>` : ''}<p>${o.idea}</p></div>
+    <div class="scroll"><div class="${ap}">${win(o.body())}</div></div>
+    <div class="notes"><div><b>Good for</b><ul>${o.good.map((g) => `<li>${g}</li>`).join('')}</ul></div><div><b>Watch for</b><ul>${o.watch.map((g) => `<li>${g}</li>`).join('')}</ul></div></div>
+  </section>`).join('');
+  document.querySelectorAll('[data-ap]').forEach((b) => b.setAttribute('aria-pressed', String(b.dataset.ap === ap)));
+}
+document.querySelectorAll('[data-ap]').forEach((b) => b.addEventListener('click', () => { ap = b.dataset.ap; try { localStorage.setItem('ms-home-ap', ap); } catch (e) {} render(); }));
+render();
+</script>

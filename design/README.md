@@ -10,6 +10,7 @@ Design pages for MacSprint AI. Each file is a standalone page you can open in a 
 | `feature-flows.html` | Click-through flows for every feature (Ask Your Files is part of Search), each marked Draft, In review or Final, with every screen part named and specified | https://claude.ai/artifact/AKZpLyE6xmZCKXms3GnhKz |
 | `design-day.html` | One-day interactive course on Mac app UI design with SwiftUI | https://claude.ai/artifact/G3PtpAEVu8NLHbmn4Z9DPp |
 | `search.html` | Search: Big preview rows, AI always on, Graphite field with voice, style comparison and voice notes | https://claude.ai/artifact/3yWNpo3MCC2wnV9vfgDB2u |
+| `home-options.html` | Home: five ranked options (Space bar, Today first, Storage cards, Ring, Quick actions), light or dark | https://claude.ai/artifact/LMRToH1G9C8Hkm8cKUjQka |
 | `graphite-glass-sample.html` | The "Graphite & Glass" style sample | https://claude.ai/artifact/4CZ9zh8ntYYZb5cdYpUH32 |
 
 Other references:
