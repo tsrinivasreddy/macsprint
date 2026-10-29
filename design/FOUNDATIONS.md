@@ -109,3 +109,10 @@ From the [Library options](library-options.html) page: option 1, **Kind tabs**. 
 Images, Documents, then More for Archives and Music; more kinds move into More as the window narrows), each with its
 kind colour dot and count. A summary line ("162 videos · 11.21 GB · 37% of your files") with a Sort pop-up
 (Largest first). A grid of big previews with folder and size. Selecting a file opens the inspector on the right (⌘I).
+
+## Downloaded From (decided 2026-10-29)
+
+From the [Downloaded From options](downloaded-from-options.html) page: option 1, **Sources and files**. A Sources list on
+the left (app icon, name, size, file count; most files first). Beside it, the chosen source's files grouped by day, each
+with its origin under the name (sender · email subject, or the website), the time and the size. Picking a source adds a
+"From: Mail" token to the search field. The inspector shows From, Subject and when it arrived.
