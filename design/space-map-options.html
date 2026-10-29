@@ -1,0 +1,281 @@
+<title>MacSprint Space Map Options</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Atkinson+Hyperlegible:wght@400;700&family=Schibsted+Grotesk:wght@600;800&display=swap">
+<style>
+/* Layout: a review sheet. Five Space Map screens, ranked, each a full MacSprint window with what it is good for. One switch sets light or dark for every window. */
+:root {
+  --paper: #eceff3; --sheet: #ffffff; --ink: #15171c; --ink-2: #4f5562; --rule: rgba(21,23,28,.12);
+  --blue: #3346c8; --blue-soft: rgba(51,70,200,.09);
+  --display: "Schibsted Grotesk", "Avenir Next", system-ui, sans-serif;
+  --body: "Atkinson Hyperlegible", "Segoe UI", system-ui, sans-serif;
+  --mac: -apple-system, BlinkMacSystemFont, "SF Pro Text", "Helvetica Neue", "Segoe UI", sans-serif;
+}
+@media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) {
+  --paper: #111317; --sheet: #191c21; --ink: #eceef2; --ink-2: #b0b6c2; --rule: rgba(255,255,255,.1);
+  --blue: #93a3ff; --blue-soft: rgba(147,163,255,.13); color-scheme: dark; } }
+:root[data-theme="dark"] {
+  --paper: #111317; --sheet: #191c21; --ink: #eceef2; --ink-2: #b0b6c2; --rule: rgba(255,255,255,.1);
+  --blue: #93a3ff; --blue-soft: rgba(147,163,255,.13); color-scheme: dark; }
+
+/* MacSprint app (design/FOUNDATIONS.md), with the decided kind colours */
+.light { --m-bg: #ffffff; --m-side: #f4f4f7; --m-alt: #f3f4f7; --m-line: rgba(20,20,30,.1); --m-text: #16161a; --m-text2: #5f6068; --m-text3: #6c6d76;
+  --m-accent: #3b5bdb; --m-btn: #2f4bc4; --m-soft: rgba(59,91,219,.1); --m-good: #1f7a4d; --m-gray: #c9ccd4;
+  --m-card: #ffffff; --m-shadow: 0 1px 2px rgba(20,24,40,.06), 0 6px 18px rgba(20,24,40,.07); --m-raise: 0 1px 2px rgba(20,24,40,.1), 0 0 0 1px rgba(20,20,30,.06);
+  --k-app: #2a78d6; --k-video: #eb6834; --k-image: #1baf7a; --k-doc: #eda100; --k-zip: #e87ba4; --k-music: #008300; }
+.dark { --m-bg: #18191d; --m-side: #1f2025; --m-alt: #23242a; --m-line: rgba(255,255,255,.09); --m-text: #ececf0; --m-text2: #a3a4ad; --m-text3: #92939f;
+  --m-accent: #8399ff; --m-btn: #4a63e0; --m-soft: rgba(131,153,255,.14); --m-good: #4cd38a; --m-gray: #4a4c55;
+  --m-card: #212228; --m-shadow: 0 1px 2px rgba(0,0,0,.3), 0 6px 18px rgba(0,0,0,.28); --m-raise: 0 1px 2px rgba(0,0,0,.4), 0 0 0 1px rgba(255,255,255,.06);
+  --k-app: #3987e5; --k-video: #d95926; --k-image: #199e70; --k-doc: #c98500; --k-zip: #d55181; --k-music: #008300; }
+
+* { box-sizing: border-box; }
+body { margin: 0; background: var(--paper); color: var(--ink); font: 16px/1.55 var(--body); -webkit-font-smoothing: antialiased;
+  padding-left: max(16px, env(safe-area-inset-left, 0px)); padding-right: max(16px, env(safe-area-inset-right, 0px)); padding-block: 40px 72px; }
+h1, h2 { font-family: var(--display); margin: 0; line-height: 1.12; text-wrap: balance; }
+.wrap { max-width: 1120px; margin: 0 auto; display: grid; gap: 24px; }
+header { display: grid; gap: 10px; max-width: 74ch; }
+header h1 { font-size: clamp(28px, 4vw, 40px); font-weight: 800; }
+header p { margin: 0; color: var(--ink-2); }
+.eyebrow { font: 600 13px/1 var(--display); color: var(--blue); }
+.bar { display: flex; flex-wrap: wrap; gap: 12px 20px; align-items: center; }
+.seg { display: inline-flex; gap: 4px; padding: 3px; border: 1px solid var(--rule); border-radius: 999px; }
+.seg button { font: 600 14px/1 var(--body); color: var(--ink-2); background: transparent; border: 0; border-radius: 999px; padding: 7px 14px; cursor: pointer; }
+.seg button[aria-pressed="true"] { background: var(--blue); color: var(--sheet); }
+.seg button:focus-visible, .jump a:focus-visible { outline: 2px solid var(--blue); outline-offset: 2px; }
+.jump { display: flex; flex-wrap: wrap; gap: 6px; }
+.jump a { font-size: 14px; color: var(--ink); text-decoration: none; border: 1px solid var(--rule); border-radius: 999px; padding: 4px 11px; display: inline-flex; gap: 6px; align-items: center; }
+.jump a b { color: var(--blue); }
+.pick { background: var(--blue-soft); border-radius: 14px; padding: 14px 18px; font-size: 15px; max-width: 88ch; margin: 0; }
+.pick b { color: var(--blue); }
+
+.opt { background: var(--sheet); border: 1px solid var(--rule); border-radius: 16px; padding: 22px; display: grid; gap: 16px; scroll-margin-top: 16px; min-width: 0; }
+.opt-head { display: flex; align-items: center; gap: 12px; flex-wrap: wrap; }
+.rank { font: 800 15px/1 var(--display); width: 30px; height: 30px; border-radius: 9px; display: grid; place-items: center; background: var(--rule); color: var(--ink); flex: none; }
+.opt.top .rank { background: var(--blue); color: var(--sheet); }
+.opt h2 { font-size: 22px; font-weight: 800; }
+.tag { font: 600 12px/1 var(--body); color: var(--blue); background: var(--blue-soft); border-radius: 999px; padding: 5px 10px; }
+.opt-head p { margin: 0; color: var(--ink-2); flex: 1 1 100%; }
+.scroll { overflow-x: auto; padding: 4px; margin: -4px; }
+.notes { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 300px), 1fr)); gap: 8px 28px; font-size: 15px; }
+.notes h3 { font: 600 14px/1.2 var(--display); color: var(--ink-2); margin: 0; }
+.notes ul { margin: 6px 0 0; padding-left: 18px; }
+.notes li { margin-bottom: 3px; }
+
+/* Window */
+.win { font: 13px/1.35 var(--mac); color: var(--m-text); background: var(--m-bg); border-radius: 14px; overflow: hidden; display: grid; grid-template-columns: 200px 1fr;
+  min-width: 880px; box-shadow: 0 0 0 1px var(--m-line), 0 16px 40px rgba(20,24,40,.12); }
+.side { background: var(--m-side); border-right: 1px solid var(--m-line); padding: 12px 10px; display: grid; align-content: start; gap: 1px; }
+.lights { display: flex; gap: 6px; margin: 0 4px 14px; }
+.lights i { width: 11px; height: 11px; border-radius: 50%; background: #ff5f57; }
+.lights i:nth-child(2) { background: #febc2e; } .lights i:nth-child(3) { background: #28c840; }
+.wm { font-size: 17px; color: var(--m-accent); margin: 0 6px 12px; }
+.wm b { font-weight: 500; letter-spacing: .16em; }
+.sh { font-size: 11px; font-weight: 600; color: var(--m-text3); margin: 10px 8px 4px; }
+.srow { display: flex; align-items: center; gap: 8px; padding: 5px 8px; border-radius: 7px; white-space: nowrap; }
+.srow svg { color: var(--m-text2); flex: none; }
+.srow em { margin-left: auto; font-style: normal; font-size: 11px; color: var(--m-text3); }
+.srow em.good { color: var(--m-good); font-weight: 600; }
+.srow.sel { background: var(--m-bg); box-shadow: var(--m-raise); font-weight: 600; }
+.srow.sel svg { color: var(--m-accent); }
+.main { display: grid; grid-template-rows: auto 1fr; min-width: 0; }
+.tb { display: flex; align-items: center; padding: 10px 16px; border-bottom: 1px solid var(--m-line); }
+.field { margin: 0 auto; width: 320px; display: flex; align-items: center; gap: 7px; border-radius: 9px; padding: 6px 10px; color: var(--m-text3); font-size: 12.5px; box-shadow: 0 0 0 1px var(--m-line), 0 2px 6px rgba(0,0,0,.05); }
+.field span { flex: 1; }
+.field .kbd, .kbd { flex: none; font-size: 11px; border: 1px solid var(--m-line); border-radius: 5px; padding: 0 5px; color: var(--m-text3); }
+.view { display: inline-flex; padding: 2px; border-radius: 8px; background: var(--m-alt); gap: 2px; }
+.view span { padding: 3px 7px; border-radius: 6px; color: var(--m-text2); display: grid; place-items: center; }
+.view span.on { background: var(--m-bg); color: var(--m-text); box-shadow: var(--m-raise); }
+.content { padding: 18px 22px 22px; display: grid; gap: 14px; align-content: start; }
+.head { display: flex; align-items: center; gap: 10px; }
+.head h3 { font: 700 22px/1.15 var(--mac); margin: 0; letter-spacing: -.01em; }
+.head p { margin: 2px 0 0; color: var(--m-text2); font-size: 12.5px; }
+.ml { margin-left: auto; }
+.chips { display: flex; gap: 6px; flex-wrap: wrap; }
+.chip { font-size: 12px; font-weight: 600; color: var(--m-text2); border-radius: 999px; padding: 4px 10px; box-shadow: 0 0 0 1px var(--m-line); display: inline-flex; align-items: center; gap: 6px; }
+.chip i { width: 8px; height: 8px; border-radius: 50%; background: var(--c); }
+.chip.on { background: var(--m-text); color: var(--m-bg); box-shadow: none; }
+.day { display: flex; align-items: baseline; gap: 8px; font-size: 13px; font-weight: 700; margin-top: 2px; }
+.day small { font-size: 11px; font-weight: 500; color: var(--m-text3); }
+.btn { font: 600 12px/1 var(--mac); border-radius: 9px; padding: 7px 12px; display: inline-flex; gap: 6px; align-items: center; white-space: nowrap; }
+.btn.bord { color: var(--m-text); background: var(--m-bg); box-shadow: 0 0 0 1px var(--m-line); }
+.btn.pri { color: #fff; background: var(--m-btn); }
+.sm { font-size: 11px; color: var(--m-text3); }
+
+/* Thumbnails: photos and videos are drawn gradients; documents get a tinted page with the kind colour */
+.th { position: relative; border-radius: 10px; overflow: hidden; background: linear-gradient(135deg, hsl(var(--h) 62% 72%), hsl(calc(var(--h) + 40) 52% 46%)); box-shadow: 0 0 0 1px var(--m-line); }
+.th.doc { background: color-mix(in oklab, var(--c) 12%, var(--m-bg)); display: grid; place-items: center; color: var(--c); }
+.th em { position: absolute; left: 6px; bottom: 6px; font-style: normal; font-size: 10px; font-weight: 600; color: #fff; background: rgba(0,0,0,.5); border-radius: 6px; padding: 1px 6px; }
+.th .new { position: absolute; right: 6px; top: 6px; font-size: 9.5px; font-weight: 700; color: #fff; background: var(--m-btn); border-radius: 999px; padding: 1px 6px; }
+.kind { display: inline-flex; align-items: center; gap: 5px; font-size: 11px; color: var(--m-text2); white-space: nowrap; }
+.kind i { width: 7px; height: 7px; border-radius: 50%; background: var(--c); flex: none; }
+
+/* Static right-click menu, shown on one option */
+.menu { position: absolute; z-index: 3; width: 210px; background: var(--m-card); border-radius: 9px; box-shadow: 0 10px 30px rgba(0,0,0,.22), 0 0 0 1px var(--m-line); padding: 5px; font-size: 12.5px; }
+.menu div { display: flex; justify-content: space-between; padding: 4px 8px; border-radius: 5px; }
+.menu div small { color: var(--m-text3); }
+.menu div.hl { background: var(--m-btn); color: #fff; } .menu div.hl small { color: rgba(255,255,255,.8); }
+.menu hr { border: 0; border-top: 1px solid var(--m-line); margin: 4px 6px; }
+/* Space Map */
+.topbar { display: flex; align-items: center; gap: 12px; }
+.segk { display: inline-flex; padding: 2px; border-radius: 9px; background: var(--m-alt); gap: 2px; }
+.segk span { font-size: 12px; font-weight: 600; color: var(--m-text2); padding: 4px 10px; border-radius: 7px; }
+.segk span.on { background: var(--m-bg); color: var(--m-text); box-shadow: var(--m-raise); }
+.crumb { display: flex; align-items: center; gap: 6px; font-size: 12px; color: var(--m-text2); }
+.crumb b { color: var(--m-text); }
+.k { --c: color-mix(in oklab, var(--m-text) 22%, var(--m-bg)); --ink: var(--m-text); }
+.k.video { --c: var(--k-video); --ink: #fff; } .k.image { --c: var(--k-image); --ink: #fff; } .k.app { --c: var(--k-app); --ink: #fff; }
+.k.doc { --c: var(--k-doc); --ink: rgba(0,0,0,.8); } .k.music { --c: var(--k-music); --ink: #fff; }
+.selbar { display: flex; align-items: center; gap: 12px; padding: 10px 12px; border-radius: 14px; background: var(--m-alt); }
+.selbar .sq { width: 30px; height: 30px; border-radius: 8px; background: var(--c); flex: none; }
+.selbar b { font-size: 13.5px; } .selbar .sm { display: block; }
+.foot { display: flex; gap: 8px; align-items: center; font-size: 11.5px; color: var(--m-text3); }
+.legend { display: flex; flex-wrap: wrap; gap: 4px 12px; font-size: 11px; color: var(--m-text2); }
+.legend span { display: inline-flex; gap: 5px; align-items: center; } .legend i { width: 9px; height: 9px; border-radius: 3px; background: var(--c); }
+/* 1 nested blocks */
+.tm { display: grid; grid-template-columns: repeat(24, 1fr); grid-template-rows: repeat(10, 30px); gap: 3px; }
+.blk { background: var(--c); color: var(--ink); border-radius: 8px; padding: 6px 7px; display: flex; flex-direction: column; gap: 3px; min-width: 0; overflow: hidden; }
+.blk > b { font-size: 12px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; } .blk > small { font-size: 10.5px; opacity: .85; margin-top: -3px; }
+.blk.sel { box-shadow: inset 0 0 0 2.5px var(--m-bg), 0 0 0 2.5px var(--m-accent); }
+.blk .kids { flex: 1; display: flex; gap: 2px; min-height: 0; }
+.blk .kids.col { flex-direction: column; }
+.blk .kid { background: rgba(255,255,255,.2); border-radius: 5px; padding: 3px 6px; font-size: 10.5px; display: flex; gap: 6px; align-items: flex-start; justify-content: space-between; overflow: hidden; min-width: 0; min-height: 0; }
+.k.doc .kid { background: rgba(255,255,255,.35); }
+.blk .kid span { white-space: nowrap; overflow: hidden; text-overflow: ellipsis; } .blk .kid em { font-style: normal; opacity: .85; white-space: nowrap; }
+.blk .lk { font-size: 10px; opacity: .8; display: inline-flex; gap: 3px; align-items: center; }
+/* 2 columns */
+.cols { display: grid; grid-template-columns: 1fr 1fr 0.9fr; border-radius: 12px; box-shadow: 0 0 0 1px var(--m-line); overflow: hidden; min-height: 300px; }
+.col { padding: 6px; display: grid; gap: 1px; align-content: start; } .col + .col { border-left: 1px solid var(--m-line); }
+.ci { display: grid; grid-template-columns: 16px minmax(0, 1fr) 46px 10px; gap: 7px; align-items: center; padding: 4px 6px; border-radius: 7px; font-size: 12px; }
+.ci .nm { display: grid; gap: 3px; min-width: 0; } .ci .nm span { white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.ci .bar { height: 4px; border-radius: 2px; background: color-mix(in oklab, var(--m-text) 14%, transparent); }
+.ci .bar i { display: block; height: 100%; border-radius: 2px; background: color-mix(in oklab, var(--m-text) 40%, transparent); }
+.ci.on { background: var(--m-btn); color: #fff; } .ci.on .bar { background: rgba(255,255,255,.3); } .ci.on .bar i { background: #fff; } .ci.on svg { color: #fff; }
+.ci .gb { text-align: right; font-variant-numeric: tabular-nums; font-size: 11.5px; }
+.ci svg { color: var(--c); }
+.prev { display: grid; gap: 8px; padding: 8px; align-content: start; }
+.prev .th { aspect-ratio: 16/10; border-radius: 10px; }
+.prev b { font-size: 13px; } .prev dl { margin: 0; display: grid; grid-template-columns: auto 1fr; gap: 3px 10px; font-size: 11.5px; } .prev dt { color: var(--m-text3); } .prev dd { margin: 0; }
+/* 3 rings, 5 bubbles */
+.ring { display: grid; grid-template-columns: 330px minmax(0, 1fr); gap: 20px; align-items: center; }
+.rl { display: grid; gap: 2px; }
+.rl div { display: grid; grid-template-columns: 10px minmax(0, 1fr) auto; gap: 8px; align-items: center; font-size: 12px; padding: 3px 6px; border-radius: 7px; }
+.rl div i { width: 10px; height: 10px; border-radius: 3px; background: var(--c); }
+.rl div b { font-variant-numeric: tabular-nums; } .rl div.on { background: var(--m-soft); font-weight: 600; }
+.rl div.sub { padding-left: 24px; color: var(--m-text2); font-size: 11.5px; }
+svg text { font-family: var(--mac); }
+/* 4 layers */
+.ic { display: grid; gap: 3px; }
+.lay { display: flex; gap: 3px; height: 54px; }
+.lay > div { box-sizing: border-box; flex-basis: 0; background: var(--c); color: var(--ink); border-radius: 7px; padding: 6px 7px; font-size: 11.5px; min-width: 0; overflow: hidden; display: grid; align-content: start; }
+.lay > div b { white-space: nowrap; overflow: hidden; text-overflow: ellipsis; } .lay > div small { opacity: .85; font-size: 10.5px; white-space: nowrap; }
+.lay > div.dim { opacity: .3; }
+.lay > div.gap { background: none; }
+.lay.disk > div { background: color-mix(in oklab, var(--m-text) 12%, var(--m-bg)); color: var(--m-text); }
+.lay > div.sel { box-shadow: inset 0 0 0 2.5px var(--m-bg), 0 0 0 2.5px var(--m-accent); }
+.lay.l3 > .grp { display: flex; gap: 3px; min-width: 0; background: none; padding: 0; }
+.lay.l3 .grp > div { box-sizing: border-box; flex-basis: 0; background: var(--c); color: var(--ink); opacity: .78; border-radius: 7px; padding: 6px 7px; font-size: 11.5px; min-width: 0; overflow: hidden; display: grid; align-content: start; }
+.lay.l3 .grp b { white-space: nowrap; overflow: hidden; text-overflow: ellipsis; } .lay.l3 .grp small { font-size: 10.5px; }
+</style>
+
+<div class="wrap">
+  <header>
+    <span class="eyebrow">Space Map · options</span>
+    <h1>Five ways to see where the space went</h1>
+    <p>Space Map is the third view in Free Up Space (Files, Running total, Map). It answers one question: what is taking up my disk? Every option uses the same disk (245 GB used of 494 GB), colours each folder by the kind of files in it, the same colours as Home, and shows size as area or length, never colour. Nothing is removed from the map itself: you pick something, then review it in Files, with the usual Trash and Undo.</p>
+  </header>
+  <div class="bar">
+    <div class="seg" role="group" aria-label="App appearance"><button type="button" id="ap-light" data-ap="light" aria-pressed="true">Light app</button><button type="button" id="ap-dark" data-ap="dark" aria-pressed="false">Dark app</button></div>
+    <nav class="jump" id="jump" aria-label="Options"></nav>
+  </div>
+  <p class="pick"><b>My pick: 1, Nested blocks.</b> Every folder is a block sized by its space, and the biggest folders already show what is inside them, so you see that Trip 2025 is 22 GB without clicking. Click a block to go in; the bar below says what it is and opens it in Files. 2 (Columns) is better when people want exact numbers more than a picture.</p>
+  <div id="opts" class="wrap" style="gap:20px"></div>
+</div>
+
+<script>
+const P = {
+  house: '<path d="M4 11.5 12 5l8 6.5V19a1 1 0 0 1-1 1h-4.5v-5h-5v5H5a1 1 0 0 1-1-1z"/>',
+  clock: '<circle cx="12" cy="12" r="8"/><path d="M12 7.5V12l3 2"/>',
+  grid: '<rect x="4.5" y="4.5" width="6" height="6" rx="1.5"/><rect x="13.5" y="4.5" width="6" height="6" rx="1.5"/><rect x="4.5" y="13.5" width="6" height="6" rx="1.5"/><rect x="13.5" y="13.5" width="6" height="6" rx="1.5"/>',
+  list: '<path d="M9 7h11M9 12h11M9 17h11"/><circle cx="5" cy="7" r="1"/><circle cx="5" cy="12" r="1"/><circle cx="5" cy="17" r="1"/>',
+  down: '<circle cx="12" cy="12" r="8"/><path d="M12 8v8M8.5 12.5 12 16l3.5-3.5"/>',
+  clip: '<rect x="6" y="5" width="12" height="15" rx="2"/><path d="M9.5 5V4a1 1 0 0 1 1-1h3a1 1 0 0 1 1 1v1M9 11h6M9 14.5h4"/>',
+  trash: '<path d="M5 7h14M10 7V5h4v2M7 7l1 12a1 1 0 0 0 1 1h6a1 1 0 0 0 1-1l1-12"/>',
+  dup: '<rect x="8" y="8" width="11" height="11" rx="2"/><path d="M5 15V6a1 1 0 0 1 1-1h9"/>',
+  folder: '<path d="M4 7.5A1.5 1.5 0 0 1 5.5 6h4l2 2h7A1.5 1.5 0 0 1 20 9.5v8a1.5 1.5 0 0 1-1.5 1.5h-13A1.5 1.5 0 0 1 4 17.5z"/>',
+  search: '<circle cx="10.5" cy="10.5" r="6"/><path d="m15 15 5 5"/>',
+  doc: '<path d="M7 4h7l4 4v11a1 1 0 0 1-1 1H7a1 1 0 0 1-1-1V5a1 1 0 0 1 1-1z"/><path d="M14 4v4h4M9 13h6M9 16h4"/>',
+  music: '<path d="M9 17.5V6l10-2v11.5"/><circle cx="7" cy="17.5" r="2"/><circle cx="17" cy="15.5" r="2"/>',
+  zip: '<path d="M7 4h10a1 1 0 0 1 1 1v14a1 1 0 0 1-1 1H7a1 1 0 0 1-1-1V5a1 1 0 0 1 1-1zM12 4v2M12 8v2M12 12v2"/><rect x="10.5" y="14" width="3" height="3" rx=".8"/>',
+  app: '<rect x="4.5" y="4.5" width="15" height="15" rx="4"/><path d="M9 15l3-6 3 6M10 13h4"/>',
+  photo: '<rect x="4" y="5" width="16" height="14" rx="2"/><circle cx="9" cy="10" r="1.6"/><path d="m5 17 4.5-4.5 3 3 2.5-2.5L19 17"/>',
+  film: '<rect x="4" y="5" width="16" height="14" rx="2"/><path d="M8 5v14M16 5v14M4 9.5h4M16 9.5h4M4 14.5h4M16 14.5h4"/>',
+  pin: '<path d="M9 4h6l-1 5 3 3H7l3-3zM12 12v8"/>',
+  chev: '<path d="m8 10 4 4 4-4"/>',
+};
+const ic = (k, s = 14, w = 1.8) => `<svg viewBox="0 0 24 24" width="${s}" height="${s}" fill="none" stroke="currentColor" stroke-width="${w}" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">${P[k]}</svg>`;
+
+
+Object.assign(P, { lock: '<rect x="5.5" y="10.5" width="13" height="9" rx="2"/><path d="M8.5 10.5V8a3.5 3.5 0 0 1 7 0v2.5"/>', disk: '<rect x="3.5" y="13" width="17" height="6" rx="2"/><path d="M5 13 7.5 6h9L19 13M16.5 16h.01"/>', tri: '<path d="m9 6 6 6-6 6"/>' });
+// [folder, GB, kind, grid area (col / row / col end / row end on 24 x 10), children [name, GB], children stacked in a column?]
+const TOP = [['Movies', 64, 'video', '1 / 1 / 11 / 7', [['Trip 2025', 22], ['Wedding film', 16], ['Screen recordings', 12], ['Exports', 9], ['Other', 5]], 1],
+  ['Photos', 40, 'image', '1 / 7 / 6 / 15', [['Photos library', 30], ['Edits and exports', 10]], 1],
+  ['Apps', 35, 'app', '1 / 15 / 6 / 22', [['Video editor', 12], ['Design apps', 9], ['Games', 8], ['Other', 6]], 1],
+  ['System', 31, '', '1 / 22 / 11 / 25', null],
+  ['Documents', 30, 'doc', '6 / 7 / 11 / 13', [['Clients', 12], ['Projects', 9], ['Other', 9]], 1],
+  ['Downloads', 20, '', '6 / 13 / 11 / 17', null],
+  ['Music', 15, 'music', '6 / 17 / 11 / 20', null],
+  ['Other', 10, '', '6 / 20 / 11 / 22', null]];
+const KI = { video: 'film', image: 'photo', app: 'app', doc: 'doc', music: 'music', '': 'folder' };
+const side = () => `<aside class="side"><div class="lights"><i></i><i></i><i></i></div><div class="wm">Mac <b>SPRINT</b></div>
+  <div class="sh">Discover</div>${[['house', 'Home'], ['clock', 'Recents'], ['grid', 'Library', '2,880'], ['down', 'Downloaded From', '913'], ['clip', 'Clipboard']].map(([i, n, b]) => `<div class="srow">${ic(i)}${n}${b ? `<em>${b}</em>` : ''}</div>`).join('')}
+  <div class="sh">Clean up</div>${[['trash', 'Free Up Space', '14.1 GB', 1], ['dup', 'Duplicates', '44.8 MB'], ['folder', 'Organizer']].map(([i, n, b, s]) => `<div class="srow${s ? ' sel' : ''}">${ic(i)}${n}${b ? `<em class="good">${b}</em>` : ''}</div>`).join('')}</aside>`;
+const win = (content) => `<div class="win">${side()}<div class="main"><div class="tb"><span style="width:58px"></span><div class="field">${ic('search', 13)}<span>Search or ask</span><span class="kbd">⌘F</span></div><span class="btn bord" style="padding:5px 10px">Rescan</span></div><div class="content">${content}</div></div></div>`;
+const head = (path = '') => `<div class="topbar"><div class="head"><div><h3>Free Up Space</h3><p>Macintosh HD · 245 GB used of 494 GB</p></div></div><span class="ml segk"><span>Files</span><span>Running total</span><span class="on">Map</span></span></div><div class="crumb">${ic('disk', 13)}<b>Macintosh HD</b>${path}</div>`;
+const sel = (name = 'Movies', gb = '64 GB', kind = 'video', note = 'Trip 2025 and Wedding film take 38 GB. 31 GB not opened in a year.') => `<div class="selbar k ${kind}"><span class="sq"></span><span><b>${name} · ${gb}</b><span class="sm">${note}</span></span><span class="ml btn bord">Show in Finder</span><span class="btn pri">Review in Files</span></div>`;
+const legend = () => `<div class="legend">${[['video', 'Videos'], ['image', 'Images'], ['app', 'Apps'], ['doc', 'Documents'], ['music', 'Music'], ['', 'Mixed or system']].map(([k, n]) => `<span class="k ${k}"><i></i>${n}</span>`).join('')}</div>`;
+const foot = `<div class="foot">${ic('lock', 11)}Nothing is removed from the map. Review in Files shows the files first; they go to the Trash, with Undo.</div>`;
+// SVG ring arc from angle a0 to a1 (0..1 of the circle), radii r0..r1, centre c
+const arc = (a0, a1, r0, r1, c = 150) => { const p = (a, r) => [c + r * Math.sin(a * 2 * Math.PI), c - r * Math.cos(a * 2 * Math.PI)].map((v) => v.toFixed(1)).join(' '), L = a1 - a0 > .5 ? 1 : 0; return `M${p(a0, r1)} A${r1} ${r1} 0 ${L} 1 ${p(a1, r1)} L${p(a1, r0)} A${r0} ${r0} 0 ${L} 0 ${p(a0, r0)}Z`; };
+
+const OPTIONS = [
+  { name: 'Nested blocks', tag: 'My pick', idea: 'Every top folder is a block sized by its space, coloured by the kind of files in it. The biggest folders already show their own biggest folders inside, so one look goes two levels deep. Click a block to go inside; the bar below names it and opens it in Files.',
+    good: ['Size as area: the biggest thing is obvious at once', 'Two levels in one look, fewer clicks', 'Same colours as Home and Library', 'System is visibly locked'],
+    watch: ['Small folders are hard to label: they fold into Other', 'Exact numbers are in the bar, not on every block'],
+    body: () => head() + `<div class="tm">${TOP.map(([n, gb, k, area, kids, col]) => `<div class="blk k ${k}${n === 'Movies' ? ' sel' : ''}" style="grid-area:${area}"><b>${n}</b><small>${gb} GB</small>${n === 'System' ? `<span class="lk">${ic('lock', 9)}macOS needs this</span>` : ''}${kids ? `<div class="kids${col ? ' col' : ''}">${kids.map(([c, g]) => `<div class="kid" style="flex:${g}"><span>${c}</span><em>${g} GB</em></div>`).join('')}</div>` : ''}</div>`).join('')}</div>${sel()}${foot}` },
+  { name: 'Columns', idea: 'Like Finder’s column view: each column lists a folder’s contents biggest first, with a bar for size. Click a row to open the next column; the last column previews the file and says when it was last opened.',
+    good: ['Exact numbers on every row', 'Familiar from Finder', 'Easy to go back: earlier columns stay'],
+    watch: ['Less striking than a picture', 'Bars only compare within one column'],
+    body: () => { const row = (n, gb, max, k, on, chev = 1) => `<div class="ci k ${k}${on ? ' on' : ''}">${ic(KI[k], 14)}<span class="nm"><span>${n}</span><span class="bar"><i style="width:${(gb / max * 100).toFixed(0)}%"></i></span></span><span class="gb">${gb} GB</span>${chev ? ic('tri', 10) : '<span></span>'}</div>`;
+      return head(` ${ic('tri', 10)}<b>Movies</b> ${ic('tri', 10)}<b>Trip 2025</b>`) + `<div class="cols"><div class="col">${TOP.map(([n, gb, k]) => row(n, gb, 64, k, n === 'Movies')).join('')}</div><div class="col">${TOP[0][4].map(([n, gb]) => row(n, gb, 22, 'video', n === 'Trip 2025')).join('')}</div><div class="col prev"><span class="th" style="--h:200"></span><b>Trip 2025</b><dl><dt>Size</dt><dd>22 GB, 41 videos</dd><dt>Biggest</dt><dd>Drone flight 4K.mov, 6.2 GB</dd><dt>Last opened</dt><dd>14 months ago</dd></dl><span class="btn pri" style="justify-self:start">Review in Files</span></div></div>${foot}` } },
+  { name: 'Rings', idea: 'The disk as a ring: the inner ring is the top folders, the outer ring what is inside the biggest ones. A list beside it gives the names and sizes, so nothing depends on reading a thin slice.',
+    good: ['Eye-catching, shows the whole disk as one shape', 'Two levels at once', 'The list makes it precise'],
+    watch: ['Angles are harder to compare than areas', 'Small slices need the list to read'],
+    body: () => { let a = 0; const segs = TOP.map(([n, gb, k, , kids]) => { const a0 = a, a1 = a + gb / 245; a = a1; let b = a0; const outer = (kids || []).map(([, g]) => { const b0 = b; b += g / 245; return `<path d="${arc(b0 + .002, b - .002, 108, 140)}" fill="var(--c)" fill-opacity=".55"/>`; }).join(''); return `<g class="k ${k}"${n === 'Movies' ? ' stroke="var(--m-accent)" stroke-width="0"' : ''}><path d="${arc(a0 + .002, a1 - .002, 66, 105)}" fill="var(--c)"/>${outer}</g>`; }).join('');
+      return head() + `<div class="ring"><svg viewBox="0 0 300 300" width="300" height="300">${segs}<text x="150" y="146" text-anchor="middle" font-size="22" font-weight="700" fill="var(--m-text)">245 GB</text><text x="150" y="166" text-anchor="middle" font-size="11" fill="var(--m-text3)">used of 494 GB</text></svg><div class="rl">${TOP.map(([n, gb, k, , kids]) => `<div class="k ${k}${n === 'Movies' ? ' on' : ''}"><i></i><span>${n}</span><b>${gb} GB</b></div>${n === 'Movies' ? kids.slice(0, 3).map(([c, g]) => `<div class="sub k ${k}"><span></span><span>${c}</span><span>${g} GB</span></div>`).join('') : ''}`).join('')}</div></div>${sel()}` } },
+  { name: 'Layers', idea: 'The disk as a bar across the top, the top folders in a layer below it, and their contents in a third layer, each as wide as its space. Click a piece to zoom so it fills the width.',
+    good: ['Widths are easy to compare', 'The path from disk to folder reads top to bottom', 'Zooming keeps the context above'],
+    watch: ['Small folders get very narrow', 'Third layer only shows for big folders'],
+    body: () => head() + `<div class="ic"><div class="lay disk"><div style="flex:1"><b>Macintosh HD</b><small>245 GB used</small></div></div><div class="lay">${TOP.map(([n, gb, k]) => `<div class="k ${k}${n === 'Movies' ? ' sel' : ''}" style="flex:${gb}"><b>${n}</b><small>${gb} GB</small></div>`).join('')}</div><div class="lay l3">${TOP.map(([n, gb, k, , kids]) => `<div class="grp" style="flex:${gb}">${(kids || []).map(([c, g]) => `<div class="k ${k}" style="flex:${g}"><b>${c}</b><small>${g}</small></div>`).join('')}</div>`).join('')}</div></div>${legend()}${sel()}` },
+  { name: 'Bubbles', idea: 'Each top folder is a bubble whose area is its space, in its kind colour. Click a bubble and it opens into the bubbles inside it.',
+    good: ['Friendly and the most playful', 'Labels fit inside big bubbles', 'Works well on a small window'],
+    watch: ['Circles waste space and are harder to compare than blocks', 'Only one level at a time'],
+    body: () => { const B = [[110, 150], [265, 90], [270, 232], [400, 75], [405, 215], [527, 150], [620, 70], [625, 236]];
+      return head() + `<svg viewBox="0 0 680 310" width="100%" height="300">${TOP.map(([n, gb, k], i) => { const r = 11 * Math.sqrt(gb), [x, y] = B[i]; return `<g class="k ${k}"><circle cx="${x}" cy="${y}" r="${r.toFixed(1)}" fill="var(--c)"${n === 'Movies' ? ' stroke="var(--m-accent)" stroke-width="3"' : ''}/><text x="${x}" y="${y - 2}" text-anchor="middle" font-size="${r > 50 ? 14 : 12}" font-weight="700" fill="var(--ink)">${n}</text><text x="${x}" y="${y + 14}" text-anchor="middle" font-size="11" fill="var(--ink)" fill-opacity=".85">${gb} GB</text></g>`; }).join('')}</svg>${sel()}` } },
+];
+
+let ap = matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
+try { const s = localStorage.getItem('ms-home-ap'); if (s === 'light' || s === 'dark') ap = s; } catch (e) {}
+document.getElementById('jump').innerHTML = OPTIONS.map((o, i) => `<a href="#option-${i + 1}"><b>${i + 1}</b>${o.name}</a>`).join('');
+function render() {
+  document.getElementById('opts').innerHTML = OPTIONS.map((o, i) => `
+  <section class="opt${i === 0 ? ' top' : ''}" id="option-${i + 1}" aria-labelledby="h-${i}">
+    <div class="opt-head"><span class="rank">${i + 1}</span><h2 id="h-${i}">${o.name}</h2>${o.tag ? `<span class="tag">${o.tag}</span>` : ''}<p>${o.idea}</p></div>
+    <div class="scroll"><div class="${ap}">${win(o.body())}</div></div>
+    <div class="notes"><div><h3>Good for</h3><ul>${o.good.map((g) => `<li>${g}</li>`).join('')}</ul></div><div><h3>Watch for</h3><ul>${o.watch.map((g) => `<li>${g}</li>`).join('')}</ul></div></div>
+  </section>`).join('');
+  document.querySelectorAll('[data-ap]').forEach((b) => b.setAttribute('aria-pressed', String(b.dataset.ap === ap)));
+}
+document.querySelectorAll('[data-ap]').forEach((b) => b.addEventListener('click', () => { ap = b.dataset.ap; try { localStorage.setItem('ms-home-ap', ap); } catch (e) {} render(); }));
+render();
+</script>

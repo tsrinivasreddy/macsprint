@@ -1348,7 +1348,7 @@ function shotEditor(blurred) {
 
 /* =================== render =================== */
 // Review status. The owner says when a feature is final; only then change it here.
-const STATUS = { search: 'review', home: 'review', recents: 'review', library: 'review', 'downloaded-from': 'review', clipboard: 'review', cleanup: 'review', duplicates: 'review', organizer: 'review' };   // draft | review | final
+const STATUS = { search: 'review', home: 'review', recents: 'review', library: 'review', 'downloaded-from': 'review', clipboard: 'review', cleanup: 'review', duplicates: 'review', organizer: 'review', 'space-map': 'review' };   // draft | review | final
 const ST = { draft: 'Draft', review: 'In review', final: 'Final' };
 const st = (f) => STATUS[f.id] || 'draft';
 const rail = document.getElementById('rail'), main = document.getElementById('main'), sel = document.getElementById('feat-select');

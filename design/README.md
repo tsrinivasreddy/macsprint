@@ -21,6 +21,7 @@ Design pages for MacSprint AI. Each file is a standalone page you can open in a 
 | `duplicates-options.html` | Duplicates: five ranked options (Keep chips, Side by side, Outline list, Copy stacks, Compare strip), light or dark | https://claude.ai/artifact/219NwZrnH81WhyvZK4DYch |
 | `duplicates-round2.html` | Duplicates round 2: Keep chips with preview and compare (Open in place, Preview panel, Compare window), light or dark | https://claude.ai/artifact/HAjCHGMPnt8owJHsii6DaS |
 | `organizer-options.html` | Organizer: five ranked options (Piles, Flow map, Before and after, Checklist, Rules), light or dark | https://claude.ai/artifact/3TCpgWnQ8xZaBYCe9CGbMT |
+| `space-map-options.html` | Space Map: five ranked options (Nested blocks, Columns, Rings, Layers, Bubbles), light or dark | https://claude.ai/artifact/F9cSUo6eQ6EPGZz3yGSaLD |
 | `graphite-glass-sample.html` | The "Graphite & Glass" style sample | https://claude.ai/artifact/4CZ9zh8ntYYZb5cdYpUH32 |
 
 Other references:
