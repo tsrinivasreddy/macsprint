@@ -35,6 +35,16 @@ Chosen on the [Foundations page](https://claude.ai/artifact/D2DkAL8ZHo1vRohYUX13
 
 ## Search (decided 2026-10-29)
 
+**Update: the field is now Halo** ([round 2](search-bar-round2.html), option 1, Glass list). A rounded capsule in the
+toolbar (Search or ask, ⌘F, microphone) opens into a floating glass panel over any screen, 500 pt wide, 20 pt corners,
+regular material (solid when Reduce Transparency is on), deep soft shadow. A hairline ring (indigo → violet → sky) sits
+at 50% and brightens with a soft glow, turning only while listening or thinking; it is still with Reduce Motion.
+Field 16 pt medium; the microphone becomes a gradient pill of level bars while listening. The answer is quiet type
+("Answer from your files") with its source chip; files follow. Rows: 52×40 thumbnail with a file-type tag, name
+12.5 pt semibold, matched words tinted in the accent, reason icon + folder + date; the selected row is a soft accent
+tint with a fine ring and shows ↩ Open and Space. Footer: count, "Found on your Mac. Nothing leaves it.", keys.
+The Graphite band below is kept for reference only.
+
 Design page: [`search.html`](search.html), live at https://claude.ai/artifact/3yWNpo3MCC2wnV9vfgDB2u.
 Search is the one place that steps outside the plain field above: a frosted, fully rounded field on a soft gradient band.
 
@@ -46,7 +56,7 @@ Footer: count · "Found on your Mac" and the shortcuts. Thumbnails lazy-loaded a
 (Intel, macOS before 26, Apple Intelligence off or model not ready), search uses names and OCR text only and the
 footer says once: "Smart search needs Apple Intelligence". Every result keeps its reason line.
 
-**Field: Graphite.** Height 52, radius full (capsule), search icon 24, text 19, microphone on the right.
+**Field: Graphite (replaced by Halo above).** Height 52, radius full (capsule), search icon 24, text 19, microphone on the right.
 Fill blur 18. Dotted underline marks words still being recognised during voice input.
 
 | Token | Light | Dark |
