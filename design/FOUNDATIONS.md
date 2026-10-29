@@ -123,3 +123,14 @@ From the [Clipboard options](clipboard-options.html) page: option 1, **Search pa
 over any app: search field and settings gear on top, Pinned, then Today. Each row: kind icon (text, link, image, colour
 swatch, code), the item, and the app it came from with the time. The selected row shows Copy and Pin; the others show
 ⌘1–⌘9. Footer: ↩ Paste, ⌥↩ Paste as plain text, ⌘P Pin, and "Passwords never saved".
+
+## Free Up Space (decided 2026-10-29; was "Clean Up")
+
+The sidebar row is now **Free Up Space** so it does not repeat the section name "Clean up" (shortcut ⇧⌘K unchanged).
+From [round 2](free-up-space-round2.html): one screen, three views in a switch at the top, ⌘1 / ⌘2 / ⌘3:
+- **Files** (default): a sentence with the total (14.1 GB), then the groups biggest first. Each row shows the group's
+  biggest files as thumbnails with sizes, "+ N more", the group size and Review.
+- **Running total**: the same groups on one shared scale. Each bar starts where the last ended (accent bar, pale trail
+  for what came before) and a "So far" column keeps the total. The headline says where most of the space is.
+- **Map**: the Space Map treemap.
+Every view ends with: "You review every group first. Files go to the Trash, and Undo puts them back."
