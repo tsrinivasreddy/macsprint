@@ -1,0 +1,284 @@
+<title>MacSprint Home Infographics</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Atkinson+Hyperlegible:wght@400;700&family=Schibsted+Grotesk:wght@600;800&display=swap">
+<style>
+/* Layout: a review sheet. Five Home screens, ranked; each is built around one information graphic chosen by the data's job. One switch sets light or dark for every window. */
+:root {
+  --paper: #eceff3; --sheet: #ffffff; --ink: #15171c; --ink-2: #4f5562; --rule: rgba(21,23,28,.12);
+  --blue: #3346c8; --blue-soft: rgba(51,70,200,.09);
+  --display: "Schibsted Grotesk", "Avenir Next", system-ui, sans-serif;
+  --body: "Atkinson Hyperlegible", "Segoe UI", system-ui, sans-serif;
+  --mac: -apple-system, BlinkMacSystemFont, "SF Pro Text", "Helvetica Neue", "Segoe UI", sans-serif;
+}
+@media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) {
+  --paper: #111317; --sheet: #191c21; --ink: #eceef2; --ink-2: #b0b6c2; --rule: rgba(255,255,255,.1);
+  --blue: #93a3ff; --blue-soft: rgba(147,163,255,.13); color-scheme: dark; } }
+:root[data-theme="dark"] {
+  --paper: #111317; --sheet: #191c21; --ink: #eceef2; --ink-2: #b0b6c2; --rule: rgba(255,255,255,.1);
+  --blue: #93a3ff; --blue-soft: rgba(147,163,255,.13); color-scheme: dark; }
+
+/* MacSprint app (design/FOUNDATIONS.md). Kind colours: the validated categorical order (dataviz palette), light and dark steps. */
+.light { --m-bg: #ffffff; --m-side: #f4f4f7; --m-alt: #f3f4f7; --m-line: rgba(20,20,30,.1); --m-text: #16161a; --m-text2: #5f6068; --m-text3: #6c6d76;
+  --m-accent: #3b5bdb; --m-btn: #2f4bc4; --m-soft: rgba(59,91,219,.12); --m-good: #1f7a4d; --m-good-soft: rgba(31,122,77,.1); --m-gray: #c9ccd4; --m-gray2: #e4e6eb;
+  --m-card: #ffffff; --m-shadow: 0 1px 2px rgba(20,24,40,.06), 0 6px 18px rgba(20,24,40,.07); --m-raise: 0 1px 2px rgba(20,24,40,.1), 0 0 0 1px rgba(20,20,30,.06);
+  --k1: #2a78d6; --k2: #eb6834; --k3: #1baf7a; --k4: #eda100; --k5: #e87ba4; --k6: #008300; --tip: #1d1e22; --tip-t: #fff; }
+.dark { --m-bg: #18191d; --m-side: #1f2025; --m-alt: #23242a; --m-line: rgba(255,255,255,.09); --m-text: #ececf0; --m-text2: #a3a4ad; --m-text3: #92939f;
+  --m-accent: #8399ff; --m-btn: #4a63e0; --m-soft: rgba(131,153,255,.16); --m-good: #4cd38a; --m-good-soft: rgba(76,211,138,.12); --m-gray: #4a4c55; --m-gray2: #2c2d34;
+  --m-card: #212228; --m-shadow: 0 1px 2px rgba(0,0,0,.3), 0 6px 18px rgba(0,0,0,.28); --m-raise: 0 1px 2px rgba(0,0,0,.4), 0 0 0 1px rgba(255,255,255,.06);
+  --k1: #3987e5; --k2: #d95926; --k3: #199e70; --k4: #c98500; --k5: #d55181; --k6: #008300; --tip: #f0f0f3; --tip-t: #16161a; }
+
+* { box-sizing: border-box; }
+body { margin: 0; background: var(--paper); color: var(--ink); font: 16px/1.55 var(--body); -webkit-font-smoothing: antialiased;
+  padding-left: max(16px, env(safe-area-inset-left, 0px)); padding-right: max(16px, env(safe-area-inset-right, 0px)); padding-block: 40px 72px; }
+h1, h2 { font-family: var(--display); margin: 0; line-height: 1.12; text-wrap: balance; }
+.wrap { max-width: 1120px; margin: 0 auto; display: grid; gap: 24px; }
+header { display: grid; gap: 10px; max-width: 74ch; }
+header h1 { font-size: clamp(28px, 4vw, 40px); font-weight: 800; }
+header p { margin: 0; color: var(--ink-2); }
+.eyebrow { font: 600 13px/1 var(--display); color: var(--blue); }
+.bar { display: flex; flex-wrap: wrap; gap: 12px 20px; align-items: center; }
+.seg { display: inline-flex; gap: 4px; padding: 3px; border: 1px solid var(--rule); border-radius: 999px; }
+.seg button { font: 600 14px/1 var(--body); color: var(--ink-2); background: transparent; border: 0; border-radius: 999px; padding: 7px 14px; cursor: pointer; }
+.seg button[aria-pressed="true"] { background: var(--blue); color: var(--sheet); }
+.seg button:focus-visible, .jump a:focus-visible { outline: 2px solid var(--blue); outline-offset: 2px; }
+.jump { display: flex; flex-wrap: wrap; gap: 6px; }
+.jump a { font-size: 14px; color: var(--ink); text-decoration: none; border: 1px solid var(--rule); border-radius: 999px; padding: 4px 11px; display: inline-flex; gap: 6px; align-items: center; }
+.jump a b { color: var(--blue); }
+.pick { background: var(--blue-soft); border-radius: 14px; padding: 14px 18px; font-size: 15px; max-width: 88ch; margin: 0; display: grid; gap: 6px; }
+.pick p { margin: 0; } .pick b { color: var(--blue); }
+
+.opt { background: var(--sheet); border: 1px solid var(--rule); border-radius: 16px; padding: 22px; display: grid; gap: 16px; scroll-margin-top: 16px; min-width: 0; }
+.opt-head { display: flex; align-items: center; gap: 12px; flex-wrap: wrap; }
+.rank { font: 800 15px/1 var(--display); width: 30px; height: 30px; border-radius: 9px; display: grid; place-items: center; background: var(--rule); color: var(--ink); flex: none; }
+.opt.top .rank { background: var(--blue); color: var(--sheet); }
+.opt h2 { font-size: 22px; font-weight: 800; }
+.tag { font: 600 12px/1 var(--body); color: var(--blue); background: var(--blue-soft); border-radius: 999px; padding: 5px 10px; }
+.form { font-size: 13px; color: var(--ink-2); border: 1px solid var(--rule); border-radius: 999px; padding: 3px 10px; }
+.opt-head p { margin: 0; color: var(--ink-2); flex: 1 1 100%; }
+.scroll { overflow-x: auto; padding: 4px; margin: -4px; }
+.notes { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 300px), 1fr)); gap: 8px 28px; font-size: 15px; }
+.notes h3 { font: 600 14px/1.2 var(--display); color: var(--ink-2); margin: 0; }
+.notes ul { margin: 6px 0 0; padding-left: 18px; }
+.notes li { margin-bottom: 3px; }
+
+/* Window */
+.win { font: 13px/1.35 var(--mac); color: var(--m-text); background: var(--m-bg); border-radius: 14px; overflow: hidden; display: grid; grid-template-columns: 200px 1fr;
+  min-width: 880px; box-shadow: 0 0 0 1px var(--m-line), 0 16px 40px rgba(20,24,40,.12); }
+.side { background: var(--m-side); border-right: 1px solid var(--m-line); padding: 12px 10px; display: grid; align-content: start; gap: 1px; }
+.lights { display: flex; gap: 6px; margin: 0 4px 14px; }
+.lights i { width: 11px; height: 11px; border-radius: 50%; background: #ff5f57; }
+.lights i:nth-child(2) { background: #febc2e; } .lights i:nth-child(3) { background: #28c840; }
+.wm { font-size: 17px; color: var(--m-accent); margin: 0 6px 12px; }
+.wm b { font-weight: 500; letter-spacing: .16em; }
+.sh { font-size: 11px; font-weight: 600; color: var(--m-text3); margin: 10px 8px 4px; }
+.srow { display: flex; align-items: center; gap: 8px; padding: 5px 8px; border-radius: 7px; white-space: nowrap; }
+.srow svg { color: var(--m-text2); flex: none; }
+.srow em { margin-left: auto; font-style: normal; font-size: 11px; color: var(--m-text3); }
+.srow em.good { color: var(--m-good); font-weight: 600; }
+.srow.sel { background: var(--m-bg); box-shadow: var(--m-raise); font-weight: 600; }
+.srow.sel svg { color: var(--m-accent); }
+.main { display: grid; grid-template-rows: auto 1fr; min-width: 0; }
+.tb { display: flex; padding: 10px 16px; border-bottom: 1px solid var(--m-line); }
+.field { margin: 0 auto; width: 340px; display: flex; align-items: center; gap: 7px; border-radius: 9px; padding: 6px 10px; color: var(--m-text3); font-size: 12.5px; box-shadow: 0 0 0 1px var(--m-line), 0 2px 6px rgba(0,0,0,.05); }
+.field span { flex: 1; }
+.field .kbd { flex: none; font-size: 11px; border: 1px solid var(--m-line); border-radius: 5px; padding: 0 5px; }
+.content { padding: 20px 22px 24px; display: grid; gap: 18px; align-content: start; }
+.hello { display: flex; align-items: flex-end; gap: 12px; }
+.hello h3 { font: 700 22px/1.15 var(--mac); margin: 0; letter-spacing: -.01em; }
+.hello p { margin: 3px 0 0; color: var(--m-text2); font-size: 12.5px; }
+.btn { font: 600 12px/1 var(--mac); border-radius: 9px; padding: 7px 12px; display: inline-flex; gap: 6px; align-items: center; white-space: nowrap; }
+.btn.bord { color: var(--m-text); background: var(--m-bg); box-shadow: 0 0 0 1px var(--m-line); }
+.btn.pri { color: #fff; background: var(--m-btn); }
+.ml { margin-left: auto; }
+.card { background: var(--m-card); border-radius: 16px; box-shadow: var(--m-shadow), 0 0 0 1px var(--m-line); padding: 16px; min-width: 0; position: relative; }
+.ct { display: flex; align-items: baseline; gap: 8px; font-size: 14px; font-weight: 700; margin-bottom: 12px; }
+.ct small { font-size: 11.5px; font-weight: 400; color: var(--m-text3); }
+.sm { font-size: 11px; color: var(--m-text3); }
+.g2 { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
+.g3 { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; }
+.g4 { display: grid; grid-template-columns: repeat(4, 1fr); gap: 12px; }
+.col2 { display: grid; grid-template-columns: 1.35fr 1fr; gap: 14px; }
+
+/* Shared marks */
+.hero { font: 700 52px/1 var(--mac); letter-spacing: -.03em; }
+.hero-l { font-size: 13px; color: var(--m-text2); margin-top: 6px; }
+.stack { display: flex; gap: 2px; height: 16px; }
+.stack i { background: var(--c); border-radius: 0; min-width: 3px; }
+.stack i:first-child { border-radius: 4px 0 0 4px; } .stack i:last-child { border-radius: 0 4px 4px 0; }
+.legend { display: flex; flex-wrap: wrap; gap: 6px 16px; font-size: 12px; color: var(--m-text2); margin-top: 10px; }
+.legend span { display: inline-flex; align-items: center; gap: 6px; }
+.legend i { width: 10px; height: 10px; border-radius: 3px; background: var(--c); }
+.legend b { color: var(--m-text); font-weight: 600; font-variant-numeric: tabular-nums; }
+.tip { position: absolute; z-index: 3; background: var(--tip); color: var(--tip-t); font-size: 11.5px; line-height: 1.35; border-radius: 8px; padding: 7px 9px; box-shadow: 0 6px 16px rgba(0,0,0,.2); white-space: nowrap; pointer-events: none; }
+.tip b { display: block; font-size: 12px; }
+.tip::after { content: ""; position: absolute; left: 14px; bottom: -5px; width: 10px; height: 10px; background: var(--tip); transform: rotate(45deg); }
+.tip.r::after { left: auto; right: 7px; }
+
+/* 1 Free-up: hero + emphasis bar + breakdown */
+.free { display: grid; grid-template-columns: auto 1fr; gap: 28px; align-items: center; }
+.ebar { display: flex; gap: 2px; height: 28px; }
+.ebar i { display: block; height: 100%; }
+.ebar .keep { background: var(--m-gray2); border-radius: 6px 0 0 6px; }
+.ebar .rec { background: var(--m-accent); border-radius: 0 6px 6px 0; position: relative; }
+.axis { display: flex; justify-content: space-between; font-size: 11px; color: var(--m-text3); margin-top: 6px; font-variant-numeric: tabular-nums; }
+.brk { display: grid; gap: 9px; }
+.brow { display: grid; grid-template-columns: 22px 130px 1fr 64px; gap: 10px; align-items: center; font-size: 12.5px; }
+.brow svg { color: var(--m-text2); }
+.brow .track { height: 8px; border-radius: 4px; background: var(--m-gray2); overflow: hidden; }
+.brow .track i { display: block; height: 100%; border-radius: 4px; background: var(--m-accent); min-width: 4px; }
+.brow .v { text-align: right; font-weight: 700; font-variant-numeric: tabular-nums; }
+
+/* 2 Squares (waffle) */
+.waffle { display: grid; grid-template-columns: repeat(20, 1fr); gap: 3px; }
+.waffle i { aspect-ratio: 1; border-radius: 3px; background: var(--c); }
+.kinds { display: grid; gap: 2px; align-content: start; }
+.krow { display: grid; grid-template-columns: 12px 1fr auto auto; gap: 10px; align-items: center; padding: 7px 8px; border-radius: 9px; font-size: 12.5px; }
+.krow i { width: 12px; height: 12px; border-radius: 3px; background: var(--c); }
+.krow .n { color: var(--m-text3); font-size: 11.5px; font-variant-numeric: tabular-nums; }
+.krow .v { font-weight: 700; font-variant-numeric: tabular-nums; min-width: 62px; text-align: right; }
+.krow.hl { background: var(--m-alt); }
+
+/* 3 Week */
+.cols { display: grid; grid-template-columns: repeat(7, 1fr); gap: 10px; align-items: end; height: 150px; border-bottom: 1px solid var(--m-line); padding-top: 18px; }
+.cols div { display: flex; flex-direction: column; justify-content: flex-end; align-items: center; gap: 4px; }
+.cols i { width: 100%; max-width: 34px; background: var(--m-gray); border-radius: 4px 4px 0 0; }
+.cols .today i { background: var(--m-accent); }
+.cols b { font-size: 11.5px; font-variant-numeric: tabular-nums; color: var(--m-text2); }
+.cols .today b { color: var(--m-text); }
+.days { display: grid; grid-template-columns: repeat(7, 1fr); gap: 10px; text-align: center; font-size: 11px; color: var(--m-text3); margin-top: 6px; }
+.days .today { color: var(--m-text); font-weight: 700; }
+.tile { display: grid; gap: 2px; }
+.tile .l { font-size: 12px; color: var(--m-text2); }
+.tile .v { font-size: 24px; font-weight: 700; letter-spacing: -.01em; }
+.spark { display: flex; align-items: end; gap: 2px; height: 22px; margin-top: 6px; }
+.spark i { flex: 1; background: var(--m-gray); border-radius: 2px 2px 0 0; }
+.spark i:last-child { background: var(--m-accent); }
+
+/* 4 Blocks (treemap) */
+.tree { display: grid; grid-template-columns: 47fr 53fr; gap: 3px; height: 230px; }
+.tree .rc { display: grid; grid-template-rows: 70fr 30fr; gap: 3px; min-width: 0; }
+.tree .bot { display: grid; grid-template-columns: 9fr 4fr 2fr 1fr; gap: 3px; min-width: 0; }
+.blk { background: var(--c); border-radius: 8px; padding: 10px; color: #fff; display: grid; align-content: space-between; min-width: 0; overflow: hidden; position: relative; }
+.blk b { font-size: 14px; } .blk span { font-size: 22px; font-weight: 700; letter-spacing: -.01em; }
+.blk.s { padding: 7px; } .blk.s b { font-size: 11.5px; } .blk.s span { font-size: 12.5px; }
+.blk.xs { padding: 0; }
+.blk .lbl { text-shadow: 0 1px 2px rgba(0,0,0,.25); }
+
+/* 5 Sources */
+.hbars { display: grid; gap: 10px; }
+.hb { display: grid; grid-template-columns: 110px 1fr; gap: 12px; align-items: center; font-size: 12.5px; }
+.hb .w { display: flex; align-items: center; gap: 8px; }
+.hb .w i { display: block; height: 18px; background: var(--m-accent); border-radius: 0 4px 4px 0; min-width: 4px; }
+.hb .w span { font-weight: 700; font-variant-numeric: tabular-nums; white-space: nowrap; }
+.hb .w small { font-weight: 400; color: var(--m-text3); }
+.mini { display: grid; gap: 8px; }
+.mrow { display: flex; align-items: center; gap: 10px; font-size: 12.5px; padding: 8px 0; border-top: 1px solid var(--m-line); }
+.mrow:first-child { border-top: 0; }
+.mrow svg { color: var(--m-text2); }
+.mrow .v { margin-left: auto; font-weight: 700; font-variant-numeric: tabular-nums; }
+</style>
+
+<div class="wrap">
+  <header>
+    <span class="eyebrow">Home · information designs</span>
+    <h1>Five ways to show what is on your Mac</h1>
+    <p>A second round for Home. Each screen is built around one simple graphic, chosen by what the numbers need to say: what fills the Mac, what you can free, what is new, or where files came from. Same sidebar, same toolbar, same numbers as the first round (2,880 files, 30.19 GB, up to 14.1 GB to free).</p>
+  </header>
+  <div class="bar">
+    <div class="seg" role="group" aria-label="App appearance"><button type="button" id="ap-light" data-ap="light" aria-pressed="true">Light app</button><button type="button" id="ap-dark" data-ap="dark" aria-pressed="false">Dark app</button></div>
+    <nav class="jump" id="jump" aria-label="Options"></nav>
+  </div>
+  <div class="pick">
+    <p><b>My pick: 1, Free-up.</b> It leads with the one number people open a Mac cleaner for, shows it against the whole disk, and breaks it into four reasons with sizes. Every bar has its number next to it, so it reads without a legend. Pair it with the Squares from option 2 lower on the same screen for “what fills my Mac”.</p>
+    <p><b>Colours.</b> The six file kinds now use a colour order that passed a colour-blindness check in light and dark (the first Home round failed it: Images and Videos looked the same). Every colour also has a text label next to it.</p>
+  </div>
+  <div id="opts" class="wrap" style="gap:20px"></div>
+</div>
+
+<script>
+const P = {
+  house: '<path d="M4 11.5 12 5l8 6.5V19a1 1 0 0 1-1 1h-4.5v-5h-5v5H5a1 1 0 0 1-1-1z"/>',
+  clock: '<circle cx="12" cy="12" r="8"/><path d="M12 7.5V12l3 2"/>',
+  grid: '<rect x="4.5" y="4.5" width="6" height="6" rx="1.5"/><rect x="13.5" y="4.5" width="6" height="6" rx="1.5"/><rect x="4.5" y="13.5" width="6" height="6" rx="1.5"/><rect x="13.5" y="13.5" width="6" height="6" rx="1.5"/>',
+  down: '<circle cx="12" cy="12" r="8"/><path d="M12 8v8M8.5 12.5 12 16l3.5-3.5"/>',
+  clip: '<rect x="6" y="5" width="12" height="15" rx="2"/><path d="M9.5 5V4a1 1 0 0 1 1-1h3a1 1 0 0 1 1 1v1M9 11h6M9 14.5h4"/>',
+  trash: '<path d="M5 7h14M10 7V5h4v2M7 7l1 12a1 1 0 0 0 1 1h6a1 1 0 0 0 1-1l1-12"/>',
+  dup: '<rect x="8" y="8" width="11" height="11" rx="2"/><path d="M5 15V6a1 1 0 0 1 1-1h9"/>',
+  folder: '<path d="M4 7.5A1.5 1.5 0 0 1 5.5 6h4l2 2h7A1.5 1.5 0 0 1 20 9.5v8a1.5 1.5 0 0 1-1.5 1.5h-13A1.5 1.5 0 0 1 4 17.5z"/>',
+  search: '<circle cx="10.5" cy="10.5" r="6"/><path d="m15 15 5 5"/>',
+  shot: '<path d="M4 8V6a2 2 0 0 1 2-2h2M16 4h2a2 2 0 0 1 2 2v2M20 16v2a2 2 0 0 1-2 2h-2M8 20H6a2 2 0 0 1-2-2v-2"/><circle cx="12" cy="12" r="3"/>',
+  drive: '<rect x="4" y="13" width="16" height="6" rx="2"/><path d="M6 13 8 5h8l2 8M16.5 16h.01"/>',
+  refresh: '<path d="M19 12a7 7 0 1 1-2.1-5M19 4.5V8h-3.5"/>',
+};
+const ic = (k, s = 14, w = 1.8) => `<svg viewBox="0 0 24 24" width="${s}" height="${s}" fill="none" stroke="currentColor" stroke-width="${w}" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">${P[k]}</svg>`;
+
+// Same sample numbers as design/feature-flows.html. Colour slots are fixed per kind, never by rank.
+const K = [['Apps', 'k1', '14.31 GB', 47, '110'], ['Videos', 'k2', '11.21 GB', 37, '162'], ['Images', 'k3', '2.81 GB', 9, '2,280'], ['Documents', 'k4', '1.16 GB', 4, '201'], ['Archives', 'k5', '630 MB', 2, '93'], ['Music', 'k6', '82.7 MB', 1, '34']];
+const CL = [['down', 'Old Downloads', 11.5, '11.5 GB', '1,227 items'], ['drive', 'Large files', 2.2, '2.2 GB', '10 items'], ['shot', 'Old screenshots', .321, '321 MB', '480 items'], ['dup', 'Duplicates', .0448, '44.8 MB', '24 extra copies']];
+const WEEK = [['Thu', 18], ['Fri', 31], ['Sat', 12], ['Sun', 9], ['Mon', 44], ['Tue', 27], ['Today', 13]];
+const SRC = [['AirDrop', 3.1, '3.1 GB', '22 files'], ['Any website', 1.4, '1.4 GB', '411 files'], ['Safari', 1.0, '1.0 GB', '131 files'], ['Google Drive', .457, '457 MB', '15 files'], ['WhatsApp', .212, '212 MB', '37 files'], ['Mail', .12, '120 MB', '104 files']];
+
+const side = () => `<aside class="side"><div class="lights"><i></i><i></i><i></i></div><div class="wm">Mac <b>SPRINT</b></div>
+  <div class="sh">Discover</div>${[['house', 'Home', '', 1], ['clock', 'Recents'], ['grid', 'Library', '2,880'], ['down', 'Downloaded From', '913'], ['clip', 'Clipboard']].map(([i, n, b, s]) => `<div class="srow${s ? ' sel' : ''}">${ic(i)}${n}${b ? `<em>${b}</em>` : ''}</div>`).join('')}
+  <div class="sh">Clean up</div>${[['trash', 'Clean Up', '14.1 GB'], ['dup', 'Duplicates', '44.8 MB'], ['folder', 'Organizer']].map(([i, n, b]) => `<div class="srow">${ic(i)}${n}${b ? `<em class="good">${b}</em>` : ''}</div>`).join('')}</aside>`;
+const win = (content) => `<div class="win">${side()}<div class="main"><div class="tb"><div class="field">${ic('search', 13)}<span>Search or ask a question</span><span class="kbd">⌘F</span></div></div><div class="content">${content}</div></div></div>`;
+const hello = (sub = '2,880 files · 30.19 GB across your Mac · updated 2 min ago') => `<div class="hello"><div><h3>Good afternoon</h3><p>${sub}</p></div><span class="btn bord ml">${ic('refresh', 12)}Refresh</span></div>`;
+const stack = () => `<div class="stack" role="img" aria-label="${K.map((k) => `${k[0]} ${k[2]}`).join(', ')}">${K.map((k) => `<i style="--c:var(--${k[1]});flex:${k[3]}"></i>`).join('')}</div>`;
+const legend = () => `<div class="legend">${K.map((k) => `<span><i style="--c:var(--${k[1]})"></i>${k[0]} <b>${k[2]}</b></span>`).join('')}</div>`;
+const waffle = () => { const cells = []; K.forEach((k) => { for (let i = 0; i < k[3] * 2; i++) cells.push(k[1]); }); return `<div class="waffle" role="img" aria-label="200 squares, each about 150 MB: ${K.map((k) => `${k[0]} ${k[3]}%`).join(', ')}">${cells.map((c) => `<i style="--c:var(--${c})"></i>`).join('')}</div>`; };
+
+const OPTIONS = [
+  { name: 'Free-up', form: 'Hero number + one emphasis bar', tag: 'My pick',
+    idea: 'The headline is the space you can free. One bar shows it against everything your files use; the grey part stays. Four short bars say where the space comes from, each with its size.',
+    good: ['Answers the question people open a cleaner for, in one number', 'Emphasis form: only the part you can act on is coloured', 'Every bar has its value next to it, so no legend is needed', 'Review is one click from the number'],
+    watch: ['Duplicates (44.8 MB) is a sliver next to 11.5 GB; its number carries it', 'Says nothing about kinds of files; pair with option 2 below it'],
+    body: () => hello() + `<div class="card"><div class="free"><div><div class="hero">14.1 GB</div><div class="hero-l">you can free, safely</div><span class="btn pri" style="margin-top:14px">Review in Clean Up</span></div>
+      <div><div class="ct" style="margin-bottom:8px">Your files <small>30.19 GB in total</small></div><div class="ebar" role="img" aria-label="16.1 GB stays, 14.1 GB can be freed"><i class="keep" style="flex:16.09"></i><i class="rec" style="flex:14.1"></i></div><div class="axis"><span>Stays · 16.1 GB</span><span>Can be freed · 14.1 GB</span></div></div></div></div>
+      <div class="card"><div class="ct">Where the 14.1 GB comes from</div><div class="brk">${CL.map(([i, n, v, l, s]) => `<div class="brow">${ic(i)}<span>${n}<br><span class="sm">${s}</span></span><span class="track"><i style="width:${v / 11.5 * 100}%"></i></span><span class="v">${l}</span></div>`).join('')}</div></div>` },
+  { name: 'Squares', form: 'Waffle: 200 squares = your files',
+    idea: 'Each square is about 150 MB of your files, coloured by kind. People count blocks instead of reading a chart. The list beside it names every kind with its size and file count.',
+    good: ['The most eye-catching option, and still exact', 'Part-to-whole that anyone can read: “almost half is apps”', 'The list doubles as the way into Library', 'Hover a square or a row: a tooltip names the kind and size (shown)'],
+    watch: ['Music and Archives are only 2–4 squares; the list carries them', 'Needs the labelled list; colour alone is not enough'],
+    body: () => hello() + `<div class="card"><div class="ct">What fills your Mac <small>each square ≈ 150 MB</small></div><div class="col2"><div style="position:relative">${waffle()}<div class="tip" style="left:120px;top:92px"><b>Videos</b>11.21 GB · 162 files</div></div>
+      <div class="kinds">${K.map((k, i) => `<div class="krow${i === 1 ? ' hl' : ''}" style="--c:var(--${k[1]})"><i></i><span>${k[0]}</span><span class="n">${k[4]} files</span><span class="v">${k[2]}</span></div>`).join('')}</div></div></div>
+      <div class="g4">${CL.map(([i, n, v, l, s]) => `<div class="card tile"><span class="l">${n}</span><span class="v">${l}</span><span class="sm">${s}</span></div>`).join('')}</div>` },
+  { name: 'This week', form: 'Columns over time, today highlighted',
+    idea: 'How many files arrived each day this week, with today in colour and the other days in grey. Three tiles beside it count new downloads, screenshots and space added, each with a small trend.',
+    good: ['Shows that MacSprint is watching new files, which builds trust', 'Emphasis keeps the eye on today', 'Leads naturally into Recents and Downloaded From'],
+    watch: ['Space use moves below the fold', 'Quiet weeks look empty; needs a friendly empty state'],
+    body: () => { const max = Math.max(...WEEK.map((d) => d[1])); return hello('13 new files today · 154 this week') + `<div class="col2"><div class="card"><div class="ct">New files this week</div><div class="cols" role="img" aria-label="${WEEK.map((d) => d[0] + ' ' + d[1]).join(', ')}">${WEEK.map((d, i) => `<div class="${i === 6 ? 'today' : ''}">${i === 6 || d[1] === max ? `<b>${d[1]}</b>` : ''}<i style="height:${Math.round(d[1] / max * 104)}px"></i></div>`).join('')}</div><div class="days">${WEEK.map((d, i) => `<span class="${i === 6 ? 'today' : ''}">${d[0]}</span>`).join('')}</div></div>
+      <div style="display:grid;gap:12px">${[['Downloaded', '87', [9, 14, 6, 4, 22, 18, 14]], ['Screenshots', '41', [3, 8, 2, 1, 12, 9, 6]], ['Space added', '3.2 GB', [2, 5, 1, 1, 9, 6, 4]]].map(([l, v, s]) => `<div class="card tile"><span class="l">${l} this week</span><span class="v">${v}</span><span class="spark">${s.map((x) => `<i style="height:${x / Math.max(...s) * 100}%"></i>`).join('')}</span></div>`).join('')}</div></div>
+      <div class="card"><div class="ct">Your files <small>30.19 GB</small><span class="btn pri ml" style="font-size:11.5px">Free up to 14.1 GB</span></div>${stack()}${legend()}</div>`; } },
+  { name: 'Blocks', form: 'Treemap: block size = space',
+    idea: 'Each kind is a block sized by the space it uses, with its name and size inside. It previews Space Map, and clicking a block opens that kind in Library.',
+    good: ['Very visual; big things look big', 'Same idea as Space Map, so Home teaches it', 'Labels sit inside the blocks'],
+    watch: ['Small kinds become tiny blocks; Music is too small to label (its name moves to a tooltip)', 'Comparing two similar blocks by area is harder than bars'],
+    body: () => { const b = (k, cls = '') => `<div class="blk ${cls}" style="--c:var(--${k[1]})">${cls === 'xs' ? '' : `<b class="lbl">${k[0]}</b><span class="lbl">${k[2]}</span>`}</div>`;
+      return hello() + `<div class="card"><div class="ct">What fills your Mac <small>block size = space</small></div><div class="tree" role="img" aria-label="${K.map((k) => `${k[0]} ${k[2]}`).join(', ')}">${b(K[0])}<div class="rc">${b(K[1])}<div class="bot">${b(K[2], 's')}${b(K[3], 's')}${b(K[4], 'xs')}<div style="position:relative;display:grid">${b(K[5], 'xs')}<div class="tip r" style="right:-6px;left:auto;bottom:calc(100% + 8px)"><b>Music</b>82.7 MB · 34 files</div></div></div></div></div><p class="sm" style="margin:8px 0 0">Smallest blocks: Archives 630 MB · Music 82.7 MB</p></div>
+      <div class="g4">${CL.map(([i, n, v, l, s]) => `<div class="card tile"><span class="l">${n}</span><span class="v">${l}</span><span class="sm">${s}</span></div>`).join('')}</div>`; } },
+  { name: 'Sources', form: 'Sorted bars, one colour',
+    idea: 'Where your downloads came from, biggest first, in one colour with the size at the end of each bar. Clean Up sits beside it as a short list.',
+    good: ['Unusual and useful: few apps can show this', 'Sorted bars in one colour are the easiest chart to read', 'Leads into Downloaded From'],
+    watch: ['Only covers downloads (913 files), not everything', 'Needs the source of each file, which is not known for older files'],
+    body: () => hello() + `<div class="col2"><div class="card"><div class="ct">Where your downloads came from <small>913 files · 6.4 GB</small></div><div class="hbars">${SRC.map(([n, v, l, s]) => `<div class="hb"><span>${n}</span><span class="w"><i style="width:${v / 3.1 * 78}%"></i><span>${l} <small>· ${s}</small></span></span></div>`).join('')}</div></div>
+      <div class="card"><div class="ct">Clean Up <small>up to 14.1 GB</small></div><div class="mini">${CL.map(([i, n, v, l, s]) => `<div class="mrow">${ic(i)}<span>${n}<br><span class="sm">${s}</span></span><span class="v">${l}</span></div>`).join('')}</div><span class="btn pri" style="margin-top:12px">Review</span></div></div>
+      <div class="card"><div class="ct">Your files <small>30.19 GB</small></div>${stack()}${legend()}</div>` },
+];
+
+let ap = matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
+try { const s = localStorage.getItem('ms-home-ap'); if (s === 'light' || s === 'dark') ap = s; } catch (e) {}
+document.getElementById('jump').innerHTML = OPTIONS.map((o, i) => `<a href="#option-${i + 1}"><b>${i + 1}</b>${o.name}</a>`).join('');
+function render() {
+  document.getElementById('opts').innerHTML = OPTIONS.map((o, i) => `
+  <section class="opt${i === 0 ? ' top' : ''}" id="option-${i + 1}" aria-labelledby="h-${i}">
+    <div class="opt-head"><span class="rank">${i + 1}</span><h2 id="h-${i}">${o.name}</h2>${o.tag ? `<span class="tag">${o.tag}</span>` : ''}<span class="form">${o.form}</span><p>${o.idea}</p></div>
+    <div class="scroll"><div class="${ap}">${win(o.body())}</div></div>
+    <div class="notes"><div><h3>Good for</h3><ul>${o.good.map((g) => `<li>${g}</li>`).join('')}</ul></div><div><h3>Watch for</h3><ul>${o.watch.map((g) => `<li>${g}</li>`).join('')}</ul></div></div>
+  </section>`).join('');
+  document.querySelectorAll('[data-ap]').forEach((b) => b.setAttribute('aria-pressed', String(b.dataset.ap === ap)));
+}
+document.querySelectorAll('[data-ap]').forEach((b) => b.addEventListener('click', () => { ap = b.dataset.ap; try { localStorage.setItem('ms-home-ap', ap); } catch (e) {} render(); }));
+render();
+</script>
