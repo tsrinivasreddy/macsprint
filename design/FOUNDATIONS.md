@@ -95,3 +95,10 @@ its name or a tooltip, so colour never carries meaning alone.
 | Music | `#008300` | `#008300` |
 
 The website still uses the earlier colours; update it when the owner asks.
+
+## Recents (decided 2026-10-29)
+
+From the [Recents options](recents-options.html) page: option 1, **Latest first**. The newest file gets its own card
+(preview with a New badge, kind, source, size, Open / Quick Look / Show in Finder, and a "drag it into Mail" hint).
+Below it: kind filter chips, then the other files in a grid grouped by Today, Yesterday and Earlier this week, each with
+its source and time. Grid / List switch top right (⌘1 / ⌘2).
