@@ -21,6 +21,9 @@ const ICON = {
   check: '<path d="m5 12.5 4.5 4.5L19 7.5"/>',
   copy: '<rect x="8" y="8" width="12" height="12" rx="2"/><path d="M16 8V6a2 2 0 0 0-2-2H6a2 2 0 0 0-2 2v8a2 2 0 0 0 2 2h2"/>',
   rotate: '<path d="M4 12a8 8 0 1 0 2.4-5.7"/><path d="M4 4v4h4"/>',
+  sparkle: '<path d="M12 3l1.8 4.7L18.5 9.5l-4.7 1.8L12 16l-1.8-4.7L5.5 9.5l4.7-1.8z"/><path d="M19 15l.8 2 2 .8-2 .8-.8 2-.8-2-2-.8 2-.8z"/>',
+  lock: '<rect x="5" y="11" width="14" height="10" rx="2.5"/><path d="M8 11V8a4 4 0 0 1 8 0v3"/>',
+  info: '<circle cx="12" cy="12" r="9"/><path d="M12 11v6M12 7.5h.01"/>',
   zoom: '<circle cx="10.5" cy="10.5" r="6.5"/><path d="m20 20-4.8-4.8M10.5 8v5M8 10.5h5"/>',
 };
 
@@ -555,7 +558,121 @@ function similar(el) {
   });
 }
 
+/* ---------------- Ask Your Files (inside Search) ---------------- */
+function ask(el) {
+  const Q = [
+    { q: 'When does my lease end?', a: 'Your lease ends on 31 August 2027.', d: 'It runs 12 months from 1 September 2026, then continues month to month.', src: 'Lease agreement 2026.pdf', page: 'page 3', quote: 'The tenancy <mark>ends on 31 August 2027</mark> unless renewed in writing.', more: [['Renewal reminder.eml', 'Mail'], ['Move-in checklist.pdf', 'Documents']] },
+    { q: 'How much was the March electricity bill?', a: 'The March bill was $84.20.', d: 'It was due on 12 April.', src: 'Electricity bill Mar 2026.pdf', page: 'page 1', quote: 'Amount due <mark>$84.20</mark> by 12 April.', more: [['Electricity bill Feb 2026.pdf', 'Downloads']] },
+    { q: 'What is my flight booking reference?', a: 'Your booking reference is K7QX2P.', d: 'Flight SK 482, seat 14C.', src: 'Flight SK 482 boarding pass.png', page: 'image', quote: 'Booking ref <mark>K7QX2P</mark> · Seat 14C', more: [['Hotel confirmation.pdf', 'Downloads']] },
+    { q: 'What was the router password?', none: true, more: [['Router setup notes.txt', 'Documents'], ['Screenshot 2026-06-02.png', 'Desktop']] },
+  ];
+  el.innerHTML = `<div class="d-ask">
+    <p class="d-label">Ask a question</p>
+    <div class="d-chips" role="group" aria-label="Example questions">${Q.map((x, i) => `<button type="button" class="d-chip" data-i="${i}" aria-pressed="${i === 0}">${svg(ICON.sparkle, 12)}${esc(x.q)}</button>`).join('')}</div>
+    <div class="d-ask-out" aria-live="polite"></div>
+    <p class="d-foot"><span class="d-lock">${svg(ICON.lock, 11)}</span> Answered on your Mac, only from text found in your files.</p></div>`;
+  const out = el.querySelector('.d-ask-out');
+  const show = (i, open) => {
+    const x = Q[i];
+    el.querySelectorAll('.d-chip').forEach((c) => c.setAttribute('aria-pressed', String(+c.dataset.i === i)));
+    const more = `<p class="d-label">${x.none ? 'Closest files' : 'Other files that may help'}</p><ul class="d-results">${x.more.map(([n, w]) => `<li><span class="d-res-icon">${svg(ICON.doc, 18)}</span><div><b>${esc(n)}</b><small>${esc(w)}</small></div></li>`).join('')}</ul>`;
+    if (x.none) { out.innerHTML = `<div class="d-note">${svg(ICON.info, 14)}<span>No clear answer in your files. These are the closest matches.</span></div>${more}`; return; }
+    out.innerHTML = `<div class="d-answer"><span class="d-answer-q">${svg(ICON.sparkle, 11)}Answer from your files</span><b>${esc(x.a)}</b><p>${esc(x.d)}</p>
+      <button type="button" class="d-cite" aria-expanded="${!!open}">${svg(ICON.doc, 12)}${esc(x.src)}<small>${esc(x.page)}</small></button>
+      <blockquote class="d-quote" ${open ? '' : 'hidden'}>${x.quote}</blockquote></div>${more}`;
+    out.querySelector('.d-cite').addEventListener('click', (e) => {
+      const b = e.currentTarget, q = out.querySelector('.d-quote'); q.hidden = !q.hidden; b.setAttribute('aria-expanded', String(!q.hidden));
+    });
+  };
+  bindAll(el, '.d-chip', 'click', (e) => show(+e.currentTarget.dataset.i, false));
+  show(0, false);
+}
+
+/* ---------------- Space Map (a view inside Clean Up) ---------------- */
+function spacemap(el) {
+  const TOP = [['Movies', 61, 275, '1/7', '1/7'], ['Photos', 38, 215, '7/11', '1/4'], ['Apps', 34, 195, '11/13', '1/4'], ['Documents', 22, 35, '7/10', '4/7'], ['Caches', 19, 345, '10/12', '4/7'], ['Other', 17, 150, '12/13', '4/7']];
+  const MOVIES = [['Conference-talk.mov', 3.1, 275, '1/8', '1/5', 'not opened for 14 months'], ['Trip 2025.mov', 2.4, 290, '8/13', '1/5', 'opened last year'], ['Screen recording.mov', 1.8, 260, '1/5', '5/7', 'not opened for 9 months'], ['Wedding.mov', 1.6, 305, '5/9', '5/7', 'opened last month'], ['Other 34 files', 52, 245, '9/13', '5/7', '']];
+  let sel = null;
+  const root = () => {
+    sel = null;
+    el.innerHTML = `<div class="d-map"><p class="d-label">Macintosh HD · 341 GB used · click a block</p>
+      <div class="d-tree">${TOP.map(([n, g, h, c, r]) => `<button type="button" class="d-tile" data-n="${n}" style="--h:${h};grid-column:${c};grid-row:${r}" aria-label="${n}, ${g} GB${n === 'Movies' ? ', open' : ''}"><b>${n}</b><small>${g} GB</small></button>`).join('')}</div>
+      <p class="d-foot">Bigger block, bigger folder. Only Movies opens in this demo.</p></div>`;
+    el.querySelector('[data-n="Movies"]').addEventListener('click', inside);
+  };
+  const inside = () => {
+    el.innerHTML = `<div class="d-map"><p class="d-label"><button type="button" class="d-crumb">Macintosh HD</button> › Movies · 61 GB</p>
+      <div class="d-tree d-tree-in">${MOVIES.map(([n, g, h, c, r], i) => `<button type="button" class="d-tile" data-i="${i}" style="--h:${h};grid-column:${c};grid-row:${r}" aria-pressed="false"><b>${n}</b><small>${g} GB</small></button>`).join('')}</div>
+      <div class="d-clean-foot"><span class="d-total" aria-live="polite">Select a file to see why it is suggested.</span><button type="button" class="btn btn-small d-go" disabled>Move to Trash…</button></div></div>`;
+    el.querySelector('.d-crumb').addEventListener('click', root);
+    const total = el.querySelector('.d-total'), go = el.querySelector('.d-go');
+    bindAll(el, '.d-tile', 'click', (e) => {
+      const b = e.currentTarget, i = +b.dataset.i; if (!MOVIES[i][5]) return;
+      el.querySelectorAll('.d-tile').forEach((t) => t.setAttribute('aria-pressed', String(t === b)));
+      sel = MOVIES[i]; total.textContent = `${sel[0]} · ${sel[1]} GB · ${sel[5]}`; go.disabled = false;
+    });
+    go.addEventListener('click', () => {
+      el.innerHTML = `<div class="d-map"><div class="d-report" role="status"><span class="d-report-icon">${svg(ICON.check, 22)}</span><p><b>${esc(sel[0])} moved to the Trash.</b></p><span class="d-sub">${sel[1]} GB · saved to Cleanup History</span><button type="button" class="btn btn-small btn-quiet d-undo">Undo</button></div></div>`;
+      el.querySelector('.d-undo').addEventListener('click', inside);
+    });
+  };
+  root();
+}
+
+/* ---------------- Explain This (System Data and any file) ---------------- */
+function explain(el) {
+  const ROWS = [
+    ['App caches', '22 GB', 'ok', 'Safe to clear', 'Apps keep temporary copies of things they use often, like thumbnails and web pages. Clear them and apps rebuild them. The first launch afterwards can be a little slower. Largest: Xcode 8.2 GB, Chrome 6.1 GB, Spotify 2.9 GB.'],
+    ['iOS device backups', '31 GB', 'ask', 'Check first', 'Full copies of your iPhone or iPad. If the device has a newer backup in iCloud you can remove old ones, but if this is your only copy, keep it.'],
+    ['Local snapshots', '9 GB', 'keep', 'macOS manages this', 'Time Machine keeps short-term copies so you can go back a few hours. macOS frees them by itself when space is needed.'],
+    ['Mail and Messages data', '34 GB', 'keep', 'Leave it', 'Your messages and attachments. Remove them inside Mail or Messages, not here.'],
+    ['Other (cannot be read)', '52 GB', 'keep', 'Not available', 'macOS does not let any app see inside this part. It is shown so the total adds up.'],
+  ];
+  el.innerHTML = `<div class="d-explain"><p class="d-label">System Data · 148 GB · what is in it</p>
+    <ul class="d-xrows">${ROWS.map(([n, s, k, v], i) => `<li><button type="button" class="d-xrow" data-i="${i}" aria-expanded="false"><span class="d-xn">${n}</span><span class="d-xs">${s}</span><span class="d-vd ${k}">${v}</span><span class="d-xe">Explain</span></button><p class="d-xdetail" hidden></p></li>`).join('')}</ul>
+    <p class="d-foot">Some of System Data is normal, and macOS frees it on its own.</p></div>`;
+  bindAll(el, '.d-xrow', 'click', (e) => {
+    const b = e.currentTarget, p = b.nextElementSibling, open = b.getAttribute('aria-expanded') !== 'true';
+    el.querySelectorAll('.d-xrow').forEach((x) => { x.setAttribute('aria-expanded', 'false'); x.nextElementSibling.hidden = true; });
+    if (open) { b.setAttribute('aria-expanded', 'true'); p.textContent = ROWS[+b.dataset.i][4]; p.hidden = false; }
+  });
+  el.querySelector('.d-xrow').click();
+}
+
+/* ---------------- Screenshot Inbox (a tab inside Organizer) ---------------- */
+function shots(el) {
+  const G = [['Receipts', 'Receipts', 14, [260, 220, 260], true], ['Tickets and bookings', 'Tickets', 6, [280, 220], true], ['Error messages', 'Errors', 21, [220, 260, 280], true], ['Chats', 'Chats', 33, [260, 280, 220], true], ['Codes and passwords', '', 10, [260, 220], false]];
+  const review = () => {
+    el.innerHTML = `<div class="d-shots"><p class="d-label">84 screenshots on your Desktop · five kinds</p>
+      <ul class="d-checks">${G.map(([n, f, c, hs, on], i) => `<li><label><input type="checkbox" data-i="${i}" ${on ? 'checked' : ''}> <span class="d-gname">${n}</span><span class="d-gth" aria-hidden="true">${hs.map((h) => ph(h)).join('')}</span><em>${f ? '→ ' + f : 'Stays'} · ${c}</em></label></li>`).join('')}</ul>
+      <div class="d-clean-foot"><span class="d-total">Screenshots that may show codes or passwords are not moved unless you tick them.</span><button type="button" class="btn btn-small d-go"></button></div></div>`;
+    const btn = el.querySelector('.d-go');
+    const sum = () => [...el.querySelectorAll('input:checked')].reduce((a, x) => a + G[+x.dataset.i][2], 0);
+    const count = () => { const n = sum(); btn.textContent = `Sort ${n} screenshots`; btn.disabled = !n; };
+    bindAll(el, 'input', 'change', count); count();
+    btn.addEventListener('click', () => {
+      const n = sum(), left = 84 - n, groups = el.querySelectorAll('input:checked').length;
+      el.innerHTML = `<div class="d-shots"><div class="d-report" role="status"><span class="d-report-icon">${svg(ICON.check, 22)}</span><p><b>${n} screenshots filed into ${groups} folder${groups === 1 ? '' : 's'}.</b></p><span class="d-sub">${left} left on the Desktop · saved to File Action History</span><button type="button" class="btn btn-small btn-quiet d-undo">Undo</button></div></div>`;
+      el.querySelector('.d-undo').addEventListener('click', review);
+    });
+  };
+  review();
+}
+
+/* ---------------- Paste Clean (inside Clipboard) ---------------- */
+function pasteclean(el) {
+  const URL_FULL = 'shop.example.com/jacket', TRACK = '?utm_source=news&utm_medium=email&fbclid=IwAR0x7';
+  el.innerHTML = `<div class="d-paste"><p class="d-label">Copied link</p>
+    <div class="d-clean" aria-label="Before and after"><span>${URL_FULL}<s>${TRACK}</s></span><em>Removes 3 tracking codes</em></div>
+    <div class="d-clean-foot"><span class="d-total">Pick how to paste it into your note.</span><span class="d-btns"><button type="button" class="btn btn-small d-go">Paste clean</button><button type="button" class="btn btn-small btn-quiet d-asis">Paste as is</button></span></div>
+    <p class="d-label">Your note</p><div class="d-note-box" aria-live="polite"><span class="d-muted">Found the jacket I mentioned:</span><code class="d-pasted">Nothing pasted yet</code></div>
+    <p class="d-foot">Plain text works the same way: formatting stays behind, in the apps you choose.</p></div>`;
+  const out = el.querySelector('.d-pasted');
+  el.querySelector('.d-go').addEventListener('click', () => { out.innerHTML = URL_FULL; out.dataset.state = 'clean'; });
+  el.querySelector('.d-asis').addEventListener('click', () => { out.innerHTML = `${URL_FULL}${TRACK}`; out.dataset.state = 'as-is'; });
+}
+
 export const DEMOS = {
-  home, recents, library, images, search, downloaded, clipboard,
-  cleanup, duplicates, organizer, rename,
+  home, recents, library, images, search, ask, downloaded, clipboard, pasteclean,
+  cleanup, spacemap, explain, duplicates, organizer, shots, rename,
 };

@@ -29,6 +29,10 @@ const TILES = [
         .map(([l, n, h]) => `<span style="--sh:${h}"><b>${l}</b>${n}</span>`).join('')}</div>` },
   { id: 'recents', size: 'hl-sm', art: `
       <div class="hl-strip">${ph(30)}${ph(260)}${ph(280)}${ph(20)}</div>` },
+  { id: 'ask', size: 'hl-half', art: `
+      <div class="hl-answer"><span><i></i>When does my lease end?</span><b>31 August 2027</b><em>Lease agreement 2026.pdf · page 3</em></div>` },
+  { id: 'spacemap', size: 'hl-half', art: `
+      <div class="hl-map"><i style="--h:275;grid-area:1/1/4/3"><b>Movies</b>61 GB</i><i style="--h:215;grid-area:1/3/3/5"><b>Photos</b></i><i style="--h:195;grid-area:1/5/3/6"></i><i style="--h:35;grid-area:3/3/4/5"><b>Docs</b></i><i style="--h:345;grid-area:3/5/4/6"></i></div>` },
   { id: 'rename', size: 'hl-wide', art: `
       <ul class="hl-names">
         <li><s>document (2).pdf</s><b>Lease agreement 2026.pdf</b></li>

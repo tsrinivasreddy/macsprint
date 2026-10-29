@@ -67,10 +67,10 @@ const paneTitle = (p) => p.textContent('#explorer .ex-pane h3');
 check('explorerTabsSelectEachFeature', async (b) => {
   const p = await open(b);
   const features = await getFeatures(p);
-  assert(features.length === 11, 'expected 11 features, got ' + features.length);
+  assert(features.length === 16, 'expected 16 features, got ' + features.length);
   const tabs = p.locator('#explorer [role=tab]');
-  assert(await tabs.count() === 11, 'expected 11 tabs, got ' + await tabs.count());
-  for (let i = 0; i < 11; i++) {
+  assert(await tabs.count() === 16, 'expected 16 tabs, got ' + await tabs.count());
+  for (let i = 0; i < 16; i++) {
     await tabs.nth(i).click();
     assert(await tabs.nth(i).getAttribute('aria-selected') === 'true', 'tab not selected: ' + i);
     const t = await paneTitle(p);
@@ -136,7 +136,7 @@ check('demosCoverEveryFeature', async (b) => {
   });
   assert(missing.length === 0, 'features without demo: ' + missing.join(','));
   const tabs = p.locator('#explorer [role=tab]');
-  for (let i = 0; i < 11; i++) {
+  for (let i = 0; i < 16; i++) {
     await tabs.nth(i).click();
     assert((await demoText(p)).trim().length > 0, 'empty demo at tab ' + i);
   }
@@ -198,7 +198,7 @@ check('demoCleanUpHonestLabels', async (b) => {
 check('problemCardsOpenFeatures', async (b) => {
   const p = await open(b);
   const cards = p.locator('#problems .problem-card');
-  assert(await cards.count() === 13, 'expected 13 problem cards, got ' + await cards.count());
+  assert(await cards.count() === 17, 'expected 17 problem cards, got ' + await cards.count());
   await p.locator('#problems .problem-card', { hasText: 'Copying one thing erases the last' }).click();
   await p.waitForTimeout(200);
   assert((await paneTitle(p)).trim() === 'Clipboard History', 'card I did not open clipboard');
@@ -264,7 +264,7 @@ check('controlsHaveAccessibleNames', async (b) => {
   const p = await open(b);
   const tabs = p.locator('#explorer [role=tab]');
   const unnamed = [];
-  for (let i = 0; i < 11; i++) {
+  for (let i = 0; i < 16; i++) {
     await tabs.nth(i).click();
     const bad = await p.evaluate(() => [...document.querySelectorAll('button, input, [role=tab], a[href]')]
       .filter((el) => el.offsetParent !== null)
@@ -526,7 +526,7 @@ check('organizerPickEachMove', async (b) => {
 check('highlightsOpenTheirFeature', async (b) => {
   const p = await open(b);
   const tiles = p.locator('#highlights .hl-tile');
-  assert(await tiles.count() === 7, `expected 7 highlight tiles, got ${await tiles.count()}`);
+  assert(await tiles.count() === 9, `expected 9 highlight tiles, got ${await tiles.count()}`);
   assert(await p.locator('#highlights .hl-tile .ph[data-photo]').count() === 9, 'highlight pictures should use real photos');
   await p.locator('#highlights .hl-tile[data-id="duplicates"]').click();
   await p.waitForTimeout(300);

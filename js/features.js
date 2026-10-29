@@ -14,6 +14,11 @@ const I = {
   recents: '<circle cx="12" cy="12" r="8.5"/><path d="M12 7.5V12l3 2"/>',
   downloaded: '<circle cx="12" cy="12" r="8.5"/><path d="M12 7.5v8M8.5 12.5 12 16l3.5-3.5"/>',
   rename: '<path d="M4 18 9 6l5 12M5.8 14h6.4"/><path d="M17 4v16M15 4h4M15 20h4"/>',
+  ask: '<path d="M12 3l1.8 4.7L18.5 9.5l-4.7 1.8L12 16l-1.8-4.7L5.5 9.5l4.7-1.8z"/><path d="M19 15l.8 2 2 .8-2 .8-.8 2-.8-2-2-.8 2-.8z"/>',
+  spacemap: '<rect x="3" y="3" width="11" height="18" rx="2"/><rect x="16" y="3" width="5" height="8" rx="1.5"/><rect x="16" y="13" width="5" height="8" rx="1.5"/>',
+  explain: '<circle cx="12" cy="12" r="8.5"/><path d="M12 11v5.5M12 7.8h.01"/>',
+  shots: '<path d="M4 8V6.5A2.5 2.5 0 0 1 6.5 4H8M16 4h1.5A2.5 2.5 0 0 1 20 6.5V8M20 16v1.5a2.5 2.5 0 0 1-2.5 2.5H16M8 20H6.5A2.5 2.5 0 0 1 4 17.5V16"/><circle cx="12" cy="12" r="3"/>',
+  pasteclean: '<rect x="5" y="5" width="14" height="16" rx="2.5"/><rect x="9" y="3" width="6" height="4" rx="1.2"/><path d="m9 14 2 2 4-4"/>',
   clipboard: '<rect x="5" y="5" width="14" height="16" rx="2.5"/><rect x="9" y="3" width="6" height="4" rx="1.2"/><path d="M8.5 12h7M8.5 16h5"/>',
 };
 
@@ -75,6 +80,17 @@ export const FEATURES = [
     ],
   },
   {
+    id: 'ask', group: 'Discover', icon: I.ask,
+    title: 'Ask Your Files', short: 'A question in, an answer out',
+    headline: 'Ask a question. Get the answer, and the file it came from.',
+    points: [
+      'Ask “When does my lease end?” in the search field and get a short answer.',
+      'Every answer names its file and page, one click from the sentence itself.',
+      'Runs on your Mac and only uses text found in your files.',
+      'When it is not sure, it says so and shows the closest files instead.',
+    ],
+  },
+  {
     id: 'downloaded', group: 'Discover', icon: I.downloaded, meta: { text: '913' },
     title: 'Downloaded From', short: 'Files grouped by where they came from',
     headline: 'Remember who sent it, not what it was called.',
@@ -96,6 +112,17 @@ export const FEATURES = [
       'Stored only on your Mac. Password fields are never recorded.',
     ],
   },
+  {
+    id: 'pasteclean', group: 'Discover', icon: I.pasteclean,
+    title: 'Paste Clean', short: 'Links without tracking, text without formatting',
+    headline: 'Paste the link, not the tracking codes.',
+    points: [
+      'See what would be removed before you paste, in red.',
+      'Paste as plain text, with no fonts or colours from the source.',
+      'Choose the apps where plain text is always used.',
+      'Paste as is is always one click away.',
+    ],
+  },
   // ---------- Clean up ----------
   {
     id: 'cleanup', group: 'Clean up', icon: I.cleanup, meta: { text: '14.1 GB', tone: 'good', label: 'up to 14.1 GB to review' },
@@ -106,6 +133,28 @@ export const FEATURES = [
       'Every card opens a review with honest labels such as “Not modified for 18 months”.',
       'Preview, confirm, and files go to the macOS Trash, never deleted outright. Undo anything.',
       'Optional automatic clean up for old installers and screenshots, off until you turn it on.',
+    ],
+  },
+  {
+    id: 'spacemap', group: 'Clean up', icon: I.spacemap,
+    title: 'Space Map', short: 'See where the space went',
+    headline: 'The biggest folders, as the biggest blocks.',
+    points: [
+      'Every folder is a block sized by the space it takes.',
+      'Click a block to go inside, and back with the path at the top.',
+      'Select a file to see why it is suggested, then move it to the Trash.',
+      'Uses the same preview, Trash and Undo as the rest of Clean Up.',
+    ],
+  },
+  {
+    id: 'explain', group: 'Clean up', icon: I.explain,
+    title: 'Explain This', short: 'What is it, and is it safe?',
+    headline: '150 GB of “System Data”, finally explained.',
+    points: [
+      'Splits System Data into caches, backups, snapshots and more.',
+      'Each part is labelled safe to clear, check first or leave it.',
+      'Right-click any file and choose Explain this file.',
+      'Says plainly what you will notice, so nothing is a surprise.',
     ],
   },
   {
@@ -126,6 +175,17 @@ export const FEATURES = [
       'Suggests folders such as Documents, Images, Archives and Installers, plus screenshots sorted by month.',
       'Shows every move before anything happens. Untick any file to leave it where it is.',
       'Never overwrites a file: if a name is taken, a number is added. Every move is logged and can be undone.',
+    ],
+  },
+  {
+    id: 'shots', group: 'Clean up', icon: I.shots,
+    title: 'Screenshot Inbox', short: 'Screenshots sorted by what they show',
+    headline: 'Receipts, tickets and errors, each in their own folder.',
+    points: [
+      'Reads your screenshots on your Mac and groups them by what they show.',
+      'Approve per group, with a few examples of each.',
+      'Screenshots that may show passwords stay where they are.',
+      'Every move is saved and can be undone.',
     ],
   },
   {
@@ -155,6 +215,10 @@ export const PROBLEMS = [
   { letter: 'K', title: 'Ten photos of the same sunset', featureId: 'duplicates' },
   { letter: 'L', title: 'Copying one thing erases the last', featureId: 'clipboard' },
   { letter: 'M', title: 'Worried about private files leaving your Mac', featureId: 'home', anchor: '#privacy' },
+  { letter: 'N', title: '“System Data” is huge and nobody says why', featureId: 'explain' },
+  { letter: 'O', title: 'A fact is buried in a long document', featureId: 'ask' },
+  { letter: 'P', title: 'A Desktop full of screenshots', featureId: 'shots' },
+  { letter: 'Q', title: 'Pasted links full of tracking codes', featureId: 'pasteclean' },
 ];
 
 export const iconSvg = (inner, size = 18) =>
@@ -163,7 +227,7 @@ export const iconSvg = (inner, size = 18) =>
 export const SHORTCUTS = [
   { group: 'Go', items: [['Home', ['⇧', '⌘', 'H']], ['Recents', ['⇧', '⌘', 'R']], ['Library', ['⇧', '⌘', 'L']], ['Downloaded From', ['⇧', '⌘', 'J']], ['Clipboard', ['⇧', '⌘', 'V']], ['Clean Up', ['⇧', '⌘', 'K']], ['Duplicates', ['⇧', '⌘', 'D']], ['Organizer', ['⇧', '⌘', 'O']]] },
   { group: 'Find and view', items: [['Search', ['⌘', 'F']], ['Copy text from images', ['⇧', '⌘', 'C']], ['Save search', ['⌘', 'S']], ['Quick Look', ['Space']], ['Grid / List', ['⌘', '1', '⌘', '2']], ['Inspector', ['⌘', 'I']], ['Back / Forward', ['⌘', '[', '⌘', ']']]] },
-  { group: 'Act', items: [['Open', ['⌘', 'O']], ['Show in Finder', ['⌥', '⌘', 'R']], ['Copy path', ['⌥', '⌘', 'C']], ['Move to Trash', ['⌘', '⌫']], ['Undo', ['⌘', 'Z']]] },
+  { group: 'Act', items: [['Open', ['⌘', 'O']], ['Show in Finder', ['⌥', '⌘', 'R']], ['Copy path', ['⌥', '⌘', 'C']], ['Explain this file', ['⌥', '⌘', 'E']], ['Move to Trash', ['⌘', '⌫']], ['Undo', ['⌘', 'Z']]] },
 ];
 
 // Spotlight cards: the problem, the everyday use, three short points and the shortcut.
@@ -173,6 +237,10 @@ export const STORIES = [
     problem: 'You remember what’s in a file, not what it’s called.',
     use: 'Type “pdfs from last week” and get exactly those files.',
     points: ['Shows how it read you, as filters you can remove', 'Finds photos by what they show', 'Says why each result matched'] },
+  { id: 'ask', label: 'Ask Your Files', keys: ['⌘', 'F'], title: 'Ask. Don’t dig.',
+    problem: 'You need one fact, and it’s buried in a document.',
+    use: 'Ask “When does my lease end?” and get the answer with its page.',
+    points: ['The source file and page are one click away', 'Runs on your Mac, from your files only', 'Not sure? It shows the closest files instead'] },
   { id: 'recents', label: 'Recents', keys: ['⇧', '⌘', 'R'], title: 'The file you just got is always first.',
     problem: 'A new download disappears into a crowded folder.',
     use: 'Open Recents and it’s at the top, ready to preview or drag into an email.',
@@ -185,6 +253,14 @@ export const STORIES = [
     problem: 'Your Mac says the disk is full, and you don’t know why.',
     use: 'Review old installers and big videos, then move them to the Trash.',
     points: ['See where the space went', 'Review before anything moves', 'Everything goes to the Trash, so you can undo'] },
+  { id: 'spacemap', label: 'Space Map', keys: ['⇧', '⌘', 'K'], title: 'See where the space went.',
+    problem: 'A list of sizes doesn’t show what’s really big.',
+    use: 'Open the map, spot the biggest block, and go inside it.',
+    points: ['Block size matches folder size', 'Click to go in, click the path to go back', 'Move to the Trash with Undo'] },
+  { id: 'explain', label: 'Explain This', keys: ['⌥', '⌘', 'E'], title: 'Know before you delete.',
+    problem: '“System Data” is 150 GB and nobody says what’s in it.',
+    use: 'See it split into parts, each marked safe to clear, check first or leave it.',
+    points: ['Plain words, no jargon', 'Right-click any file to explain it', 'Says what you will notice afterwards'] },
   { id: 'duplicates', label: 'Duplicates', keys: ['⇧', '⌘', 'D'], title: 'One copy is plenty.',
     problem: 'The same file is saved three times, in three places.',
     use: 'Keep the best copy with one click and trash the rest.',
@@ -205,10 +281,18 @@ export const STORIES = [
     problem: 'Copying something new erases what you copied before.',
     use: 'Press ⇧⌘V, find the address from an hour ago and click Copy.',
     points: ['Search everything you copied', 'Pin snippets you reuse', 'Password fields are never recorded'] },
+  { id: 'pasteclean', label: 'Paste Clean', keys: ['⇧', '⌘', 'V'], title: 'Paste it clean.',
+    problem: 'Pasted links carry tracking codes, and pasted text brings its own fonts.',
+    use: 'Paste the link without “?utm_source=…”, or the text as plain text.',
+    points: ['See what is removed before you paste', 'Plain text only in the apps you choose', 'Paste as is is always one click away'] },
   { id: 'organizer', label: 'Organizer', keys: ['⇧', '⌘', 'O'], title: 'A tidy Downloads folder.',
     problem: 'Downloads is a pile of everything.',
     use: 'See where each file would go, untick what should stay, then approve.',
     points: ['Folders by kind, screenshots by month', 'Nothing moves until you approve', 'Every move can be undone'] },
+  { id: 'shots', label: 'Screenshot Inbox', keys: ['⇧', '⌘', 'O'], title: 'Screenshots, filed.',
+    problem: 'The Desktop is full of “Screenshot 2026-…” and the receipt is in there somewhere.',
+    use: 'Sort them into Receipts, Tickets, Errors and Chats in one go.',
+    points: ['Approve per group', 'Possible passwords stay put', 'Every move can be undone'] },
   { id: 'rename', label: 'Smart Rename', keys: ['↩'], title: 'Names that make sense.',
     problem: '“document (2).pdf” tells you nothing.',
     use: 'Smart Rename reads the file and suggests “Lease agreement 2026.pdf”.',
