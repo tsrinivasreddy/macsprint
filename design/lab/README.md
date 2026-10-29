@@ -23,6 +23,7 @@ Ideas we built, tried and took out of the main pages. Nothing here is in use. It
 | **Paste Clean**: paste links without tracking codes and text without formatting, from the Clipboard panel or ⌥⇧⌘V; four placements in the Clipboard | The owner found it too complicated for users and removed the feature | [`paste-clean-in-clipboard.html`](paste-clean-in-clipboard.html) | Site: `pasteclean` in `js/features.js` and `js/demos.js`; flow: `paste-clean` in `F` and the `cleanPreview` part | `33676f2` |
 | **Screenshots tab in Organizer**: a third tab with a banner and a sheet of groups to approve | Screenshot Inbox now opens from the reviewed Screenshots pile into kinds, with no tab or sheet (see `../screenshots-in-organizer.html`) | `design/feature-flows.html` at the commit | `screenshot-inbox` entry in `F` | `73f3331` |
 | **Rename tab in Organizer**: a tab with a banner and a sheet of old and new names | Smart Rename now lives inside the opened pile, with List and Grid (see `../smart-rename-in-organizer.html`, option 1) | `design/feature-flows.html` at the commit | `smart-rename` entry in `F` | `6628a4d` |
+| **Smart Rename with Keep name per file**: new names in the opened pile, a “Keep name” link on each row, List and Grid | Replaced by the New names control (All · Choose · None) chosen in `../smart-rename-controls.html`, option 1 | `design/feature-flows.html` at the commit | `smart-rename` entry in `F` and `orgBody` | `9cb167b` |
 
 ## Still live, not archived
 

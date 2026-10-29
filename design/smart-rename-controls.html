@@ -175,7 +175,7 @@ header p { margin: 0; color: var(--ink-2); }
 .rc .new { color: var(--m-accent); font-weight: 600; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
 .rc .ctl { justify-self: end; display: inline-flex; align-items: center; gap: 6px; font-size: 11px; color: var(--m-text2); }
 .rc .lnk, .lnk { color: var(--m-accent); font-size: 11px; }
-.ck.rn { border-radius: 4px; } .ck.dim { opacity: .45; }
+.ck.rt { border-radius: 4px; } .ck.dim { opacity: .45; }
 .sw.off { background: var(--m-gray); } .sw.off::after { right: auto; left: 2px; }
 .mini { display: inline-flex; padding: 1px; border-radius: 6px; background: var(--m-alt); } .mini span { font-size: 10.5px; padding: 1px 7px; border-radius: 5px; color: var(--m-text2); } .mini span.on { background: var(--m-bg); color: var(--m-text); font-weight: 600; box-shadow: var(--m-raise); }
 .hdc { margin-left: auto; display: inline-flex; gap: 8px; align-items: center; font-size: 11px; color: var(--m-text2); }
@@ -257,7 +257,7 @@ const OPTIONS = [
   { name: 'One control: All · Choose · None', tag: 'My pick', idea: 'A segmented control in the pile header says “New names: All · Choose · None”. All (the default) renames every unclear name in the pile. None moves files with their names as they are. Choose adds a Rename tick to each file, so you pick one by one. Shown here in Choose, with two files unticked.',
     good: ['Whole pile or one by one, in one control with three words', 'Rename ticks appear only when you choose to pick', 'The column headings keep Move and Rename apart'],
     watch: ['Two kinds of tick in Choose; the headings must stay visible', 'Three segments is the most this header should hold'],
-    body: () => page(trayOf(`<span class="hdc">New names ${names('choose')}${lg()}</span>`, hdr('Rename') + rows(MIX, (i, s, c) => c ? '' : `${tick(s === 'new', 'rn')}`)), 27) },
+    body: () => page(trayOf(`<span class="hdc">New names ${names('choose')}${lg()}</span>`, hdr('Rename') + rows(MIX, (i, s, c) => c ? '' : `${tick(s === 'new', 'rt')}`)), 27) },
   { name: 'A switch for the pile, Keep name per file', idea: 'One switch in the pile header: “Clear names for this pile”, on by default. Each file has a “Keep name” link that leaves just that file as it is (it becomes “Use new name” to undo). Turn the switch off and the whole pile keeps its names.',
     good: ['The simplest whole-pile control: on or off', 'Per-file choice is one word on the row', 'No second column of ticks'],
     watch: ['Picking many files one by one means many clicks', 'An on/off switch next to the pile’s Move switch could be mixed up'],
@@ -273,7 +273,7 @@ const OPTIONS = [
   { name: 'Option 1 in Grid', idea: 'The same All · Choose · None control with the pile in Grid. In Choose, each tile has a “Rename” tick under the names. Unticked tiles show the name they keep in plain text, so the change is visible on the tile itself.',
     good: ['The same control in List and Grid', 'Check by looking at the file, then tick'],
     watch: ['Four files across: long names wrap to two lines'],
-    body: () => page(trayOf(`<span class="hdc">New names ${names('choose')}${lg(1)}</span>`, `<div class="tgrid">${FIN.filter((f) => f[1]).map(([o, n], i) => { const k = MIX.filter((x) => x)[i] === 'keep'; return `<div class="tg${k ? ' keep' : ''}"><span class="pv">${ic('doc', 16)}</span><b>${k ? o : n}</b><small>${k ? 'Keeps its name' : `was ${o}`}</small><span class="rr">${tick(!k, 'rn')} Rename</span></div>`; }).join('')}</div>`, '+ 30 more'), 27) },
+    body: () => page(trayOf(`<span class="hdc">New names ${names('choose')}${lg(1)}</span>`, `<div class="tgrid">${FIN.filter((f) => f[1]).map(([o, n], i) => { const k = MIX.filter((x) => x)[i] === 'keep'; return `<div class="tg${k ? ' keep' : ''}"><span class="pv">${ic('doc', 16)}</span><b>${k ? o : n}</b><small>${k ? 'Keeps its name' : `was ${o}`}</small><span class="rr">${tick(!k, 'rt')} Rename</span></div>`; }).join('')}</div>`, '+ 30 more'), 27) },
 ];
 
 let ap = matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
