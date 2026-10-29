@@ -9,10 +9,11 @@ See [`design/README.md`](design/README.md) for the feature flows, design course 
 # Website
 
 A single-page, Apple-style marketing site for **MacSprint AI** ("Your Mac. Smarter, faster, cleaner.").
-Its centerpiece is the **Feature Explorer**: a Mac-style app window where every one of the 10 features
-(from the MacSprint product brief plus the unique ideas from Homy) can be explored from one interface.
+Its centerpiece is the **Feature Explorer**: a Mac-style app window where every one of the 16 features
+can be tried from one interface, plus a Highlights section and feature cards with the problem and use case.
 
-Plain HTML, CSS and JavaScript modules. No build step, no dependencies, no external requests.
+Plain HTML, CSS and JavaScript modules. No framework and no external requests. A small build step
+(`tools/build-site.mjs`) prepares the Cloudflare deploy. Notes for Claude: [`CLAUDE.md`](CLAUDE.md).
 
 ## Run locally
 
@@ -34,26 +35,29 @@ python3 -m http.server 8000
 
 | Path | Purpose |
 |------|---------|
-| `index.html` | Page structure and static copy (privacy, trust, pricing, FAQ, waitlist) |
+| `index.html` | Page structure and static copy (privacy, trust, FAQ, waitlist) |
 | `styles.css` | Design tokens (light/dark), layout, Explorer and demo styles |
-| `js/features.js` | **Single source of truth** for features, releases and problem cards |
+| `js/features.js` | **Single source of truth** for features, stories, problem cards and shortcuts |
 | `js/explorer.js` | Feature Explorer, keyboard navigation, deep links, ⌘K palette |
 | `js/demos.js` | One interactive demo per feature id |
 | `js/sections.js` | Problem cards, shortcuts and waitlist form |
+| `js/highlights.js`, `js/showcase.js`, `js/home.js`, `js/photos.js` | Highlights bento, feature cards, hero window, photo mapping |
+| `worker/`, `wrangler.jsonc`, `tools/` | Cloudflare Worker (waitlist API) and the build scripts |
 | `tests/check.mjs` | Browser checks (Playwright) |
 | `tests/screens.mjs` | Screenshots at desktop/mobile × light/dark |
 
 ### Add or change a feature
 
-1. Edit its entry in `FEATURES` in `js/features.js` (title, points, `release`: `At launch`, `1.1`, `1.2`, `2.0`, or a combined value like `1.2 · 2.0`).
+1. Edit its entry in `FEATURES` in `js/features.js` (title, points) and its card in `STORIES`.
 2. Add or update its demo in `DEMOS` in `js/demos.js` using the same `id`.
+3. Update the counts in `tests/check.mjs`, then run `npm test`.
 
-The sidebar, palette, roadmap and release badges update automatically.
+The explorer sidebar, ⌘K palette and feature cards update automatically.
 
 ## Waitlist and hosting
 
-The site is deployed to Cloudflare as one Worker that also runs the waitlist (D1 storage, email to you
-and the subscriber, and a CSV export for Excel). Setup and use: [docs/DEPLOY.md](docs/DEPLOY.md).
+The site is deployed to Cloudflare as one Worker that also runs the waitlist (D1 storage, an alert to you
+by email and optionally Discord or Telegram, and a CSV export for Excel). Setup and use: [docs/DEPLOY.md](docs/DEPLOY.md).
 
 Opened straight from the repo (or as a claude.ai preview), the form keeps `data-endpoint=""` and honestly
 says it sends nothing; `tools/build-site.mjs` points it at `/api/waitlist` for the live site.
