@@ -158,3 +158,12 @@ out. A dashed tile counts what stays (added this week or open in an app). Click 
 below, like Duplicates: a tick box, the name now, an arrow, and the new name in the accent. The bar says exactly how
 many files move ("Move 181 files"); "Review all…" lists every file. Moves check names first (a taken name gets a
 number, nothing is overwritten), and every move and rename can be undone. When done, each badge turns green with a tick.
+
+## Space Map (decided 2026-10-29)
+
+From the [options page](space-map-options.html): option 1, **Nested blocks**. The Map view in Free Up Space. Every
+folder is a block sized by its space (squarified treemap), in the Home kind colour of its files; mixed and system
+folders are grey, and System is locked ("macOS needs this"). Big blocks show their own biggest folders inside under a
+white veil, so one look goes two levels deep; small folders fold into Other. A path (Macintosh HD › Movies) sits above
+the map. The bar below names the selected block with its size and one insight, plus Show in Finder and Review in Files.
+Nothing is removed from the map itself.
