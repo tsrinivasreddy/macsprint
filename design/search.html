@@ -1,0 +1,341 @@
+<title>MacSprint Search Rows</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Atkinson+Hyperlegible:wght@400;700&family=Schibsted+Grotesk:wght@600;800&display=swap">
+<style>
+/* Layout: one live mock of the chosen design (big preview rows, AI always on, voice), a style picker, then the voice feasibility notes. */
+:root {
+  --paper: #eceff3; --sheet: #ffffff; --ink: #15171c; --ink-2: #4f5562; --rule: rgba(21,23,28,.12);
+  --blue: #3346c8; --blue-soft: rgba(51,70,200,.09); --ok: #1f7a4a; --ok-soft: rgba(31,122,74,.1);
+  --display: "Schibsted Grotesk", "Avenir Next", system-ui, sans-serif;
+  --body: "Atkinson Hyperlegible", "Segoe UI", system-ui, sans-serif;
+  --mac: -apple-system, BlinkMacSystemFont, "SF Pro Text", "Helvetica Neue", "Segoe UI", sans-serif;
+}
+@media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) {
+  --paper: #111317; --sheet: #191c21; --ink: #eceef2; --ink-2: #b0b6c2; --rule: rgba(255,255,255,.1);
+  --blue: #93a3ff; --blue-soft: rgba(147,163,255,.13); --ok: #7fd9a6; --ok-soft: rgba(127,217,166,.12); color-scheme: dark; } }
+:root[data-theme="dark"] {
+  --paper: #111317; --sheet: #191c21; --ink: #eceef2; --ink-2: #b0b6c2; --rule: rgba(255,255,255,.1);
+  --blue: #93a3ff; --blue-soft: rgba(147,163,255,.13); --ok: #7fd9a6; --ok-soft: rgba(127,217,166,.12); color-scheme: dark; }
+
+/* Mock app surfaces, forced light or dark by the mock's own toggle */
+.light { --m-bg: #fff; --m-line: rgba(20,20,30,.1); --m-text: #16161a; --m-text2: #5f6068; --m-text3: #6c6d76; --m-mark: rgba(255,214,10,.5); --m-shadow: 0 14px 36px rgba(20,24,40,.18), 0 0 0 1px rgba(20,20,30,.08); }
+.dark  { --m-bg: #1b1c20; --m-line: rgba(255,255,255,.09); --m-text: #ececf0; --m-text2: #a3a4ad; --m-text3: #92939f; --m-mark: rgba(255,214,10,.38); --m-shadow: 0 14px 36px rgba(0,0,0,.55), 0 0 0 1px rgba(255,255,255,.08); }
+
+/* Field styles. --g1/--g2 band gradient, --pill frosted fill, --fi icon+text, --ph placeholder, --mic, --acc selection */
+.light.s-sunset   { --g1:#f2875a; --g2:#e66b7c; --pill:rgba(255,241,236,.84); --fi:#bf4f2e; --ph:#c4573a; --mic:#d4546a; --acc:#c4502f; }
+.dark.s-sunset    { --g1:#7d3424; --g2:#6e2a40; --pill:rgba(36,18,20,.55);   --fi:#ffb59c; --ph:#f0a48c; --mic:#ff9caf; --acc:#c75a3e; }
+.light.s-ocean    { --g1:#3b8fd8; --g2:#4cc0c4; --pill:rgba(236,247,255,.85); --fi:#1d5c99; --ph:#2a6aa6; --mic:#227f99; --acc:#1f63a6; }
+.dark.s-ocean     { --g1:#163a5c; --g2:#134e56; --pill:rgba(8,22,32,.55);    --fi:#a3d4ff; --ph:#8fc4ef; --mic:#8de2e4; --acc:#2d6fb0; }
+.light.s-meadow   { --g1:#79b54d; --g2:#d6be45; --pill:rgba(246,250,236,.86); --fi:#46731f; --ph:#527f2a; --mic:#7d6e14; --acc:#4a7a22; }
+.dark.s-meadow    { --g1:#2c461c; --g2:#4b4317; --pill:rgba(18,24,10,.55);   --fi:#c6e59f; --ph:#b5d68b; --mic:#ecd77a; --acc:#4f7d2a; }
+.light.s-lavender { --g1:#8d7bef; --g2:#e28acf; --pill:rgba(246,242,255,.86); --fi:#5641c2; --ph:#6450c9; --mic:#a8459a; --acc:#5a46c6; }
+.dark.s-lavender  { --g1:#32275c; --g2:#57284f; --pill:rgba(22,14,36,.55);   --fi:#d2c8ff; --ph:#c0b3fa; --mic:#f3aae5; --acc:#6a55d6; }
+.light.s-graphite { --g1:#cfd2d8; --g2:#aeb2bc; --pill:rgba(255,255,255,.86); --fi:#363940; --ph:#4a4d55; --mic:#363940; --acc:#3d4048; }
+.dark.s-graphite  { --g1:#2b2d32; --g2:#1c1e22; --pill:rgba(255,255,255,.08); --fi:#e6e8ec; --ph:#c9ccd2; --mic:#e6e8ec; --acc:#50545e; }
+
+* { box-sizing: border-box; }
+body { margin: 0; background: var(--paper); color: var(--ink); font: 16px/1.55 var(--body); -webkit-font-smoothing: antialiased;
+  padding-left: max(16px, env(safe-area-inset-left, 0px)); padding-right: max(16px, env(safe-area-inset-right, 0px)); padding-block: 40px 72px; }
+h1, h2, h3 { font-family: var(--display); margin: 0; line-height: 1.12; text-wrap: balance; }
+.wrap { max-width: 1060px; margin: 0 auto; display: grid; gap: 28px; }
+header { display: grid; gap: 10px; max-width: 70ch; }
+header h1 { font-size: clamp(28px, 4vw, 40px); font-weight: 800; }
+header p { margin: 0; color: var(--ink-2); }
+.eyebrow { font: 600 12px/1 var(--display); letter-spacing: .08em; text-transform: uppercase; color: var(--blue); }
+.decisions { display: flex; flex-wrap: wrap; gap: 8px; margin: 4px 0 0; padding: 0; list-style: none; }
+.decisions li { font-size: 14px; background: var(--blue-soft); color: var(--ink); border-radius: 999px; padding: 4px 12px; }
+.decisions b { color: var(--blue); }
+
+.card { background: var(--sheet); border: 1px solid var(--rule); border-radius: 16px; padding: 22px; display: grid; gap: 18px; min-width: 0; }
+.card h2 { font-size: 22px; font-weight: 800; }
+.card > p, .lead { margin: 0; color: var(--ink-2); max-width: 70ch; }
+
+/* Controls */
+.controls { display: flex; flex-wrap: wrap; gap: 14px 24px; align-items: center; }
+.ctl { display: grid; gap: 6px; }
+.ctl > span { font: 600 12px/1 var(--display); letter-spacing: .06em; text-transform: uppercase; color: var(--ink-2); }
+.seg { display: flex; flex-wrap: wrap; gap: 6px; }
+.seg button { font: 600 14px/1 var(--body); color: var(--ink); background: transparent; border: 1px solid var(--rule); border-radius: 999px; padding: 6px 12px 6px 8px; cursor: pointer; display: inline-flex; align-items: center; gap: 7px; }
+.seg button[aria-pressed="true"] { border-color: var(--blue); background: var(--blue-soft); color: var(--blue); }
+.seg button:focus-visible, .mic:focus-visible, .play:focus-visible { outline: 2px solid var(--blue); outline-offset: 2px; }
+.dot { width: 16px; height: 16px; border-radius: 50%; flex: none; box-shadow: inset 0 0 0 1px rgba(0,0,0,.12); }
+.seg.plain button { padding: 6px 12px; }
+.play { font: 600 14px/1 var(--body); color: #fff; background: var(--blue); border: 0; border-radius: 999px; padding: 8px 14px; cursor: pointer; display: inline-flex; gap: 6px; align-items: center; }
+:root[data-theme="dark"] .play { color: #111317; }
+@media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) .play { color: #111317; } }
+
+/* Mock window */
+.win { font: 13px/1.35 var(--mac); color: var(--m-text); background: var(--m-bg); border-radius: 14px; overflow: hidden; box-shadow: var(--m-shadow); max-width: 640px; width: 100%; justify-self: center; }
+.band { background: linear-gradient(110deg, var(--g1), var(--g2)); padding: 12px 14px 18px; display: grid; gap: 12px; transition: background .35s; }
+.lights { display: flex; gap: 6px; }
+.lights i { width: 11px; height: 11px; border-radius: 50%; background: #ff5f57; }
+.lights i:nth-child(2) { background: #febc2e; } .lights i:nth-child(3) { background: #28c840; }
+
+.pill { display: flex; align-items: center; gap: 12px; min-height: 52px; padding: 8px 10px 8px 18px; border-radius: 999px; background: var(--pill);
+  -webkit-backdrop-filter: blur(18px) saturate(1.4); backdrop-filter: blur(18px) saturate(1.4); box-shadow: inset 0 1px 0 rgba(255,255,255,.35), 0 1px 2px rgba(0,0,0,.08); color: var(--fi); }
+.pill .q { flex: 1; min-width: 0; display: flex; align-items: center; gap: 6px; font-size: 19px; white-space: nowrap; overflow: hidden; }
+.caret { width: 2.5px; height: 26px; border-radius: 2px; background: var(--fi); flex: none; animation: blink 1.05s steps(1) infinite; }
+@keyframes blink { 50% { opacity: 0; } }
+.ph { color: var(--ph); opacity: .9; }
+.said { color: var(--fi); overflow: hidden; text-overflow: ellipsis; }
+.said .live { text-decoration: underline dotted; text-decoration-color: color-mix(in srgb, var(--fi) 55%, transparent); text-underline-offset: 6px; text-decoration-thickness: 2px; }
+.tok { font-size: 12px; font-weight: 600; color: var(--fi); background: color-mix(in srgb, var(--fi) 14%, transparent); border-radius: 999px; padding: 3px 9px; flex: none; }
+.mic { flex: none; width: 38px; height: 38px; border-radius: 50%; border: 0; display: grid; place-items: center; cursor: pointer; background: transparent; color: var(--mic); position: relative; }
+.mic:hover { background: color-mix(in srgb, var(--mic) 12%, transparent); }
+.mic.on { background: var(--mic); color: var(--m-bg); }
+.mic.on::after { content: ""; position: absolute; inset: -5px; border-radius: 50%; border: 2px solid var(--mic); animation: ring 1.3s ease-out infinite; }
+@keyframes ring { from { transform: scale(.85); opacity: .9; } to { transform: scale(1.3); opacity: 0; } }
+.wave { display: inline-flex; gap: 3px; align-items: center; height: 22px; flex: none; }
+.wave i { width: 3px; border-radius: 2px; background: var(--mic); height: 6px; animation: wv .9s ease-in-out infinite; }
+.wave i:nth-child(2) { animation-delay: .12s } .wave i:nth-child(3) { animation-delay: .24s } .wave i:nth-child(4) { animation-delay: .36s } .wave i:nth-child(5) { animation-delay: .48s }
+@keyframes wv { 50% { height: 20px; } }
+
+.res { padding: 6px; display: grid; gap: 1px; min-height: 120px; transition: opacity .3s; }
+.res.dim { opacity: .35; }
+.row { display: flex; align-items: center; gap: 12px; padding: 8px; border-radius: 10px; min-width: 0; }
+.row.sel { background: var(--acc); color: #fff; }
+.row .txt { flex: 1; min-width: 0; display: grid; gap: 2px; }
+.row .l1, .row .l2, .row .l3 { white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.row .l1 { font-weight: 600; }
+.row .l2 { font-size: 11.5px; color: var(--m-text3); display: flex; align-items: center; gap: 4px; }
+.row .l3 { font-size: 12px; color: var(--m-text2); }
+.row.sel .l2, .row.sel .l3 { color: rgba(255,255,255,.85); }
+mark { background: var(--m-mark); color: inherit; border-radius: 2px; padding: 0 1px; }
+.row.sel mark { background: #ffd60a; color: #16161a; }
+.foot { display: flex; justify-content: space-between; gap: 10px; flex-wrap: wrap; border-top: 1px solid var(--m-line); margin: 4px 0 0; padding: 8px 8px 4px; font-size: 10.5px; color: var(--m-text3); }
+.foot kbd { font: inherit; font-weight: 600; color: var(--m-text2); }
+.hint { padding: 22px 12px; text-align: center; color: var(--m-text3); font-size: 12.5px; }
+
+.th { flex: none; width: 64px; height: 48px; border-radius: 7px; position: relative; overflow: hidden;
+  background: linear-gradient(hsl(var(--h) 55% 62%) 0 22%, hsl(var(--h) 30% 94%) 22%); box-shadow: 0 0 0 1px rgba(0,0,0,.08); }
+.dark .th { background: linear-gradient(hsl(var(--h) 45% 48%) 0 22%, hsl(var(--h) 14% 26%) 22%); }
+.th::before, .th::after { content: ""; position: absolute; left: 14%; height: 9%; border-radius: 2px; background: hsl(var(--h) 15% 60%); }
+.th::before { top: 40%; width: 64%; } .th::after { top: 64%; width: 44%; }
+.th.warn::after { background: #e5484d; width: 50%; }
+.th .box { position: absolute; left: 10%; top: 33%; width: 72%; height: 22%; border: 1.5px solid #ffd60a; border-radius: 2px; background: rgba(255,214,10,.25); z-index: 1; }
+
+/* Style gallery */
+.gallery { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 280px), 1fr)); gap: 14px; }
+.sw { border: 0; padding: 0; text-align: left; background: none; cursor: pointer; display: grid; gap: 8px; color: var(--ink); font: inherit; }
+.sw .band { border-radius: 14px; padding: 14px; }
+.sw .pill { min-height: 42px; padding-left: 14px; }
+.sw .pill .q { font-size: 15px; }
+.sw .caret { height: 20px; }
+.sw .name { font: 600 15px/1.2 var(--display); display: flex; gap: 8px; align-items: baseline; flex-wrap: wrap; }
+.sw .name small { font: 400 13px/1.3 var(--body); color: var(--ink-2); }
+.sw[aria-pressed="true"] .band { outline: 3px solid var(--blue); outline-offset: 3px; }
+.sw:focus-visible .band { outline: 3px solid var(--blue); outline-offset: 3px; }
+.duo { display: grid; grid-template-columns: 1fr 1fr; gap: 6px; }
+.duo .band { border-radius: 12px; padding: 10px; }
+
+/* Feasibility */
+.verdict { display: flex; gap: 12px; align-items: flex-start; background: var(--ok-soft); border-radius: 12px; padding: 14px 16px; }
+.verdict b { color: var(--ok); }
+.verdict p { margin: 0; }
+.tablewrap { overflow-x: auto; }
+table { border-collapse: collapse; width: 100%; min-width: 620px; font-size: 15px; }
+th, td { text-align: left; vertical-align: top; padding: 10px 12px; border-bottom: 1px solid var(--rule); }
+thead th { font: 600 12px/1.2 var(--display); letter-spacing: .06em; text-transform: uppercase; color: var(--ink-2); }
+td code { font: 13px/1.4 ui-monospace, "SF Mono", Menlo, monospace; background: var(--blue-soft); border-radius: 5px; padding: 1px 5px; }
+.free { font-weight: 700; color: var(--ok); white-space: nowrap; }
+.cols { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 300px), 1fr)); gap: 12px 28px; }
+.cols h3 { font-size: 15px; font-weight: 600; letter-spacing: .04em; text-transform: uppercase; color: var(--ink-2); }
+.cols ul { margin: 6px 0 0; padding-left: 18px; }
+.cols li { margin-bottom: 4px; }
+/* Comparison */
+.pickbox { display: grid; gap: 6px; background: var(--blue-soft); border-radius: 12px; padding: 14px 16px; max-width: 80ch; }
+.pickbox p { margin: 0; }
+.pickbox b { color: var(--blue); }
+.compare { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 320px), 1fr)); gap: 22px; }
+.cmp { display: grid; gap: 10px; align-content: start; min-width: 0; }
+.cmp .win { max-width: none; }
+.cmp .res { min-height: 0; }
+.cmp .pill { min-height: 44px; }
+.cmp .pill .q { font-size: 16px; }
+.cmp .caret { height: 21px; }
+.cmp-head { display: flex; align-items: center; gap: 10px; flex-wrap: wrap; }
+.rank { font: 800 14px/1 var(--display); width: 26px; height: 26px; border-radius: 8px; display: grid; place-items: center; background: var(--rule); color: var(--ink); flex: none; }
+.cmp.top .rank { background: var(--blue); color: var(--sheet); }
+.cmp-head h3 { font-size: 18px; font-weight: 800; }
+.tag { font: 600 12px/1 var(--body); color: var(--blue); background: var(--blue-soft); border-radius: 999px; padding: 4px 9px; }
+.use { margin-left: auto; font: 600 13px/1 var(--body); color: var(--blue); background: transparent; border: 1px solid var(--blue); border-radius: 999px; padding: 5px 11px; cursor: pointer; }
+.use:focus-visible { outline: 2px solid var(--blue); outline-offset: 2px; }
+.cmp ul { margin: 0; padding-left: 18px; font-size: 15px; }
+.cmp li { margin-bottom: 3px; }
+.cmp li.pro::marker { content: "+  "; color: var(--ok); font-weight: 700; }
+.cmp li.con::marker { content: "–  "; color: var(--ink-2); font-weight: 700; }
+@media (prefers-reduced-motion: reduce) { *, *::before, *::after { animation: none !important; transition: none !important; } }
+</style>
+
+<div class="wrap">
+  <header>
+    <span class="eyebrow">MacSprint · search</span>
+    <h1>Big preview search, with voice</h1>
+    <p>The chosen design: large thumbnails with the found words boxed in yellow. Smart search is always on, so the AI switch is gone. Pick a field style below and press the microphone to see voice search.</p>
+    <ul class="decisions">
+      <li><b>Rows:</b> Big preview (C)</li>
+      <li><b>AI:</b> always on, no switch</li>
+      <li><b>Field:</b> frosted pill, 5 styles</li>
+      <li><b>Voice:</b> on, free and on-device</li>
+    </ul>
+  </header>
+
+  <section class="card" aria-labelledby="h-demo">
+    <h2 id="h-demo">Try it</h2>
+    <div class="controls">
+      <div class="ctl"><span>Field style</span><div class="seg" id="styleSeg" role="group" aria-label="Field style"></div></div>
+      <div class="ctl"><span>Mac appearance</span><div class="seg plain" id="modeSeg" role="group" aria-label="Mac appearance">
+        <button type="button" id="mode-light" data-mode="light" aria-pressed="true">Light</button>
+        <button type="button" id="mode-dark" data-mode="dark" aria-pressed="false">Dark</button></div></div>
+      <div class="ctl"><span>Voice</span><button class="play" type="button" id="playBtn">Speak a search</button></div>
+    </div>
+    <div class="win light s-sunset" id="win">
+      <div class="band">
+        <span class="lights" aria-hidden="true"><i></i><i></i><i></i></span>
+        <div class="pill" id="pill"></div>
+      </div>
+      <div class="res" id="res" role="listbox" aria-label="Search results"></div>
+    </div>
+  </section>
+
+  <section class="card" aria-labelledby="h-compare">
+    <h2 id="h-compare">Which style fits MacSprint</h2>
+    <div class="pickbox">
+      <p><b>My pick: Ocean.</b> MacSprint already uses blue for its buttons and selection, so Ocean makes the search field, the selected row and the rest of the app feel like one product. Cool colours also keep the yellow match boxes and red error marks in screenshots easy to spot, and it stays calm when people search many times a day.</p>
+      <p><b>Runner-up: Graphite</b> if you want MacSprint to look as close to built-in macOS as possible.</p>
+    </div>
+    <p>All five use the same search and results. The Mac appearance switch above changes these too.</p>
+    <div class="compare" id="compare"></div>
+  </section>
+
+  <section class="card" aria-labelledby="h-styles">
+    <h2 id="h-styles">Field styles</h2>
+    <p>Sunset follows your reference. The others keep the same shape: a soft gradient behind, a frosted pill, a tinted icon and a microphone on the right. Each one has a light and a dark version. Tap one to use it above.</p>
+    <div class="gallery" id="gallery"></div>
+  </section>
+
+  <section class="card" aria-labelledby="h-ai">
+    <h2 id="h-ai">AI always on</h2>
+    <div class="cols">
+      <div><h3>What changes</h3><ul>
+        <li>The AI switch is removed from the field and from Settings.</li>
+        <li>Every search reads the text in images, the names and what a picture shows.</li>
+        <li>The reason line under each result (Text in image, Name, What it shows) stays, so people can see why a file matched.</li>
+      </ul></div>
+      <div><h3>When AI is not available</h3><ul>
+        <li>On Intel Macs, or when Apple Intelligence is off, search quietly uses names and image text only.</li>
+        <li>The result footer says “Smart search needs Apple Intelligence” once, with no switch to hunt for.</li>
+        <li>Everything runs on the Mac, so there is no privacy reason to need an off switch.</li>
+      </ul></div>
+    </div>
+  </section>
+
+  <section class="card" aria-labelledby="h-voice">
+    <h2 id="h-voice">Is voice free on a Mac?</h2>
+    <div class="verdict"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" style="color:var(--ok);flex:none;margin-top:2px" aria-hidden="true"><path d="M20 6 9 17l-5-5"/></svg>
+      <p><b>Yes.</b> Every piece below is a built-in Apple framework that runs on the Mac. There is no cloud bill and no per-search cost. The only cost is the Apple Developer Program, which you need to sign and ship any Mac app, voice or not.</p></div>
+    <div class="tablewrap"><table>
+      <thead><tr><th>Step</th><th>Apple framework</th><th>Cost</th><th>Needs</th></tr></thead>
+      <tbody>
+        <tr><td>Hear the words</td><td><code>SpeechAnalyzer</code> + <code>SpeechTranscriber</code> (macOS 26). On older macOS: <code>SFSpeechRecognizer</code> with on-device recognition turned on.</td><td class="free">Free</td><td>Microphone and speech permission. Works offline, no time limit.</td></tr>
+        <tr><td>Show live words</td><td>Partial results from the same transcriber, drawn with the dotted underline until they are final</td><td class="free">Free</td><td>Nothing extra</td></tr>
+        <tr><td>Turn a sentence into filters</td><td><code>Foundation Models</code> (Apple's on-device model) turns “screenshots from last month about the login error” into Screenshots + Last month + “login error”</td><td class="free">Free</td><td>macOS 26, Apple silicon, Apple Intelligence on. Fallback: <code>NSDataDetector</code> for dates plus simple word rules.</td></tr>
+        <tr><td>Find words in images</td><td><code>Vision</code> text recognition</td><td class="free">Free</td><td>Nothing extra</td></tr>
+        <tr><td>Start talking</td><td>Microphone button, or hold a shortcut such as ⌥ Space</td><td class="free">Free</td><td>Nothing extra</td></tr>
+      </tbody>
+    </table></div>
+    <div class="cols">
+      <div><h3>Watch for</h3><ul>
+        <li>Turn on on-device recognition. The older server mode sends audio to Apple and has daily limits.</li>
+        <li>Each language model downloads once the first time it is used. Show a small “Getting voice ready” state.</li>
+        <li>Add the microphone and speech recognition reasons to Info.plist, and the audio input entitlement for the App Sandbox.</li>
+      </ul></div>
+      <div><h3>Shipping</h3><ul>
+        <li>Building and testing on your own Mac costs nothing.</li>
+        <li>Shipping to other people needs the Apple Developer Program (US$99 a year) for signing and notarisation, or for the Mac App Store.</li>
+      </ul></div>
+    </div>
+  </section>
+</div>
+
+<script>
+const STYLES = [
+  { id: 'sunset', name: 'Sunset', note: 'your reference', g: ['#f2875a', '#e66b7c'] },
+  { id: 'ocean', name: 'Ocean', note: 'cool and calm', g: ['#3b8fd8', '#4cc0c4'] },
+  { id: 'meadow', name: 'Meadow', note: 'fresh and warm', g: ['#79b54d', '#d6be45'] },
+  { id: 'lavender', name: 'Lavender', note: 'soft and playful', g: ['#8d7bef', '#e28acf'] },
+  { id: 'graphite', name: 'Graphite', note: 'quiet, closest to macOS', g: ['#cfd2d8', '#6f737d'] },
+];
+const ICON = {
+  search: '<circle cx="10.5" cy="10.5" r="6.5"/><path d="m15.5 15.5 5 5"/>',
+  mic: '<rect x="9" y="3" width="6" height="11" rx="3" fill="currentColor" stroke="none"/><path d="M5.5 11a6.5 6.5 0 0 0 13 0M12 17.5V21M8.5 21h7"/>',
+  stop: '<rect x="7" y="7" width="10" height="10" rx="2" fill="currentColor" stroke="none"/>',
+  text: '<path d="M4 8V5.5A1.5 1.5 0 0 1 5.5 4H8M16 4h2.5A1.5 1.5 0 0 1 20 5.5V8M20 16v2.5a1.5 1.5 0 0 1-1.5 1.5H16M8 20H5.5A1.5 1.5 0 0 1 4 18.5V16M8 10h8M8 14h5"/>',
+  name: '<path d="M3.5 18 8 6l4.5 12M5.2 14h5.6M15.5 10.5c.6-.6 1.4-1 2.3-1 1.6 0 2.7 1 2.7 2.6V18M20.5 13.8h-2.6c-1.6 0-2.6.8-2.6 2.1 0 1.2.9 2.1 2.2 2.1 1.6 0 3-1.3 3-3"/>',
+  ai: '<path d="M11 3.5l1.7 4.8 4.8 1.7-4.8 1.7L11 16.5l-1.7-4.8L4.5 10l4.8-1.7zM18 14.5l.8 2.2 2.2.8-2.2.8-.8 2.2-.8-2.2-2.2-.8 2.2-.8z"/>',
+};
+const svg = (k, s = 12, w = 1.9) => `<svg viewBox="0 0 24 24" width="${s}" height="${s}" fill="none" stroke="currentColor" stroke-width="${w}" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">${ICON[k]}</svg>`;
+const REASON = { text: 'Text in image', name: 'Name', ai: 'What it shows' };
+const R = [
+  { file: 'Screenshot 09-18 10.42.png', where: 'Desktop', date: 'Sep 18', h: 228, kind: 'text', snip: '“<mark>Login</mark> failed: token <mark>error</mark> 401”' },
+  { file: 'Screenshot 09-25 08.03.png', where: 'Downloads', date: 'Sep 25', h: 280, kind: 'text', snip: '“Error: unable to <mark>log in</mark>. Try again.”' },
+  { file: '<mark>Login-error</mark> notes.png', where: 'Screenshots', date: 'Sep 9', h: 150, kind: 'name', snip: 'The name contains “login error”' },
+  { file: 'Screenshot 09-02 16.10.png', where: 'Desktop', date: 'Sep 2', h: 8, kind: 'ai', snip: 'A sign-in page with a red warning', warn: true },
+];
+const rows = () => R.map((r, i) => `<div class="row${i === 0 ? ' sel' : ''}" role="option" aria-selected="${i === 0}"><span class="th${r.warn ? ' warn' : ''}" style="--h:${r.h}">${r.kind === 'text' ? '<span class="box"></span>' : ''}</span><span class="txt"><span class="l1">${r.file}</span><span class="l3">${r.snip}</span><span class="l2">${svg(r.kind, 10)} ${REASON[r.kind]} · ${r.where} · ${r.date}</span></span></div>`).join('')
+  + `<div class="foot"><span>4 results · Found on your Mac</span><span><kbd>↩</kbd> Open · <kbd>Space</kbd> Preview · <kbd>⌘C</kbd> Copy text · Hold <kbd>⌥ Space</kbd> to talk</span></div>`;
+
+const win = document.getElementById('win'), pill = document.getElementById('pill'), res = document.getElementById('res');
+let style = 'ocean', mode = 'light', timers = [], listening = false;
+try { const s = localStorage.getItem('ms-style'); if (STYLES.some((x) => x.id === s)) style = s; } catch (e) {}
+
+const micBtn = (on) => `<button class="mic${on ? ' on' : ''}" type="button" id="micBtn" aria-label="${on ? 'Stop listening' : 'Search by voice'}" aria-pressed="${on}">${svg(on ? 'stop' : 'mic', on ? 18 : 24, 2)}</button>`;
+function setPill(inner, on = false) {
+  pill.innerHTML = `${svg('search', 24, 2.4)}<span class="q">${inner}</span>${micBtn(on)}`;
+  document.getElementById('micBtn').onclick = () => (listening ? stop(true) : speak());
+}
+const finished = () => `<span class="tok">Screenshots</span><span class="tok">Last month</span><span class="said">login error</span><span class="caret"></span>`;
+function showDone() { setPill(finished()); res.className = 'res'; res.innerHTML = rows(); }
+
+const WORDS = ['screenshots', 'from', 'last', 'month', 'about', 'the', 'login', 'error'];
+function speak() {
+  stop(false); listening = true;
+  setPill(`<span class="wave" aria-hidden="true"><i></i><i></i><i></i><i></i><i></i></span><span class="ph">Listening…</span>`, true);
+  res.className = 'res dim';
+  WORDS.forEach((w, i) => timers.push(setTimeout(() => {
+    const said = WORDS.slice(0, i + 1);
+    const done = said.slice(0, Math.max(0, i - 1)).join(' '), live = said.slice(Math.max(0, i - 1)).join(' ');
+    setPill(`<span class="wave" aria-hidden="true"><i></i><i></i><i></i><i></i><i></i></span><span class="said">${done} <span class="live">${live}</span></span><span class="caret"></span>`, true);
+  }, 600 + i * 330)));
+  timers.push(setTimeout(() => { listening = false; showDone(); }, 600 + WORDS.length * 330 + 650));
+}
+function stop(finish) { timers.forEach(clearTimeout); timers = []; listening = false; if (finish) showDone(); }
+
+const RANK = [
+  { id: 'ocean', tag: 'Recommended', pro: ['Matches MacSprint’s blue buttons and selection', 'Yellow highlights and red error marks stand out on cool colours', 'Calm enough for dozens of searches a day'], con: ['Less of a statement than Sunset'] },
+  { id: 'graphite', tag: 'Safest', pro: ['Looks native next to Finder and Spotlight', 'Works with any wallpaper and any accent colour'], con: ['Least memorable; can look like plain Spotlight'] },
+  { id: 'lavender', pro: ['Friendly, and hints at the smart search inside'], con: ['Purple-to-pink is a very common “AI app” look', 'Pulls away from MacSprint’s blue'] },
+  { id: 'sunset', tag: 'Your reference', pro: ['The most eye-catching and warm'], con: ['Orange-red sits close to the red error marks in results', 'Clashes with MacSprint’s blue unless the whole app turns warm'] },
+  { id: 'meadow', pro: ['Fresh and unusual for a Mac utility'], con: ['Its yellow end blurs the yellow match boxes', 'Weakest in dark mode'] },
+];
+const cmpRows = () => R.slice(0, 2).map((r, i) => `<div class="row${i === 0 ? ' sel' : ''}"><span class="th${r.warn ? ' warn' : ''}" style="--h:${r.h}">${r.kind === 'text' ? '<span class="box"></span>' : ''}</span><span class="txt"><span class="l1">${r.file}</span><span class="l3">${r.snip}</span><span class="l2">${svg(r.kind, 10)} ${REASON[r.kind]} · ${r.date}</span></span></div>`).join('');
+document.getElementById('compare').innerHTML = RANK.map((x, i) => { const s = STYLES.find((y) => y.id === x.id); return `<div class="cmp${i === 0 ? ' top' : ''}"><div class="cmp-head"><span class="rank">${i + 1}</span><h3>${s.name}</h3>${x.tag ? `<span class="tag">${x.tag}</span>` : ''}<button class="use" type="button" id="use-${s.id}" data-use="${s.id}">Try it</button></div><div class="win cmpwin" data-s="${s.id}"><div class="band"><div class="pill">${svg('search', 20, 2.4)}<span class="q"><span class="tok">Screenshots</span><span class="said">login error</span><span class="caret"></span></span><span class="mic" aria-hidden="true">${svg('mic', 20, 2)}</span></div></div><div class="res">${cmpRows()}</div></div><ul>${x.pro.map((p) => `<li class="pro">${p}</li>`).join('')}${x.con.map((p) => `<li class="con">${p}</li>`).join('')}</ul></div>`; }).join('');
+document.querySelectorAll('[data-use]').forEach((b) => b.onclick = () => { pick(b.dataset.use); document.getElementById('h-demo').scrollIntoView({ behavior: 'smooth', block: 'start' }); });
+function applyStyle() {
+  win.className = `win ${mode} s-${style}`;
+  document.querySelectorAll('.cmpwin').forEach((w) => w.className = `win cmpwin ${mode} s-${w.dataset.s}`);
+  document.querySelectorAll('[data-style]').forEach((b) => b.setAttribute('aria-pressed', b.dataset.style === style));
+  document.querySelectorAll('[data-mode]').forEach((b) => b.setAttribute('aria-pressed', b.dataset.mode === mode));
+}
+function pick(id) { style = id; try { localStorage.setItem('ms-style', id); } catch (e) {} applyStyle(); }
+
+document.getElementById('styleSeg').innerHTML = STYLES.map((s) => `<button type="button" id="seg-${s.id}" data-style="${s.id}" aria-pressed="false"><span class="dot" style="background:linear-gradient(135deg,${s.g[0]},${s.g[1]})"></span>${s.name}</button>`).join('');
+const miniPill = `<div class="pill">${svg('search', 20, 2.4)}<span class="q"><span class="caret"></span><span class="ph">Search</span></span><span class="mic" aria-hidden="true">${svg('mic', 20, 2)}</span></div>`;
+document.getElementById('gallery').innerHTML = STYLES.map((s) => `<button class="sw" type="button" id="sw-${s.id}" data-style="${s.id}" aria-pressed="false"><span class="duo"><span class="light s-${s.id} band">${miniPill}</span><span class="dark s-${s.id} band">${miniPill}</span></span><span class="name">${s.name}<small>${s.note}</small></span></button>`).join('');
+document.querySelectorAll('[data-style]').forEach((b) => b.onclick = () => pick(b.dataset.style));
+document.querySelectorAll('[data-mode]').forEach((b) => b.onclick = () => { mode = b.dataset.mode; applyStyle(); });
+document.getElementById('playBtn').onclick = speak;
+applyStyle(); showDone();
+</script>
