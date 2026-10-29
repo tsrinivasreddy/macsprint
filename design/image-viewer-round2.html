@@ -1,0 +1,175 @@
+<meta charset="utf-8">
+<title>MacSprint Image Viewer Round 2</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Atkinson+Hyperlegible:wght@400;700&family=Schibsted+Grotesk:wght@600;800&display=swap">
+<style>
+/* Layout: a review sheet. Five full-screen styles for the Image Viewer (stage and filmstrip), ranked. Media fills the screen; controls float on dark glass so they read over any photo. */
+:root {
+  --paper: #eceff3; --sheet: #ffffff; --ink: #15171c; --ink-2: #4f5562; --rule: rgba(21,23,28,.12);
+  --blue: #3346c8; --blue-soft: rgba(51,70,200,.09);
+  --display: "Schibsted Grotesk", "Avenir Next", system-ui, sans-serif;
+  --body: "Atkinson Hyperlegible", "Segoe UI", system-ui, sans-serif;
+  --mac: -apple-system, BlinkMacSystemFont, "SF Pro Text", "Helvetica Neue", "Segoe UI", sans-serif;
+}
+@media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) {
+  --paper: #111317; --sheet: #191c21; --ink: #eceef2; --ink-2: #b0b6c2; --rule: rgba(255,255,255,.1);
+  --blue: #93a3ff; --blue-soft: rgba(147,163,255,.13); color-scheme: dark; } }
+:root[data-theme="dark"] {
+  --paper: #111317; --sheet: #191c21; --ink: #eceef2; --ink-2: #b0b6c2; --rule: rgba(255,255,255,.1);
+  --blue: #93a3ff; --blue-soft: rgba(147,163,255,.13); color-scheme: dark; }
+
+/* MacSprint app (design/FOUNDATIONS.md), with the decided kind colours */
+.light { --m-bg: #ffffff; --m-side: #f4f4f7; --m-alt: #f3f4f7; --m-line: rgba(20,20,30,.1); --m-text: #16161a; --m-text2: #5f6068; --m-text3: #6c6d76;
+  --m-accent: #3b5bdb; --m-btn: #2f4bc4; --m-soft: rgba(59,91,219,.1); --m-good: #1f7a4d; --m-gray: #c9ccd4;
+  --m-card: #ffffff; --m-shadow: 0 1px 2px rgba(20,24,40,.06), 0 6px 18px rgba(20,24,40,.07); --m-raise: 0 1px 2px rgba(20,24,40,.1), 0 0 0 1px rgba(20,20,30,.06);
+  --k-app: #2a78d6; --k-video: #eb6834; --k-image: #1baf7a; --k-doc: #eda100; --k-zip: #e87ba4; --k-music: #008300; }
+.dark { --m-bg: #18191d; --m-side: #1f2025; --m-alt: #23242a; --m-line: rgba(255,255,255,.09); --m-text: #ececf0; --m-text2: #a3a4ad; --m-text3: #92939f;
+  --m-accent: #8399ff; --m-btn: #4a63e0; --m-soft: rgba(131,153,255,.14); --m-good: #4cd38a; --m-gray: #4a4c55;
+  --m-card: #212228; --m-shadow: 0 1px 2px rgba(0,0,0,.3), 0 6px 18px rgba(0,0,0,.28); --m-raise: 0 1px 2px rgba(0,0,0,.4), 0 0 0 1px rgba(255,255,255,.06);
+  --k-app: #3987e5; --k-video: #d95926; --k-image: #199e70; --k-doc: #c98500; --k-zip: #d55181; --k-music: #008300; }
+
+* { box-sizing: border-box; }
+body { margin: 0; background: var(--paper); color: var(--ink); font: 16px/1.55 var(--body); -webkit-font-smoothing: antialiased;
+  padding-left: max(16px, env(safe-area-inset-left, 0px)); padding-right: max(16px, env(safe-area-inset-right, 0px)); padding-block: 40px 72px; }
+h1, h2 { font-family: var(--display); margin: 0; line-height: 1.12; text-wrap: balance; }
+.wrap { max-width: 1120px; margin: 0 auto; display: grid; gap: 24px; }
+header { display: grid; gap: 10px; max-width: 74ch; }
+header h1 { font-size: clamp(28px, 4vw, 40px); font-weight: 800; }
+header p { margin: 0; color: var(--ink-2); }
+.eyebrow { font: 600 13px/1 var(--display); color: var(--blue); }
+.bar { display: flex; flex-wrap: wrap; gap: 12px 20px; align-items: center; }
+.seg { display: inline-flex; gap: 4px; padding: 3px; border: 1px solid var(--rule); border-radius: 999px; }
+.seg button { font: 600 14px/1 var(--body); color: var(--ink-2); background: transparent; border: 0; border-radius: 999px; padding: 7px 14px; cursor: pointer; }
+.seg button[aria-pressed="true"] { background: var(--blue); color: var(--sheet); }
+.seg button:focus-visible, .jump a:focus-visible { outline: 2px solid var(--blue); outline-offset: 2px; }
+.jump { display: flex; flex-wrap: wrap; gap: 6px; }
+.jump a { font-size: 14px; color: var(--ink); text-decoration: none; border: 1px solid var(--rule); border-radius: 999px; padding: 4px 11px; display: inline-flex; gap: 6px; align-items: center; }
+.jump a b { color: var(--blue); }
+.pick { background: var(--blue-soft); border-radius: 14px; padding: 14px 18px; font-size: 15px; max-width: 88ch; margin: 0; }
+.pick b { color: var(--blue); }
+
+.opt { background: var(--sheet); border: 1px solid var(--rule); border-radius: 16px; padding: 22px; display: grid; gap: 16px; scroll-margin-top: 16px; min-width: 0; }
+.opt-head { display: flex; align-items: center; gap: 12px; flex-wrap: wrap; }
+.rank { font: 800 15px/1 var(--display); width: 30px; height: 30px; border-radius: 9px; display: grid; place-items: center; background: var(--rule); color: var(--ink); flex: none; }
+.opt.top .rank { background: var(--blue); color: var(--sheet); }
+.opt h2 { font-size: 22px; font-weight: 800; }
+.tag { font: 600 12px/1 var(--body); color: var(--blue); background: var(--blue-soft); border-radius: 999px; padding: 5px 10px; }
+.opt-head p { margin: 0; color: var(--ink-2); flex: 1 1 100%; }
+.scroll { overflow-x: auto; padding: 4px; margin: -4px; }
+.notes { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 300px), 1fr)); gap: 8px 28px; font-size: 15px; }
+.notes h3 { font: 600 14px/1.2 var(--display); color: var(--ink-2); margin: 0; }
+.notes ul { margin: 6px 0 0; padding-left: 18px; }
+.notes li { margin-bottom: 3px; }
+
+/* Full-screen viewer. Controls sit on dark glass in both appearances so white text keeps 4.5:1 over any photo. */
+.scr { position: relative; aspect-ratio: 16 / 10; min-width: 880px; border-radius: 12px; overflow: hidden; background: #000; color: #f2f3f6; font: 13px/1.35 -apple-system, BlinkMacSystemFont, "SF Pro Text", "Helvetica Neue", sans-serif; box-shadow: 0 0 0 1px var(--rule), 0 16px 40px rgba(20,24,40,.14); }
+.media { position: absolute; inset: 0; background: radial-gradient(circle at 70% 30%, hsl(calc(var(--h) + 30) 90% 88% / .9) 0 6%, transparent 20%), linear-gradient(170deg, hsl(var(--h) 55% 66%) 0%, hsl(calc(var(--h) + 25) 48% 48%) 55%, hsl(calc(var(--h) + 50) 40% 22%) 100%); }
+.media.fit { inset: 0 auto 0 50%; width: 37.5%; translate: -50% 0; }
+.media.blur { filter: blur(40px) brightness(.45) saturate(1.3); inset: -60px; }
+.glass { background: rgba(22,23,28,.62); -webkit-backdrop-filter: blur(20px) saturate(1.4); backdrop-filter: blur(20px) saturate(1.4); box-shadow: inset 0 0 0 1px rgba(255,255,255,.12), 0 8px 24px rgba(0,0,0,.3); }
+.pill { position: absolute; display: flex; align-items: center; gap: 10px; border-radius: 14px; padding: 7px 10px; z-index: 2; }
+.pill b { font-size: 13px; } .pill small { font-size: 11px; color: #c4c6cf; }
+.back { display: inline-flex; gap: 3px; align-items: center; font-size: 12.5px; color: #aab8ff; white-space: nowrap; }
+.cnt { font-variant-numeric: tabular-nums; font-size: 12px; color: #d6d8df; white-space: nowrap; }
+.sep { width: 1px; align-self: stretch; background: rgba(255,255,255,.16); }
+.ib { width: 28px; height: 26px; border-radius: 7px; display: grid; place-items: center; color: #e6e8ee; }
+.ib.on { background: rgba(131,153,255,.28); color: #fff; }
+.arrow { position: absolute; top: 50%; translate: 0 -50%; width: 44px; height: 44px; border-radius: 50%; display: grid; place-items: center; color: #fff; z-index: 2; }
+.arrow.l { left: 18px; } .arrow.r { right: 18px; }
+.strip { display: flex; gap: 4px; align-items: center; }
+.strip i { width: 44px; height: 30px; border-radius: 5px; flex: none; opacity: .6; background: linear-gradient(160deg, hsl(var(--h) 55% 64%), hsl(calc(var(--h) + 40) 45% 34%)); }
+.strip i.on { opacity: 1; width: 52px; height: 36px; outline: 2px solid #fff; outline-offset: 1px; }
+.strip i.vid { position: relative; } .strip i.vid::after { content: ""; position: absolute; inset: 0; margin: auto; width: 0; height: 0; border-left: 8px solid #fff; border-block: 5px solid transparent; translate: 2px 0; }
+.track { position: relative; min-width: 280px; height: 4px; border-radius: 2px; background: rgba(255,255,255,.22); flex: 1; }
+.track i { position: absolute; inset: 0 auto 0 0; border-radius: 2px; background: #fff; }
+.track b { position: absolute; top: 50%; width: 12px; height: 12px; border-radius: 50%; background: #fff; translate: -50% -50%; box-shadow: 0 1px 4px rgba(0,0,0,.4); }
+.track em { position: absolute; top: -3px; width: 1px; height: 10px; background: rgba(255,255,255,.4); }
+.days { position: relative; height: 14px; font-size: 10.5px; color: #c4c6cf; } .days span { position: absolute; translate: -50% 0; white-space: nowrap; }
+.hint { position: absolute; z-index: 2; font-size: 11px; color: #e6e8ee; border-radius: 999px; padding: 4px 10px; }
+.play { width: 34px; height: 34px; border-radius: 50%; display: grid; place-items: center; background: #fff; color: #111; flex: none; }
+.time { font-variant-numeric: tabular-nums; font-size: 11.5px; color: #d6d8df; white-space: nowrap; }
+.keys { display: flex; flex-wrap: wrap; gap: 6px 14px; font-size: 12.5px; color: var(--ink-2); }
+.keys span { display: inline-flex; gap: 5px; align-items: center; white-space: nowrap; }
+.keys kbd { font: 600 11.5px/1 var(--body); border-radius: 6px; padding: 3px 6px; min-width: 20px; text-align: center; color: var(--ink); box-shadow: inset 0 -1px 0 var(--rule), 0 0 0 1px var(--rule); }
+.step { font: 600 13px/1 var(--display); color: var(--ink-2); margin: 4px 0 -4px; }
+.screens { display: grid; gap: 14px; }
+</style>
+
+<div class="wrap">
+  <header>
+    <span class="eyebrow">Image Viewer · round 2</span>
+    <h1>Stage and filmstrip, full screen</h1>
+    <p>Option 1 from the first round, now with the photo or video filling the whole screen. The controls float on dark glass over the picture, so they stay readable on bright and dark photos alike, in light and dark mode. Navigation never hides: the ← → buttons stay on screen in every style, the keys always work, and the counter always says where you are. Controls never fade away on a timer; H hides them and H brings them back.</p>
+  </header>
+  <nav class="jump" id="jump" aria-label="Styles"></nav>
+  <p class="pick"><b>My pick: 1, Floating glass.</b> The picture fills the screen edge to edge, with three small glass pieces on top: where you are (top left), tools (top right) and the filmstrip (bottom). Videos use the same layout with a play bar added (style 4), and tall photos fill the sides with a soft blur of themselves (style 5), so 4 and 5 are how 1 handles videos and portraits, not separate choices.</p>
+  <div id="opts" class="wrap" style="gap:20px"></div>
+</div>
+
+<script>
+const P = {
+  house: '<path d="M4 11.5 12 5l8 6.5V19a1 1 0 0 1-1 1h-4.5v-5h-5v5H5a1 1 0 0 1-1-1z"/>',
+  clock: '<circle cx="12" cy="12" r="8"/><path d="M12 7.5V12l3 2"/>',
+  grid: '<rect x="4.5" y="4.5" width="6" height="6" rx="1.5"/><rect x="13.5" y="4.5" width="6" height="6" rx="1.5"/><rect x="4.5" y="13.5" width="6" height="6" rx="1.5"/><rect x="13.5" y="13.5" width="6" height="6" rx="1.5"/>',
+  list: '<path d="M9 7h11M9 12h11M9 17h11"/><circle cx="5" cy="7" r="1"/><circle cx="5" cy="12" r="1"/><circle cx="5" cy="17" r="1"/>',
+  down: '<circle cx="12" cy="12" r="8"/><path d="M12 8v8M8.5 12.5 12 16l3.5-3.5"/>',
+  clip: '<rect x="6" y="5" width="12" height="15" rx="2"/><path d="M9.5 5V4a1 1 0 0 1 1-1h3a1 1 0 0 1 1 1v1M9 11h6M9 14.5h4"/>',
+  trash: '<path d="M5 7h14M10 7V5h4v2M7 7l1 12a1 1 0 0 0 1 1h6a1 1 0 0 0 1-1l1-12"/>',
+  dup: '<rect x="8" y="8" width="11" height="11" rx="2"/><path d="M5 15V6a1 1 0 0 1 1-1h9"/>',
+  folder: '<path d="M4 7.5A1.5 1.5 0 0 1 5.5 6h4l2 2h7A1.5 1.5 0 0 1 20 9.5v8a1.5 1.5 0 0 1-1.5 1.5h-13A1.5 1.5 0 0 1 4 17.5z"/>',
+  search: '<circle cx="10.5" cy="10.5" r="6"/><path d="m15 15 5 5"/>',
+  doc: '<path d="M7 4h7l4 4v11a1 1 0 0 1-1 1H7a1 1 0 0 1-1-1V5a1 1 0 0 1 1-1z"/><path d="M14 4v4h4M9 13h6M9 16h4"/>',
+  music: '<path d="M9 17.5V6l10-2v11.5"/><circle cx="7" cy="17.5" r="2"/><circle cx="17" cy="15.5" r="2"/>',
+  zip: '<path d="M7 4h10a1 1 0 0 1 1 1v14a1 1 0 0 1-1 1H7a1 1 0 0 1-1-1V5a1 1 0 0 1 1-1zM12 4v2M12 8v2M12 12v2"/><rect x="10.5" y="14" width="3" height="3" rx=".8"/>',
+  app: '<rect x="4.5" y="4.5" width="15" height="15" rx="4"/><path d="M9 15l3-6 3 6M10 13h4"/>',
+  photo: '<rect x="4" y="5" width="16" height="14" rx="2"/><circle cx="9" cy="10" r="1.6"/><path d="m5 17 4.5-4.5 3 3 2.5-2.5L19 17"/>',
+  film: '<rect x="4" y="5" width="16" height="14" rx="2"/><path d="M8 5v14M16 5v14M4 9.5h4M16 9.5h4M4 14.5h4M16 14.5h4"/>',
+  pin: '<path d="M9 4h6l-1 5 3 3H7l3-3zM12 12v8"/>',
+  chev: '<path d="m8 10 4 4 4-4"/>',
+};
+const ic = (k, s = 14, w = 1.8) => `<svg viewBox="0 0 24 24" width="${s}" height="${s}" fill="none" stroke="currentColor" stroke-width="${w}" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">${P[k]}</svg>`;
+Object.assign(P, { left: '<path d="m14 6-6 6 6 6"/>', right: '<path d="m10 6 6 6-6 6"/>', zin: '<circle cx="10.5" cy="10.5" r="6"/><path d="m15 15 5 5M8 10.5h5M10.5 8v5"/>', rot: '<path d="M18 9a7 7 0 1 0 1 5"/><path d="M19 4v5h-5"/>', info: '<circle cx="12" cy="12" r="8"/><path d="M12 11v5M12 8h.01"/>', share: '<path d="M12 4v11M8 8l4-4 4 4"/><path d="M6 12v7h12v-7"/>', exit: '<path d="M9 4v5H4M15 4v5h5M9 20v-5H4M15 20v-5h5"/>', playk: '<path d="M8 5.5v13l11-6.5z" fill="currentColor"/>', vol: '<path d="M5 10v4h3l4 3V7L8 10z"/><path d="M15.5 9.5a3.5 3.5 0 0 1 0 5"/>', back10: '<path d="M6 12a6 6 0 1 0 2-4.5"/><path d="M6 4v4h4"/>', fwd10: '<path d="M18 12a6 6 0 1 1-2-4.5"/><path d="M18 4v4h-4"/>' });
+const N = 16, H = (n) => (n * 47 + 190) % 360;
+const glass = (cls, st, html) => `<div class="pill glass ${cls}" style="${st}">${html}</div>`;
+const where = (kind = 'IMG_0016.HEIC', n = N) => glass('', 'left:16px;top:14px', `<span class="back">${ic('left', 12)}Library</span><span class="sep"></span><span style="display:grid;line-height:1.25"><b>${kind}</b><small>Vacation 2026 · Jul 14</small></span><span class="cnt">${n} of 120</span>`);
+const tools = (extra = '') => glass('', 'right:16px;top:14px;gap:2px;padding:5px 6px', `${['zin', 'rot', 'info', 'share', 'trash'].map((k) => `<span class="ib">${ic(k, 15)}</span>`).join('')}${extra}<span class="sep" style="margin:0 4px"></span><span class="ib">${ic('exit', 15)}</span>`);
+const arrows = () => `<span class="arrow l glass">${ic('left', 18, 2.2)}</span><span class="arrow r glass">${ic('right', 18, 2.2)}</span>`;
+const strip = (vidAt = -1, c = N) => `<div class="strip">${Array.from({ length: 13 }, (_, i) => c - 6 + i).map((n) => `<i class="${n === c ? 'on' : ''}${n === vidAt ? ' vid' : ''}" style="--h:${H(n)}"></i>`).join('')}</div>`;
+const filmPill = (vidAt, c) => glass('', 'left:50%;bottom:16px;translate:-50% 0;padding:7px 10px', strip(vidAt, c));
+const keys = (more = []) => `<div class="keys">${[['← →', 'Previous, next'], ['⌘+ ⌘−', 'Zoom'], ['⌘0', 'Fit'], ['⌘I', 'Details'], ['⌘⌫', 'Trash, with Undo'], ['H', 'Hide or show controls'], ['Esc', 'Back'], ...more].map(([k, t]) => `<span>${k.split(' ').map((x) => `<kbd>${x}</kbd>`).join('')}${t}</span>`).join('')}</div>`;
+const scr = (inner, h = N) => `<div class="scr"><div class="media" style="--h:${H(h)}"></div>${inner}</div>`;
+const track = (pct, ticks = []) => `<span class="track"><i style="width:${pct}%"></i>${ticks.map((t) => `<em style="left:${t}%"></em>`).join('')}<b style="left:${pct}%"></b></span>`;
+
+const OPTIONS = [
+  { name: 'Floating glass', tag: 'My pick', idea: 'The picture fills the screen edge to edge. Three small glass pieces float over it: where you are (top left), the tools (top right) and the filmstrip (bottom centre). Round ← → buttons sit at the edges. H hides the glass pieces for a clean look; the ← → buttons stay.',
+    good: ['Nothing frames the picture: it is the whole screen', 'Where you are, what is next and the tools each have one fixed spot', 'Readable over any photo: dark glass, white text', 'Clean view is one key, never a timer'],
+    watch: ['Glass covers a little of the picture’s corners and bottom', 'Glass needs a plain dark fallback when Reduce Transparency is on'],
+    body: () => `<p class="step">With controls</p>${scr(where() + tools() + arrows() + filmPill())}<p class="step">After H: clean view, ← → still on screen</p>${scr(arrows() + `<span class="hint glass" style="left:50%;bottom:16px;translate:-50% 0">H shows controls · 16 of 120</span>`)}${keys()}` },
+  { name: 'One bottom bar', idea: 'The top of the screen stays completely clear. Everything sits in one glass bar along the bottom: back, previous, the counter, next, a short filmstrip and the tools. Your eyes and pointer only ever go to one place.',
+    good: ['The top two thirds of the picture are untouched', 'Previous, counter and next sit side by side', 'One place to learn'],
+    watch: ['The bar is busier than separate pieces', 'Covers the bottom edge of the picture'],
+    body: () => `${scr(glass('', 'left:16px;right:16px;bottom:14px;gap:12px', `<span class="back">${ic('left', 12)}Library</span><span class="sep"></span><span class="ib">${ic('left', 16, 2.2)}</span><span class="cnt" style="min-width:64px;text-align:center"><b>${N}</b> of 120</span><span class="ib">${ic('right', 16, 2.2)}</span><span class="sep"></span><span style="flex:1;display:flex;justify-content:center;overflow:hidden">${strip()}</span><span class="sep"></span>${['zin', 'info', 'share', 'trash'].map((k) => `<span class="ib">${ic(k, 15)}</span>`).join('')}<span class="ib">${ic('exit', 15)}</span>`))}${keys()}` },
+  { name: 'Scrubber line', idea: 'The quietest style. Along the bottom, one thin line is the whole folder, with a dot for where you are and the days marked under it. Drag the dot to move fast; ← → step one by one. ↑ raises the filmstrip when you want to see the neighbours.',
+    good: ['Almost nothing over the picture', 'Shows position in the whole folder, not just the neighbours', 'Fast to move through hundreds of photos'],
+    watch: ['Neighbours are hidden until ↑', 'The line needs the date labels to make sense'],
+    body: () => `<p class="step">Quiet: the scrubber line</p>${scr(where() + tools() + arrows() + glass('', 'left:16px;right:16px;bottom:14px;display:grid;gap:4px;padding:10px 16px 6px', `<div style="display:flex;gap:12px;align-items:center"><span class="cnt">1</span>${track(12.5, [5, 33, 71])}<span class="cnt">120</span></div><div class="days" style="margin:0 22px"><span style="left:2%">Jul 12</span><span style="left:19%">Jul 13</span><span style="left:52%">Jul 14</span><span style="left:86%">Jul 15</span></div>`))}<p class="step">After ↑: the filmstrip rises above the line</p>${scr(where() + tools() + arrows() + glass('', 'left:16px;right:16px;bottom:14px;display:grid;gap:10px;padding:10px 16px 8px;justify-items:center', `${strip()}<div style="display:flex;gap:12px;align-items:center;width:100%"><span class="cnt">1</span>${track(12.5, [5, 33, 71])}<span class="cnt">120</span></div>`))}${keys([['↑ ↓', 'Show or hide filmstrip']])}` },
+  { name: 'Videos, same layout', idea: 'How style 1 shows a video. The same three glass pieces stay put; a play bar joins the bottom above the filmstrip. Videos never start on their own: Space plays. ← → still move between files, so navigation works the same for photos and videos; ⌥← ⌥→ skip 10 seconds.',
+    good: ['One way to move, for photos and videos alike', 'Click to play, never autoplay', 'Videos are marked with ▶ in the filmstrip'],
+    watch: ['People used to ← → seeking a video need ⌥: the key bar says so', 'Captions need room above the play bar'],
+    body: () => `${scr(where('Drone flight.mov') + tools() + arrows() + glass('', 'left:50%;bottom:16px;translate:-50% 0;display:grid;gap:10px;padding:10px 14px', `<div style="display:flex;gap:10px;align-items:center"><span class="ib">${ic('back10', 16)}</span><span class="play">${ic('playk', 14)}</span><span class="ib">${ic('fwd10', 16)}</span><span class="time">1:04</span>${track(33)}<span class="time">3:12</span><span class="ib">${ic('vol', 16)}</span></div><div style="display:flex;justify-content:center">${strip(N)}</div>`), N)}${keys([['Space', 'Play or pause'], ['⌥← ⌥→', 'Skip 10 seconds']])}` },
+  { name: 'Tall photos, full screen', idea: 'How style 1 shows a portrait photo. The photo is never cropped; the empty sides fill with a soft, dark blur of the same photo, so the screen still feels full. ⌘9 fills the screen instead, cropping the top and bottom.',
+    good: ['No black bars, nothing cropped', 'Works for phone photos and screenshots', 'The same glass pieces and arrows as style 1'],
+    watch: ['The blur costs a little GPU; it is drawn once per photo', 'Off with Reduce Transparency: plain black sides'],
+    body: () => `<div class="scr"><div class="media blur" style="--h:${H(21)}"></div><div class="media fit" style="--h:${H(21)}"></div>${where('IMG_0021.HEIC', 21)}${tools()}${arrows()}${filmPill(-1, 21)}</div>${keys([['⌘9', 'Fill the screen']])}` },
+];
+
+document.getElementById('jump').innerHTML = OPTIONS.map((o, i) => `<a href="#option-${i + 1}"><b>${i + 1}</b>${o.name}</a>`).join('');
+document.getElementById('opts').innerHTML = OPTIONS.map((o, i) => `
+  <section class="opt${i === 0 ? ' top' : ''}" id="option-${i + 1}" aria-labelledby="h-${i}">
+    <div class="opt-head"><span class="rank">${i + 1}</span><h2 id="h-${i}">${o.name}</h2>${o.tag ? `<span class="tag">${o.tag}</span>` : ''}<p>${o.idea}</p></div>
+    <div class="scroll"><div class="screens">${o.body()}</div></div>
+    <div class="notes"><div><h3>Good for</h3><ul>${o.good.map((g) => `<li>${g}</li>`).join('')}</ul></div><div><h3>Watch for</h3><ul>${o.watch.map((g) => `<li>${g}</li>`).join('')}</ul></div></div>
+  </section>`).join('');
+</script>
