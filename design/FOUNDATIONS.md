@@ -145,3 +145,6 @@ and date (differences in accent), a Keep / Trash switch under each, and "Identic
 Space opens Quick Look on the focused copy; ↓ closes the group, marks it Reviewed and opens the next. The bottom bar
 trashes copies from reviewed groups only; "Trash all N suggested…" is a separate, plainer button. Keys: ↑↓ groups,
 ←→ copies, K keep, Space Quick Look, Return open or close.
+Scan result (first screen): a sentence with what was found and that nothing has moved; the four scan steps as a
+process strip (not to scale, the last step tinted); "What they are" as one stacked bar in the Home kind colours with a
+legend and sizes; "Where the extra copies are" as bars by folder in one hue (accent for the biggest, grey for the rest).
