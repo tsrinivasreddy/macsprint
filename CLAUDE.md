@@ -163,7 +163,7 @@ Do not refactor the repository during an audit unless explicitly asked.
 - Foundations are final: `design/FOUNDATIONS.md`. Wordmark "Mac S P R I N T" in indigo; accent `#3b5bdb` light / `#8399ff` dark;
   buttons `#2f4bc4` / `#4a63e0`; radii window 14, card 16, button 9, field 9; SF Pro; soft shadows; search centred; filled buttons.
 - Static designs only. No hover motion, fans or animated effects (the owner found them glitchy). Light and dark must both work.
-- Keep the sidebar short: Discover (Home, Recents, Library, Downloaded From, Clipboard) and Clean up (Clean Up, Duplicates, Organizer).
+- Keep the sidebar short: Discover (Home, Recents, Library, Downloaded From, Clipboard) and Clean up (Free Up Space, Duplicates, Organizer). The row was called Clean Up; the designs renamed it so it does not repeat the section name (the website still says Clean Up until it is updated).
   New features live inside an existing place; they do not add sidebar rows. Quick Search, Command Panel, Menu Bar, Finder Tools,
   Screenshot Toolkit and Window Manager were removed on purpose.
 - Removed design experiments are kept in `design/lab/` (see its README). Do not delete them.

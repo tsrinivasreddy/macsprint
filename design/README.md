@@ -16,6 +16,7 @@ Design pages for MacSprint AI. Each file is a standalone page you can open in a 
 | `library-options.html` | Library: five ranked options (Kind tabs, Kind tiles, Shelves, Kinds and folders, Gallery), light or dark | https://claude.ai/artifact/9vpmXz9MFciP3R1x4gBnUy |
 | `downloaded-from-options.html` | Downloaded From: five ranked options (Sources and files, Source cards, Source chips, Share bar, Apps and websites), light or dark | https://claude.ai/artifact/C3K16eHzGGZHQN2zU6s3s9 |
 | `clipboard-options.html` | Clipboard: five ranked quick-paste panels (Search panel, List and preview, Card shelf, At the cursor, Kind tabs), light or dark | https://claude.ai/artifact/3Puu2YF5LPhsdku1fwRs4f |
+| `free-up-space-options.html` | Free Up Space (was Clean Up): five ranked options (Biggest first, Cards, Checklist, Before and after, One at a time), light or dark | https://claude.ai/artifact/D2zd7doFCzMJVPamXBy7Qj |
 | `graphite-glass-sample.html` | The "Graphite & Glass" style sample | https://claude.ai/artifact/4CZ9zh8ntYYZb5cdYpUH32 |
 
 Other references:
