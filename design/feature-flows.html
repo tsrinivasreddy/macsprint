@@ -397,22 +397,28 @@ main { min-width: 0; display: grid; grid-template-columns: minmax(0, 1fr); gap: 
 .selrect small { position: absolute; right: 4px; bottom: -22px; background: rgba(0,0,0,.7); color: #fff; font-size: 10.5px; padding: 1px 6px; border-radius: 4px; }
 .capbar { position: absolute; z-index: 6; left: 50%; bottom: 22px; transform: translateX(-50%); display: flex; gap: 8px; align-items: center; background: var(--m-menu); border-radius: 12px; padding: 6px 8px; box-shadow: 0 16px 40px rgba(0,0,0,.4); }
 
-/* image viewer */
-.mac.viewer { grid-template-columns: minmax(0, 1fr); grid-template-rows: auto 1fr auto; background: #121316; color: #ececf0; }
-.mac.viewer.vinsp { grid-template-columns: minmax(0, 1fr) 200px; }
-.v-top { grid-column: 1 / -1; display: flex; align-items: center; gap: 12px; padding: 8px 12px; background: #1c1d21; font-size: 12px; }
-.v-top .m-lights { padding: 0; }
-.v-top b { font-weight: 600; }
-.v-top .cnt { color: #a3a4ad; font-variant-numeric: tabular-nums; }
-.v-top .tools { margin-left: auto; display: flex; gap: 4px; }
-.v-top .m-ibtn { background: #2a2b31; border-color: #3a3b42; color: #e3e3e8; }
-.v-stage { display: grid; place-items: center; min-height: 0; padding: 16px; }
-.v-stage .ph { width: 72%; aspect-ratio: 4 / 3; max-height: 100%; border-radius: 3px; }
-.v-strip { grid-column: 1; display: flex; gap: 6px; justify-content: center; padding: 10px; background: #1c1d21; }
-.v-strip .ph { width: 46px; height: 34px; border-radius: 4px; opacity: .55; }
-.v-strip .ph.on { opacity: 1; box-shadow: 0 0 0 2px #8399ff; }
-.v-info { grid-row: 2 / span 2; background: #1c1d21; border-left: 1px solid #2a2b31; padding: 14px; font-size: 11px; display: grid; gap: 8px; align-content: start; }
-.v-info dt { color: #92939f; }
+/* image viewer: full screen, controls on dark glass in both appearances (white text stays 4.5:1 over any photo) */
+.mac.fsv { display: block; background: #000; color: #f2f3f6; }
+.fs-media { position: absolute; inset: 0; } .fs-media .ph { width: 100%; height: 100%; border-radius: 0; }
+.fs-gl { position: absolute; z-index: 3; display: flex; align-items: center; gap: 8px; border-radius: 12px; padding: 6px 9px; font-size: 11.5px; background: rgba(22,23,28,.62); -webkit-backdrop-filter: blur(20px) saturate(1.4); backdrop-filter: blur(20px) saturate(1.4); box-shadow: inset 0 0 0 1px rgba(255,255,255,.12), 0 8px 24px rgba(0,0,0,.3); }
+.fs-gl b { font-size: 12px; } .fs-gl small { font-size: 10px; color: #c4c6cf; }
+.fs-back { display: inline-flex; gap: 2px; align-items: center; color: #aab8ff; white-space: nowrap; }
+.fs-sep { width: 1px; align-self: stretch; background: rgba(255,255,255,.16); }
+.fs-cnt { font-variant-numeric: tabular-nums; color: #d6d8df; white-space: nowrap; }
+.fs-ib { width: 24px; height: 22px; border-radius: 6px; display: grid; place-items: center; color: #e6e8ee; }
+.fs-arrow { top: 50%; translate: 0 -50%; width: 38px; height: 38px; padding: 0; border-radius: 50%; justify-content: center; }
+.fs-arrow.l { left: 14px; } .fs-arrow.r { right: 14px; }
+.fs-hint { border-radius: 999px; padding: 4px 10px; font-size: 10.5px; }
+.fs-strip { display: flex; gap: 4px; align-items: center; justify-content: center; }
+.fs-strip .ph { width: 38px; height: 26px; border-radius: 4px; opacity: .6; position: relative; }
+.fs-strip .ph.on { width: 44px; height: 30px; opacity: 1; outline: 2px solid #fff; outline-offset: 1px; }
+.fs-strip .ph.vid::after { content: ""; position: absolute; inset: 0; margin: auto; width: 0; height: 0; border-left: 7px solid #fff; border-block: 4.5px solid transparent; translate: 2px 0; }
+.fs-play { display: flex; gap: 8px; align-items: center; }
+.fs-pb { width: 28px; height: 28px; border-radius: 50%; display: grid; place-items: center; background: #fff; color: #111; flex: none; }
+.fs-time { font-size: 10.5px; color: #d6d8df; font-variant-numeric: tabular-nums; }
+.fs-track { position: relative; flex: 1; min-width: 200px; height: 4px; border-radius: 2px; background: rgba(255,255,255,.22); }
+.fs-track i { position: absolute; inset: 0 auto 0 0; border-radius: 2px; background: #fff; }
+.fs-track b { position: absolute; top: 50%; width: 10px; height: 10px; border-radius: 50%; background: #fff; translate: -50% -50%; }
 
 /* Kind colours: the colour-blind-safe order checked with the dataviz validator, light and dark steps. Fixed per kind, never by rank. */
 .mscope { --k1: #2a78d6; --k2: #eb6834; --k3: #1baf7a; --k4: #eda100; --k5: #e87ba4; --k6: #008300; }
@@ -937,12 +943,18 @@ const C = {
     sample: () => `<div class="m-insp" style="width:170px;border:1px solid var(--m-line);border-radius:10px"><i class="ph" style="--h:330"></i><b>Party.mov</b><dl class="m-dl"><dt>Size</dt><dd>1.3 GB</dd><dt>From</dt><dd>Messages</dd></dl></div>` },
   ctxMenu: { name: 'Context menu', swift: '.contextMenu {\n  Button("Open", systemImage: "arrow.up.right") { … }\n  Button("Show in Finder", systemImage: "folder") { … }\n  Divider()\n  Button("Move to Trash", systemImage: "trash", role: .destructive) { … }\n}', sf: ['arrow.up.right', 'folder', 'doc.on.doc', 'trash'], size: 'Rows ~22 pt; 180–240 pt wide', type: '12–13 pt; shortcuts in grey on the right', color: 'Translucent menu; hovered row accent', shape: '9–10 pt corners, separators', states: ['Row hover', 'Disabled row', 'Submenu', 'Separator'],
     sample: () => `<div class="m-menu" style="position:static"><div>Open<small>⌘O</small></div><div class="hl">Show in Finder<small>⌥⌘R</small></div><hr><div>Move to Trash<small>⌘⌫</small></div></div>` },
-  viewerStage: { name: 'Image stage', swift: 'Image(nsImage: current)\n  .resizable()\n  .scaledToFit()\n  .onKeyPress(.rightArrow) { next(); return .handled }', sf: [], size: 'Fills the window; image fitted', type: '—', color: 'Near-black backdrop so photos stand out', shape: '—', states: ['Fit', 'Actual size', 'Zoomed', 'Loading'],
-    sample: () => `<div style="background:#121316;padding:12px 30px;border-radius:8px"><i class="ph" style="--h:20;display:block;width:110px;aspect-ratio:4/3"></i></div>` },
-  counter: { name: 'Position counter', swift: 'Text("\\(index) of \\(count)")\n  .monospacedDigit()\n  .foregroundStyle(.secondary)', sf: [], size: '—', type: '12 pt, monospaced digits so it does not jiggle', color: 'Secondary grey', shape: '—', states: ['First', 'Middle', 'Last'],
+  viewerStage: { name: 'Full-screen stage', swift: 'ZStack {\n  Color.black\n  MediaView(item: current)          // Image or AVPlayerLayer, fitted\n    .scaledToFit()\n}\n.ignoresSafeArea()\n.onKeyPress(.rightArrow) { next(); return .handled }\n.onKeyPress(.leftArrow) { previous(); return .handled }\n// full screen with the window’s own full-screen mode; neighbours preloaded', sf: [], size: 'The whole screen; picture fitted, never cropped (⌘9 fills)', type: '—', color: 'Black behind the picture', shape: '—', states: ['Fit', 'Fill (⌘9)', 'Zoomed', 'Loading (previous picture stays until the next is ready)'],
+    sample: () => `<div class="mac fsv" style="height:160px;width:260px"><div class="fs-media"><i class="ph" style="--h:300"></i></div></div>` },
+  glassBar: { name: 'Glass piece', swift: 'HStack(spacing: 8) { … }\n  .padding(.horizontal, 10).padding(.vertical, 6)\n  .background(.ultraThinMaterial.opacity(0.9), in: .rect(cornerRadius: 12))\n  .environment(\\.colorScheme, .dark)   // dark glass over any picture\n// macOS 26: .glassEffect(.regular.tint(.black.opacity(0.4)))\n// Reduce Transparency: solid #1c1d21', sf: ['chevron.left'], size: 'Height ~40 pt; sits 12 pt from the edges', type: 'Name 12 pt semibold; folder and date 10 pt; white', color: 'Dark glass, hairline white border', shape: '12 pt corners', states: ['Shown', 'Hidden (H or the eye button)', 'Reduce Transparency (solid)'],
+    sample: () => `<div class="mac fsv" style="height:70px;width:340px"><div class="fs-media"><i class="ph" style="--h:220"></i></div><div class="fs-gl" style="left:12px;top:12px"><span class="fs-back">${ic('chevron.left', 11)}Library</span><span class="fs-sep"></span><span style="display:grid;line-height:1.25"><b>IMG_0015.HEIC</b><small>Vacation 2026 · Jul 14</small></span><span class="fs-cnt">15 of 120</span></div></div>` },
+  navArrow: { name: 'Previous / next button', swift: 'Button { next() } label: {\n  Image(systemName: "chevron.right").font(.title3.weight(.semibold))\n    .frame(width: 38, height: 38)\n}\n.buttonStyle(.plain)\n.background(.ultraThinMaterial, in: .circle)\n.help("Next (→)")\n// always on screen, even in clean view', sf: ['chevron.left', 'chevron.right'], size: '38 pt circle, 14 pt from the side, centred vertically', type: '—', color: 'Dark glass, white chevron', shape: 'Circle', states: ['Default', 'Pressed', 'Disabled at the first or last file'],
+    sample: () => `<div class="mac fsv" style="height:70px;width:120px"><div class="fs-media"><i class="ph" style="--h:120"></i></div><span class="fs-gl fs-arrow l">${ic('chevron.left', 15)}</span><span class="fs-gl fs-arrow r">${ic('chevron.right', 15)}</span></div>` },
+  playBar: { name: 'Play bar', swift: 'HStack(spacing: 8) {\n  Button("Back 10 s", systemImage: "gobackward.10") { skip(-10) }\n  Button(isPlaying ? "Pause" : "Play", systemImage: isPlaying ? "pause.fill" : "play.fill") { toggle() }\n  Button("Forward 10 s", systemImage: "goforward.10") { skip(10) }\n  Text(time); Slider(value: $position); Text(duration)\n  VolumeButton()\n}\n.labelStyle(.iconOnly)\n// Space plays; ⌥← ⌥→ skip 10 s; ← → stay for files', sf: ['play.fill', 'pause.fill', 'gobackward.10', 'goforward.10', 'speaker.wave.2'], size: 'Play button 28 pt; track at least 200 pt', type: 'Times 10.5 pt, monospaced digits', color: 'White on dark glass', shape: 'Joins the filmstrip piece', states: ['Paused (never autoplays)', 'Playing', 'Ended', 'Cannot play this format'],
+    sample: () => `<div class="mac fsv" style="height:64px;width:420px"><div class="fs-media"><i class="ph" style="--h:260"></i></div><div class="fs-gl" style="left:12px;right:12px;top:12px">${fsViewer(16, { video: 1, playing: 1 }).match(/<div class="fs-play"[\s\S]*?<\/div>/)[0]}</div></div>` },
+  counter: { name: 'Position counter', swift: 'Text("\\(index) of \\(count)")\n  .monospacedDigit()\n  .foregroundStyle(.secondary)', sf: [], size: '—', type: '11.5 pt, monospaced digits so it does not jiggle', color: 'Light grey on dark glass', shape: '—', states: ['First', 'Middle', 'Last'],
     sample: () => `<span style="font-variant-numeric:tabular-nums;color:var(--m-text2)">15 of 120</span>` },
-  filmstrip: { name: 'Filmstrip', swift: 'ScrollView(.horizontal) {\n  LazyHStack(spacing: 6) {\n    ForEach(photos) { Thumb($0) }\n  }\n}', sf: [], size: 'Thumbnails 46 × 34 pt; 6 pt gap', type: '—', color: 'Current: 2 pt accent ring, others 55% opacity', shape: '4 pt corners', states: ['Current', 'Hover', 'Scrolling'],
-    sample: () => `<div class="v-strip" style="border-radius:8px">${[10, 40, 70, 100, 130].map((h, i) => `<i class="ph${i === 2 ? ' on' : ''}" style="--h:${h}"></i>`).join('')}</div>` },
+  filmstrip: { name: 'Filmstrip', swift: 'ScrollView(.horizontal) {\n  LazyHStack(spacing: 6) {\n    ForEach(photos) { Thumb($0) }\n  }\n}', sf: [], size: 'Thumbnails 38 × 26 pt, current 44 × 30 pt; 4 pt gap', type: '—', color: 'Current: white ring, others 60% opacity; videos marked ▶', shape: '4 pt corners, in a glass piece', states: ['Current', 'Video', 'Loading (grey)', 'Moves with ← →'],
+    sample: () => `<div class="mac fsv" style="height:60px;width:300px"><div class="fs-media"><i class="ph" style="--h:200"></i></div><div class="fs-gl" style="left:50%;top:10px;translate:-50% 0"><div class="fs-strip">${[10, 40, 70, 100, 130].map((h, i) => `<i class="ph${i === 2 ? ' on' : ''}${i === 3 ? ' vid' : ''}" style="--h:${h}"></i>`).join('')}</div></div></div>` },
   chip: { name: 'Filter chip', swift: 'Text("PDF")\n  .font(.caption.weight(.semibold))\n  .foregroundStyle(.tint)\n  .padding(.horizontal, 9)\n  .background(.tint.opacity(0.12), in: .capsule)', sf: ['sparkles'], size: 'Height 18–22 pt', type: '10.5–12 pt semibold', color: 'Accent text on 12% accent', shape: 'Capsule', states: ['AI-understood', 'Removable (×)', 'Hover'],
     sample: () => `<div style="display:flex;gap:6px;align-items:center;font-size:11px;color:var(--m-text2)">${ic('sparkles', 12)}Understood as <span class="m-kchip">Screenshot</span><span class="m-kchip">“login error”</span><span class="m-kchip">Last month</span></div>` },
   popup: { name: 'Pop-up button', swift: 'Picker("Kind", selection: $kind) { … }\n  .pickerStyle(.menu)', sf: ['chevron.down'], size: 'Height 20–24 pt', type: '10.5–12 pt; value semibold', color: 'Bordered, neutral', shape: '6 pt corners', states: ['Closed', 'Open (menu)', 'Changed value'],
@@ -1160,17 +1172,19 @@ const F = [
         comps: ['ctxMenu', 'inspector'], screen: () => win({ sel: 'library', body: libBody('Videos', 'Wedding.mov'), insp: LINSP, over: `<div class="m-menu" data-c="ctxMenu" style="left:330px;top:210px"><div>Open<small>⌘O</small></div><div>Quick Look<small>Space</small></div><div class="hl">Show in Finder<small>⌥⌘R</small></div><div>Copy Path<small>⌥⌘C</small></div><hr><div>Move to Trash<small>⌘⌫</small></div></div>` }) },
     ] },
   { id: 'viewer', group: 'Discover', icon: 'photo', name: 'Image Viewer',
-    what: 'Open one photo and step through every photo in the same folder with the arrow keys.',
+    what: 'Open one photo or video and step through everything in the same folder with the arrow keys, full screen, with the controls floating on glass.',
     when: 'Browsing a folder of photos or screenshots.',
     steps: [
       { t: 'Open a photo', do: 'In Finder, click “Open With MacSprint”.', see: 'A Finder folder with one photo selected and its menu open.', why: 'MacSprint registers as a viewer for JPEG, PNG, HEIC and WebP, so it appears in Open With.',
         comps: ['ctxMenu'], screen: () => `<div class="desk">${menubar()}${awin('left:40px;top:44px;width:560px;height:430px', 'Vacation 2026', `<div style="display:grid;gap:2px">${['IMG_0013.HEIC', 'IMG_0014.HEIC', 'IMG_0015.HEIC', 'IMG_0016.HEIC', 'IMG_0017.HEIC'].map((n, i) => `<div class="m-tr${i === 2 ? ' sel' : ''}" style="grid-template-columns:24px 1fr 70px"><i class="ph" style="--h:${i * 47}"></i><span>${n}</span><span class="r mut">2.4 MB</span></div>`).join('')}</div>`)}<div class="m-menu" data-c="ctxMenu" style="left:250px;top:160px"><div>Open</div><div class="hl" data-hot>Open With MacSprint</div><div>Quick Look</div><hr><div>Copy</div></div></div>` },
-      { t: 'Browse with →', do: 'Click the → button (or press the right arrow key).', see: 'The photo fills the window; the counter says 15 of 120; a filmstrip shows neighbours.', why: 'A dark backdrop lets photos stand out. The counter uses monospaced digits so it does not wobble as numbers change.',
-        comps: ['viewerStage', 'counter', 'iconBtn', 'filmstrip'], screen: () => viewer(15, { hotNext: true }) },
-      { t: 'Next photo', do: 'Click the ⓘ button to see the details.', see: '16 of 120. The filmstrip highlight moves along.', why: 'Nearby photos are loaded in advance so the next one appears instantly.',
-        comps: ['counter', 'filmstrip', 'iconBtn'], screen: () => viewer(16, { hotInfo: true }) },
-      { t: 'See details', do: 'Done. This is the end of the flow.', see: 'An info panel with dimensions, format, size and camera.', why: 'Details stay out of the way until asked for; the photo keeps most of the space.',
-        comps: ['inspector', 'viewerStage'], screen: () => viewer(16, { info: true }) },
+      { t: 'Full screen, photo first', do: 'Click → (or press the right arrow key).', see: 'The photo fills the whole screen, edge to edge. Three small glass pieces float over it: where you are and “15 of 120” (top left), the tools (top right) and the filmstrip (bottom). Round ← → buttons sit at the edges.', why: 'Nothing frames the picture. Each control has one fixed spot, so it is found once and then ignored. Dark glass with white text stays readable over bright and dark photos alike, in light and dark mode.',
+        comps: ['viewerStage', 'glassBar', 'counter', 'navArrow', 'filmstrip'], screen: () => fsViewer(15, { hot: 'next' }) },
+      { t: 'A video, same layout', do: 'Click ▶ (or press Space).', see: '16 of 120 is a video. The same glass pieces stay put; a play bar joins the filmstrip at the bottom. The video waits: it does not play on its own. Videos are marked ▶ in the filmstrip.', why: '← → always move between files, for photos and videos alike, so navigation never changes under you. ⌥← ⌥→ skip 10 seconds inside a video. Click to play, never autoplay.',
+        comps: ['playBar', 'filmstrip', 'counter'], screen: () => fsViewer(16, { video: 1, hot: 'play' }) },
+      { t: 'Hide the controls', do: 'Click the eye (or press H).', see: 'The video plays. The eye button in the tools hides every glass piece.', why: 'Controls never fade away on a timer, which would feel glitchy and leave people hunting for them. Hiding is a choice: one key or one click, and the same again to bring them back.',
+        comps: ['iconBtn', 'playBar'], screen: () => fsViewer(16, { video: 1, playing: 1, hot: 'hide' }) },
+      { t: 'Clean view', do: 'Done. This is the end of the flow.', see: 'Only the picture, the ← → buttons and a small hint: “H shows controls · 16 of 120”.', why: 'Navigation is never hidden: the arrows stay on screen and every key keeps working, so the clean view costs nothing in getting around.',
+        comps: ['viewerStage', 'navArrow'], screen: () => fsViewer(16, { video: 1, playing: 1, clean: 1 }) },
     ] },
   { id: 'search', group: 'Discover', icon: 'magnifyingglass', name: 'Search',
     what: 'One panel to find files and ask about them, from any screen: file names, what a photo shows, the words inside screenshots, and questions like “When does my lease end?”. Type it or say it. Smart search is always on.',
@@ -1336,9 +1350,19 @@ const F = [
 ];
 
 /* screen helpers that need data */
-function viewer(n, { hotNext, hotInfo, info } = {}) {
-  const hue = (i) => (i * 47) % 360;
-  return `<div class="mac viewer${info ? ' vinsp' : ''}" data-c="window"><div class="v-top"><div class="m-lights"><i></i><i></i><i></i></div><b>IMG_${String(n).padStart(4, '0')}.HEIC</b><span class="cnt" data-c="counter">${n} of 120</span><div class="tools" data-c="iconBtn"><span class="m-ibtn">${ic('chevron.left', 13)}</span><span class="m-ibtn" ${hotNext ? 'data-hot' : ''}>${ic('chevron.right', 13)}</span><span class="m-ibtn">${ic('plus.magnifyingglass', 13)}</span><span class="m-ibtn">${ic('rotate.right', 13)}</span><span class="m-ibtn" ${hotInfo ? 'data-hot' : ''} style="${info ? 'color:#8399ff' : ''}">${ic('info.circle', 13)}</span></div></div><div class="v-stage" data-c="viewerStage"><i class="ph" style="--h:${hue(n)}"></i></div>${info ? `<div class="v-info" data-c="inspector"><b>Details</b><dl class="m-dl"><dt>Size</dt><dd>4032 × 3024</dd><dt>Format</dt><dd>HEIC</dd><dt>File</dt><dd>2.7 MB</dd><dt>Camera</dt><dd>iPhone 16</dd><dt>Taken</dt><dd>Jul 14, 2026</dd><dt>Folder</dt><dd>Vacation 2026</dd></dl></div>` : ''}<div class="v-strip" data-c="filmstrip">${Array.from({ length: 9 }, (_, k) => n - 4 + k).map((i) => `<i class="ph${i === n ? ' on' : ''}" style="--h:${hue(i)}"></i>`).join('')}</div></div>`;
+/* Image Viewer (decided in design/image-viewer-round2.html: Floating glass, full screen; videos use the same layout with a play bar) */
+Object.assign(P, { 'square.and.arrow.up': '<path d="M12 4v11M8 8l4-4 4 4"/><path d="M6 12v7h12v-7"/>', 'speaker.wave.2': '<path d="M5 10v4h3l4 3V7L8 10z"/><path d="M15.5 9.5a3.5 3.5 0 0 1 0 5"/>', 'gobackward.10': '<path d="M6 12a6 6 0 1 0 2-4.5"/><path d="M6 4v4h4"/>', 'goforward.10': '<path d="M18 12a6 6 0 1 1-2-4.5"/><path d="M18 4v4h-4"/>', 'arrow.down.right.and.arrow.up.left': '<path d="M9 4v5H4M15 4v5h5M9 20v-5H4M15 20v-5h5"/>' });
+const VIDEO_AT = 16;
+function fsViewer(n, { hot, video, playing, clean } = {}) {
+  const hue = (i) => (i * 47 + 190) % 360;
+  const name = video ? 'Drone flight.mov' : `IMG_${String(n).padStart(4, '0')}.HEIC`;
+  const strip = `<div class="fs-strip" data-c="filmstrip">${Array.from({ length: 11 }, (_, k) => n - 5 + k).map((i) => `<i class="ph${i === n ? ' on' : ''}${i === VIDEO_AT ? ' vid' : ''}" style="--h:${hue(i)}"></i>`).join('')}</div>`;
+  const play = `<div class="fs-play" data-c="playBar"><span class="fs-ib">${ic('gobackward.10', 13)}</span><span class="fs-pb" ${hot === 'play' ? 'data-hot' : ''}>${ic(playing ? 'pause.fill' : 'play.fill', 11)}</span><span class="fs-ib">${ic('goforward.10', 13)}</span><span class="fs-time">${playing ? '1:04' : '0:00'}</span><span class="fs-track"><i style="width:${playing ? 33 : 0}%"></i><b style="left:${playing ? 33 : 0}%"></b></span><span class="fs-time">3:12</span><span class="fs-ib">${ic('speaker.wave.2', 13)}</span></div>`;
+  const chrome = clean ? `<span class="fs-gl fs-hint" style="left:50%;bottom:12px;translate:-50% 0">H shows controls · ${n} of 120</span>`
+    : `<div class="fs-gl" style="left:12px;top:12px" data-c="glassBar"><span class="fs-back">${ic('chevron.left', 11)}Library</span><span class="fs-sep"></span><span style="display:grid;line-height:1.25"><b>${name}</b><small>Vacation 2026 · Jul 14</small></span><span class="fs-cnt" data-c="counter">${n} of 120</span></div>`
+    + `<div class="fs-gl" style="right:12px;top:12px;gap:1px;padding:4px 5px">${['plus.magnifyingglass', 'rotate.right', 'info.circle', 'square.and.arrow.up', 'trash'].map((k) => `<span class="fs-ib">${ic(k, 13)}</span>`).join('')}<span class="fs-sep" style="margin:0 3px"></span><span class="fs-ib" data-c="iconBtn" ${hot === 'hide' ? 'data-hot' : ''}>${ic('eye.slash', 13)}</span><span class="fs-ib">${ic('arrow.down.right.and.arrow.up.left', 13)}</span></div>`
+    + `<div class="fs-gl" style="left:50%;bottom:12px;translate:-50% 0;${video ? 'display:grid;gap:8px;padding:8px 10px' : ''}">${video ? play : ''}${strip}</div>`;
+  return `<div class="mac fsv" data-c="window"><div class="fs-media" data-c="viewerStage"><i class="ph" style="--h:${hue(n)}"></i></div>${chrome}<span class="fs-gl fs-arrow l">${ic('chevron.left', 15)}</span><span class="fs-gl fs-arrow r" data-c="navArrow" ${hot === 'next' ? 'data-hot' : ''}>${ic('chevron.right', 15)}</span></div>`;
 }
 /* Free Up Space (decided in design/free-up-space-round2.html: Show the files by default, Running total as a second view, Map as the third) */
 // [title, reason, files, size GB, icon, biggest files: [hue or icon, size]]
@@ -1490,7 +1514,7 @@ function shotEditor(blurred) {
 
 /* =================== render =================== */
 // Review status. The owner says when a feature is final; only then change it here.
-const STATUS = { search: 'review', home: 'review', recents: 'review', library: 'review', 'downloaded-from': 'review', clipboard: 'review', cleanup: 'review', duplicates: 'review', organizer: 'review', 'space-map': 'review', explain: 'review' };   // draft | review | final
+const STATUS = { search: 'review', home: 'review', recents: 'review', library: 'review', 'downloaded-from': 'review', clipboard: 'review', cleanup: 'review', duplicates: 'review', organizer: 'review', 'space-map': 'review', explain: 'review', viewer: 'review' };   // draft | review | final
 const ST = { draft: 'Draft', review: 'In review', final: 'Final' };
 const st = (f) => STATUS[f.id] || 'draft';
 const rail = document.getElementById('rail'), main = document.getElementById('main'), sel = document.getElementById('feat-select');

@@ -63,7 +63,7 @@ export const FEATURES = [
     headline: 'Open one photo. Press → for the next.',
     points: [
       'Opening a single image loads every supported image in its folder.',
-      'Filmstrip, grid view, fullscreen, zoom, pan and rotate.',
+      'Full screen with a filmstrip, zoom, pan and rotate. Videos play in the same view.',
       'JPEG, PNG, HEIC and WebP; smooth even with thousands of files.',
       'Copy image, name or path. Reveal in Finder. Move to Trash after confirming.',
     ],
@@ -276,7 +276,7 @@ export const STORIES = [
   { id: 'images', label: 'Image Viewer', keys: ['←', '→'], title: 'Open one photo. Press → for the next.',
     problem: 'Preview shows only the photo you opened.',
     use: 'Open any photo and step through the whole folder with the arrow keys.',
-    points: ['Zoom, rotate and full screen', 'Filmstrip and grid view', 'JPEG, PNG, HEIC and WebP'] },
+    points: ['Full screen, zoom and rotate', 'Filmstrip for photos and videos', 'JPEG, PNG, HEIC and WebP'] },
   { id: 'clipboard', label: 'Clipboard', keys: ['⇧', '⌘', 'V'], title: 'Never lose something you copied.',
     problem: 'Copying something new erases what you copied before.',
     use: 'Press ⇧⌘V, find the address from an hour ago and click Copy.',

@@ -19,6 +19,7 @@ Ideas we built, tried and took out of the main pages. Nothing here is in use. It
 | **Six search result rows**: Reason chip, Snippet first, Big preview, Grouped by why, Top hit, Compact with badge, each in light and dark | Big preview (C) was chosen; see `../search.html` | [`search-row-options.html`](search-row-options.html) | Each option is one entry in `OPTIONS` (a `rows()` function) | not committed before |
 | **Separate Search and Ask Your Files flows**: Search with a grid of result cards and an AI on/off switch; Ask Your Files as its own flow | Ask lives in the Search field; Search uses the Graphite field, big preview rows and voice; smart search is always on | `design/feature-flows.html` at the commit | `search` and `ask-files` entries in `F` | `16e9712` |
 | **Standalone What’s This? flow**: a System Data table with sheets, and a right-click card on Large files | What’s This? now lives inside the reviewed Free Up Space: a System Data line under the groups and answers under rows in the Review table (see `../whats-this-in-free-up-space.html`) | `design/feature-flows.html` at the commit | `explain` entry in `F` | `4250450` |
+| **Windowed Image Viewer flow**: a dark window with a top bar, a filmstrip below and an info panel | Replaced by the full-screen Floating glass viewer with videos in the same layout (see `../image-viewer-round2.html`) | `design/feature-flows.html` at the commit | `viewer` entry in `F` and `viewer()` | `f6a595d` |
 
 ## Still live, not archived
 
