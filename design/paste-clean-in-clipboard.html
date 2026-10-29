@@ -1,0 +1,241 @@
+<meta charset="utf-8">
+<title>Paste Clean in Clipboard</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Atkinson+Hyperlegible:wght@400;700&family=Schibsted+Grotesk:wght@600;800&display=swap">
+<style>
+/* Layout: a review sheet. The reviewed Clipboard panel, unchanged, with Paste Clean placed in one spot per option, ranked. One switch sets light or dark for every window. */
+:root {
+  --paper: #eceff3; --sheet: #ffffff; --ink: #15171c; --ink-2: #4f5562; --rule: rgba(21,23,28,.12);
+  --blue: #3346c8; --blue-soft: rgba(51,70,200,.09);
+  --display: "Schibsted Grotesk", "Avenir Next", system-ui, sans-serif;
+  --body: "Atkinson Hyperlegible", "Segoe UI", system-ui, sans-serif;
+  --mac: -apple-system, BlinkMacSystemFont, "SF Pro Text", "Helvetica Neue", "Segoe UI", sans-serif;
+}
+@media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) {
+  --paper: #111317; --sheet: #191c21; --ink: #eceef2; --ink-2: #b0b6c2; --rule: rgba(255,255,255,.1);
+  --blue: #93a3ff; --blue-soft: rgba(147,163,255,.13); color-scheme: dark; } }
+:root[data-theme="dark"] {
+  --paper: #111317; --sheet: #191c21; --ink: #eceef2; --ink-2: #b0b6c2; --rule: rgba(255,255,255,.1);
+  --blue: #93a3ff; --blue-soft: rgba(147,163,255,.13); color-scheme: dark; }
+
+/* MacSprint app (design/FOUNDATIONS.md), with the decided kind colours */
+.light { --m-bg: #ffffff; --m-side: #f4f4f7; --m-alt: #f3f4f7; --m-line: rgba(20,20,30,.1); --m-text: #16161a; --m-text2: #5f6068; --m-text3: #6c6d76;
+  --m-accent: #3b5bdb; --m-btn: #2f4bc4; --m-soft: rgba(59,91,219,.1); --m-good: #1f7a4d; --m-gray: #c9ccd4;
+  --m-card: #ffffff; --m-shadow: 0 1px 2px rgba(20,24,40,.06), 0 6px 18px rgba(20,24,40,.07); --m-raise: 0 1px 2px rgba(20,24,40,.1), 0 0 0 1px rgba(20,20,30,.06);
+  --k-app: #2a78d6; --k-video: #eb6834; --k-image: #1baf7a; --k-doc: #eda100; --k-zip: #e87ba4; --k-music: #008300; }
+.dark { --m-bg: #18191d; --m-side: #1f2025; --m-alt: #23242a; --m-line: rgba(255,255,255,.09); --m-text: #ececf0; --m-text2: #a3a4ad; --m-text3: #92939f;
+  --m-accent: #8399ff; --m-btn: #4a63e0; --m-soft: rgba(131,153,255,.14); --m-good: #4cd38a; --m-gray: #4a4c55;
+  --m-card: #212228; --m-shadow: 0 1px 2px rgba(0,0,0,.3), 0 6px 18px rgba(0,0,0,.28); --m-raise: 0 1px 2px rgba(0,0,0,.4), 0 0 0 1px rgba(255,255,255,.06);
+  --k-app: #3987e5; --k-video: #d95926; --k-image: #199e70; --k-doc: #c98500; --k-zip: #d55181; --k-music: #008300; }
+
+* { box-sizing: border-box; }
+body { margin: 0; background: var(--paper); color: var(--ink); font: 16px/1.55 var(--body); -webkit-font-smoothing: antialiased;
+  padding-left: max(16px, env(safe-area-inset-left, 0px)); padding-right: max(16px, env(safe-area-inset-right, 0px)); padding-block: 40px 72px; }
+h1, h2 { font-family: var(--display); margin: 0; line-height: 1.12; text-wrap: balance; }
+.wrap { max-width: 1120px; margin: 0 auto; display: grid; gap: 24px; }
+header { display: grid; gap: 10px; max-width: 74ch; }
+header h1 { font-size: clamp(28px, 4vw, 40px); font-weight: 800; }
+header p { margin: 0; color: var(--ink-2); }
+.eyebrow { font: 600 13px/1 var(--display); color: var(--blue); }
+.bar { display: flex; flex-wrap: wrap; gap: 12px 20px; align-items: center; }
+.seg { display: inline-flex; gap: 4px; padding: 3px; border: 1px solid var(--rule); border-radius: 999px; }
+.seg button { font: 600 14px/1 var(--body); color: var(--ink-2); background: transparent; border: 0; border-radius: 999px; padding: 7px 14px; cursor: pointer; }
+.seg button[aria-pressed="true"] { background: var(--blue); color: var(--sheet); }
+.seg button:focus-visible, .jump a:focus-visible { outline: 2px solid var(--blue); outline-offset: 2px; }
+.jump { display: flex; flex-wrap: wrap; gap: 6px; }
+.jump a { font-size: 14px; color: var(--ink); text-decoration: none; border: 1px solid var(--rule); border-radius: 999px; padding: 4px 11px; display: inline-flex; gap: 6px; align-items: center; }
+.jump a b { color: var(--blue); }
+.pick { background: var(--blue-soft); border-radius: 14px; padding: 14px 18px; font-size: 15px; max-width: 88ch; margin: 0; }
+.pick b { color: var(--blue); }
+
+.opt { background: var(--sheet); border: 1px solid var(--rule); border-radius: 16px; padding: 22px; display: grid; gap: 16px; scroll-margin-top: 16px; min-width: 0; }
+.opt-head { display: flex; align-items: center; gap: 12px; flex-wrap: wrap; }
+.rank { font: 800 15px/1 var(--display); width: 30px; height: 30px; border-radius: 9px; display: grid; place-items: center; background: var(--rule); color: var(--ink); flex: none; }
+.opt.top .rank { background: var(--blue); color: var(--sheet); }
+.opt h2 { font-size: 22px; font-weight: 800; }
+.tag { font: 600 12px/1 var(--body); color: var(--blue); background: var(--blue-soft); border-radius: 999px; padding: 5px 10px; }
+.opt-head p { margin: 0; color: var(--ink-2); flex: 1 1 100%; }
+.scroll { overflow-x: auto; padding: 4px; margin: -4px; }
+.notes { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 300px), 1fr)); gap: 8px 28px; font-size: 15px; }
+.notes h3 { font: 600 14px/1.2 var(--display); color: var(--ink-2); margin: 0; }
+.notes ul { margin: 6px 0 0; padding-left: 18px; }
+.notes li { margin-bottom: 3px; }
+
+/* Window */
+.win { font: 13px/1.35 var(--mac); color: var(--m-text); background: var(--m-bg); border-radius: 14px; overflow: hidden; display: grid; grid-template-columns: 200px 1fr;
+  min-width: 880px; box-shadow: 0 0 0 1px var(--m-line), 0 16px 40px rgba(20,24,40,.12); }
+.side { background: var(--m-side); border-right: 1px solid var(--m-line); padding: 12px 10px; display: grid; align-content: start; gap: 1px; }
+.lights { display: flex; gap: 6px; margin: 0 4px 14px; }
+.lights i { width: 11px; height: 11px; border-radius: 50%; background: #ff5f57; }
+.lights i:nth-child(2) { background: #febc2e; } .lights i:nth-child(3) { background: #28c840; }
+.wm { font-size: 17px; color: var(--m-accent); margin: 0 6px 12px; }
+.wm b { font-weight: 500; letter-spacing: .16em; }
+.sh { font-size: 11px; font-weight: 600; color: var(--m-text3); margin: 10px 8px 4px; }
+.srow { display: flex; align-items: center; gap: 8px; padding: 5px 8px; border-radius: 7px; white-space: nowrap; }
+.srow svg { color: var(--m-text2); flex: none; }
+.srow em { margin-left: auto; font-style: normal; font-size: 11px; color: var(--m-text3); }
+.srow em.good { color: var(--m-good); font-weight: 600; }
+.srow.sel { background: var(--m-bg); box-shadow: var(--m-raise); font-weight: 600; }
+.srow.sel svg { color: var(--m-accent); }
+.main { display: grid; grid-template-rows: auto 1fr; min-width: 0; }
+.tb { display: flex; align-items: center; padding: 10px 16px; border-bottom: 1px solid var(--m-line); }
+.field { margin: 0 auto; width: 320px; display: flex; align-items: center; gap: 7px; border-radius: 9px; padding: 6px 10px; color: var(--m-text3); font-size: 12.5px; box-shadow: 0 0 0 1px var(--m-line), 0 2px 6px rgba(0,0,0,.05); }
+.field span { flex: 1; }
+.field .kbd, .kbd { flex: none; font-size: 11px; border: 1px solid var(--m-line); border-radius: 5px; padding: 0 5px; color: var(--m-text3); }
+.view { display: inline-flex; padding: 2px; border-radius: 8px; background: var(--m-alt); gap: 2px; }
+.view span { padding: 3px 7px; border-radius: 6px; color: var(--m-text2); display: grid; place-items: center; }
+.view span.on { background: var(--m-bg); color: var(--m-text); box-shadow: var(--m-raise); }
+.content { padding: 18px 22px 22px; display: grid; gap: 14px; align-content: start; }
+.head { display: flex; align-items: center; gap: 10px; }
+.head h3 { font: 700 22px/1.15 var(--mac); margin: 0; letter-spacing: -.01em; }
+.head p { margin: 2px 0 0; color: var(--m-text2); font-size: 12.5px; }
+.ml { margin-left: auto; }
+.chips { display: flex; gap: 6px; flex-wrap: wrap; }
+.chip { font-size: 12px; font-weight: 600; color: var(--m-text2); border-radius: 999px; padding: 4px 10px; box-shadow: 0 0 0 1px var(--m-line); display: inline-flex; align-items: center; gap: 6px; }
+.chip i { width: 8px; height: 8px; border-radius: 50%; background: var(--c); }
+.chip.on { background: var(--m-text); color: var(--m-bg); box-shadow: none; }
+.day { display: flex; align-items: baseline; gap: 8px; font-size: 13px; font-weight: 700; margin-top: 2px; }
+.day small { font-size: 11px; font-weight: 500; color: var(--m-text3); }
+.btn { font: 600 12px/1 var(--mac); border-radius: 9px; padding: 7px 12px; display: inline-flex; gap: 6px; align-items: center; white-space: nowrap; }
+.btn.bord { color: var(--m-text); background: var(--m-bg); box-shadow: 0 0 0 1px var(--m-line); }
+.btn.pri { color: #fff; background: var(--m-btn); }
+.sm { font-size: 11px; color: var(--m-text3); }
+
+/* Thumbnails: photos and videos are drawn gradients; documents get a tinted page with the kind colour */
+.th { position: relative; border-radius: 10px; overflow: hidden; background: linear-gradient(135deg, hsl(var(--h) 62% 72%), hsl(calc(var(--h) + 40) 52% 46%)); box-shadow: 0 0 0 1px var(--m-line); }
+.th.doc { background: color-mix(in oklab, var(--c) 12%, var(--m-bg)); display: grid; place-items: center; color: var(--c); }
+.th em { position: absolute; left: 6px; bottom: 6px; font-style: normal; font-size: 10px; font-weight: 600; color: #fff; background: rgba(0,0,0,.5); border-radius: 6px; padding: 1px 6px; }
+.th .new { position: absolute; right: 6px; top: 6px; font-size: 9.5px; font-weight: 700; color: #fff; background: var(--m-btn); border-radius: 999px; padding: 1px 6px; }
+.kind { display: inline-flex; align-items: center; gap: 5px; font-size: 11px; color: var(--m-text2); white-space: nowrap; }
+.kind i { width: 7px; height: 7px; border-radius: 50%; background: var(--c); flex: none; }
+
+/* Clipboard panel, as reviewed (design/feature-flows.html, clipPanel) */
+.light { --m-menu: rgba(250,250,252,.92); --m-desk: linear-gradient(135deg, #6d7be0, #4aa3dc 55%, #8fd6e6); --bad: #c4223b; --good: #1f7a4d; }
+.dark { --m-menu: rgba(42,43,50,.92); --m-desk: linear-gradient(135deg, #252a5c, #1d4466 55%, #1f5560); --bad: #ff8a94; --good: #4cd38a; }
+.desk { position: relative; min-width: 880px; height: 500px; border-radius: 14px; overflow: hidden; background: var(--m-desk); font: 13px/1.35 var(--mac); color: var(--m-text); box-shadow: 0 0 0 1px var(--rule), 0 16px 40px rgba(20,24,40,.14); }
+.awin { position: absolute; left: 36px; top: 30px; width: 600px; height: 430px; background: var(--m-bg); border-radius: 10px; overflow: hidden; box-shadow: 0 20px 50px rgba(0,0,0,.35), 0 0 0 1px var(--m-line); }
+.awin .bar { height: 28px; display: flex; align-items: center; gap: 6px; padding: 0 10px; border-bottom: 1px solid var(--m-line); font-size: 11.5px; color: var(--m-text2); background: var(--m-side); }
+.awin .bar i { width: 10px; height: 10px; border-radius: 50%; background: #ff5f57; } .awin .bar i:nth-child(2) { background: #febc2e; } .awin .bar i:nth-child(3) { background: #28c840; }
+.awin .body { padding: 14px; display: grid; gap: 8px; font-size: 12.5px; }
+.ln { height: 8px; border-radius: 4px; background: var(--m-alt); }
+.panel { position: absolute; z-index: 3; left: 50%; translate: -50% 0; top: 40px; width: 520px; background: var(--m-menu); border-radius: 15px; box-shadow: 0 30px 70px rgba(0,0,0,.45), 0 0 0 1px var(--m-line); -webkit-backdrop-filter: blur(24px); backdrop-filter: blur(24px); }
+.psearch { display: flex; align-items: center; gap: 8px; padding: 12px 14px 10px; border-bottom: 1px solid var(--m-line); font-size: 15px; color: var(--m-text3); }
+.psearch span { flex: 1; }
+.lbl { font-size: 10.5px; font-weight: 600; color: var(--m-text3); padding: 8px 8px 3px; display: flex; gap: 4px; align-items: center; }
+.rows { padding: 2px 6px 6px; }
+.ci { display: grid; grid-template-columns: 28px minmax(0, 1fr) auto; gap: 10px; align-items: center; padding: 5px 8px; border-radius: 8px; font-size: 12.5px; }
+.ci .ico { width: 28px; height: 28px; border-radius: 7px; display: grid; place-items: center; background: var(--m-alt); color: var(--m-text2); }
+.ci .tx { min-width: 0; } .ci .tx b { display: block; font-weight: 500; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; } .ci .tx small { display: block; font-size: 10.5px; color: var(--m-text3); }
+.ci .k { font-size: 11px; color: var(--m-text3); display: inline-flex; gap: 6px; align-items: center; }
+.ci.sel { background: var(--m-soft); box-shadow: inset 0 0 0 1px color-mix(in oklab, var(--m-accent) 40%, transparent); }
+.ci.sel.open { border-radius: 8px 8px 0 0; }
+.acts { display: inline-flex; gap: 6px; align-items: center; }
+.copy1 { display: inline-flex; align-items: center; gap: 3px; height: 22px; padding: 0 8px; border-radius: 9px; font-size: 11px; font-weight: 600; color: var(--m-accent); background: var(--m-soft); white-space: nowrap; }
+.copy1.pri { color: #fff; background: var(--m-btn); }
+.ib { width: 24px; height: 22px; border-radius: 7px; display: grid; place-items: center; color: var(--m-text2); box-shadow: 0 0 0 1px var(--m-line); background: var(--m-bg); }
+.cfoot { display: flex; gap: 14px; flex-wrap: wrap; align-items: center; padding: 8px 14px; border-top: 1px solid var(--m-line); font-size: 11px; color: var(--m-text3); }
+.cfoot b { font-weight: 600; color: var(--m-text2); } .cfoot .ml { margin-left: auto; display: inline-flex; gap: 4px; align-items: center; }
+.cfoot .hl b { color: var(--m-accent); }
+.tagc { display: inline-flex; gap: 3px; align-items: center; font-size: 10.5px; font-weight: 600; color: var(--m-accent); background: var(--m-soft); border-radius: 999px; padding: 1px 7px; white-space: nowrap; }
+.prev { margin: 0 0 4px; padding: 8px 10px 10px 46px; border-radius: 0 0 8px 8px; background: var(--m-soft); display: grid; gap: 5px; font-size: 11.5px; }
+.prev code { font: 11.5px/1.45 ui-monospace, Menlo, monospace; word-break: break-all; color: var(--m-text); }
+.prev s { color: var(--bad); text-decoration-thickness: 1.5px; }
+.prev small { color: var(--m-text2); display: inline-flex; gap: 5px; align-items: center; }
+.menu2 { position: absolute; z-index: 4; width: 230px; background: var(--m-card); border-radius: 9px; box-shadow: 0 10px 30px rgba(0,0,0,.25), 0 0 0 1px var(--m-line); padding: 5px; font-size: 12px; }
+.menu2 div { display: flex; justify-content: space-between; gap: 8px; padding: 5px 8px; border-radius: 5px; }
+.menu2 div small { color: var(--m-text3); } .menu2 div.hl { background: var(--m-btn); color: #fff; } .menu2 div.hl small { color: rgba(255,255,255,.8); }
+.menu2 hr { border: 0; border-top: 1px solid var(--m-line); margin: 4px 6px; }
+.sw { width: 28px; height: 16px; border-radius: 999px; background: var(--m-btn); position: relative; display: inline-block; flex: none; } .sw::after { content: ""; position: absolute; right: 2px; top: 2px; width: 12px; height: 12px; border-radius: 50%; background: #fff; }
+.orig { font-size: 10.5px; color: var(--m-accent); }
+.hud { position: absolute; z-index: 4; display: flex; gap: 10px; align-items: center; padding: 8px 12px; border-radius: 12px; background: var(--m-card); box-shadow: 0 10px 30px rgba(0,0,0,.25), 0 0 0 1px var(--m-line); font-size: 12px; }
+.hud .u { color: var(--m-accent); font-weight: 600; }
+.keycap { position: absolute; z-index: 4; right: 30px; top: 30px; display: flex; gap: 5px; align-items: center; font-size: 12px; color: #fff; }
+.keycap kbd { font: 600 15px/1 var(--mac); color: var(--m-text); background: var(--m-bg); border-radius: 8px; padding: 8px 10px; box-shadow: inset 0 -2px 0 var(--m-line), 0 4px 12px rgba(0,0,0,.25); }
+.lnk { color: var(--m-accent); }
+.step { font: 600 12px/1 var(--display); color: var(--ink-2); margin: 4px 0 -4px; }
+</style>
+
+<div class="wrap">
+  <header>
+    <span class="eyebrow">Paste Clean · in Clipboard</span>
+    <h1>Where Paste Clean fits in the reviewed Clipboard</h1>
+    <p>Paste Clean pastes a link without its tracking codes, or text without the fonts and colours it came with. It has no sidebar row: it lives in the reviewed Clipboard panel (⇧⌘V), which is shown here unchanged, and in its own shortcut, ⌥⇧⌘V. Return always pastes exactly what you copied; cleaning is a choice, and you see what it removes before you paste. You can choose more than one.</p>
+  </header>
+  <div class="bar">
+    <div class="seg" role="group" aria-label="App appearance"><button type="button" data-ap="light" aria-pressed="true">Light app</button><button type="button" data-ap="dark" aria-pressed="false">Dark app</button></div>
+    <nav class="jump" id="jump" aria-label="Options"></nav>
+  </div>
+  <p class="pick"><b>My pick: 1 and 4 together.</b> In the panel, rows that can be cleaned say so, and the selected one shows exactly what ⌥↩ will remove. Outside the panel, ⌥⇧⌘V pastes the last copy clean straight away, with Undo. 1 is for checking, 4 is for speed; both use the same words and the same result.</p>
+  <div id="opts" class="wrap" style="gap:20px"></div>
+</div>
+
+<script>
+const P = {
+  house: '<path d="M4 11.5 12 5l8 6.5V19a1 1 0 0 1-1 1h-4.5v-5h-5v5H5a1 1 0 0 1-1-1z"/>',
+  clock: '<circle cx="12" cy="12" r="8"/><path d="M12 7.5V12l3 2"/>',
+  grid: '<rect x="4.5" y="4.5" width="6" height="6" rx="1.5"/><rect x="13.5" y="4.5" width="6" height="6" rx="1.5"/><rect x="4.5" y="13.5" width="6" height="6" rx="1.5"/><rect x="13.5" y="13.5" width="6" height="6" rx="1.5"/>',
+  list: '<path d="M9 7h11M9 12h11M9 17h11"/><circle cx="5" cy="7" r="1"/><circle cx="5" cy="12" r="1"/><circle cx="5" cy="17" r="1"/>',
+  down: '<circle cx="12" cy="12" r="8"/><path d="M12 8v8M8.5 12.5 12 16l3.5-3.5"/>',
+  clip: '<rect x="6" y="5" width="12" height="15" rx="2"/><path d="M9.5 5V4a1 1 0 0 1 1-1h3a1 1 0 0 1 1 1v1M9 11h6M9 14.5h4"/>',
+  trash: '<path d="M5 7h14M10 7V5h4v2M7 7l1 12a1 1 0 0 0 1 1h6a1 1 0 0 0 1-1l1-12"/>',
+  dup: '<rect x="8" y="8" width="11" height="11" rx="2"/><path d="M5 15V6a1 1 0 0 1 1-1h9"/>',
+  folder: '<path d="M4 7.5A1.5 1.5 0 0 1 5.5 6h4l2 2h7A1.5 1.5 0 0 1 20 9.5v8a1.5 1.5 0 0 1-1.5 1.5h-13A1.5 1.5 0 0 1 4 17.5z"/>',
+  search: '<circle cx="10.5" cy="10.5" r="6"/><path d="m15 15 5 5"/>',
+  doc: '<path d="M7 4h7l4 4v11a1 1 0 0 1-1 1H7a1 1 0 0 1-1-1V5a1 1 0 0 1 1-1z"/><path d="M14 4v4h4M9 13h6M9 16h4"/>',
+  music: '<path d="M9 17.5V6l10-2v11.5"/><circle cx="7" cy="17.5" r="2"/><circle cx="17" cy="15.5" r="2"/>',
+  zip: '<path d="M7 4h10a1 1 0 0 1 1 1v14a1 1 0 0 1-1 1H7a1 1 0 0 1-1-1V5a1 1 0 0 1 1-1zM12 4v2M12 8v2M12 12v2"/><rect x="10.5" y="14" width="3" height="3" rx=".8"/>',
+  app: '<rect x="4.5" y="4.5" width="15" height="15" rx="4"/><path d="M9 15l3-6 3 6M10 13h4"/>',
+  photo: '<rect x="4" y="5" width="16" height="14" rx="2"/><circle cx="9" cy="10" r="1.6"/><path d="m5 17 4.5-4.5 3 3 2.5-2.5L19 17"/>',
+  film: '<rect x="4" y="5" width="16" height="14" rx="2"/><path d="M8 5v14M16 5v14M4 9.5h4M16 9.5h4M4 14.5h4M16 14.5h4"/>',
+  pin: '<path d="M9 4h6l-1 5 3 3H7l3-3zM12 12v8"/>',
+  chev: '<path d="m8 10 4 4 4-4"/>',
+};
+const ic = (k, s = 14, w = 1.8) => `<svg viewBox="0 0 24 24" width="${s}" height="${s}" fill="none" stroke="currentColor" stroke-width="${w}" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">${P[k]}</svg>`;
+Object.assign(P, { link: '<path d="M10 14a4 4 0 0 0 5.7 0l3-3a4 4 0 0 0-5.7-5.7l-1 1"/><path d="M14 10a4 4 0 0 0-5.7 0l-3 3a4 4 0 0 0 5.7 5.7l1-1"/>', text: '<path d="M5 7h14M5 11h14M5 15h9"/>', rich: '<path d="M6 18 11 6h2l5 12M8.5 13h7"/>', code: '<path d="m9 8-4 4 4 4M15 8l4 4-4 4"/>', wand: '<path d="m5 19 10-10M14 5v2M18 9h2M17 6l1.5-1.5M16 12l1.5 1.5"/>', gear: '<circle cx="12" cy="12" r="3"/><path d="M12 3v3M12 18v3M3 12h3M18 12h3M5.6 5.6l2.1 2.1M16.3 16.3l2.1 2.1M5.6 18.4l2.1-2.1M16.3 7.7l2.1-2.1"/>', copy: '<rect x="8" y="8" width="11" height="11" rx="2"/><path d="M5 15V6a1 1 0 0 1 1-1h9"/>', chevd: '<path d="m8 10 4 4 4-4"/>' });
+// [icon, text, from, when, clean tag]
+const LINK = ['link', 'shop.example.com/jacket?utm_source=news&utm_medium=email&fbclid=IwAR0x7', 'Safari', '1 min ago', '3 tracking codes'];
+const PIN = [['text', '221B Baker Street, London NW1 6XE', 'Mail']];
+const TODAY = [LINK, ['rich', 'Quarterly notes: revenue up 12%, hiring paused until March', 'Pages', '9:41', 'Formatted'], ['photo', 'Screenshot 9.41.png · 1440 × 900', 'Screenshot', '9:41'], ['text', 'Meeting moved to 3 pm, room 4B', 'Slack', '9:30'], ['code', 'npm run build && npm test', 'Terminal', '8:40']];
+const notes = (extra = '') => `<div class="awin"><div class="bar"><i></i><i></i><i></i><span>Notes</span></div><div class="body">${extra || '<div class="ln" style="width:70%"></div><div class="ln" style="width:85%"></div><div class="ln" style="width:55%"></div><div class="ln" style="width:78%"></div>'}</div></div>`;
+// one clipboard row; sel = selected, sub = html under the row, tagged = show the clean tag
+const row = (r, i, { sel, tagged, right, pinned } = {}) => `<div class="ci${sel ? ' sel' : ''}${sel && sel.open ? ' open' : ''}"><span class="ico">${ic(r[0], 14)}</span><span class="tx"><b>${sel && sel.text ? sel.text : r[1]}</b><small>${r[2]}${pinned ? '' : ` · ${r[3]}`}${tagged && r[4] ? ` · <span class="tagc">${ic('wand', 10)}${r[4]}</span>` : ''}</small></span>${right || (sel ? `<span class="acts"><span class="copy1">${ic('copy', 10)}Copy</span><span class="ib">${ic('pin', 11)}</span></span>` : `<span class="k">${pinned ? ic('pin', 11) : `⌘${i + 1}`}</span>`)}</div>`;
+const panel = ({ selRow, under = '', tagged, foot, right, selText } = {}) => `<div class="panel"><div class="psearch">${ic('search', 16)}<span>Search what you copied</span><span class="ib" style="box-shadow:none;background:none">${ic('gear', 14)}</span></div><div class="rows"><div class="lbl">${ic('pin', 10)}Pinned</div>${PIN.map((r) => row(r, 0, { pinned: 1 })).join('')}<div class="lbl">Today</div>${TODAY.map((r, i) => { const s = i === selRow; return row(r, i, { sel: s && { open: !!under, text: selText }, tagged, right: s ? right : '' }) + (s ? under : ''); }).join('')}</div><div class="cfoot">${foot || '<span><b>↩</b> Paste</span><span><b>⌥↩</b> Paste as plain text</span><span><b>⌘P</b> Pin</span>'}<span class="ml">${ic('lock', 10)}Passwords never saved</span></div></div>`;
+const cleanPrev = `<div class="prev"><code>shop.example.com/jacket<s>?utm_source=news&amp;utm_medium=email&amp;fbclid=IwAR0x7</s></code><small>${ic('wand', 11)}⌥↩ removes 3 tracking codes. The page opens the same.</small></div>`;
+const foot1 = '<span><b>↩</b> Paste</span><span class="hl"><b>⌥↩</b> Paste clean</span><span><b>⌘P</b> Pin</span>';
+
+const OPTIONS = [
+  { name: 'Tagged rows, preview on the selected one', tag: 'Recommended', idea: 'The reviewed panel, with two small changes. Rows that can be cleaned carry a quiet tag (“3 tracking codes”, “Formatted”). The selected one opens a preview under it: what ⌥↩ removes is struck through in red. The footer’s “⌥↩ Paste as plain text” becomes “⌥↩ Paste clean”, which covers both links and text.',
+    good: ['You see what changes before you paste', 'Return still pastes exactly what you copied', 'Same keys as today, one clearer name', 'Tags tell you which copies are worth cleaning'],
+    watch: ['The preview adds a row of height to the panel', 'Strike-through needs the words too, not only red: it says “removes 3 tracking codes”'],
+    body: () => `<p class="step">A link with tracking codes</p><div class="desk">${notes()}${panel({ selRow: 0, under: cleanPrev, tagged: 1, foot: foot1 })}</div><p class="step">Formatted text from another app</p><div class="desk">${notes()}${panel({ selRow: 1, tagged: 1, foot: foot1, under: `<div class="prev"><code style="font-family:inherit">Quarterly notes: revenue up 12%, hiring paused until March</code><small>${ic('wand', 11)}⌥↩ pastes it as plain text: the font, size and colour from Pages are left behind.</small></div>` })}</div>` },
+  { name: 'A Paste clean button with choices', idea: 'The selected row gets a “Paste clean” button next to Copy, with a small menu for what to remove: tracking codes, formatting, or both. The choice is remembered.',
+    good: ['Visible for mouse users, not only a key', 'Fine control when someone wants only one of the two'],
+    watch: ['Three buttons on one row', 'Most people never need the menu'],
+    body: () => `<div class="desk">${notes()}${panel({ selRow: 0, right: `<span class="acts"><span class="copy1">${ic('copy', 10)}Copy</span><span class="copy1 pri">${ic('wand', 10)}Paste clean ${ic('chevd', 10)}</span><span class="ib">${ic('pin', 11)}</span></span>`, foot: foot1 })}<div class="menu2" style="left:540px;top:180px"><div class="hl"><span>Remove tracking and formatting</span><small>⌥↩</small></div><div><span>Remove tracking codes only</span></div><div><span>Remove formatting only</span></div><hr><div><span>Paste as is</span><small>↩</small></div></div></div>` },
+  { name: 'Clean by default, with a switch', idea: 'A “Paste clean” switch sits in the panel footer. When it is on, the rows already show the cleaned version and Return pastes it; “Original” is one click away on the selected row.',
+    good: ['For people who always want clean pastes', 'What you see in the list is what you get'],
+    watch: ['Return no longer pastes exactly what you copied', 'Easy to forget the switch is on'],
+    body: () => `<div class="desk">${notes()}${panel({ selRow: 0, selText: 'shop.example.com/jacket', right: `<span class="acts"><span class="orig">Original</span><span class="copy1">${ic('copy', 10)}Copy</span><span class="ib">${ic('pin', 11)}</span></span>`, foot: `<span style="display:inline-flex;gap:6px;align-items:center"><span class="sw"></span><b>Paste clean</b></span><span><b>↩</b> Paste clean</span><span><b>⌥↩</b> Paste original</span>` })}</div>` },
+  { name: 'The shortcut, no panel', tag: 'Recommended', idea: '⌥⇧⌘V pastes the last thing you copied, cleaned, straight into the app you are in. A small note appears next to it saying what was removed, with Undo. No panel opens.',
+    good: ['Fastest: one shortcut, done', 'The note names the result, so nothing happens silently', '⌘Z or Undo puts the original back'],
+    watch: ['Only the latest copy; older ones need the panel', 'People must learn the shortcut: the panel footer teaches it'],
+    body: () => `<p class="step">Press ⌥⇧⌘V in Notes</p><div class="desk">${notes(`<div>Found the jacket I mentioned:</div><div class="lnk">shop.example.com/jacket</div><div class="ln" style="width:70%"></div><div class="ln" style="width:55%"></div>`)}<div class="keycap"><kbd>⌥</kbd><kbd>⇧</kbd><kbd>⌘</kbd><kbd>V</kbd></div><div class="hud" style="left:250px;top:92px">${ic('wand', 13)}<span>Pasted without 3 tracking codes</span><span class="u">Undo ⌘Z</span></div></div>` },
+];
+
+let ap = matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
+try { const s = localStorage.getItem('ms-home-ap'); if (s === 'light' || s === 'dark') ap = s; } catch (e) {}
+document.getElementById('jump').innerHTML = OPTIONS.map((o, i) => `<a href="#option-${i + 1}"><b>${i + 1}</b>${o.name.split(',')[0]}</a>`).join('');
+function render() {
+  document.getElementById('opts').innerHTML = OPTIONS.map((o, i) => `
+  <section class="opt${o.tag ? ' top' : ''}" id="option-${i + 1}" aria-labelledby="h-${i}">
+    <div class="opt-head"><span class="rank">${i + 1}</span><h2 id="h-${i}">${o.name}</h2>${o.tag ? `<span class="tag">${o.tag}</span>` : ''}<p>${o.idea}</p></div>
+    <div class="scroll"><div class="${ap}" style="display:grid;gap:14px">${o.body()}</div></div>
+    <div class="notes"><div><h3>Good for</h3><ul>${o.good.map((g) => `<li>${g}</li>`).join('')}</ul></div><div><h3>Watch for</h3><ul>${o.watch.map((g) => `<li>${g}</li>`).join('')}</ul></div></div>
+  </section>`).join('');
+  document.querySelectorAll('[data-ap]').forEach((b) => b.setAttribute('aria-pressed', String(b.dataset.ap === ap)));
+}
+document.querySelectorAll('[data-ap]').forEach((b) => b.addEventListener('click', () => { ap = b.dataset.ap; try { localStorage.setItem('ms-home-ap', ap); } catch (e) {} render(); }));
+render();
+</script>
