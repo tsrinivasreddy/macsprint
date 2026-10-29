@@ -14,6 +14,7 @@ Design pages for MacSprint AI. Each file is a standalone page you can open in a 
 | `home-info.html` | Home, round 2: five ranked information designs (Free-up, Squares, This week, Blocks, Sources) with colour-blind-safe kind colours | https://claude.ai/artifact/GrnZpnCpojaSFFkaCbRnSs |
 | `recents-options.html` | Recents: five ranked options (Latest first, Timeline, Day groups, Week strip, Columns by day), light or dark | https://claude.ai/artifact/WLW2dosf3mtjYzDo6DJvJF |
 | `library-options.html` | Library: five ranked options (Kind tabs, Kind tiles, Shelves, Kinds and folders, Gallery), light or dark | https://claude.ai/artifact/9vpmXz9MFciP3R1x4gBnUy |
+| `downloaded-from-options.html` | Downloaded From: five ranked options (Sources and files, Source cards, Source chips, Share bar, Apps and websites), light or dark | https://claude.ai/artifact/C3K16eHzGGZHQN2zU6s3s9 |
 | `graphite-glass-sample.html` | The "Graphite & Glass" style sample | https://claude.ai/artifact/4CZ9zh8ntYYZb5cdYpUH32 |
 
 Other references:
