@@ -1,0 +1,302 @@
+<title>MacSprint Search Bar Round 2</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Atkinson+Hyperlegible:wght@400;700&family=Schibsted+Grotesk:wght@600;800&display=swap">
+<style>
+/* Layout: a review sheet. Three search bar refinements, ranked, each a full MacSprint window with what it is good for. One switch sets light or dark for every window. */
+:root {
+  --paper: #eceff3; --sheet: #ffffff; --ink: #15171c; --ink-2: #4f5562; --rule: rgba(21,23,28,.12);
+  --blue: #3346c8; --blue-soft: rgba(51,70,200,.09);
+  --display: "Schibsted Grotesk", "Avenir Next", system-ui, sans-serif;
+  --body: "Atkinson Hyperlegible", "Segoe UI", system-ui, sans-serif;
+  --mac: -apple-system, BlinkMacSystemFont, "SF Pro Text", "Helvetica Neue", "Segoe UI", sans-serif;
+}
+@media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) {
+  --paper: #111317; --sheet: #191c21; --ink: #eceef2; --ink-2: #b0b6c2; --rule: rgba(255,255,255,.1);
+  --blue: #93a3ff; --blue-soft: rgba(147,163,255,.13); color-scheme: dark; } }
+:root[data-theme="dark"] {
+  --paper: #111317; --sheet: #191c21; --ink: #eceef2; --ink-2: #b0b6c2; --rule: rgba(255,255,255,.1);
+  --blue: #93a3ff; --blue-soft: rgba(147,163,255,.13); color-scheme: dark; }
+
+/* MacSprint app (design/FOUNDATIONS.md), with the decided kind colours */
+.light { --m-bg: #ffffff; --m-side: #f4f4f7; --m-alt: #f3f4f7; --m-line: rgba(20,20,30,.1); --m-text: #16161a; --m-text2: #5f6068; --m-text3: #6c6d76;
+  --m-accent: #3b5bdb; --m-btn: #2f4bc4; --m-soft: rgba(59,91,219,.1); --m-good: #1f7a4d; --m-gray: #c9ccd4;
+  --m-card: #ffffff; --m-shadow: 0 1px 2px rgba(20,24,40,.06), 0 6px 18px rgba(20,24,40,.07); --m-raise: 0 1px 2px rgba(20,24,40,.1), 0 0 0 1px rgba(20,20,30,.06);
+  --k-app: #2a78d6; --k-video: #eb6834; --k-image: #1baf7a; --k-doc: #eda100; --k-zip: #e87ba4; --k-music: #008300; }
+.dark { --m-bg: #18191d; --m-side: #1f2025; --m-alt: #23242a; --m-line: rgba(255,255,255,.09); --m-text: #ececf0; --m-text2: #a3a4ad; --m-text3: #92939f;
+  --m-accent: #8399ff; --m-btn: #4a63e0; --m-soft: rgba(131,153,255,.14); --m-good: #4cd38a; --m-gray: #4a4c55;
+  --m-card: #212228; --m-shadow: 0 1px 2px rgba(0,0,0,.3), 0 6px 18px rgba(0,0,0,.28); --m-raise: 0 1px 2px rgba(0,0,0,.4), 0 0 0 1px rgba(255,255,255,.06);
+  --k-app: #3987e5; --k-video: #d95926; --k-image: #199e70; --k-doc: #c98500; --k-zip: #d55181; --k-music: #008300; }
+
+* { box-sizing: border-box; }
+body { margin: 0; background: var(--paper); color: var(--ink); font: 16px/1.55 var(--body); -webkit-font-smoothing: antialiased;
+  padding-left: max(16px, env(safe-area-inset-left, 0px)); padding-right: max(16px, env(safe-area-inset-right, 0px)); padding-block: 40px 72px; }
+h1, h2 { font-family: var(--display); margin: 0; line-height: 1.12; text-wrap: balance; }
+.wrap { max-width: 1120px; margin: 0 auto; display: grid; gap: 24px; }
+header { display: grid; gap: 10px; max-width: 74ch; }
+header h1 { font-size: clamp(28px, 4vw, 40px); font-weight: 800; }
+header p { margin: 0; color: var(--ink-2); }
+.eyebrow { font: 600 13px/1 var(--display); color: var(--blue); }
+.bar { display: flex; flex-wrap: wrap; gap: 12px 20px; align-items: center; }
+.seg { display: inline-flex; gap: 4px; padding: 3px; border: 1px solid var(--rule); border-radius: 999px; }
+.seg button { font: 600 14px/1 var(--body); color: var(--ink-2); background: transparent; border: 0; border-radius: 999px; padding: 7px 14px; cursor: pointer; }
+.seg button[aria-pressed="true"] { background: var(--blue); color: var(--sheet); }
+.seg button:focus-visible, .jump a:focus-visible { outline: 2px solid var(--blue); outline-offset: 2px; }
+.jump { display: flex; flex-wrap: wrap; gap: 6px; }
+.jump a { font-size: 14px; color: var(--ink); text-decoration: none; border: 1px solid var(--rule); border-radius: 999px; padding: 4px 11px; display: inline-flex; gap: 6px; align-items: center; }
+.jump a b { color: var(--blue); }
+.pick { background: var(--blue-soft); border-radius: 14px; padding: 14px 18px; font-size: 15px; max-width: 88ch; margin: 0; }
+.pick b { color: var(--blue); }
+
+.opt { background: var(--sheet); border: 1px solid var(--rule); border-radius: 16px; padding: 22px; display: grid; gap: 16px; scroll-margin-top: 16px; min-width: 0; }
+.opt-head { display: flex; align-items: center; gap: 12px; flex-wrap: wrap; }
+.rank { font: 800 15px/1 var(--display); width: 30px; height: 30px; border-radius: 9px; display: grid; place-items: center; background: var(--rule); color: var(--ink); flex: none; }
+.opt.top .rank { background: var(--blue); color: var(--sheet); }
+.opt h2 { font-size: 22px; font-weight: 800; }
+.tag { font: 600 12px/1 var(--body); color: var(--blue); background: var(--blue-soft); border-radius: 999px; padding: 5px 10px; }
+.opt-head p { margin: 0; color: var(--ink-2); flex: 1 1 100%; }
+.scroll { overflow-x: auto; padding: 4px; margin: -4px; }
+.notes { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 300px), 1fr)); gap: 8px 28px; font-size: 15px; }
+.notes h3 { font: 600 14px/1.2 var(--display); color: var(--ink-2); margin: 0; }
+.notes ul { margin: 6px 0 0; padding-left: 18px; }
+.notes li { margin-bottom: 3px; }
+
+/* Window */
+.win { font: 13px/1.35 var(--mac); color: var(--m-text); background: var(--m-bg); border-radius: 14px; overflow: hidden; display: grid; grid-template-columns: 200px 1fr;
+  min-width: 880px; box-shadow: 0 0 0 1px var(--m-line), 0 16px 40px rgba(20,24,40,.12); }
+.side { background: var(--m-side); border-right: 1px solid var(--m-line); padding: 12px 10px; display: grid; align-content: start; gap: 1px; }
+.lights { display: flex; gap: 6px; margin: 0 4px 14px; }
+.lights i { width: 11px; height: 11px; border-radius: 50%; background: #ff5f57; }
+.lights i:nth-child(2) { background: #febc2e; } .lights i:nth-child(3) { background: #28c840; }
+.wm { font-size: 17px; color: var(--m-accent); margin: 0 6px 12px; }
+.wm b { font-weight: 500; letter-spacing: .16em; }
+.sh { font-size: 11px; font-weight: 600; color: var(--m-text3); margin: 10px 8px 4px; }
+.srow { display: flex; align-items: center; gap: 8px; padding: 5px 8px; border-radius: 7px; white-space: nowrap; }
+.srow svg { color: var(--m-text2); flex: none; }
+.srow em { margin-left: auto; font-style: normal; font-size: 11px; color: var(--m-text3); }
+.srow em.good { color: var(--m-good); font-weight: 600; }
+.srow.sel { background: var(--m-bg); box-shadow: var(--m-raise); font-weight: 600; }
+.srow.sel svg { color: var(--m-accent); }
+.main { display: grid; grid-template-rows: auto 1fr; min-width: 0; }
+.tb { display: flex; align-items: center; padding: 10px 16px; border-bottom: 1px solid var(--m-line); }
+.field { margin: 0 auto; width: 320px; display: flex; align-items: center; gap: 7px; border-radius: 9px; padding: 6px 10px; color: var(--m-text3); font-size: 12.5px; box-shadow: 0 0 0 1px var(--m-line), 0 2px 6px rgba(0,0,0,.05); }
+.field span { flex: 1; }
+.field .kbd, .kbd { flex: none; font-size: 11px; border: 1px solid var(--m-line); border-radius: 5px; padding: 0 5px; color: var(--m-text3); }
+.view { display: inline-flex; padding: 2px; border-radius: 8px; background: var(--m-alt); gap: 2px; }
+.view span { padding: 3px 7px; border-radius: 6px; color: var(--m-text2); display: grid; place-items: center; }
+.view span.on { background: var(--m-bg); color: var(--m-text); box-shadow: var(--m-raise); }
+.content { padding: 18px 22px 22px; display: grid; gap: 14px; align-content: start; }
+.head { display: flex; align-items: center; gap: 10px; }
+.head h3 { font: 700 22px/1.15 var(--mac); margin: 0; letter-spacing: -.01em; }
+.head p { margin: 2px 0 0; color: var(--m-text2); font-size: 12.5px; }
+.ml { margin-left: auto; }
+.chips { display: flex; gap: 6px; flex-wrap: wrap; }
+.chip { font-size: 12px; font-weight: 600; color: var(--m-text2); border-radius: 999px; padding: 4px 10px; box-shadow: 0 0 0 1px var(--m-line); display: inline-flex; align-items: center; gap: 6px; }
+.chip i { width: 8px; height: 8px; border-radius: 50%; background: var(--c); }
+.chip.on { background: var(--m-text); color: var(--m-bg); box-shadow: none; }
+.day { display: flex; align-items: baseline; gap: 8px; font-size: 13px; font-weight: 700; margin-top: 2px; }
+.day small { font-size: 11px; font-weight: 500; color: var(--m-text3); }
+.btn { font: 600 12px/1 var(--mac); border-radius: 9px; padding: 7px 12px; display: inline-flex; gap: 6px; align-items: center; white-space: nowrap; }
+.btn.bord { color: var(--m-text); background: var(--m-bg); box-shadow: 0 0 0 1px var(--m-line); }
+.btn.pri { color: #fff; background: var(--m-btn); }
+.sm { font-size: 11px; color: var(--m-text3); }
+
+/* Thumbnails: photos and videos are drawn gradients; documents get a tinted page with the kind colour */
+.th { position: relative; border-radius: 10px; overflow: hidden; background: linear-gradient(135deg, hsl(var(--h) 62% 72%), hsl(calc(var(--h) + 40) 52% 46%)); box-shadow: 0 0 0 1px var(--m-line); }
+.th.doc { background: color-mix(in oklab, var(--c) 12%, var(--m-bg)); display: grid; place-items: center; color: var(--c); }
+.th em { position: absolute; left: 6px; bottom: 6px; font-style: normal; font-size: 10px; font-weight: 600; color: #fff; background: rgba(0,0,0,.5); border-radius: 6px; padding: 1px 6px; }
+.th .new { position: absolute; right: 6px; top: 6px; font-size: 9.5px; font-weight: 700; color: #fff; background: var(--m-btn); border-radius: 999px; padding: 1px 6px; }
+.kind { display: inline-flex; align-items: center; gap: 5px; font-size: 11px; color: var(--m-text2); white-space: nowrap; }
+.kind i { width: 7px; height: 7px; border-radius: 50%; background: var(--c); flex: none; }
+
+/* Static right-click menu, shown on one option */
+.menu { position: absolute; z-index: 3; width: 210px; background: var(--m-card); border-radius: 9px; box-shadow: 0 10px 30px rgba(0,0,0,.22), 0 0 0 1px var(--m-line); padding: 5px; font-size: 12.5px; }
+.menu div { display: flex; justify-content: space-between; padding: 4px 8px; border-radius: 5px; }
+.menu div small { color: var(--m-text3); }
+.menu div.hl { background: var(--m-btn); color: #fff; } .menu div.hl small { color: rgba(255,255,255,.8); }
+.menu hr { border: 0; border-top: 1px solid var(--m-line); margin: 4px 6px; }
+/* Halo, round 2 */
+.ramp { --r1: #3b5bdb; --r2: #8f6bff; --r3: #3fb4f5; }
+.dark .ramp, .ramp.dark, .hud { --r1: #8399ff; --r2: #b39bff; --r3: #6fd0ff; }
+@property --a { syntax: '<angle>'; inherits: false; initial-value: 0deg; }
+@keyframes spin { to { --a: 360deg; } }
+@keyframes wv { 0%, 100% { transform: scaleY(.3); } 50% { transform: scaleY(1); } }
+@keyframes blink { 50% { opacity: 0; } }
+@keyframes word { from { opacity: 0; filter: blur(3px); } }
+@keyframes drop { from { opacity: 0; transform: translate(-50%, -10px) scale(.985); } }
+@keyframes shimmer { to { background-position: -200% 0; } }
+.caret { display: inline-block; width: 2px; height: 1.05em; border-radius: 1px; background: var(--m-accent); vertical-align: -.14em; margin-left: 1px; animation: blink 1.1s steps(1) infinite; }
+.keycap { font: 600 10px/1 var(--mac); color: var(--m-text2); min-width: 18px; text-align: center; padding: 3px 5px; border-radius: 5px; background: var(--m-bg); box-shadow: 0 0 0 .5px var(--m-line), 0 1px 0 var(--m-line); }
+/* window behind the panel */
+.behind { display: grid; gap: 12px; }
+.behind .row { display: grid; grid-template-columns: repeat(6, 1fr); gap: 8px; } .behind .row .th { height: 64px; border-radius: 12px; }
+.behind .bar2 { height: 12px; border-radius: 6px; display: flex; gap: 2px; overflow: hidden; } .behind .bar2 i { display: block; }
+.o .content { position: relative; min-height: 470px; }
+/* glass panel */
+.gp { position: absolute; left: 50%; top: 12px; transform: translateX(-50%); width: min(620px, 94%); border-radius: 22px; z-index: 2; animation: drop .4s cubic-bezier(.2,.8,.2,1) both;
+  background: color-mix(in oklab, var(--m-bg) 84%, transparent); backdrop-filter: blur(30px) saturate(1.7); -webkit-backdrop-filter: blur(30px) saturate(1.7);
+  box-shadow: inset 0 1px 0 rgba(255,255,255,.7), 0 0 0 .5px rgba(0,0,0,.14), 0 12px 24px -12px rgba(0,0,0,.22), 0 44px 90px -30px rgba(20,24,60,.5); }
+.dark .gp { background: color-mix(in oklab, var(--m-bg) 78%, transparent); box-shadow: inset 0 1px 0 rgba(255,255,255,.09), 0 0 0 .5px rgba(255,255,255,.12), 0 12px 24px -12px rgba(0,0,0,.6), 0 44px 90px -30px rgba(0,0,0,.8); }
+.gp.wide { width: min(800px, 96%); }
+.gp::before, .gp::after { content: ''; position: absolute; inset: -1px; border-radius: 23px; padding: 1.2px; pointer-events: none; background: conic-gradient(from var(--a), var(--r1), var(--r2), var(--r3), var(--r1));
+  -webkit-mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0); -webkit-mask-composite: xor; mask-composite: exclude; opacity: .55; }
+.gp::after { filter: blur(10px); opacity: .0; }
+.gp.live::before, .gp.live::after { animation: spin 3.6s linear infinite; } .gp.live::before { opacity: 1; } .gp.live::after { opacity: .7; }
+.gp .in { padding: 10px; display: grid; gap: 10px; position: relative; }
+.pf { display: flex; align-items: center; gap: 12px; padding: 6px 6px 8px 10px; border-bottom: .5px solid var(--m-line); }
+.pf .q { flex: 1; min-width: 0; font: 500 21px/1.2 var(--mac); letter-spacing: -.012em; }
+.pf .lead { color: var(--m-accent); }
+.gbtn { width: 30px; height: 30px; border-radius: 50%; display: grid; place-items: center; color: var(--m-text2); background: color-mix(in oklab, var(--m-text) 6%, transparent); flex: none; }
+.gbtn.on { background: linear-gradient(135deg, var(--r1), var(--r2)); color: #fff; box-shadow: 0 4px 14px -4px color-mix(in oklab, var(--r2) 70%, transparent); }
+.gbtn:has(.wave) { width: auto; padding: 0 11px; border-radius: 99px; }
+.wave { display: inline-flex; gap: 2px; align-items: center; height: 16px; } .wave i { width: 2.5px; height: 16px; border-radius: 2px; background: currentColor; transform-origin: center; animation: wv 1s ease-in-out infinite; }
+.wave i:nth-child(2n) { animation-delay: -.35s; } .wave i:nth-child(3n) { animation-delay: -.7s; } .wave i:nth-child(5n) { animation-delay: -.15s; }
+/* answer */
+.ans2 { display: grid; gap: 8px; padding: 4px 10px 10px; }
+.ans2 .lbl { display: flex; align-items: center; gap: 7px; font-size: 11.5px; font-weight: 600; color: var(--m-text2); }
+.spk { width: 18px; height: 18px; border-radius: 6px; display: grid; place-items: center; color: #fff; background: linear-gradient(135deg, var(--r1), var(--r2)); }
+.ans2 p { margin: 0; font: 500 16px/1.4 var(--mac); letter-spacing: -.005em; color: var(--m-text); }
+.ans2 p span { animation: word .45s ease-out both; } .ans2 p b { font-weight: 700; }
+.src { display: flex; align-items: center; gap: 8px; font-size: 11.5px; color: var(--m-text2); }
+.src .pg.s { margin: 0; width: 20px; height: 26px; padding: 3px; gap: 2px; border-radius: 3px; }
+.src .lnk { margin-left: auto; display: inline-flex; gap: 6px; align-items: center; color: var(--m-accent); font-weight: 600; }
+.sec { display: flex; justify-content: space-between; font-size: 11px; font-weight: 600; color: var(--m-text3); padding: 4px 10px 0; border-top: .5px solid var(--m-line); padding-top: 10px; }
+/* rows */
+.rs { display: grid; gap: 2px; }
+.rr { display: grid; grid-template-columns: 52px minmax(0, 1fr) auto; gap: 12px; align-items: center; padding: 7px 10px 7px 7px; border-radius: 12px; position: relative; }
+.rr.on { background: color-mix(in oklab, var(--m-accent) 11%, transparent); box-shadow: inset 0 0 0 1px color-mix(in oklab, var(--m-accent) 30%, transparent); }
+.tw { position: relative; width: 52px; height: 40px; }
+.tw .th { display: block; width: 52px; height: 40px; border-radius: 8px; box-shadow: 0 0 0 .5px rgba(0,0,0,.12), 0 2px 6px -2px rgba(0,0,0,.25); }
+.tw .tag { position: absolute; left: -3px; bottom: -3px; font: 700 8px/1 var(--mac); letter-spacing: .02em; color: #fff; padding: 2px 4px; border-radius: 4px; background: var(--c); box-shadow: 0 0 0 1.5px var(--m-bg); }
+.pg { display: grid; gap: 3px; align-content: start; width: 32px; height: 40px; margin: 0 auto; padding: 5px 4px; border-radius: 4px; background: #fff; box-shadow: 0 0 0 .5px rgba(0,0,0,.14), 0 2px 6px -2px rgba(0,0,0,.3); }
+.pg i { display: block; height: 2px; border-radius: 1px; background: #d3d7df; } .pg i.h { height: 3px; width: 70%; background: var(--c); } .pg i.k { background: color-mix(in oklab, var(--m-accent) 55%, #fff); } .pg i.s { width: 60%; }
+.rr .t { min-width: 0; display: grid; gap: 2px; }
+.rr .t b { font: 600 13.5px/1.2 var(--mac); letter-spacing: -.005em; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.rr .t .sn { font-size: 12px; color: var(--m-text2); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.rr .t .mt { display: flex; align-items: center; gap: 5px; font-size: 10.5px; color: var(--m-text3); white-space: nowrap; overflow: hidden; }
+.rr .t .mt svg { flex: none; }
+mark { background: color-mix(in oklab, var(--m-accent) 17%, transparent); color: var(--m-text); border-radius: 4px; padding: 0 2px; font-weight: 600; }
+.rr .hint { display: none; gap: 6px; align-items: center; font-size: 10.5px; color: var(--m-text2); }
+.rr.on .hint { display: inline-flex; }
+.foot { display: flex; align-items: center; gap: 14px; font-size: 10.5px; color: var(--m-text3); padding: 9px 10px 2px; border-top: .5px solid var(--m-line); }
+.foot span { display: inline-flex; gap: 5px; align-items: center; }
+.foot .ml { margin-left: auto; }
+/* preview pane (option 2) */
+.split { display: grid; grid-template-columns: minmax(0, 1fr) 250px; gap: 10px; }
+.pv { border-radius: 14px; background: color-mix(in oklab, var(--m-text) 4%, transparent); padding: 12px; display: grid; gap: 10px; align-content: start; }
+.pv .big { width: 120px; height: 156px; padding: 12px 10px; gap: 5px; margin: 4px auto 0; }
+.pv .big i { height: 3px; } .pv .big i.h { height: 5px; }
+.pv b { font-size: 13px; } .pv dl { margin: 0; display: grid; grid-template-columns: auto 1fr; gap: 3px 10px; font-size: 11px; } .pv dt { color: var(--m-text3); } .pv dd { margin: 0; }
+/* HUD (option 3) */
+.hud { --m-bg: #1d1f26; --m-text: #f1f2f6; --m-text2: #b8bcc8; --m-text3: #8a8f9c; --m-line: rgba(255,255,255,.12); --m-accent: #8399ff; color: var(--m-text); }
+.gp.hud { background: rgba(28,30,38,.78); box-shadow: inset 0 1px 0 rgba(255,255,255,.1), 0 0 0 .5px rgba(255,255,255,.1), 0 44px 90px -30px rgba(0,0,0,.7); }
+/* toolbar capsule + states */
+.tb2 { display: flex; align-items: center; justify-content: center; padding: 10px 14px; border-bottom: 1px solid var(--m-line); }
+.cap { display: flex; align-items: center; gap: 8px; height: 30px; padding: 0 5px 0 12px; border-radius: 99px; width: 340px; font-size: 12.5px; color: var(--m-text3); background: color-mix(in oklab, var(--m-text) 5%, transparent); box-shadow: inset 0 0 0 .5px var(--m-line); }
+.cap span:nth-child(2) { flex: 1; }
+.cap .gbtn { width: 22px; height: 22px; }
+.strip { font: 13px/1.35 var(--mac); color: var(--m-text); display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 12px; }
+.st { display: grid; gap: 6px; } .st > span { font: 600 12px var(--body); color: var(--ink-2); }
+.st .pad { border-radius: 16px; padding: 18px 16px; display: grid; gap: 10px; align-content: center; min-height: 120px; position: relative; overflow: hidden; }
+.light .pad { background: linear-gradient(135deg, #e9ecf3, #f4f1fb); } .dark .pad { background: linear-gradient(135deg, #14161b, #1a1724); }
+.st .gp { position: relative; left: auto; top: auto; transform: none; width: 100%; animation: none; }
+.st .gp .pf { border: 0; padding: 4px 4px 4px 8px; } .st .gp .pf .q { font-size: 16px; }
+.think { background: linear-gradient(90deg, var(--m-text3) 0%, var(--m-text) 20%, var(--m-text3) 40%) 0 0 / 200% 100%; -webkit-background-clip: text; background-clip: text; color: transparent; animation: shimmer 2s linear infinite; }
+.live-w { text-decoration: underline dotted color-mix(in oklab, var(--m-text) 45%, transparent); text-underline-offset: 4px; }
+@media (prefers-reduced-motion: reduce) { .gp, .gp::before, .gp::after, .wave i, .caret, .ans2 p span, .think { animation: none !important; } .think { color: var(--m-text2); background: none; } }
+</style>
+
+<div class="wrap">
+  <header>
+    <span class="eyebrow">Search bar · round 2</span>
+    <h1>Halo, made premium</h1>
+    <p>Round 1 picked Halo: a small capsule in the toolbar that opens into a floating panel. This round refines it. The panel is real glass, so the window shows softly through it. The colour ring is a hairline with a soft glow that turns only while it listens or thinks. The answer is quiet type with its source shown as a page. Result rows get page and photo thumbnails, a file-type tag, an icon for why each file matched, highlights in the accent colour, and a soft selection that shows ↩ Open and Space Quick Look only where you are.</p>
+  </header>
+  <div class="bar">
+    <div class="seg" role="group" aria-label="App appearance"><button type="button" id="ap-light" data-ap="light" aria-pressed="true">Light app</button><button type="button" id="ap-dark" data-ap="dark" aria-pressed="false">Dark app</button></div>
+    <nav class="jump" id="jump" aria-label="Options"></nav>
+  </div>
+  <p class="pick"><b>My pick: 1, Glass list.</b> It keeps Halo simple: one column, the answer first, files below, and nothing on screen you do not need. 2 (With preview) is better on big displays, where seeing the page before opening saves a click. 3 (Night glass) is the most dramatic, always dark like a heads-up display, but it ignores the light appearance.</p>
+  <div id="opts" class="wrap" style="gap:20px"></div>
+</div>
+
+<script>
+const P = {
+  house: '<path d="M4 11.5 12 5l8 6.5V19a1 1 0 0 1-1 1h-4.5v-5h-5v5H5a1 1 0 0 1-1-1z"/>',
+  clock: '<circle cx="12" cy="12" r="8"/><path d="M12 7.5V12l3 2"/>',
+  grid: '<rect x="4.5" y="4.5" width="6" height="6" rx="1.5"/><rect x="13.5" y="4.5" width="6" height="6" rx="1.5"/><rect x="4.5" y="13.5" width="6" height="6" rx="1.5"/><rect x="13.5" y="13.5" width="6" height="6" rx="1.5"/>',
+  list: '<path d="M9 7h11M9 12h11M9 17h11"/><circle cx="5" cy="7" r="1"/><circle cx="5" cy="12" r="1"/><circle cx="5" cy="17" r="1"/>',
+  down: '<circle cx="12" cy="12" r="8"/><path d="M12 8v8M8.5 12.5 12 16l3.5-3.5"/>',
+  clip: '<rect x="6" y="5" width="12" height="15" rx="2"/><path d="M9.5 5V4a1 1 0 0 1 1-1h3a1 1 0 0 1 1 1v1M9 11h6M9 14.5h4"/>',
+  trash: '<path d="M5 7h14M10 7V5h4v2M7 7l1 12a1 1 0 0 0 1 1h6a1 1 0 0 0 1-1l1-12"/>',
+  dup: '<rect x="8" y="8" width="11" height="11" rx="2"/><path d="M5 15V6a1 1 0 0 1 1-1h9"/>',
+  folder: '<path d="M4 7.5A1.5 1.5 0 0 1 5.5 6h4l2 2h7A1.5 1.5 0 0 1 20 9.5v8a1.5 1.5 0 0 1-1.5 1.5h-13A1.5 1.5 0 0 1 4 17.5z"/>',
+  search: '<circle cx="10.5" cy="10.5" r="6"/><path d="m15 15 5 5"/>',
+  doc: '<path d="M7 4h7l4 4v11a1 1 0 0 1-1 1H7a1 1 0 0 1-1-1V5a1 1 0 0 1 1-1z"/><path d="M14 4v4h4M9 13h6M9 16h4"/>',
+  music: '<path d="M9 17.5V6l10-2v11.5"/><circle cx="7" cy="17.5" r="2"/><circle cx="17" cy="15.5" r="2"/>',
+  zip: '<path d="M7 4h10a1 1 0 0 1 1 1v14a1 1 0 0 1-1 1H7a1 1 0 0 1-1-1V5a1 1 0 0 1 1-1zM12 4v2M12 8v2M12 12v2"/><rect x="10.5" y="14" width="3" height="3" rx=".8"/>',
+  app: '<rect x="4.5" y="4.5" width="15" height="15" rx="4"/><path d="M9 15l3-6 3 6M10 13h4"/>',
+  photo: '<rect x="4" y="5" width="16" height="14" rx="2"/><circle cx="9" cy="10" r="1.6"/><path d="m5 17 4.5-4.5 3 3 2.5-2.5L19 17"/>',
+  film: '<rect x="4" y="5" width="16" height="14" rx="2"/><path d="M8 5v14M16 5v14M4 9.5h4M16 9.5h4M4 14.5h4M16 14.5h4"/>',
+  pin: '<path d="M9 4h6l-1 5 3 3H7l3-3zM12 12v8"/>',
+  chev: '<path d="m8 10 4 4 4-4"/>',
+};
+const ic = (k, s = 14, w = 1.8) => `<svg viewBox="0 0 24 24" width="${s}" height="${s}" fill="none" stroke="currentColor" stroke-width="${w}" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">${P[k]}</svg>`;
+
+
+Object.assign(P, { mic: '<rect x="9" y="3.5" width="6" height="11" rx="3"/><path d="M5.5 11.5a6.5 6.5 0 0 0 13 0M12 18v2.5"/>', spark: '<path d="M12 3.5 13.8 9l5.7 1.8-5.7 1.8L12 18.5l-1.8-5.9-5.7-1.8L10.2 9z"/>', find: '<path d="M7 4h7l4 4v5M6 4.8V19a1 1 0 0 0 1 1h4"/><circle cx="16" cy="16.5" r="3"/><path d="m18.2 18.7 2.3 2.3"/>', eye: '<path d="M2.5 12S6 5.5 12 5.5 21.5 12 21.5 12 18 18.5 12 18.5 2.5 12 2.5 12Z"/><circle cx="12" cy="12" r="3"/>', aa: '<path d="m3.5 18 4.5-12 4.5 12M5.2 13.5h5.6M15 12.5a3 3 0 0 1 6 0V18M21 15.5c-4 0-6 .5-6 2.2 0 1 .8 1.6 2 1.6 2.2 0 4-1.4 4-3.8"/>', info: '<circle cx="12" cy="12" r="8"/><path d="M12 11v5M12 8h.01"/>', copy: '<rect x="8" y="8" width="11" height="11" rx="2"/><path d="M5 15V6a1 1 0 0 1 1-1h9"/>' });
+const wave = `<span class="wave">${'<i></i>'.repeat(9)}</span>`;
+const page = (c, cls = '') => `<span class="pg ${cls}" style="--c:${c}"><i class="h"></i><i></i><i class="k"></i><i></i><i class="s"></i></span>`;
+// [name, thumb ('pdf' | 'txt' | hue), tag, tag colour, snippet, reason icon, reason, folder, date]
+const R = [['Lease agreement 2026.pdf', 'pdf', 'PDF', 'var(--k-doc)', 'monthly <mark>lease</mark> of $2,400 until Aug 31, 2027', 'find', 'Text on page 2', 'Documents', 'Oct 28'],
+  ['Lease signing.jpg', 30, 'JPG', 'var(--k-image)', 'A person signing a <mark>lease</mark> at a desk', 'eye', 'What it shows', 'Pictures', 'Oct 28'],
+  ['Lease checklist.txt', 'txt', 'TXT', 'var(--m-gray)', '<mark>Lease</mark>: deposit, keys, parking', 'aa', 'Name', 'Desktop', 'Oct 2']];
+const thumb = ([, t, tag, c]) => `<span class="tw">${typeof t === 'number' ? `<span class="th" style="--h:${t}"></span>` : page(t === 'pdf' ? '#3b5bdb' : '#9aa0ab')}<span class="tag" style="--c:${c}">${tag}</span></span>`;
+const rows = (n = 3) => `<div class="rs">${R.slice(0, n).map((r, i) => `<div class="rr${i === 0 ? ' on' : ''}">${thumb(r)}<span class="t"><b>${r[0]}</b><span class="sn">${r[4]}</span><span class="mt">${ic(r[5], 11)}${r[6]} · ${r[7]} · ${r[8]}</span></span><span class="hint"><span class="keycap">↩</span>Open<span class="keycap">Space</span></span></div>`).join('')}</div>`;
+const words = (html) => html.split(' ').map((w, i) => `<span style="animation-delay:${(i * 0.05).toFixed(2)}s">${w}</span>`).join(' ');
+const answer = () => `<div class="ans2"><span class="lbl"><span class="spk">${ic('spark', 11, 1.8)}</span>Answer from your files</span><p>${words('Your lease ends on <b>Aug&nbsp;31,&nbsp;2027.</b> Rent is $2,400 a month.')}</p><span class="src">${page('#3b5bdb', 's')}Lease agreement 2026.pdf · page 2<span class="lnk">Open page 2<span class="keycap">⌘↩</span></span></span></div>`;
+const field = (live, q = 'lease<span class="caret"></span>') => `<div class="pf"><span class="lead">${ic('search', 20, 2)}</span><span class="q">${q}</span><span class="keycap">esc</span><span class="gbtn${live ? ' on' : ''}">${live ? wave : ic('mic', 15)}</span></div>`;
+const foot = `<div class="foot"><span><span class="keycap">↑</span><span class="keycap">↓</span>choose</span><span><span class="keycap">⌥</span><span class="keycap">Space</span>talk</span><span class="ml">${ic('info', 11)}Found on your Mac. Nothing leaves it.</span></div>`;
+const side = () => `<aside class="side"><div class="lights"><i></i><i></i><i></i></div><div class="wm">Mac <b>SPRINT</b></div>
+  <div class="sh">Discover</div>${[['house', 'Home', '', 1], ['clock', 'Recents'], ['grid', 'Library', '2,880'], ['down', 'Downloaded From', '913'], ['clip', 'Clipboard']].map(([i, n, b, s]) => `<div class="srow${s ? ' sel' : ''}">${ic(i)}${n}${b ? `<em>${b}</em>` : ''}</div>`).join('')}
+  <div class="sh">Clean up</div>${[['trash', 'Free Up Space', '14.1 GB'], ['dup', 'Duplicates', '44.8 MB'], ['folder', 'Organizer']].map(([i, n, b]) => `<div class="srow">${ic(i)}${n}${b ? `<em class="good">${b}</em>` : ''}</div>`).join('')}</aside>`;
+const behind = () => `<div class="behind"><div class="head"><div><h3>Good afternoon</h3><p>245 GB used of 494 GB</p></div></div><div class="bar2">${[['var(--k-app)', 18], ['var(--k-video)', 26], ['var(--k-image)', 16], ['var(--k-doc)', 12], ['var(--k-music)', 6], ['var(--m-line)', 22]].map(([c, f]) => `<i style="flex:${f};background:${c}"></i>`).join('')}</div><div class="row">${[200, 30, 140, 280, 330, 90].map((h) => `<span class="th" style="--h:${h}"></span>`).join('')}</div><div class="row">${[250, 10, 170, 310, 60, 220].map((h) => `<span class="th" style="--h:${h}"></span>`).join('')}</div></div>`;
+const tb = `<div class="tb2"><span class="cap">${ic('search', 13)}<span>Search or ask</span><span class="keycap">⌘F</span><span class="gbtn">${ic('mic', 11)}</span></span></div>`;
+const win = (panel) => `<div class="win ramp o">${side()}<div class="main">${tb}<div class="content">${behind()}${panel}</div></div></div>`;
+const states = () => `<div class="strip">${[
+  ['Ready: the capsule in the toolbar', `<div style="display:grid;justify-items:center">${tb.replace('tb2', 'tb2" style="border:0;padding:0')}</div>`],
+  ['Listening: the ring turns, words appear as you speak', `<div class="gp live"><div class="in">${field(true, 'invoices from <span class="live-w">last mon</span>')}</div></div>`],
+  ['Thinking: before an answer', `<div class="gp live"><div class="in">${field(false, 'when does my lease end?')}<div class="ans2"><span class="lbl"><span class="spk">${ic('spark', 11, 1.8)}</span><span class="think">Reading 3 matching files…</span></span></div></div></div>`],
+  ['Asking what a file is', `<div class="gp"><div class="in">${field(false, 'what is System Data?')}<div class="ans2"><span class="lbl"><span class="spk">${ic('info', 11, 2)}</span>About this item</span><p style="font-size:14px">System Data is <b>150 GB</b>, mostly app caches. Safe to clear.</p></div></div></div>`]].map(([n, h]) => `<div class="st"><span>${n}</span><div class="pad">${h}</div></div>`).join('')}</div>`;
+
+const OPTIONS = [
+  { name: 'Glass list', tag: 'My pick', idea: 'One floating glass panel: the field, the answer from your files with its source page, then the files. The selected row is a soft tint with a fine ring and shows ↩ Open and Space only there.',
+    good: ['Calm and premium: glass, fine lines, no heavy blocks', 'Answer first, with its source one click away', 'Each row says why it matched, with an icon', 'Thumbnails show the real page or photo'],
+    watch: ['Glass needs a solid fallback when Reduce Transparency is on', 'Three results visible before scrolling'],
+    body: () => win(`<div class="gp"><div class="in">${field(false)}${answer()}<div class="sec"><span>Files</span><span>3</span></div>${rows()}${foot}</div></div>`) },
+  { name: 'With preview', idea: 'The same panel, wider, with a preview of the selected file on the right: the page with the matched line, and its details. ↑↓ change the preview as you move.',
+    good: ['See the page before opening it', 'Details (size, folder, date) without Get Info', 'Great on large displays'],
+    watch: ['Wide: covers most of a small window', 'More to look at than a plain list'],
+    body: () => win(`<div class="gp wide"><div class="in">${field(false)}<div class="split"><div style="display:grid;gap:8px;align-content:start">${answer()}<div class="sec"><span>Files</span><span>3</span></div>${rows()}</div><div class="pv">${page('#3b5bdb', 'big')}<b>Lease agreement 2026.pdf</b><dl><dt>Kind</dt><dd>PDF, 6 pages</dd><dt>Size</dt><dd>1.8 MB</dd><dt>Where</dt><dd>Documents</dd><dt>Added</dt><dd>Oct 28</dd></dl></div></div>${foot}</div></div>`) },
+  { name: 'Night glass', idea: 'The panel is always dark smoked glass, like a heads-up display, whatever the appearance. The ring glows brighter against it.',
+    good: ['The most dramatic', 'The ring and highlights read strongly', 'Clearly “a layer over your work”'],
+    watch: ['Ignores the light appearance, which some people choose on purpose', 'Dark-on-light can feel heavy for quick searches'],
+    body: () => win(`<div class="gp hud live"><div class="in">${field(false)}${answer()}<div class="sec"><span>Files</span><span>3</span></div>${rows()}${foot}</div></div>`) },
+];
+
+let ap = matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
+try { const s = localStorage.getItem('ms-home-ap'); if (s === 'light' || s === 'dark') ap = s; } catch (e) {}
+document.getElementById('jump').innerHTML = OPTIONS.map((o, i) => `<a href="#option-${i + 1}"><b>${i + 1}</b>${o.name}</a>`).join('') + '<a href="#states"><b>+</b>States</a>';
+function render() {
+  document.getElementById('opts').innerHTML = OPTIONS.map((o, i) => `
+  <section class="opt${i === 0 ? ' top' : ''}" id="option-${i + 1}" aria-labelledby="h-${i}">
+    <div class="opt-head"><span class="rank">${i + 1}</span><h2 id="h-${i}">${o.name}</h2>${o.tag ? `<span class="tag">${o.tag}</span>` : ''}<p>${o.idea}</p></div>
+    <div class="scroll"><div class="${ap}">${o.body()}</div></div>
+    <div class="notes"><div><h3>Good for</h3><ul>${o.good.map((g) => `<li>${g}</li>`).join('')}</ul></div><div><h3>Watch for</h3><ul>${o.watch.map((g) => `<li>${g}</li>`).join('')}</ul></div></div>
+  </section>`).join('') + `<section class="opt" id="states" aria-labelledby="h-st"><div class="opt-head"><span class="rank">+</span><h2 id="h-st">States, for every option</h2><p>How the bar looks before you type, while you talk, while it thinks, and when you ask what something is. Motion only follows what you do; with Reduce Motion on, everything stays still.</p></div><div class="scroll"><div class="${ap} ramp">${states()}</div></div></section>`;
+  document.querySelectorAll('[data-ap]').forEach((b) => b.setAttribute('aria-pressed', String(b.dataset.ap === ap)));
+}
+document.querySelectorAll('[data-ap]').forEach((b) => b.addEventListener('click', () => { ap = b.dataset.ap; try { localStorage.setItem('ms-home-ap', ap); } catch (e) {} render(); }));
+render();
+</script>
