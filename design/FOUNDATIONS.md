@@ -102,3 +102,10 @@ From the [Recents options](recents-options.html) page: option 1, **Latest first*
 (preview with a New badge, kind, source, size, Open / Quick Look / Show in Finder, and a "drag it into Mail" hint).
 Below it: kind filter chips, then the other files in a grid grouped by Today, Yesterday and Earlier this week, each with
 its source and time. Grid / List switch top right (⌘1 / ⌘2).
+
+## Library (decided 2026-10-29)
+
+From the [Library options](library-options.html) page: option 1, **Kind tabs**. One row of tabs (All, Apps, Videos,
+Images, Documents, then More for Archives and Music; more kinds move into More as the window narrows), each with its
+kind colour dot and count. A summary line ("162 videos · 11.21 GB · 37% of your files") with a Sort pop-up
+(Largest first). A grid of big previews with folder and size. Selecting a file opens the inspector on the right (⌘I).

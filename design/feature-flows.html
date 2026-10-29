@@ -433,6 +433,14 @@ main { min-width: 0; display: grid; grid-template-columns: minmax(0, 1fr); gap: 
 .m-day small { font-weight: 500; color: var(--m-text3); margin-left: 4px; }
 .m-file .m-from { font-size: 9.5px; color: var(--m-text3); text-align: center; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
 
+/* Library: kind tabs and summary line */
+.m-ktabs span { display: inline-flex; align-items: center; gap: 5px; padding: 3px 9px; font-weight: 600; }
+.m-ktabs span i { width: 7px; height: 7px; border-radius: 50%; background: var(--c); }
+.m-ktabs span small { font-weight: 500; color: var(--m-text3); }
+.m-libsum { display: flex; align-items: center; gap: 10px; font-size: 11.5px; color: var(--m-text2); }
+.m-libsum b { color: var(--m-text); }
+.m-libsum .m-pop { margin-left: auto; }
+
 /* Review status */
 .rail-count { margin: 0 8px 4px; font-size: 13px; color: var(--ink-3); }
 .st { font: 700 11px/1 var(--body); font-style: normal; letter-spacing: .02em; border-radius: 999px; padding: 3px 7px; flex: none; color: var(--ink-3); background: var(--rule); vertical-align: middle; }
@@ -677,8 +685,8 @@ const C = {
     sample: () => `<div class="m-dsum" style="width:300px"><span class="free"><b>172 MB</b><small>can be freed</small></span><span><b>2</b><small>extra copies</small></span><span class="m-btn danger">Trash 2 copies</span></div>` },
   matchTag: { name: 'Match reason line', swift: 'Label(match.reason.title, systemImage: match.reason.symbol)\n  .font(.caption2.weight(.semibold))\n  .foregroundStyle(.secondary)\n  .padding(.horizontal, 6).padding(.vertical, 1)\n  .background(.quaternary, in: .capsule)', sf: ['textformat', 'sparkles', 'text.viewfinder'], size: 'Height about 16 pt', type: '10 pt semibold', color: 'Secondary grey on a light grey capsule', shape: 'Capsule', states: ['Text in image', 'Name', 'What it shows (AI)'],
     sample: () => `<div style="display:grid;gap:4px;font-size:11.5px;color:var(--m-text3)">${Object.values(WHY).map(([i, t]) => `<span>${ic(i, 10)} ${t} · Desktop · Sep 18</span>`).join('')}</div>` },
-  segmented: { name: 'Segmented control', swift: 'Picker("Kind", selection: $kind) {\n  ForEach(Kind.allCases) { Text($0.name).tag($0) }\n}\n.pickerStyle(.segmented)', sf: [], size: 'Height 22–24 pt', type: '11–12 pt; selected semibold', color: 'Grey track; selected segment raised white', shape: '7 pt outer, 5 pt inner corners', states: ['Each segment selected', 'Hover', 'Disabled'],
-    sample: () => `<div class="m-seg"><span>All</span><span>Images</span><span class="on">Videos</span><span>Music</span></div>` },
+  segmented: { name: 'Kind tabs (segmented control)', swift: 'Picker("Kind", selection: $kind) {\n  ForEach(Kind.allCases) { Text($0.name).tag($0) }\n}\n.pickerStyle(.segmented)', sf: [], size: 'Height 22–24 pt', type: '11–12 pt; selected semibold', color: 'Grey track; selected segment raised white', shape: '7 pt outer, 5 pt inner corners', states: ['Each segment selected', 'Hover', 'Disabled'],
+    sample: () => `<div class="m-seg m-ktabs"><span>All <small>2,880</small></span><span style="--c:var(--k3)"><i></i>Images <small>2,280</small></span><span class="on" style="--c:var(--k2)"><i></i>Videos <small>162</small></span></div>` },
   grid: { name: 'Grid', swift: 'LazyVGrid(columns: [GridItem(.adaptive(minimum: 110))],\n          spacing: 12) {\n  ForEach(files) { FileCard(file: $0) }\n}', sf: [], size: 'Tiles min 86–120 pt; 10–12 pt gaps', type: '—', color: '—', shape: 'Columns adapt to window width', states: ['Loading', 'Filled', 'Empty'],
     sample: () => `<div class="m-grid" style="width:220px;grid-template-columns:repeat(3,1fr)">${[200, 30, 150, 280, 330, 100].map((h) => `<i class="ph" style="--h:${h};aspect-ratio:4/3;border-radius:6px"></i>`).join('')}</div>` },
   fileCard: { name: 'File card', swift: 'VStack(spacing: 4) {\n  Image(nsImage: thumb).resizable().scaledToFill()\n    .frame(height: 70).clipShape(.rect(cornerRadius: 7))\n  Text(file.name).lineLimit(1).truncationMode(.middle)\n}', sf: ['play.fill'], size: 'Thumbnail 4 : 3; ~90 pt wide', type: 'Name 10–12 pt, one line, cut in the middle', color: 'Selected: accent ring + accent name', shape: '7 pt corners', states: ['Default', 'Hover', 'Selected', 'Multi-selected'],
@@ -828,14 +836,20 @@ function recentsBody({ menu = false } = {}) {
     <div class="m-day">Yesterday <small>4</small></div><div class="m-grid">${RYEST.map((f) => rfile(f)).join('')}</div>`;
 }
 
-/* Library pieces */
-const LIB = [['Beach-sunset.heic', 'Images', 200], ['Birthday.mov', 'Videos', 330], ['Lease.pdf', 'Documents'], ['Trail.jpg', 'Images', 120], ['Product-demo.mp4', 'Videos', 10], ['Podcast.mp3', 'Music'], ['City.png', 'Images', 280], ['Drone.mov', 'Videos', 150], ['Resume.docx', 'Documents'], ['Coffee.webp', 'Images', 30], ['Keynote.app', 'Apps'], ['Wedding.mov', 'Videos', 300]];
+/* Library pieces (decided in design/library-options.html: option 1, Kind tabs) */
+// [name, kind, hue (photos and videos) or icon, folder, size, length]
+const LIB = [['Wedding.mov', 'Videos', 300, 'Movies', '4.2 GB', '18:42'], ['Photo editor.app', 'Apps', 'app', 'Applications', '3.1 GB'], ['Drone over the bay.mov', 'Videos', 150, 'Desktop', '2.6 GB', '6:10'], ['Keynote rehearsal.mov', 'Videos', 230, 'Documents', '1.1 GB', '12:20'], ['Backup.zip', 'Archives', 'doc.zipper', 'Downloads', '630 MB'], ['Concert.mp4', 'Videos', 270, 'Movies', '720 MB', '4:48'], ['Trip.mov', 'Videos', 200, 'Downloads', '412 MB', '0:42'], ['Birthday.mov', 'Videos', 330, 'Movies', '388 MB', '3:05'], ['Lease agreement 2026.pdf', 'Documents', 'doc', 'Documents', '1.8 MB'], ['Beach-sunset.heic', 'Images', 25, 'Pictures', '3.4 MB']];
+const LKINDS = [['All', null, '2,880'], ['Apps', 'var(--k1)', '110'], ['Videos', 'var(--k2)', '162'], ['Images', 'var(--k3)', '2,280'], ['Documents', 'var(--k4)', '201']];
+const LSUM = { All: '<b>2,880 files</b> · 30.19 GB', Videos: '<b>162 videos</b> · 11.21 GB · 37% of your files' };
 function libBody(kind, selName, hotKind, hotFile) {
-  const kinds = ['All', 'Images', 'Videos', 'Music', 'Documents', 'Apps'];
-  const items = LIB.filter((f) => kind === 'All' || f[1] === kind);
-  return `<div class="m-row2"><div class="m-h1" data-c="title">Library</div><div class="m-seg" data-c="segmented">${kinds.map((k) => `<span class="${k === kind ? 'on' : ''}" ${k === hotKind ? 'data-hot' : ''}>${k}</span>`).join('')}</div></div>
-  <div class="m-grid" data-c="grid">${items.map((f) => `<div class="m-file${f[0] === selName ? ' sel' : ''}" ${f[0] === selName || (!selName && f[0] === items[0][0]) ? 'data-c="fileCard"' : ''} ${f[0] === hotFile ? 'data-hot' : ''}>${f[2] !== undefined ? `<i class="ph" style="--h:${f[2]}">${f[1] === 'Videos' ? '<em class="m-play">▶ 0:42</em>' : ''}</i>` : `<i class="doc">${ic(f[1] === 'Music' ? 'music.note' : f[1] === 'Apps' ? 'app' : 'doc', 22)}</i>`}<span>${f[0]}</span></div>`).join('')}</div>`;
+  const items = LIB.filter((f) => kind === 'All' || f[1] === kind).slice(0, 8);
+  const kc = (k) => ({ Videos: 'var(--k2)', Apps: 'var(--k1)', Images: 'var(--k3)', Documents: 'var(--k4)', Archives: 'var(--k5)' })[k];
+  return `<div><div class="m-h1" data-c="title">Library</div><div class="m-sub">2,880 files · 30.19 GB in 4 folders</div></div>
+  <div class="m-seg m-ktabs" data-c="segmented">${LKINDS.slice(0, selName ? 4 : 5).map(([k, c, n]) => `<span class="${k === kind ? 'on' : ''}" ${k === hotKind ? 'data-hot' : ''} ${c ? `style="--c:${c}"` : ''}>${c ? '<i></i>' : ''}${k} <small>${n}</small></span>`).join('')}<span>More ${ic('chevron.down', 10)}</span></div>
+  <div class="m-libsum"><span>${LSUM[kind]}</span><span class="m-pop" data-c="popup">Sort: <b>Largest first</b> ▾</span></div>
+  <div class="m-grid" data-c="grid">${items.map((f) => `<div class="m-file${f[0] === selName ? ' sel' : ''}" ${f[0] === selName || (!selName && f[0] === items[0][0]) ? 'data-c="fileCard"' : ''} ${f[0] === hotFile ? 'data-hot' : ''}>${typeof f[2] === 'number' ? `<i class="ph" style="--h:${f[2]}">${f[5] ? `<em class="m-play">▶ ${f[5]}</em>` : ''}</i>` : `<i class="doc" style="color:${kc(f[1])}">${ic(f[2], 22)}</i>`}<span>${f[0]}</span><small class="m-from">${f[3]} · ${f[4]}</small></div>`).join('')}</div>`;
 }
+const LINSP = `<i class="ph" style="--h:300"></i><b>Wedding.mov</b><dl class="m-dl"><dt>Kind</dt><dd>Video · 18:42</dd><dt>Size</dt><dd>4.2 GB</dd><dt>Folder</dt><dd>Movies</dd><dt>Created</dt><dd>Jun 14, 2025</dd><dt>Opened</dt><dd>3 weeks ago</dd><dt>From</dt><dd>AirDrop</dd></dl><span style="display:flex;gap:6px;flex-wrap:wrap"><span class="m-btn pri">Open</span><span class="m-btn">Show in Finder</span></span>`;
 
 /* =================== features + flows =================== */
 const F = [
@@ -867,14 +881,14 @@ const F = [
     what: 'All your files shown as big thumbnails, filtered by kind: images, videos, music, documents and apps.',
     when: 'When you want to see what you have rather than dig through folders.',
     steps: [
-      { t: 'See everything', do: 'Click “Videos” in the segmented control.', see: 'A grid of every file with large thumbnails.', why: 'A segmented control suits 2–6 options that should always be visible. The grid adapts its columns to the window width.',
-        comps: ['segmented', 'grid', 'fileCard', 'title'], screen: () => win({ sel: 'library', body: libBody('All', null, 'Videos') }) },
-      { t: 'Filter to videos', do: 'Click the “Wedding.mov” card to select it.', see: 'Only videos remain, each with a play badge and duration.', why: 'The play badge tells videos apart from photos at a glance without opening them.',
+      { t: 'See everything', do: 'Click the Videos tab.', see: 'Kind tabs across the top, each with its colour dot and count, and More for Archives and Music. A line says how much you have (2,880 files · 30.19 GB) with a Largest first sort menu. Below, a grid of big previews with each file’s folder and size.', why: 'Tabs keep every kind one click away and work the same for each kind. Counts and sizes answer “how much do I have?” without a chart, using the same colours as Home. On a wide window Archives and Music show as tabs too. ⇧⌘L opens Library from anywhere.',
+        comps: ['title', 'segmented', 'popup', 'grid', 'fileCard'], screen: () => win({ sel: 'library', body: libBody('All', null, 'Videos') }) },
+      { t: 'Filter to videos', do: 'Click the “Wedding.mov” card to select it.', see: 'Only videos remain, largest first, each with a play badge and its length. The line above says 162 videos · 11.21 GB · 37% of your files.', why: 'The play badge tells videos apart from photos at a glance. Sorting largest first shows what takes the most space without a separate tool.',
         comps: ['segmented', 'fileCard'], screen: () => win({ sel: 'library', body: libBody('Videos', null, null, 'Wedding.mov') }) },
-      { t: 'Inspect a file', do: 'Right-click the card to open its menu (here, just click it).', see: 'An inspector slides in on the right with preview, size, dates and where it came from.', why: 'The inspector shows detail without leaving the grid, so you keep your place.',
-        comps: ['inspector', 'fileCard'], screen: () => win({ sel: 'library', body: libBody('Videos', 'Wedding.mov', null, 'Wedding.mov'), insp: `<i class="ph" style="--h:300"></i><b>Wedding.mov</b><dl class="m-dl"><dt>Kind</dt><dd>Video · 4K</dd><dt>Size</dt><dd>4.8 GB</dd><dt>Length</dt><dd>12:04</dd><dt>Modified</dt><dd>Jan 2025</dd><dt>From</dt><dd>AirDrop</dd></dl>` }) },
+      { t: 'Inspect a file', do: 'Right-click the card to open its menu (here, just click it).', see: 'The inspector on the right shows a preview, kind and length, size, folder, dates, where it came from, and Open and Show in Finder. ⌘I shows or hides it.', why: 'The inspector shows detail without leaving the grid, so you keep your place.',
+        comps: ['inspector', 'fileCard'], screen: () => win({ sel: 'library', body: libBody('Videos', 'Wedding.mov', null, 'Wedding.mov'), insp: LINSP }) },
       { t: 'Act on it', do: 'Done. This is the end of the flow.', see: 'A right-click menu with the common actions and their shortcuts.', why: 'Context menus keep actions close to the item. Each action also lives in the menu bar so people can find the shortcut.',
-        comps: ['ctxMenu', 'inspector'], screen: () => win({ sel: 'library', body: libBody('Videos', 'Wedding.mov'), insp: `<i class="ph" style="--h:300"></i><b>Wedding.mov</b><dl class="m-dl"><dt>Size</dt><dd>4.8 GB</dd></dl>`, over: `<div class="m-menu" data-c="ctxMenu" style="left:330px;top:210px"><div>Open<small>⌘O</small></div><div>Quick Look<small>Space</small></div><div class="hl">Show in Finder<small>⌥⌘R</small></div><div>Copy Path<small>⌥⌘C</small></div><hr><div>Move to Trash<small>⌘⌫</small></div></div>` }) },
+        comps: ['ctxMenu', 'inspector'], screen: () => win({ sel: 'library', body: libBody('Videos', 'Wedding.mov'), insp: LINSP, over: `<div class="m-menu" data-c="ctxMenu" style="left:330px;top:210px"><div>Open<small>⌘O</small></div><div>Quick Look<small>Space</small></div><div class="hl">Show in Finder<small>⌥⌘R</small></div><div>Copy Path<small>⌥⌘C</small></div><hr><div>Move to Trash<small>⌘⌫</small></div></div>` }) },
     ] },
   { id: 'viewer', group: 'Discover', icon: 'photo', name: 'Image Viewer',
     what: 'Open one photo and step through every photo in the same folder with the arrow keys.',
