@@ -98,7 +98,7 @@ export const FEATURES = [
       'Every download grouped by source: Safari, Mail, Slack, WhatsApp, AirDrop, ChatGPT and any website.',
       'Biggest sources first, with file counts and sizes.',
       'Opening a source is a search with a “From” token, so you can narrow it down by typing.',
-      'The inspector shows where any file came from and when. Opens with ⇧⌘J.',
+      'The inspector shows where any file came from and when. Opens with ⌥⌘L.',
     ],
   },
   {
@@ -225,9 +225,9 @@ export const iconSvg = (inner, size = 18) =>
   `<svg viewBox="0 0 24 24" width="${size}" height="${size}" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">${inner}</svg>`;
 
 export const SHORTCUTS = [
-  { group: 'Go', items: [['Home', ['⇧', '⌘', 'H']], ['Recents', ['⇧', '⌘', 'R']], ['Library', ['⇧', '⌘', 'L']], ['Downloaded From', ['⇧', '⌘', 'J']], ['Clipboard', ['⇧', '⌘', 'V']], ['Clean Up', ['⇧', '⌘', 'K']], ['Duplicates', ['⇧', '⌘', 'D']], ['Organizer', ['⇧', '⌘', 'O']]] },
-  { group: 'Find and view', items: [['Search', ['⌘', 'F']], ['Copy text from images', ['⇧', '⌘', 'C']], ['Save search', ['⌘', 'S']], ['Quick Look', ['Space']], ['Grid / List', ['⌘', '1', '⌘', '2']], ['Inspector', ['⌘', 'I']], ['Back / Forward', ['⌘', '[', '⌘', ']']]] },
-  { group: 'Act', items: [['Open', ['⌘', 'O']], ['Show in Finder', ['⌥', '⌘', 'R']], ['Copy path', ['⌥', '⌘', 'C']], ['Explain this file', ['⌥', '⌘', 'E']], ['Move to Trash', ['⌘', '⌫']], ['Undo', ['⌘', 'Z']]] },
+  { group: 'Go', items: [['Home', ['⇧', '⌘', 'H']], ['Recents', ['⇧', '⌘', 'R']], ['Library', ['⇧', '⌘', 'L']], ['Downloaded From', ['⌥', '⌘', 'L']], ['Clipboard', ['⇧', '⌘', 'V']], ['Clean Up', ['⇧', '⌘', 'K']], ['Space Map', ['⇧', '⌘', 'M']], ['Duplicates', ['⇧', '⌘', 'D']], ['Organizer', ['⇧', '⌘', 'O']], ['Screenshot Inbox', ['⇧', '⌘', 'I']]] },
+  { group: 'Find and view', items: [['Search', ['⌘', 'F']], ['Ask Your Files', ['⇧', '⌘', 'A']], ['Copy text from images', ['⇧', '⌘', 'C']], ['Save search', ['⌘', 'S']], ['Quick Look', ['Space']], ['Grid / List', ['⌘', '1', '⌘', '2']], ['Inspector', ['⌘', 'I']], ['Back / Forward', ['⌘', '[', '⌘', ']']]] },
+  { group: 'Act', items: [['Open', ['⌘', 'O']], ['Show in Finder', ['⌥', '⌘', 'R']], ['Copy path', ['⌥', '⌘', 'C']], ['Paste clean', ['⌥', '⇧', '⌘', 'V']], ['Explain this file', ['⌥', '⌘', 'E']], ['Move to Trash', ['⌘', '⌫']], ['Undo', ['⌘', 'Z']]] },
 ];
 
 // Spotlight cards: the problem, the everyday use, three short points and the shortcut.
@@ -237,7 +237,7 @@ export const STORIES = [
     problem: 'You remember what’s in a file, not what it’s called.',
     use: 'Type “pdfs from last week” and get exactly those files.',
     points: ['Shows how it read you, as filters you can remove', 'Finds photos by what they show', 'Says why each result matched'] },
-  { id: 'ask', label: 'Ask Your Files', keys: ['⌘', 'F'], title: 'Ask. Don’t dig.',
+  { id: 'ask', label: 'Ask Your Files', keys: ['⇧', '⌘', 'A'], title: 'Ask. Don’t dig.',
     problem: 'You need one fact, and it’s buried in a document.',
     use: 'Ask “When does my lease end?” and get the answer with its page.',
     points: ['The source file and page are one click away', 'Runs on your Mac, from your files only', 'Not sure? It shows the closest files instead'] },
@@ -245,7 +245,7 @@ export const STORIES = [
     problem: 'A new download disappears into a crowded folder.',
     use: 'Open Recents and it’s at the top, ready to preview or drag into an email.',
     points: ['Grouped by Today, Yesterday and this week', 'Space for Quick Look, ← → for the next file', 'Right-click for Show in Finder and Copy Path'] },
-  { id: 'downloaded', label: 'Downloaded From', keys: ['⇧', '⌘', 'J'], title: 'Remember where it came from.',
+  { id: 'downloaded', label: 'Downloaded From', keys: ['⌥', '⌘', 'L'], title: 'Remember where it came from.',
     problem: 'You know who sent the file, not its name.',
     use: 'Click Mail and see every file you saved from email.',
     points: ['Safari, Mail, Slack, WhatsApp, AirDrop and more', 'Biggest sources first', 'Each file shows who sent it and when'] },
@@ -253,7 +253,7 @@ export const STORIES = [
     problem: 'Your Mac says the disk is full, and you don’t know why.',
     use: 'Review old installers and big videos, then move them to the Trash.',
     points: ['See where the space went', 'Review before anything moves', 'Everything goes to the Trash, so you can undo'] },
-  { id: 'spacemap', label: 'Space Map', keys: ['⇧', '⌘', 'K'], title: 'See where the space went.',
+  { id: 'spacemap', label: 'Space Map', keys: ['⇧', '⌘', 'M'], title: 'See where the space went.',
     problem: 'A list of sizes doesn’t show what’s really big.',
     use: 'Open the map, spot the biggest block, and go inside it.',
     points: ['Block size matches folder size', 'Click to go in, click the path to go back', 'Move to the Trash with Undo'] },
@@ -281,7 +281,7 @@ export const STORIES = [
     problem: 'Copying something new erases what you copied before.',
     use: 'Press ⇧⌘V, find the address from an hour ago and click Copy.',
     points: ['Search everything you copied', 'Pin snippets you reuse', 'Password fields are never recorded'] },
-  { id: 'pasteclean', label: 'Paste Clean', keys: ['⇧', '⌘', 'V'], title: 'Paste it clean.',
+  { id: 'pasteclean', label: 'Paste Clean', keys: ['⌥', '⇧', '⌘', 'V'], title: 'Paste it clean.',
     problem: 'Pasted links carry tracking codes, and pasted text brings its own fonts.',
     use: 'Paste the link without “?utm_source=…”, or the text as plain text.',
     points: ['See what is removed before you paste', 'Plain text only in the apps you choose', 'Paste as is is always one click away'] },
@@ -289,7 +289,7 @@ export const STORIES = [
     problem: 'Downloads is a pile of everything.',
     use: 'See where each file would go, untick what should stay, then approve.',
     points: ['Folders by kind, screenshots by month', 'Nothing moves until you approve', 'Every move can be undone'] },
-  { id: 'shots', label: 'Screenshot Inbox', keys: ['⇧', '⌘', 'O'], title: 'Screenshots, filed.',
+  { id: 'shots', label: 'Screenshot Inbox', keys: ['⇧', '⌘', 'I'], title: 'Screenshots, filed.',
     problem: 'The Desktop is full of “Screenshot 2026-…” and the receipt is in there somewhere.',
     use: 'Sort them into Receipts, Tickets, Errors and Chats in one go.',
     points: ['Approve per group', 'Possible passwords stay put', 'Every move can be undone'] },

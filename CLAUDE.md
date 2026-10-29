@@ -154,6 +154,10 @@ Do not refactor the repository during an audit unless explicitly asked.
 - No version numbers, no "At launch", no roadmap, no pricing section.
 - Plain, short sentences. Re-read new copy for grammar.
 - Privacy promises stay true everywhere: on-device, no account, nothing uploaded, files go to the Trash, Undo on every change.
+- The site calls the product "MacSprint AI" (title, headings, copy). The wordmark stays "Mac S P R I N T".
+- Every feature has its own shortcut: simple, easy to remember, true to the feature, and following macOS conventions
+  (⌘F Search, ⌥⌘L Downloads, ⌥⇧⌘V paste clean). No two features share one. Keep `SHORTCUTS`, `STORIES` and the Go menu in
+  `design/feature-flows.html` in sync.
 
 **Design**
 - Foundations are final: `design/FOUNDATIONS.md`. Wordmark "Mac S P R I N T" in indigo; accent `#3b5bdb` light / `#8399ff` dark;
@@ -188,7 +192,7 @@ and a flow in `design/feature-flows.html`.
 ## Commands
 
 - Preview: `python3 -m http.server 8765` then open http://localhost:8765 (ES modules need HTTP).
-- Test: `npm test`. Needs Playwright (`npx playwright install chromium`). It must pass before every push.
+- Test: `npm test`. Playwright is a dev dependency: `npm install`, then `npx playwright install chromium` once. It must pass before every push.
   When you add or remove features, update the counts in `tests/check.mjs` (features, tabs, problem cards, highlight tiles).
 - Worker locally: `npx wrangler dev --var EXPORT_KEY:test --var NOTIFY_TO:you@example.com`.
 - Pushing to `main` redeploys macsprint.com through Cloudflare. Deploy steps: `docs/DEPLOY.md`.
