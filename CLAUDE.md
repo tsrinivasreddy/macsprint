@@ -175,7 +175,8 @@ Do not refactor the repository during an audit unless explicitly asked.
 Home, Recents, Visual Library, Image Viewer, Search, Ask Your Files, Downloaded From, Clipboard, Paste Clean, Clean Up,
 Space Map, Explain This, Duplicates, Organizer, Screenshot Inbox, Smart Rename.
 Every feature needs: a `FEATURES` entry, a `STORIES` entry (problem, use case, shortcut), a demo in `js/demos.js` with the same id,
-and a flow in `design/feature-flows.html`.
+and a flow in `design/feature-flows.html` (Ask Your Files is covered by the Search flow). Each flow has a review status in `STATUS`:
+Draft, In review or Final. Only the owner marks a feature Final.
 
 ## Layout
 

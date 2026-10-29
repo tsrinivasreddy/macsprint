@@ -17,6 +17,7 @@ Ideas we built, tried and took out of the main pages. Nothing here is in use. It
 | **Separate Storage Intelligence, Safe Cleanup and Quick Search & Command Panel flows; “Images” sidebar row; Clipboard under Everyday** | UX review against Seek and Homy (`../inspiration/seek-homy-review.md`): one Clean Up place, sidebar sections, Quick Search removed | `design/feature-flows.html` at the commit | Each feature is one entry in `F` | `ab53202` |
 | **Homy-style pastel website**: first website look with pastel library folders, before the Graphite & Glass restyle | Restyled to the Apple-like Graphite & Glass theme | Check out the commit (whole site) | `index.html`, `styles.css` at the commit | `84d7bf5` |
 | **Six search result rows**: Reason chip, Snippet first, Big preview, Grouped by why, Top hit, Compact with badge, each in light and dark | Big preview (C) was chosen; see `../search.html` | [`search-row-options.html`](search-row-options.html) | Each option is one entry in `OPTIONS` (a `rows()` function) | not committed before |
+| **Separate Search and Ask Your Files flows**: Search with a grid of result cards and an AI on/off switch; Ask Your Files as its own flow | Ask lives in the Search field; Search uses the Graphite field, big preview rows and voice; smart search is always on | `design/feature-flows.html` at the commit | `search` and `ask-files` entries in `F` | `16e9712` |
 
 ## Still live, not archived
 
