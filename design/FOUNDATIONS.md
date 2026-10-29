@@ -149,3 +149,12 @@ Scan result (first screen), visuals over words: "44.8 MB you can free" over one 
 colours, each part with its kind icon and size, small parts unlabeled), folder tiles with a count badge (the biggest in
 the accent tint), 46 extra copies and 9 similar sets beside them, and one quiet line for how it was checked
 (48,210 › 1,204 › 131 › 73 identical). Then Review 27 groups and "Nothing moves until you choose".
+
+## Organizer (decided 2026-10-29)
+
+From the [options page](organizer-options.html): option 1, **Piles**. Each destination folder is a pile, biggest first:
+three thumbnails, a count badge, the destination with a folder icon in the kind colour, and a switch to leave the pile
+out. A dashed tile counts what stays (added this week or open in an app). Click a pile and its files open in place
+below, like Duplicates: a tick box, the name now, an arrow, and the new name in the accent. The bar says exactly how
+many files move ("Move 181 files"); "Review all…" lists every file. Moves check names first (a taken name gets a
+number, nothing is overwritten), and every move and rename can be undone. When done, each badge turns green with a tick.
