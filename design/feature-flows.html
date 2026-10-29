@@ -528,29 +528,25 @@ main { min-width: 0; display: grid; grid-template-columns: minmax(0, 1fr); gap: 
 .m-dkeys { display: flex; flex-wrap: wrap; gap: 3px 12px; font-size: 10px; color: var(--m-text3); }
 .m-dkeys kbd { font: 600 9.5px var(--mac-font); color: var(--m-text2); border: 1px solid var(--m-line); border-radius: 4px; padding: 0 4px; margin-right: 3px; }
 .m-seg span small { color: var(--m-text3); font-weight: 500; }
-.m-scan { display: grid; grid-template-columns: 1fr auto 1fr auto 1fr auto 1fr; gap: 6px; align-items: stretch; }
-.m-scan .m-sstep { border-radius: 12px; padding: 9px 11px; background: var(--m-alt); display: grid; gap: 1px; align-content: start; }
-.m-scan .m-sstep b { font-size: 17px; font-variant-numeric: tabular-nums; letter-spacing: -.01em; }
-.m-scan .m-sstep span { font-size: 11px; font-weight: 600; } .m-scan .m-sstep small { font-size: 9.5px; color: var(--m-text3); }
-.m-scan .m-sstep.end { background: var(--m-soft); box-shadow: inset 0 0 0 1px color-mix(in oklab, var(--m-accent) 40%, transparent); }
-.m-scan .m-sstep.end b { color: var(--m-accent); }
-.m-scan .arr { align-self: center; color: var(--m-text3); }
-.m-ins { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
-.m-ins .card { border-radius: 16px; padding: 12px; background: var(--m-bg); box-shadow: 0 1px 2px rgba(0,0,0,.05), 0 0 0 1px var(--m-line); display: grid; gap: 8px; align-content: start; }
-.m-ins .hd { display: grid; gap: 1px; } .m-ins .hd b { font-size: 12px; } .m-ins .hd span { font-size: 10.5px; color: var(--m-text2); }
-.m-kbar { display: flex; gap: 2px; height: 14px; border-radius: 4px; overflow: hidden; }
-.m-kbar i { display: block; }
-.m-kleg { display: grid; gap: 3px; }
-.m-kleg span { display: grid; grid-template-columns: 9px 1fr auto; gap: 6px; align-items: center; font-size: 11px; }
-.m-kleg span i { width: 9px; height: 9px; border-radius: 3px; }
-.m-kleg span b { font-variant-numeric: tabular-nums; }
-.m-kleg span small { grid-column: 2 / 4; font-size: 9.5px; color: var(--m-text3); margin-top: -2px; }
-.m-fbar { display: grid; grid-template-columns: 92px 1fr 22px; gap: 8px; align-items: center; font-size: 11px; }
-.m-fbar .tr { height: 10px; }
-.m-fbar .tr i { display: block; height: 100%; border-radius: 0 4px 4px 0; background: color-mix(in oklab, var(--m-text) 22%, transparent); }
-.m-fbar.top .tr i { background: var(--m-accent); }
-.m-fbar b { text-align: right; font-variant-numeric: tabular-nums; }
-.m-ins .unit { font-size: 9.5px; color: var(--m-text3); text-align: right; }
+.m-shero { display: grid; gap: 6px; padding: 14px; border-radius: 16px; background: var(--m-bg); box-shadow: 0 1px 2px rgba(0,0,0,.05), 0 0 0 1px var(--m-line); }
+.m-sh { font-size: 19px; letter-spacing: -.01em; }
+.m-kshelf { display: flex; gap: 2px; height: 40px; border-radius: 9px; overflow: hidden; }
+.m-kshelf span { display: grid; place-items: center; color: #fff; min-width: 4px; }
+.m-kvals { display: flex; gap: 2px; font-size: 11px; font-weight: 700; font-variant-numeric: tabular-nums; }
+.m-kvals span { text-align: center; min-width: 4px; }
+.m-kkey { display: flex; flex-wrap: wrap; gap: 4px 12px; font-size: 10.5px; color: var(--m-text2); }
+.m-kkey span { display: inline-flex; gap: 5px; align-items: center; }
+.m-kkey i { width: 14px; height: 14px; border-radius: 4px; display: grid; place-items: center; color: #fff; }
+.m-ftiles { display: grid; grid-template-columns: repeat(4, 1fr) 1.1fr; gap: 8px; }
+.m-ft { display: grid; justify-items: center; gap: 4px; padding: 10px 6px; border-radius: 14px; background: var(--m-alt); font-size: 10.5px; color: var(--m-text2); text-align: center; }
+.m-ft .fi { position: relative; color: var(--m-text3); }
+.m-ft .fi em { position: absolute; right: -14px; top: -6px; font-style: normal; font-size: 10px; font-weight: 700; color: var(--m-text); background: var(--m-bg); border-radius: 99px; padding: 0 5px; box-shadow: 0 0 0 1px var(--m-line); }
+.m-ft.top { background: var(--m-soft); color: var(--m-text); font-weight: 600; } .m-ft.top .fi { color: var(--m-accent); } .m-ft.top .fi em { background: var(--m-btn); color: #fff; box-shadow: none; }
+.m-fnote { display: grid; grid-template-columns: auto 1fr; gap: 0 6px; align-content: center; padding: 6px 10px; font-size: 10.5px; color: var(--m-text2); }
+.m-fnote b { font-size: 15px; color: var(--m-text); text-align: right; } .m-fnote span { align-self: center; }
+.m-scanline { display: flex; align-items: center; gap: 6px; flex-wrap: wrap; font-size: 10.5px; color: var(--m-text3); }
+.m-scanline span b { color: var(--m-text2); margin-right: 3px; font-variant-numeric: tabular-nums; }
+.m-scanline span.end, .m-scanline span.end b { color: var(--m-good); font-weight: 600; }
 .m-dmore { font-size: 10.5px; color: var(--m-text3); padding: 6px 6px 0 56px; border-top: 1px solid var(--m-line); }
 
 /* Review status */
@@ -802,12 +798,12 @@ const C = {
     sample: () => `<div class="m-status" style="width:100%;border:1px solid var(--m-line);border-radius:8px"><span><b>4 results</b> · Found on your Mac</span><span>↩ Open · Space Preview</span></div>` },
   copyOnSel: { name: 'Copy Text on the selection', swift: '// VisionKit Live Text, with our own button on the match\nImageAnalysisOverlayView()\n  .overlay(alignment: matchAnchor) {\n    Button("Copy Text", systemImage: "doc.on.doc") { copy(match) }\n      .buttonStyle(.borderedProminent)\n  }', sf: ['doc.on.doc'], size: 'Height 22–24 pt', type: '11 pt semibold, white', color: 'Indigo fill', shape: '9 pt corners, soft shadow', states: ['Shown on a text match', 'Copied'],
     sample: () => `<div class="m-shot" style="width:240px;padding-bottom:40px">Error signing in<br><span class="m-ocrbox">Login failed</span>: token error<span class="m-selcopy">${ic('doc.on.doc', 10)}Copy Text</span></div>` },
-  scanPipeline: { name: 'Scan steps (how it decided)', swift: 'HStack(spacing: 6) {\n  ForEach(scan.stages) { stage in\n    VStack(alignment: .leading, spacing: 2) {\n      Text(stage.count, format: .number).font(.title3.bold()).monospacedDigit()\n      Text(stage.title).bold()\n      Text(stage.explanation).font(.caption).foregroundStyle(.secondary)\n    }\n    if stage != scan.stages.last { Image(systemName: "chevron.right") }\n  }\n}\n// Not drawn to scale on purpose: 48,210 to 73 would make the later steps invisible', sf: ['chevron.right'], size: 'Four equal steps, full width', type: 'Count 17 pt bold; title 11 pt semibold; line 10 pt grey', color: 'Grey steps; the last (identical) in the accent tint', shape: '12 pt corners', states: ['Scanning (current step counts up, later steps grey)', 'Finished', 'Cancelled (shows how far it got)'],
-    sample: () => `<div style="width:600px">${scanResult().match(/<div class="m-scan"[\s\S]*?<\/div><\/div>(?=\s*<div class="m-ins")/)[0]}</div>` },
+  scanPipeline: { name: 'How it was checked (one line)', swift: 'HStack(spacing: 6) {\n  ForEach(scan.stages) { stage in\n    VStack(alignment: .leading, spacing: 2) {\n      Text(stage.count, format: .number).font(.title3.bold()).monospacedDigit()\n      Text(stage.title).bold()\n      Text(stage.explanation).font(.caption).foregroundStyle(.secondary)\n    }\n    if stage != scan.stages.last { Image(systemName: "chevron.right") }\n  }\n}\n// Not drawn to scale on purpose: 48,210 to 73 would make the later steps invisible', sf: ['chevron.right'], size: 'Four equal steps, full width', type: 'Count 17 pt bold; title 11 pt semibold; line 10 pt grey', color: 'Grey steps; the last (identical) in the accent tint', shape: '12 pt corners', states: ['Scanning (current step counts up, later steps grey)', 'Finished', 'Cancelled (shows how far it got)'],
+    sample: () => `<div style="width:420px">${scanResult().slice(scanResult().indexOf('<div class="m-scanline"'), scanResult().indexOf('<div class="m-row2" style'))}</div>` },
   kindBreakdown: { name: 'What they are (by kind)', swift: '// Swift Charts: one stacked bar, kinds in the fixed Home colours\nChart(byKind) { k in\n  BarMark(x: .value("MB", k.megabytes), stacking: .standard)\n    .foregroundStyle(by: .value("Kind", k.name))\n}\n.chartForegroundStyleScale(Kind.colorScale)   // same colours as Home\n.chartXAxis(.hidden).frame(height: 14)\n// Legend below with the size next to each name', sf: [], size: 'Bar 14 pt high; legend rows 18 pt', type: 'Legend 11 pt; sizes 11 pt bold', color: 'Kind colours from Home (checked for colour blindness); 2 pt gaps between parts', shape: 'Bar 4 pt corners', states: ['Several kinds', 'One kind (no legend)', 'Includes similar photos (noted under Images)'],
-    sample: () => `<div style="width:320px">${scanResult().match(/<div class="card" data-c="kindBreakdown">[\s\S]*?<\/span><\/div><\/div>/)[0]}</div>` },
-  folderBars: { name: 'Where the copies are (by folder)', swift: 'Chart(byFolder) { f in\n  BarMark(x: .value("Copies", f.count), y: .value("Folder", f.name))\n    .foregroundStyle(f == byFolder.first ? Color.accentColor : .secondary.opacity(0.4))\n    .annotation(position: .trailing) { Text("\\(f.count)") }\n}\n.chartXAxis(.hidden)', sf: [], size: 'Rows 18 pt', type: 'Folder 11 pt; count 11 pt bold', color: 'One hue: accent for the biggest, grey for the rest', shape: 'Bars 4 pt corners', states: ['Up to 5 folders, the rest in “Other”'],
-    sample: () => `<div style="width:320px">${scanResult().match(/<div class="card" data-c="folderBars">[\s\S]*?<\/small><\/div>/)[0]}</div>` },
+    sample: () => { const h = scanResult(), a = h.indexOf('<div class="m-shero"'); return `<div style="width:420px">${h.slice(a, h.indexOf('<div class="m-ftiles"'))}</div>`; } },
+  folderBars: { name: 'Where the copies are (folder tiles)', swift: 'Chart(byFolder) { f in\n  BarMark(x: .value("Copies", f.count), y: .value("Folder", f.name))\n    .foregroundStyle(f == byFolder.first ? Color.accentColor : .secondary.opacity(0.4))\n    .annotation(position: .trailing) { Text("\\(f.count)") }\n}\n.chartXAxis(.hidden)', sf: [], size: 'Rows 18 pt', type: 'Folder 11 pt; count 11 pt bold', color: 'One hue: accent for the biggest, grey for the rest', shape: 'Bars 4 pt corners', states: ['Up to 5 folders, the rest in “Other”'],
+    sample: () => { const h = scanResult(), a = h.indexOf('<div class="m-ftiles"'); return `<div style="width:520px">${h.slice(a, h.indexOf('<div class="m-scanline"'))}</div>`; } },
   keepChips: { name: 'Group row with Keep chips', swift: 'HStack(spacing: 12) {\n  ReviewedMark(group.isReviewed)          // green tick or empty circle\n  Thumbnail(group.sample).frame(width: 40, height: 30)\n  VStack(alignment: .leading) { Text(group.name).bold(); Text("\\(group.copies.count) copies") }\n  FlowLayout(spacing: 6) {\n    ForEach(group.copies) { copy in\n      Button { group.keep(copy) } label: { CopyChip(copy, keeper: group.keeper) }\n        .disabled(copy.isProtected)   // protected: always kept\n    }\n  }\n  Text(group.saving, format: .byteCount(style: .file)).bold()\n}\n.onTapGesture { expanded.toggle() }   // also Return', sf: ['star.fill', 'lock', 'checkmark'], size: 'Row 52 pt; chips 22 pt high', type: 'Name 12.5 pt bold; chips 10.5 pt', color: 'Keeper chip in the button fill; others struck through; protected chip grey with a lock', shape: 'Capsule chips', states: ['Not reviewed', 'Reviewed (tick)', 'Open', 'Keeper changed'],
     sample: () => `<div style="width:560px">${dupList().html.match(/<div class="m-dr"[\s\S]*?<\/b><\/div>/)[0]}</div>` },
   compareTray: { name: 'Compare tray (opens in place)', swift: 'if expanded {\n  VStack(alignment: .leading, spacing: 8) {\n    Label("Identical contents", systemImage: "checkmark")   // byte-by-byte check\n    ScrollView(.horizontal) {\n      HStack(spacing: 10) {\n        ForEach(group.copies) { copy in\n          CopyPreview(copy)          // QLThumbnailGenerator\n            .overlay { if copy == focused { FocusRing() } }\n          Picker("", selection: binding(copy)) { Text("Keep"); Text("Trash") }\n            .pickerStyle(.segmented)\n        }\n      }\n    }\n  }\n  .onKeyPress(.space) { quickLook(focused) }\n}', sf: ['checkmark', 'lock'], size: 'Copies 4 across; preview 4:3', type: 'Folder 11 pt bold, differences in accent; dates 10 pt', color: 'Tray in the accent tint; kept copy ringed in accent', shape: 'Cards 12 pt corners', states: ['Identical (exact copies)', 'Focused copy (Space for Quick Look)', 'Protected copy', 'More than 4 copies (scrolls)'],
@@ -1152,7 +1148,7 @@ const F = [
     what: 'Finds exact copies of the same file, and near-identical photos such as bursts and edits, and helps you keep the best one.',
     when: 'The same download saved three times, or ten photos of the same sunset.',
     steps: [
-      { t: 'What the scan found', do: 'Click “Review 27 groups”.', see: 'A sentence with the result (44.8 MB: 46 exact copies and 9 sets of similar photos) and that nothing has moved yet. Below, how the scan decided, in four steps from 48,210 files to 73 identical ones. Then two small charts: what the copies are, by kind, and where the extra copies are, by folder.', why: 'The steps explain “exact copy” in plain words (same size, same start, same fingerprint), which builds trust. They are not drawn to scale on purpose: 48,210 to 73 would make the later steps invisible. The charts turn the result into insight: images take the most room, and half the copies are in Downloads. Kinds use the Home colours; folders use one colour because they are amounts, not categories.',
+      { t: 'What the scan found', do: 'Click “Review 27 groups”.', see: 'One line says how much you can free (44.8 MB). A thick bar shows what the copies are, each kind with its icon and size. Folder tiles show where the extra copies are, Downloads first. One quiet line shows how it was checked: 48,210 › 1,204 › 131 › 73 identical.', why: 'Each question gets one picture instead of a paragraph: what (the bar), where (the folders), how sure (the check line). Kinds keep the Home colours and icons, so the bar needs no legend to read. The check line explains “exact copy” without slowing anyone down: same size, same start, same fingerprint.',
         comps: ['title', 'scanPipeline', 'kindBreakdown', 'folderBars', 'primary'], screen: () => win({ sel: 'duplicates', body: scanResult() }) },
       { t: 'One row per group', do: 'Click Brochure-final.pdf to compare its copies.', see: 'Groups biggest saving first. Each row has a chip for every place a copy lives: the blue chip is the suggested copy to keep, the others are struck through, and a locked chip is in a protected folder. A tick marks groups you have already looked at.', why: 'Folder names are what people recognise, so they carry the choice. Changing the keeper is one click on a chip. Exact copies and similar photos share one place, split by the switch, because similar photos always need a person to choose.',
         comps: ['title', 'segmented', 'keepChips', 'reviewBar'], screen: () => win({ sel: 'duplicates', body: dupList({ hotRow: 0 }).html }) },
@@ -1251,19 +1247,19 @@ const DUPS = [['Brochure-final.pdf', null, '2.4 MB', [['Downloads', 'Oct 28, 9:1
   ['Logo.png', 230, '1.9 MB', [['Documents › Brand', 'Sep 3', 1], ['Desktop', 'Sep 9'], ['Downloads', 'Sep 9']], '3.8 MB', 2],
   ['Lease agreement 2026.pdf', null, '1.8 MB', [['Documents', 'Oct 28', 1], ['Downloads', 'Oct 28'], ['Mail Downloads', 'Oct 28']], '3.6 MB', 2],
   ['Mix.m4a', null, '3.1 MB', [['Music', 'Oct 27', 1], ['Downloads', 'Oct 27']], '3.1 MB', 1]];
-// Scan result: how the scan narrowed down (process, not to scale), what the copies are (kind colours), where they are (one hue)
-const SCAN = [['48,210', 'files checked', 'Every file in your chosen folders'], ['1,204', 'same size', 'Only files of equal size can match'], ['131', 'same start', 'The first bytes are compared'], ['73', 'identical', 'A full fingerprint proves it: 27 groups']];
-const DKINDS = [['Images', 'var(--k3)', 19.5, '13.6 MB is similar photos'], ['Documents', 'var(--k4)', 14.2], ['Music', 'var(--k6)', 6.2], ['Videos', 'var(--k2)', 3.4], ['Archives', 'var(--k5)', 1.5]];
+// Scan result: one visual per question. What are they (kind bar with icons), where are they (folder tiles), how was it checked (one quiet line)
+const SCAN = [['48,210', 'checked'], ['1,204', 'same size'], ['131', 'same start'], ['73', 'identical']];
+const DKINDS = [['Images', 'var(--k3)', 19.5, 'photo'], ['Documents', 'var(--k4)', 14.2, 'doc'], ['Music', 'var(--k6)', 6.2, 'music.note'], ['Videos', 'var(--k2)', 3.4, 'film'], ['Archives', 'var(--k5)', 1.5, 'doc.zipper']];
 const DFOLD = [['Downloads', 24], ['Desktop', 9], ['Mail Downloads', 8], ['Documents', 5]];
 function scanResult() {
-  return `<div class="m-row2"><div data-c="title"><div class="m-h1">Duplicates</div><div class="m-sub">Scan finished · 48,210 files checked in 38 seconds</div></div></div>
-  <div class="m-lede"><b>44.8 MB of copies you don’t need: 46 exact copies and 9 sets of similar photos.</b><span>Nothing has been moved. You choose what to keep in the next step.</span></div>
-  <div class="m-scan" data-c="scanPipeline">${SCAN.map(([n, l, d], i) => `${i ? `<span class="arr">${ic('chevron.right', 12)}</span>` : ''}<div class="m-sstep${i === 3 ? ' end' : ''}"><b>${n}</b><span>${l}</span><small>${d}</small></div>`).join('')}</div>
-  <div class="m-ins">
-    <div class="card" data-c="kindBreakdown"><div class="hd"><b>What they are</b><span>Images take the most room</span></div><div class="m-kbar">${DKINDS.map(([, c, v]) => `<i style="flex:${v};background:${c}"></i>`).join('')}</div><div class="m-kleg">${DKINDS.map(([n, c, v, note]) => `<span><i style="background:${c}"></i>${n}<b>${v} MB</b>${note ? `<small>${note}</small>` : ''}</span>`).join('')}</div></div>
-    <div class="card" data-c="folderBars"><div class="hd"><b>Where the extra copies are</b><span>Half are in Downloads: the same file saved twice</span></div>${DFOLD.map(([f, n], i) => `<div class="m-fbar${i === 0 ? ' top' : ''}"><span>${f}</span><span class="tr"><i style="width:${(n / 24 * 100).toFixed(1)}%"></i></span><b>${n}</b></div>`).join('')}<small class="unit">extra copies, of 46</small></div>
-  </div>
-  <div class="m-row2" style="justify-content:flex-start;gap:8px"><span class="m-btn pri" data-c="primary" data-hot>Review 27 groups</span><span class="m-btn">Similar photos (9)</span><span class="m-sub" style="margin-left:auto">${ic('lock', 10)} Protected folders are never picked</span></div>`;
+  return `<div class="m-row2"><div data-c="title"><div class="m-h1">Duplicates</div><div class="m-sub">Scan finished in 38 seconds</div></div></div>
+  <div class="m-shero" data-c="kindBreakdown"><b class="m-sh">44.8 MB you can free</b>
+    <div class="m-kshelf">${DKINDS.map(([n, c, v, i]) => `<span style="flex:${v};background:${c}" title="${n} ${v} MB">${v > 3 ? ic(i, 15) : ''}</span>`).join('')}</div>
+    <div class="m-kvals">${DKINDS.map(([n, , v]) => `<span style="flex:${v}" title="${n}">${v > 3 ? `${v}` : ''}</span>`).join('')}</div>
+    <div class="m-kkey">${DKINDS.map(([n, c, v, i]) => `<span><i style="background:${c}">${ic(i, 9)}</i>${n}</span>`).join('')}</div></div>
+  <div class="m-ftiles" data-c="folderBars">${DFOLD.map(([f, n], k) => `<div class="m-ft${k === 0 ? ' top' : ''}"><span class="fi">${ic('folder', 20)}<em>${n}</em></span><span>${f}</span></div>`).join('')}<div class="m-fnote"><b>46</b><span>extra copies</span><b>9</b><span>similar sets</span></div></div>
+  <div class="m-scanline" data-c="scanPipeline">${SCAN.map(([n, l], i) => `${i ? ic('chevron.right', 10) : ''}<span class="${i === 3 ? 'end' : ''}"><b>${n}</b>${l}</span>`).join('')}</div>
+  <div class="m-row2" style="justify-content:flex-start;gap:8px"><span class="m-btn pri" data-c="primary" data-hot>Review 27 groups</span><span class="m-btn">Similar photos (9)</span><span class="m-sub" style="margin-left:auto;display:inline-flex;gap:4px;align-items:center">${ic('lock', 10)}Nothing moves until you choose</span></div>`;
 }
 function dupSeg(on, hot, exact = 27) {
   return `<div class="m-seg" data-c="segmented">${[['Exact copies', exact], ['Similar photos', 9]].map(([n, c]) => `<span class="${n === on ? 'on' : ''}" ${n === hot ? 'data-hot' : ''}>${n} <small>${c}</small></span>`).join('')}</div>`;
