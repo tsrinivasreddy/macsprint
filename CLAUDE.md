@@ -156,7 +156,7 @@ Do not refactor the repository during an audit unless explicitly asked.
 - Privacy promises stay true everywhere: on-device, no account, nothing uploaded, files go to the Trash, Undo on every change.
 - The site calls the product "MacSprint AI" (title, headings, copy). The wordmark stays "Mac S P R I N T".
 - Every feature has its own shortcut: simple, easy to remember, true to the feature, and following macOS conventions
-  (⌘F Search, ⌥⌘L Downloads, ⌥⇧⌘V paste clean). No two features share one. Keep `SHORTCUTS`, `STORIES` and the Go menu in
+  (⌘F Search, ⌥⌘L Downloads, ⌥⌘/ What’s this?). No two features share one. Keep `SHORTCUTS`, `STORIES` and the Go menu in
   `design/feature-flows.html` in sync.
 
 **Design**
@@ -166,14 +166,14 @@ Do not refactor the repository during an audit unless explicitly asked.
   thinking, opening a panel) and it stops with Reduce Motion. The feature flows page stays static. Light and dark must both work.
 - Keep the sidebar short: Discover (Home, Recents, Library, Downloaded From, Clipboard) and Clean up (Free Up Space, Duplicates, Organizer). The row was called Clean Up; the designs renamed it so it does not repeat the section name (the website still says Clean Up until it is updated).
   New features live inside an existing place; they do not add sidebar rows. Quick Search, Command Panel, Menu Bar, Finder Tools,
-  Screenshot Toolkit and Window Manager were removed on purpose.
+  Screenshot Toolkit, Window Manager and Paste Clean were removed on purpose.
 - Removed design experiments are kept in `design/lab/` (see its README). Do not delete them.
 - Keep every design Claude makes. Each new design page is its own file, committed locally. When a design is replaced, move
   the old page to `design/lab/` with a README row; never delete it or overwrite it with a different design. Commit locally
   as you go; push only when the owner asks.
 
-**Features** (16, in `js/features.js`)
-Home, Recents, Visual Library, Image Viewer, Search, Ask Your Files, Downloaded From, Clipboard, Paste Clean, Clean Up,
+**Features** (15, in `js/features.js`)
+Home, Recents, Visual Library, Image Viewer, Search, Ask Your Files, Downloaded From, Clipboard, Clean Up,
 Space Map, What’s This?, Duplicates, Organizer, Screenshot Inbox, Smart Rename.
 Every feature needs: a `FEATURES` entry, a `STORIES` entry (problem, use case, shortcut), a demo in `js/demos.js` with the same id,
 and a flow in `design/feature-flows.html` (Ask Your Files is covered by the Search flow). Each flow has a review status in `STATUS`:

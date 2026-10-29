@@ -1009,7 +1009,7 @@ mark { background: var(--mark); color: var(--text); border-radius: 3px; padding:
 @media (prefers-reduced-motion: reduce) { .hl-tile, .hl-tile:hover { transition: none; transform: none; } }
 .hl-sub { grid-column: 1; font-size: 17px; line-height: 1.45; color: #a1a1a6; max-width: 36ch; }
 
-/* ============ Demos: ask, space map, explain, screenshot inbox, paste clean ============ */
+/* ============ Demos: ask, space map, explain, screenshot inbox ============ */
 .d-chips { display: flex; flex-wrap: wrap; gap: 6px; margin-bottom: 10px; }
 .d-chip { display: inline-flex; align-items: center; gap: 5px; font: inherit; font-size: 12px; padding: 5px 10px; border-radius: 980px; border: 1px solid var(--win-line); background: var(--win-bg); color: var(--text); cursor: pointer; text-align: left; }
 .d-chip svg { color: var(--accent); flex: none; }
@@ -1057,9 +1057,7 @@ mark { background: var(--mark); color: var(--text); border-radius: 3px; padding:
 .d-clean s { color: var(--error); text-decoration-thickness: 1.5px; }
 .d-clean em { font: 600 11px var(--font); color: var(--text-3); font-style: normal; }
 .d-btns { display: inline-flex; gap: 6px; }
-.d-note-box { display: grid; gap: 4px; padding: 10px 12px; border-radius: 10px; background: var(--win-bg); border: 1px solid var(--win-line); font-size: 12.5px; }
 .d-muted { color: var(--text-3); }
-.d-pasted { font: 12px var(--mono); color: var(--accent-text); word-break: break-all; }
 @media (max-width: 620px) { .d-xrow { grid-template-columns: minmax(0, 1fr) auto; } .d-xrow .d-vd, .d-xrow .d-xe { display: none; } .d-gth { display: none; } }
 
 /* Highlights: two half-width tiles */

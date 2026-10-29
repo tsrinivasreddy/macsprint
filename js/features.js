@@ -18,7 +18,6 @@ const I = {
   spacemap: '<rect x="3" y="3" width="11" height="18" rx="2"/><rect x="16" y="3" width="5" height="8" rx="1.5"/><rect x="16" y="13" width="5" height="8" rx="1.5"/>',
   explain: '<circle cx="12" cy="12" r="8.5"/><path d="M12 11v5.5M12 7.8h.01"/>',
   shots: '<path d="M4 8V6.5A2.5 2.5 0 0 1 6.5 4H8M16 4h1.5A2.5 2.5 0 0 1 20 6.5V8M20 16v1.5a2.5 2.5 0 0 1-2.5 2.5H16M8 20H6.5A2.5 2.5 0 0 1 4 17.5V16"/><circle cx="12" cy="12" r="3"/>',
-  pasteclean: '<rect x="5" y="5" width="14" height="16" rx="2.5"/><rect x="9" y="3" width="6" height="4" rx="1.2"/><path d="m9 14 2 2 4-4"/>',
   clipboard: '<rect x="5" y="5" width="14" height="16" rx="2.5"/><rect x="9" y="3" width="6" height="4" rx="1.2"/><path d="M8.5 12h7M8.5 16h5"/>',
 };
 
@@ -110,17 +109,6 @@ export const FEATURES = [
       'A quick-paste panel with ⇧⌘V, and a Copy button on every item.',
       'Pause anytime, exclude apps and set how long history is kept.',
       'Stored only on your Mac. Password fields are never recorded.',
-    ],
-  },
-  {
-    id: 'pasteclean', group: 'Discover', icon: I.pasteclean,
-    title: 'Paste Clean', short: 'Links without tracking, text without formatting',
-    headline: 'Paste the link, not the tracking codes.',
-    points: [
-      'See what would be removed before you paste, in red.',
-      'Paste as plain text, with no fonts or colours from the source.',
-      'Choose the apps where plain text is always used.',
-      'Paste as is is always one click away.',
     ],
   },
   // ---------- Clean up ----------
@@ -218,7 +206,6 @@ export const PROBLEMS = [
   { letter: 'N', title: '“System Data” is huge and nobody says why', featureId: 'explain' },
   { letter: 'O', title: 'A fact is buried in a long document', featureId: 'ask' },
   { letter: 'P', title: 'A Desktop full of screenshots', featureId: 'shots' },
-  { letter: 'Q', title: 'Pasted links full of tracking codes', featureId: 'pasteclean' },
 ];
 
 export const iconSvg = (inner, size = 18) =>
@@ -227,7 +214,7 @@ export const iconSvg = (inner, size = 18) =>
 export const SHORTCUTS = [
   { group: 'Go', items: [['Home', ['⇧', '⌘', 'H']], ['Recents', ['⇧', '⌘', 'R']], ['Library', ['⇧', '⌘', 'L']], ['Downloaded From', ['⌥', '⌘', 'L']], ['Clipboard', ['⇧', '⌘', 'V']], ['Clean Up', ['⇧', '⌘', 'K']], ['Space Map', ['⇧', '⌘', 'M']], ['Duplicates', ['⇧', '⌘', 'D']], ['Organizer', ['⇧', '⌘', 'O']], ['Screenshot Inbox', ['⇧', '⌘', 'I']]] },
   { group: 'Find and view', items: [['Search', ['⌘', 'F']], ['Ask Your Files', ['⇧', '⌘', 'A']], ['Copy text from images', ['⇧', '⌘', 'C']], ['Save search', ['⌘', 'S']], ['Quick Look', ['Space']], ['Grid / List', ['⌘', '1', '⌘', '2']], ['Inspector', ['⌘', 'I']], ['Back / Forward', ['⌘', '[', '⌘', ']']]] },
-  { group: 'Act', items: [['Open', ['⌘', 'O']], ['Show in Finder', ['⌥', '⌘', 'R']], ['Copy path', ['⌥', '⌘', 'C']], ['Paste clean', ['⌥', '⇧', '⌘', 'V']], ['What’s this?', ['⌥', '⌘', '/']], ['Move to Trash', ['⌘', '⌫']], ['Undo', ['⌘', 'Z']]] },
+  { group: 'Act', items: [['Open', ['⌘', 'O']], ['Show in Finder', ['⌥', '⌘', 'R']], ['Copy path', ['⌥', '⌘', 'C']], ['What’s this?', ['⌥', '⌘', '/']], ['Move to Trash', ['⌘', '⌫']], ['Undo', ['⌘', 'Z']]] },
 ];
 
 // Spotlight cards: the problem, the everyday use, three short points and the shortcut.
@@ -281,10 +268,6 @@ export const STORIES = [
     problem: 'Copying something new erases what you copied before.',
     use: 'Press ⇧⌘V, find the address from an hour ago and click Copy.',
     points: ['Search everything you copied', 'Pin snippets you reuse', 'Password fields are never recorded'] },
-  { id: 'pasteclean', label: 'Paste Clean', keys: ['⌥', '⇧', '⌘', 'V'], title: 'Paste it clean.',
-    problem: 'Pasted links carry tracking codes, and pasted text brings its own fonts.',
-    use: 'Paste the link without “?utm_source=…”, or the text as plain text.',
-    points: ['See what is removed before you paste', 'Plain text only in the apps you choose', 'Paste as is is always one click away'] },
   { id: 'organizer', label: 'Organizer', keys: ['⇧', '⌘', 'O'], title: 'A tidy Downloads folder.',
     problem: 'Downloads is a pile of everything.',
     use: 'See where each file would go, untick what should stay, then approve.',

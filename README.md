@@ -9,7 +9,7 @@ See [`design/README.md`](design/README.md) for the feature flows, design course 
 # Website
 
 A single-page, Apple-style marketing site for **MacSprint AI** ("Your Mac. Smarter, faster, cleaner.").
-Its centerpiece is the **Feature Explorer**: a Mac-style app window where every one of the 16 features
+Its centerpiece is the **Feature Explorer**: a Mac-style app window where every one of the 15 features
 can be tried from one interface, plus a Highlights section and feature cards with the problem and use case.
 
 Plain HTML, CSS and JavaScript modules. No framework and no external requests. A small build step

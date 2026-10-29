@@ -659,20 +659,7 @@ function shots(el) {
   review();
 }
 
-/* ---------------- Paste Clean (inside Clipboard) ---------------- */
-function pasteclean(el) {
-  const URL_FULL = 'shop.example.com/jacket', TRACK = '?utm_source=news&utm_medium=email&fbclid=IwAR0x7';
-  el.innerHTML = `<div class="d-paste"><p class="d-label">Copied link</p>
-    <div class="d-clean" aria-label="Before and after"><span>${URL_FULL}<s>${TRACK}</s></span><em>Removes 3 tracking codes</em></div>
-    <div class="d-clean-foot"><span class="d-total">Pick how to paste it into your note.</span><span class="d-btns"><button type="button" class="btn btn-small d-go">Paste clean</button><button type="button" class="btn btn-small btn-quiet d-asis">Paste as is</button></span></div>
-    <p class="d-label">Your note</p><div class="d-note-box" aria-live="polite"><span class="d-muted">Found the jacket I mentioned:</span><code class="d-pasted">Nothing pasted yet</code></div>
-    <p class="d-foot">Plain text works the same way: formatting stays behind, in the apps you choose.</p></div>`;
-  const out = el.querySelector('.d-pasted');
-  el.querySelector('.d-go').addEventListener('click', () => { out.innerHTML = URL_FULL; out.dataset.state = 'clean'; });
-  el.querySelector('.d-asis').addEventListener('click', () => { out.innerHTML = `${URL_FULL}${TRACK}`; out.dataset.state = 'as-is'; });
-}
-
 export const DEMOS = {
-  home, recents, library, images, search, ask, downloaded, clipboard, pasteclean,
+  home, recents, library, images, search, ask, downloaded, clipboard,
   cleanup, spacemap, explain, duplicates, organizer, shots, rename,
 };
