@@ -16,6 +16,7 @@ Ideas we built, tried and took out of the main pages. Nothing here is in use. It
 | **Search “Understood as” chips + pop-up filters; Duplicates radio/checkbox list** | Replaced by Seek-inspired search tokens, results status bar and Keep / Trash copy cards (see `../inspiration/seek.md`) | `design/feature-flows.html` at the commit | Search step 2 and Duplicate Finder step 3 in `F` | `3177f8a` |
 | **Separate Storage Intelligence, Safe Cleanup and Quick Search & Command Panel flows; “Images” sidebar row; Clipboard under Everyday** | UX review against Seek and Homy (`../inspiration/seek-homy-review.md`): one Clean Up place, sidebar sections, Quick Search removed | `design/feature-flows.html` at the commit | Each feature is one entry in `F` | `ab53202` |
 | **Homy-style pastel website**: first website look with pastel library folders, before the Graphite & Glass restyle | Restyled to the Apple-like Graphite & Glass theme | Check out the commit (whole site) | `index.html`, `styles.css` at the commit | `84d7bf5` |
+| **Six search result rows**: Reason chip, Snippet first, Big preview, Grouped by why, Top hit, Compact with badge, each in light and dark | Big preview (C) was chosen; see `../search.html` | [`search-row-options.html`](search-row-options.html) | Each option is one entry in `OPTIONS` (a `rows()` function) | not committed before |
 
 ## Still live, not archived
 

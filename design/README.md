@@ -9,7 +9,7 @@ Design pages for MacSprint AI. Each file is a standalone page you can open in a 
 | Figma: Library folders | Six new folder styles (Rest + Hover fan-out of the last five items) and the Quick Look panel | https://www.figma.com/design/GfAtd52w4TiLTV4Cdn9WWA |
 | `feature-flows.html` | Click-through flows for all 16 features, with every screen part named and specified | https://claude.ai/artifact/AKZpLyE6xmZCKXms3GnhKz |
 | `design-day.html` | One-day interactive course on Mac app UI design with SwiftUI | https://claude.ai/artifact/G3PtpAEVu8NLHbmn4Z9DPp |
-| `search.html` | Search: Big preview rows, AI always on, Ocean field with voice, style comparison and voice notes | https://claude.ai/artifact/3yWNpo3MCC2wnV9vfgDB2u |
+| `search.html` | Search: Big preview rows, AI always on, Graphite field with voice, style comparison and voice notes | https://claude.ai/artifact/3yWNpo3MCC2wnV9vfgDB2u |
 | `graphite-glass-sample.html` | The "Graphite & Glass" style sample | https://claude.ai/artifact/4CZ9zh8ntYYZb5cdYpUH32 |
 
 Other references:

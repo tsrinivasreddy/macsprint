@@ -68,7 +68,7 @@ header p { margin: 0; color: var(--ink-2); }
 
 /* Mock window */
 .win { font: 13px/1.35 var(--mac); color: var(--m-text); background: var(--m-bg); border-radius: 14px; overflow: hidden; box-shadow: var(--m-shadow); max-width: 640px; width: 100%; justify-self: center; }
-.band { background: linear-gradient(110deg, var(--g1), var(--g2)); padding: 12px 14px 18px; display: grid; gap: 12px; transition: background .35s; }
+.band { background: linear-gradient(110deg, var(--g1), var(--g2)); padding: 12px 14px 18px; display: grid; grid-template-columns: minmax(0, 1fr); gap: 12px; transition: background .35s; }
 .lights { display: flex; gap: 6px; }
 .lights i { width: 11px; height: 11px; border-radius: 50%; background: #ff5f57; }
 .lights i:nth-child(2) { background: #febc2e; } .lights i:nth-child(3) { background: #28c840; }
@@ -203,8 +203,8 @@ td code { font: 13px/1.4 ui-monospace, "SF Mono", Menlo, monospace; background: 
   <section class="card" aria-labelledby="h-compare">
     <h2 id="h-compare">Which style fits MacSprint</h2>
     <div class="pickbox">
-      <p><b>My pick: Ocean.</b> MacSprint already uses blue for its buttons and selection, so Ocean makes the search field, the selected row and the rest of the app feel like one product. Cool colours also keep the yellow match boxes and red error marks in screenshots easy to spot, and it stays calm when people search many times a day.</p>
-      <p><b>Runner-up: Graphite</b> if you want MacSprint to look as close to built-in macOS as possible.</p>
+      <p><b>Chosen: Graphite.</b> Quiet and closest to built-in macOS. It sits well next to any wallpaper and any accent colour, and it lets the yellow match boxes and red error marks in results stand out.</p>
+      <p><b>Runner-up: Ocean</b> if search should feel more like a blue MacSprint place.</p>
     </div>
     <p>All five use the same search and results. The Mac appearance switch above changes these too.</p>
     <div class="compare" id="compare"></div>
@@ -288,7 +288,7 @@ const rows = () => R.map((r, i) => `<div class="row${i === 0 ? ' sel' : ''}" rol
   + `<div class="foot"><span>4 results · Found on your Mac</span><span><kbd>↩</kbd> Open · <kbd>Space</kbd> Preview · <kbd>⌘C</kbd> Copy text · Hold <kbd>⌥ Space</kbd> to talk</span></div>`;
 
 const win = document.getElementById('win'), pill = document.getElementById('pill'), res = document.getElementById('res');
-let style = 'ocean', mode = 'light', timers = [], listening = false;
+let style = 'graphite', mode = 'light', timers = [], listening = false;
 try { const s = localStorage.getItem('ms-style'); if (STYLES.some((x) => x.id === s)) style = s; } catch (e) {}
 
 const micBtn = (on) => `<button class="mic${on ? ' on' : ''}" type="button" id="micBtn" aria-label="${on ? 'Stop listening' : 'Search by voice'}" aria-pressed="${on}">${svg(on ? 'stop' : 'mic', on ? 18 : 24, 2)}</button>`;
@@ -314,8 +314,8 @@ function speak() {
 function stop(finish) { timers.forEach(clearTimeout); timers = []; listening = false; if (finish) showDone(); }
 
 const RANK = [
-  { id: 'ocean', tag: 'Recommended', pro: ['Matches MacSprint’s blue buttons and selection', 'Yellow highlights and red error marks stand out on cool colours', 'Calm enough for dozens of searches a day'], con: ['Less of a statement than Sunset'] },
-  { id: 'graphite', tag: 'Safest', pro: ['Looks native next to Finder and Spotlight', 'Works with any wallpaper and any accent colour'], con: ['Least memorable; can look like plain Spotlight'] },
+  { id: 'graphite', tag: 'Chosen', pro: ['Looks native next to Finder and Spotlight', 'Works with any wallpaper and any accent colour'], con: ['Least memorable; can look like plain Spotlight'] },
+  { id: 'ocean', tag: 'Runner-up', pro: ['Matches MacSprint’s blue buttons and selection', 'Yellow highlights and red error marks stand out on cool colours', 'Calm enough for dozens of searches a day'], con: ['Less of a statement than Sunset'] },
   { id: 'lavender', pro: ['Friendly, and hints at the smart search inside'], con: ['Purple-to-pink is a very common “AI app” look', 'Pulls away from MacSprint’s blue'] },
   { id: 'sunset', tag: 'Your reference', pro: ['The most eye-catching and warm'], con: ['Orange-red sits close to the red error marks in results', 'Clashes with MacSprint’s blue unless the whole app turns warm'] },
   { id: 'meadow', pro: ['Fresh and unusual for a Mac utility'], con: ['Its yellow end blurs the yellow match boxes', 'Weakest in dark mode'] },

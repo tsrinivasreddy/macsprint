@@ -20,7 +20,7 @@ Chosen on the [Foundations page](https://claude.ai/artifact/D2DkAL8ZHo1vRohYUX13
 | Library folders | Storage card |
 | AI search default | Always on (no on/off switch) |
 | Search results | Big preview rows |
-| Search field | Ocean frosted pill, with voice |
+| Search field | Graphite frosted pill, with voice |
 
 ## Tokens
 
@@ -46,19 +46,19 @@ Footer: count · "Found on your Mac" and the shortcuts. Thumbnails lazy-loaded a
 (Intel, macOS before 26, Apple Intelligence off or model not ready), search uses names and OCR text only and the
 footer says once: "Smart search needs Apple Intelligence". Every result keeps its reason line.
 
-**Field: Ocean.** Height 52, radius full (capsule), search icon 24, text 19, microphone on the right.
+**Field: Graphite.** Height 52, radius full (capsule), search icon 24, text 19, microphone on the right.
 Fill blur 18. Dotted underline marks words still being recognised during voice input.
 
 | Token | Light | Dark |
 |---|---|---|
-| Band gradient | `#3b8fd8` → `#4cc0c4` | `#163a5c` → `#134e56` |
-| Field fill | `rgba(236,247,255,.85)` | `rgba(8,22,32,.55)` |
-| Icon and text | `#1d5c99` | `#a3d4ff` |
-| Microphone | `#227f99` | `#8de2e4` |
-| Selected row | `#1f63a6` | `#2d6fb0` |
+| Band gradient | `#cfd2d8` → `#aeb2bc` | `#2b2d32` → `#1c1e22` |
+| Field fill | `rgba(255,255,255,.86)` | `rgba(255,255,255,.08)` |
+| Icon and text | `#363940` | `#e6e8ec` |
+| Microphone | `#363940` | `#e6e8ec` |
+| Selected row | `#3d4048` | `#50545e` |
 
 Open question: the selected row could use the foundation button fill (`#2f4bc4` / `#4a63e0`) instead, to match buttons elsewhere.
-Other field styles (Sunset, Meadow, Lavender, Graphite) stay selectable on the design page for comparison.
+Other field styles (Ocean, Sunset, Meadow, Lavender) stay selectable on the design page for comparison.
 
 **Voice search.** Mic button, or hold ⌥ Space. States: idle, listening (stop button + level bars), live words
 (dotted underline), done (words turned into tokens such as Screenshots and Last month). Respect Reduce Motion.

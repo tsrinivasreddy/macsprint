@@ -1,0 +1,187 @@
+<title>MacSprint Lab · Search Rows</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Atkinson+Hyperlegible:wght@400;700&family=Schibsted+Grotesk:wght@600;800&display=swap">
+<style>
+/* Layout: a review sheet. Each option is one row design, shown in a light and a dark window side by side, with what it is good for. */
+:root {
+  --paper: #eceff3; --sheet: #ffffff; --ink: #15171c; --ink-2: #4f5562; --rule: rgba(21,23,28,.12);
+  --blue: #3346c8; --blue-soft: rgba(51,70,200,.09);
+  --display: "Schibsted Grotesk", "Avenir Next", system-ui, sans-serif;
+  --body: "Atkinson Hyperlegible", "Segoe UI", system-ui, sans-serif;
+  --mac: -apple-system, BlinkMacSystemFont, "SF Pro Text", "Helvetica Neue", "Segoe UI", sans-serif;
+}
+@media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) {
+  --paper: #111317; --sheet: #191c21; --ink: #eceef2; --ink-2: #b0b6c2; --rule: rgba(255,255,255,.1);
+  --blue: #93a3ff; --blue-soft: rgba(147,163,255,.13); color-scheme: dark; } }
+:root[data-theme="dark"] {
+  --paper: #111317; --sheet: #191c21; --ink: #eceef2; --ink-2: #b0b6c2; --rule: rgba(255,255,255,.1);
+  --blue: #93a3ff; --blue-soft: rgba(147,163,255,.13); color-scheme: dark; }
+
+/* The MacSprint app (Foundations): each mock is forced light or dark so both are always on screen. */
+.light { --m-bg: #fff; --m-side: #f4f4f7; --m-alt: #f0f1f5; --m-line: rgba(20,20,30,.1); --m-text: #16161a; --m-text2: #5f6068; --m-text3: #6c6d76;
+  --m-accent: #3b5bdb; --m-btn: #2f4bc4; --m-soft: rgba(59,91,219,.11); --m-mark: rgba(255,214,10,.5); --m-shadow: 0 10px 30px rgba(20,24,40,.16), 0 0 0 1px rgba(20,20,30,.08); }
+.dark { --m-bg: #18191d; --m-side: #1f2025; --m-alt: #25262c; --m-line: rgba(255,255,255,.09); --m-text: #ececf0; --m-text2: #a3a4ad; --m-text3: #92939f;
+  --m-accent: #8399ff; --m-btn: #4a63e0; --m-soft: rgba(131,153,255,.15); --m-mark: rgba(255,214,10,.38); --m-shadow: 0 10px 30px rgba(0,0,0,.5), 0 0 0 1px rgba(255,255,255,.08); }
+
+* { box-sizing: border-box; }
+body { margin: 0; background: var(--paper); color: var(--ink); font: 16px/1.55 var(--body); -webkit-font-smoothing: antialiased;
+  padding-left: max(16px, env(safe-area-inset-left, 0px)); padding-right: max(16px, env(safe-area-inset-right, 0px)); padding-block: 40px 72px; }
+h1, h2 { font-family: var(--display); margin: 0; line-height: 1.12; text-wrap: balance; }
+.wrap { max-width: 1120px; margin: 0 auto; display: grid; gap: 28px; }
+header { display: grid; gap: 10px; max-width: 70ch; }
+header h1 { font-size: clamp(28px, 4vw, 40px); font-weight: 800; }
+header p { margin: 0; color: var(--ink-2); }
+.eyebrow { font: 600 12px/1 var(--display); letter-spacing: .08em; text-transform: uppercase; color: var(--blue); }
+.legend { display: flex; flex-wrap: wrap; gap: 8px 18px; font-size: 14px; color: var(--ink-2); }
+.legend span { display: inline-flex; align-items: center; gap: 6px; }
+.legend svg { color: var(--blue); }
+.pick { background: var(--blue-soft); border-radius: 14px; padding: 14px 18px; font-size: 15px; max-width: 80ch; }
+.pick b { color: var(--blue); }
+
+.opt { background: var(--sheet); border: 1px solid var(--rule); border-radius: 16px; padding: 22px; display: grid; gap: 16px; }
+.opt-head { display: flex; align-items: baseline; gap: 12px; flex-wrap: wrap; }
+.letter { font: 800 15px/1 var(--display); color: #fff; background: var(--blue); border-radius: 8px; width: 28px; height: 28px; display: grid; place-items: center; flex: none; }
+:root[data-theme="dark"] .letter { color: #111317; }
+@media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) .letter { color: #111317; } }
+.opt h2 { font-size: 22px; font-weight: 800; }
+.opt-head p { margin: 0; color: var(--ink-2); flex-basis: 100%; }
+.pair { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 440px), 1fr)); gap: 16px; }
+.pair figure { margin: 0; display: grid; gap: 6px; min-width: 0; }
+.pair figcaption { font-size: 12px; color: var(--ink-2); letter-spacing: .04em; text-transform: uppercase; }
+.notes { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 300px), 1fr)); gap: 8px 24px; font-size: 15px; }
+.notes div { min-width: 0; }
+.notes b { font-family: var(--display); font-size: 13px; letter-spacing: .04em; text-transform: uppercase; color: var(--ink-2); display: block; }
+.notes ul { margin: 4px 0 0; padding-left: 18px; }
+
+/* Window */
+.win { font: 13px/1.35 var(--mac); color: var(--m-text); background: var(--m-side); border-radius: 14px; overflow: hidden; box-shadow: 0 0 0 1px var(--m-line); min-width: 0; }
+.tb { display: flex; align-items: center; gap: 10px; padding: 9px 12px; background: var(--m-bg); border-bottom: 1px solid var(--m-line); }
+.lights { display: flex; gap: 6px; flex: none; }
+.lights i { width: 11px; height: 11px; border-radius: 50%; background: #ff5f57; }
+.lights i:nth-child(2) { background: #febc2e; } .lights i:nth-child(3) { background: #28c840; }
+.field { flex: 1; min-width: 0; max-width: 360px; margin: 0 auto; display: flex; align-items: center; gap: 6px; background: var(--m-bg); border-radius: 9px; padding: 5px 9px;
+  box-shadow: 0 0 0 3px var(--m-soft), 0 0 0 1px var(--m-accent); color: var(--m-text3); font-size: 12.5px; white-space: nowrap; overflow: hidden; }
+.tok { font-size: 10.5px; font-weight: 600; color: var(--m-accent); background: var(--m-soft); border-radius: 9px; padding: 1px 7px; flex: none; }
+.typed { color: var(--m-text); overflow: hidden; text-overflow: ellipsis; }
+.stage { padding: 8px 14px 16px; display: grid; justify-items: center; }
+.pop { width: 100%; max-width: 440px; background: var(--m-bg); border-radius: 12px; box-shadow: var(--m-shadow); padding: 6px; display: grid; gap: 1px; }
+.foot { display: flex; justify-content: space-between; gap: 10px; flex-wrap: wrap; border-top: 1px solid var(--m-line); margin-top: 4px; padding: 7px 8px 3px; font-size: 10.5px; color: var(--m-text3); }
+.foot kbd { font: inherit; font-weight: 600; color: var(--m-text2); }
+.gh { font-size: 10.5px; font-weight: 600; color: var(--m-text3); padding: 7px 8px 3px; display: flex; align-items: center; gap: 5px; }
+.gh .n { margin-left: auto; font-weight: 400; }
+mark { background: var(--m-mark); color: inherit; border-radius: 2px; padding: 0 1px; }
+
+/* Rows */
+.row { display: flex; align-items: center; gap: 10px; padding: 6px 8px; border-radius: 8px; min-width: 0; }
+.row.sel { background: var(--m-btn); color: #fff; }
+.row.sel mark { background: #ffd60a; color: #16161a; }
+.row .txt { flex: 1; min-width: 0; display: grid; gap: 1px; }
+.row .l1, .row .l2, .row .l3 { white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.row .l1 { font-weight: 600; }
+.row .l2 { font-size: 11.5px; color: var(--m-text3); }
+.row .l3 { font-size: 11.5px; color: var(--m-text2); }
+.row.sel .l2, .row.sel .l3, .row.sel .side { color: rgba(255,255,255,.82); }
+.side { flex: none; font-size: 11px; color: var(--m-text3); font-variant-numeric: tabular-nums; }
+.chip { flex: none; display: inline-flex; align-items: center; gap: 4px; font-size: 10.5px; font-weight: 600; color: var(--m-accent); background: var(--m-soft); border-radius: 9px; padding: 2px 7px; }
+.row.sel .chip { color: #fff; background: rgba(255,255,255,.2); }
+@media (max-width: 520px) { .chip .cl { display: none; } }
+
+/* Screenshot thumbnail, drawn: a title bar and lines of text. --h sets the colour. */
+.th { flex: none; width: 32px; height: 24px; border-radius: 5px; position: relative; overflow: hidden;
+  background: linear-gradient(hsl(var(--h) 55% 62%) 0 22%, hsl(var(--h) 30% 94%) 22%); box-shadow: 0 0 0 1px rgba(0,0,0,.08); }
+.dark .th { background: linear-gradient(hsl(var(--h) 45% 48%) 0 22%, hsl(var(--h) 14% 26%) 22%); }
+.th::before, .th::after { content: ""; position: absolute; left: 14%; height: 9%; border-radius: 2px; background: hsl(var(--h) 15% 60%); }
+.th::before { top: 40%; width: 64%; } .th::after { top: 64%; width: 44%; }
+.th.warn::after { background: #e5484d; width: 50%; }
+.th .box { position: absolute; left: 10%; top: 33%; width: 72%; height: 22%; border: 1.5px solid #ffd60a; border-radius: 2px; background: rgba(255,214,10,.25); z-index: 1; }
+.th.m { width: 44px; height: 33px; }
+.th.l { width: 64px; height: 48px; border-radius: 7px; }
+.th.xl { width: 96px; height: 72px; border-radius: 8px; }
+.th.s { width: 22px; height: 17px; border-radius: 4px; }
+.badge { position: absolute; right: -3px; bottom: -3px; width: 14px; height: 14px; border-radius: 50%; display: grid; place-items: center; background: var(--m-accent); color: #fff; box-shadow: 0 0 0 2px var(--m-bg); z-index: 2; }
+.wb { position: relative; flex: none; }
+.row.sel .badge { box-shadow: 0 0 0 2px var(--m-btn); background: #fff; color: var(--m-btn); }
+
+/* E: top hit */
+.hit { display: grid; grid-template-columns: auto 1fr; gap: 12px; padding: 10px; border-radius: 10px; background: var(--m-soft); align-items: start; }
+.hit .txt { display: grid; gap: 4px; min-width: 0; }
+.hit .name { font-weight: 700; font-size: 13.5px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.hit .quote { font-size: 12px; color: var(--m-text2); }
+.btns { display: flex; gap: 6px; flex-wrap: wrap; margin-top: 4px; }
+.btn { font-size: 11px; font-weight: 600; border-radius: 9px; padding: 3px 9px; background: var(--m-bg); color: var(--m-text); box-shadow: 0 0 0 1px var(--m-line); }
+.btn.pri { background: var(--m-btn); color: #fff; box-shadow: none; }
+.sub { font-size: 10.5px; font-weight: 600; color: var(--m-text3); padding: 8px 8px 2px; }
+</style>
+
+<div class="wrap">
+  <header>
+    <span class="eyebrow">Search · result rows</span>
+    <h1>Six ways to show a search result</h1>
+    <p>The search field is open with “login error”, read as two filters: Screenshots and Last month. The same four files appear in every option. Only the row changes. The first row is selected with the keyboard.</p>
+    <div class="legend" id="legend"></div>
+  </header>
+  <p class="pick"><b>My pick: A as the default, with the snippet from B on the selected row.</b> It stays short and calm for many results, and the reason chip makes the AI easy to trust. D is the best choice if people often ask why something matched. E fits when the first result is almost always the right one.</p>
+  <div id="opts" class="wrap" style="gap:20px"></div>
+</div>
+
+<script>
+const ico = {
+  text: '<path d="M4 8V5.5A1.5 1.5 0 0 1 5.5 4H8M16 4h2.5A1.5 1.5 0 0 1 20 5.5V8M20 16v2.5a1.5 1.5 0 0 1-1.5 1.5H16M8 20H5.5A1.5 1.5 0 0 1 4 18.5V16M8 10h8M8 14h5"/>',
+  name: '<path d="M3.5 18 8 6l4.5 12M5.2 14h5.6M15.5 10.5c.6-.6 1.4-1 2.3-1 1.6 0 2.7 1 2.7 2.6V18M20.5 13.8h-2.6c-1.6 0-2.6.8-2.6 2.1 0 1.2.9 2.1 2.2 2.1 1.6 0 3-1.3 3-3"/>',
+  ai: '<path d="M11 3.5l1.7 4.8 4.8 1.7-4.8 1.7L11 16.5l-1.7-4.8L4.5 10l4.8-1.7zM18 14.5l.8 2.2 2.2.8-2.2.8-.8 2.2-.8-2.2-2.2-.8 2.2-.8z"/>',
+  search: '<circle cx="10.5" cy="10.5" r="6"/><path d="m15 15 5 5"/>',
+};
+const svg = (k, s = 12) => `<svg viewBox="0 0 24 24" width="${s}" height="${s}" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">${ico[k]}</svg>`;
+const REASON = { text: 'Text in image', name: 'Name', ai: 'What it shows' };
+const GROUP = { text: 'Text in the image', name: 'In the name', ai: 'Looks like (AI)' };
+
+// Sample results, best match first.
+const R = [
+  { file: 'Screenshot 09-18 10.42.png', where: 'Desktop', date: 'Sep 18', h: 228, kind: 'text', snip: '“<mark>Login</mark> failed: token <mark>error</mark> 401”' },
+  { file: 'Screenshot 09-25 08.03.png', where: 'Downloads', date: 'Sep 25', h: 280, kind: 'text', snip: '“Error: unable to <mark>log in</mark>. Try again.”' },
+  { file: '<mark>Login-error</mark> notes.png', where: 'Screenshots', date: 'Sep 9', h: 150, kind: 'name', snip: 'The name contains “login error”' },
+  { file: 'Screenshot 09-02 16.10.png', where: 'Desktop', date: 'Sep 2', h: 8, kind: 'ai', snip: 'A sign-in page with a red warning', warn: true },
+];
+const plain = (s) => s.replace(/<[^>]+>/g, '');
+const th = (r, size = '', box = false) => `<span class="th ${size}${r.warn ? ' warn' : ''}" style="--h:${r.h}">${box && r.kind === 'text' ? '<span class="box"></span>' : ''}</span>`;
+const foot = (n = 4) => `<div class="foot"><span>${n} results · Found on your Mac</span><span><kbd>↩</kbd> Open · <kbd>Space</kbd> Preview · <kbd>⌘C</kbd> Copy text</span></div>`;
+
+const OPTIONS = [
+  { name: 'Reason chip', idea: 'A thumbnail, the name, where and when, and a small chip on the right that says why the file matched. Calm and easy to scan.',
+    good: ['Long lists: every row is the same height', 'The chip makes the AI readable in one glance', 'Looks like a normal Mac list'],
+    watch: ['The matched text is hidden until you preview', 'The chip takes room from long names'],
+    rows: () => R.map((r, i) => `<div class="row${i === 0 ? ' sel' : ''}">${th(r, 'm')}<span class="txt"><span class="l1">${r.file}</span><span class="l2">${r.where} · ${r.date}</span></span><span class="chip" title="${REASON[r.kind]}">${svg(r.kind, 10)}<span class="cl">${REASON[r.kind]}</span></span></div>`).join('') + foot() },
+  { name: 'Snippet first', idea: 'The words that matched are the main line, highlighted in yellow. The file name sits under them in grey.',
+    good: ['Proof first: you see the match before you open anything', 'Best for text in screenshots and PDFs'],
+    watch: ['Rows with a name match say less', 'Harder to scan by file name'],
+    rows: () => R.map((r, i) => `<div class="row${i === 0 ? ' sel' : ''}">${th(r, 'm')}<span class="txt"><span class="l1" style="font-weight:500">${r.snip}</span><span class="l2">${plain(r.file)} · ${r.where} · ${r.date}</span></span></div>`).join('') + foot() },
+  { name: 'Big preview', idea: 'Large thumbnails with a yellow box drawn where the words were found. Name and reason beside it.',
+    good: ['The most eye-catching option', 'You can spot the right screenshot by its look', 'The yellow box matches Copy Text in the preview'],
+    watch: ['Fewer results fit without scrolling', 'Thumbnails must load fast (lazy and cached)'],
+    rows: () => R.map((r, i) => `<div class="row${i === 0 ? ' sel' : ''}" style="padding:8px">${th(r, 'l', true)}<span class="txt"><span class="l1">${r.file}</span><span class="l3">${r.snip}</span><span class="l2">${svg(r.kind, 10)} ${REASON[r.kind]} · ${r.where} · ${r.date}</span></span></div>`).join('') + foot() },
+  { name: 'Grouped by why', idea: 'Results are split under small headings: Text in the image, In the name, Looks like (AI). Rows stay one line.',
+    good: ['Shows clearly how search read the question', 'The AI guesses sit in their own group, so they never look like facts'],
+    watch: ['The best match may not be first if its group is lower', 'Headings take space with few results'],
+    rows: () => { let out = '', i = 0; for (const k of ['text', 'name', 'ai']) { const g = R.filter((r) => r.kind === k); out += `<div class="gh">${svg(k, 10)}${GROUP[k]}<span class="n">${g.length}</span></div>`; out += g.map((r) => `<div class="row${i++ === 0 ? ' sel' : ''}" style="padding:5px 8px">${th(r)}<span class="txt"><span class="l1" style="font-weight:500">${r.file} <span class="l2" style="display:inline">· ${r.kind === 'name' ? r.where : r.snip}</span></span></span><span class="side">${r.date}</span></div>`).join(''); } return out + foot(); } },
+  { name: 'Top hit', idea: 'The best match is a card with a preview, the matched words and its main buttons. The rest follow as short rows.',
+    good: ['One click from search to action (Open, Copy Text)', 'Clear when the first result is almost always right'],
+    watch: ['If the top hit is wrong, it takes the most space', 'Needs a confident ranking'],
+    rows: () => { const [t, ...rest] = R; return `<div class="hit">${th(t, 'xl', true)}<span class="txt"><span class="name">${t.file}</span><span class="chip" style="justify-self:start">${svg(t.kind, 10)}${REASON[t.kind]}</span><span class="quote">${t.snip}</span><span class="btns"><span class="btn pri">Open</span><span class="btn">Copy Text</span><span class="btn">Show in Finder</span></span></span></div><div class="sub">More results</div>` + rest.map((r) => `<div class="row" style="padding:5px 8px">${th(r)}<span class="txt"><span class="l1" style="font-weight:500">${r.file}</span></span><span class="side">${r.date}</span></div>`).join('') + foot(); } },
+  { name: 'Compact with badge', idea: 'One line per file. A small badge on the thumbnail tells why it matched; the snippet follows the name in grey.',
+    good: ['Fits the most results', 'Feels fast, close to a menu'],
+    watch: ['Badges are small: people must learn three icons', 'Long names cut the snippet off'],
+    rows: () => R.map((r, i) => `<div class="row${i === 0 ? ' sel' : ''}" style="padding:5px 8px"><span class="wb">${th(r, 's')}<span class="badge">${svg(r.kind, 8)}</span></span><span class="txt"><span class="l1" style="font-weight:500">${r.file} <span class="l2" style="display:inline">${r.snip}</span></span></span><span class="side">${r.date}</span></div>`).join('') + foot() },
+];
+
+const win = (theme, body) => `<div class="win ${theme}"><div class="tb"><span class="lights"><i></i><i></i><i></i></span><div class="field">${svg('ai', 12)}<span class="tok">Screenshots</span><span class="tok">Last month</span><span class="typed">login error</span></div><span style="width:45px;flex:none"></span></div><div class="stage"><div class="pop" role="listbox" aria-label="Search results">${body}</div></div></div>`;
+
+document.getElementById('legend').innerHTML = Object.keys(REASON).map((k) => `<span>${svg(k, 15)}${REASON[k]}${k === 'ai' ? ' (AI)' : ''}</span>`).join('');
+document.getElementById('opts').innerHTML = OPTIONS.map((o, i) => { const body = o.rows(); const L = 'ABCDEF'[i]; return `
+  <section class="opt" id="option-${L.toLowerCase()}" aria-labelledby="h-${L}">
+    <div class="opt-head"><span class="letter">${L}</span><h2 id="h-${L}">${o.name}</h2><p>${o.idea}</p></div>
+    <div class="pair"><figure><figcaption>Light</figcaption>${win('light', body)}</figure><figure><figcaption>Dark</figcaption>${win('dark', body)}</figure></div>
+    <div class="notes"><div><b>Good for</b><ul>${o.good.map((g) => `<li>${g}</li>`).join('')}</ul></div><div><b>Watch for</b><ul>${o.watch.map((g) => `<li>${g}</li>`).join('')}</ul></div></div>
+  </section>`; }).join('');
+</script>
