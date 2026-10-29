@@ -451,6 +451,17 @@ main { min-width: 0; display: grid; grid-template-columns: minmax(0, 1fr); gap: 
 .m-libsum b { color: var(--m-text); }
 .m-libsum .m-pop { margin-left: auto; }
 
+/* Clipboard panel rows */
+.m-ci { display: grid; grid-template-columns: 26px minmax(0, 1fr) auto auto; gap: 9px; align-items: center; padding: 5px 8px; border-radius: 8px; font-size: 12px; }
+.m-ci .ico { width: 26px; height: 26px; border-radius: 7px; display: grid; place-items: center; background: var(--m-alt); color: var(--m-text2); }
+.m-ci .tx { min-width: 0; } .m-ci .tx b { display: block; font-weight: 500; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.m-ci .tx small { display: block; font-size: 10px; color: var(--m-text3); }
+.m-ci .k { font-size: 10.5px; color: var(--m-text3); grid-column: 3 / 5; justify-self: end; }
+.m-ci.sel { background: var(--m-soft); box-shadow: inset 0 0 0 1px color-mix(in oklab, var(--m-accent) 40%, transparent); }
+.m-cfoot { display: flex; gap: 12px; flex-wrap: wrap; align-items: center; padding: 7px 12px; border-top: 1px solid var(--m-line); font-size: 10.5px; color: var(--m-text3); }
+.m-cfoot b { font-weight: 600; color: var(--m-text2); }
+.m-cfoot .ml { margin-left: auto; display: inline-flex; gap: 4px; align-items: center; }
+
 /* Review status */
 .rail-count { margin: 0 8px 4px; font-size: 13px; color: var(--ink-3); }
 .st { font: 700 11px/1 var(--body); font-style: normal; letter-spacing: .02em; border-radius: 999px; padding: 3px 7px; flex: none; color: var(--ink-3); background: var(--rule); vertical-align: middle; }
@@ -569,6 +580,9 @@ const P = {
   'rotate.right': '<path d="M20 12a8 8 0 1 1-2.3-5.7"/><path d="M20 4v4h-4"/>',
   'plus.magnifyingglass': '<circle cx="10.5" cy="10.5" r="6"/><path d="m20 20-5-5M10.5 8v5M8 10.5h5"/>',
   'info.circle': '<circle cx="12" cy="12" r="9"/><path d="M12 11v6M12 7.5h.01"/>',
+  'link': '<path d="M10 14a4 4 0 0 0 5.7 0l3-3a4 4 0 0 0-5.7-5.7l-1 1M14 10a4 4 0 0 0-5.7 0l-3 3a4 4 0 0 0 5.7 5.7l1-1"/>',
+  'text.alignleft': '<path d="M5 7h14M5 12h14M5 17h9"/>',
+  'chevron.left.forwardslash.chevron.right': '<path d="m9 8-4 4 4 4M15 8l4 4-4 4M13 6l-2 12"/>',
   'pin': '<path d="M12 17v5M8 3h8l-1 6 3 4H6l3-4z"/>',
   'arrow.clockwise': '<path d="M20 12a8 8 0 1 1-2.3-5.7"/><path d="M20 4v4h-4"/>',
   'checkmark.circle': '<circle cx="12" cy="12" r="9"/><path d="m8 12.5 3 3 5-6"/>',
@@ -661,6 +675,8 @@ const C = {
     sample: () => `<div style="display:grid;gap:6px;width:140px"><div style="height:10px;border-radius:4px;background:var(--m-line)"></div><div style="height:10px;width:60%;border-radius:4px;background:var(--m-line)"></div></div>` },
   toast: { name: 'Toast (brief message)', swift: '// macOS has no built-in toast: a small custom overlay\n.overlay(alignment: .bottom) {\n  if showToast { ToastView(text: "Updated") }\n}\n.animation(.smooth, value: showToast)', sf: ['checkmark.circle', 'arrow.uturn.backward'], size: 'Height ~30 pt', type: '12 pt', color: 'Inverted: dark on light, light on dark', shape: 'Capsule, strong shadow', states: ['Appearing', 'Visible 3–4 s', 'With Undo'],
     sample: () => `<div class="m-toast" style="position:static;transform:none">${ic('checkmark.circle', 13)}3 items moved to Trash<span class="m-btn">Undo</span></div>` },
+  clipRow: { name: 'Clipboard row', swift: 'HStack(spacing: 10) {\n  ClipKindIcon(item)            // text, link, image, colour, code\n  VStack(alignment: .leading) {\n    Text(item.preview).lineLimit(1)\n    Text("\\(item.sourceApp) · \\(item.copied, style: .relative)")\n      .font(.caption).foregroundStyle(.secondary)\n  }\n  Spacer()\n  if isSelected { CopyButton(item); PinButton(item) }\n  else { Text("⌘\\(index)") }   // ⌘1–⌘9 paste\n}', sf: ['text.alignleft', 'link', 'photo', 'pin'], size: 'Row height 40 pt; icon 26 pt', type: 'Text 12.5 pt; source and time 10.5 pt grey', color: 'Selected: button fill, white text', shape: 'Rows 8 pt corners; icon 7 pt', states: ['Normal', 'Selected (Copy and Pin show)', 'Pinned', 'Image', 'Colour'],
+    sample: () => `<div style="width:380px">${clipPanel(false).match(/<div class="m-ci sel"[\s\S]*?<\/span><\/div>/)[0]}</div>` },
   copyBtn: { name: 'Copy button', swift: 'Button("Copy", systemImage: "doc.on.doc") {\n  NSPasteboard.general.clearContents()\n  NSPasteboard.general.setString(item.text, forType: .string)\n}\n.buttonStyle(.bordered).controlSize(.small)', sf: ['doc.on.doc'], size: 'Height 20 pt', type: '10.5 pt semibold', color: 'Indigo on 11% indigo', shape: '9 pt corners', states: ['Copy', 'Copied (1.5 s)'],
     sample: () => `<span class="m-copy1">${ic('doc.on.doc', 10)}Copy</span>` },
   goMenu: { name: 'Go menu', swift: 'CommandMenu("Go") {\n  Button("Home") { section = .home }\n    .keyboardShortcut("h", modifiers: [.command, .shift])\n  Button("Recents") { section = .recents }\n    .keyboardShortcut("r", modifiers: [.command, .shift])\n  // … one per sidebar place\n  Divider()\n  Button("Back") { goBack() }.keyboardShortcut("[")\n}', sf: [], size: 'Standard macOS menu', type: '13 pt; shortcuts right-aligned in grey', color: 'System menu', shape: 'System menu', states: ['Closed', 'Open', 'Item highlighted'],
@@ -963,15 +979,15 @@ const F = [
         comps: ['inspector', 'primary', 'secondary'], screen: () => win({ sel: 'downloaded-from', tb: toolbar({ tokens: ['From: Mail'] }), body: dlBody('Mail', { sel: 'Invoice 0412.pdf' }), insp: `<span class="doc" style="aspect-ratio:4/3;border-radius:8px;background:var(--m-alt);display:grid;place-items:center;color:var(--m-text3)">${ic('doc', 34)}</span><b>Invoice 0412.pdf</b><dl class="m-dl"><dt>Kind</dt><dd>PDF · 220 KB</dd><dt>From</dt><dd>Mail · Acme Billing</dd><dt>Subject</dt><dd>Your October invoice</dd><dt>Arrived</dt><dd>Today, 9:48</dd><dt>Folder</dt><dd>Downloads</dd></dl><div style="display:flex;gap:6px"><span class="m-btn pri" data-c="primary">Open</span><span class="m-btn" data-c="secondary">Show in Finder</span></div>` }) },
     ] },
   { id: 'clipboard', group: 'Discover', icon: 'doc.on.clipboard', name: 'Clipboard',
-    what: 'Everything you copied, searchable, with pinned favourites.',
+    what: 'Everything you copied, searchable, with pinned favourites, in a panel that opens over any app with ⇧⌘V.',
     when: 'You copied something new and lost what you copied before.',
     steps: [
       { t: 'Open history', do: 'Click the ⇧⌘V keys.', see: 'You are writing in Notes.', why: 'A shortcut close to Paste (⌘V) is easy to remember.',
         comps: ['keycap'], screen: () => `<div class="desk">${menubar()}${awin('left:40px;top:44px;width:600px;height:440px', 'Notes', lines(9))}<div class="keycap-big" data-c="keycap" data-hot>Press <kbd>⇧</kbd><kbd>⌘</kbd><kbd>V</kbd></div></div>` },
-      { t: 'Find and pin', do: 'Click the pin next to the address.', see: 'A panel of copied items, pinned ones on top, with a search field. Every item has a Copy button, so you can copy it again without pasting first.', why: 'Pins keep snippets you reuse (an address, a sign-off) from scrolling away.',
-        comps: ['panel', 'search', 'pRow', 'copyBtn', 'iconBtn'], screen: () => clipPanel(false) },
-      { t: 'Pinned', do: 'Click the gear to open Clipboard settings.', see: 'The address moved into Pinned.', why: 'Moving the item shows the result of the action without any message.',
-        comps: ['pRow', 'iconBtn'], screen: () => clipPanel(true) },
+      { t: 'Find and pin', do: 'Click the pin on the selected address.', see: 'A centred panel over Notes: a search field, Pinned, then today’s copies. Each shows an icon for its kind, the app it came from and when. The selected item shows Copy and Pin; the others show ⌘1–⌘6. The footer lists the keys and says passwords are never saved.', why: 'It works like the Mac’s own search: type to filter, arrows to move, Return to paste, ⌥ Return to paste as plain text. The app and time answer “which one was it?”. Pins keep snippets you reuse (an address, an email) from scrolling away.',
+        comps: ['panel', 'search', 'clipRow', 'copyBtn', 'iconBtn'], screen: () => clipPanel(false) },
+      { t: 'Pinned', do: 'Click the gear to open Clipboard settings.', see: 'The address moved into Pinned, above the email. Press Return to paste it into the note.', why: 'Moving the item shows the result of the action without any message.',
+        comps: ['clipRow', 'iconBtn'], screen: () => clipPanel(true) },
       { t: 'Privacy settings', do: 'Done. This is the end of the flow.', see: 'Switches and options: pause history, how long to keep it, apps to ignore.', why: 'Clipboard history is sensitive, so controls are clear and easy to reach. Password fields are never recorded.',
         comps: ['toggle', 'popup', 'table'], screen: () => `<div class="desk">${menubar()}<div class="awin" style="left:120px;top:50px;width:480px;height:400px"><div class="bar"><i></i><i></i><i></i><span>Settings — Clipboard</span></div><div class="body" style="gap:12px;font-size:12px"><div class="m-row2" data-c="toggle"><span>Pause clipboard history</span><span style="width:30px;height:17px;border-radius:99px;background:var(--m-line);position:relative;display:inline-block"><i style="position:absolute;left:2px;top:2px;width:13px;height:13px;border-radius:50%;background:#fff"></i></span></div><div class="m-row2"><span>Keep history for</span><span class="m-pop" data-c="popup"><b>30 days</b> ▾</span></div><div><div style="margin-bottom:6px">Never record from these apps</div><div data-c="table" style="border:1px solid var(--m-line);border-radius:8px;overflow:hidden">${['1Password', 'Keychain Access', 'Banking app'].map((n) => `<div class="m-tr" style="grid-template-columns:24px 1fr"><span class="ico">${ic('app', 13)}</span><span>${n}</span></div>`).join('')}</div></div></div></div></div>` },
     ] },
@@ -1090,12 +1106,22 @@ function cleanList() {
   const rows = [['macOS-Installer-old.dmg', '12.9 GB', true, 'app'], ['Photos-backup-2024.zip', '8.3 GB', true, 'doc.zipper'], ['Conference-talk.mov', '3.1 GB', true, 'film'], ['Xcode-cache-copy', '2.4 GB', false, 'folder']];
   return `<div class="m-h1" style="font-size:18px">Review before cleaning</div><div data-c="table" style="border:1px solid var(--m-line);border-radius:8px;overflow:hidden"><div class="m-tr head"><span></span><span></span><span>Name</span><span>Location</span><span class="r">Size</span></div>${rows.map((r, i) => `<div class="m-tr${r[2] ? ' sel' : ''}"><span class="m-check${r[2] ? ' on' : ''}" ${i === 0 ? 'data-c="checkbox"' : ''}></span><span class="ico">${ic(r[3], 14)}</span><span>${r[0]}</span><span class="mut">~/Downloads</span><span class="r">${r[1]}</span></div>`).join('')}</div>`;
 }
+/* Clipboard panel (decided in design/clipboard-options.html: option 1, Search panel) */
+// [kind icon or colour, text, from, when]
+const CLIPS = [['text.alignleft', '221B Baker Street, London NW1 6XE', 'Mail', '9:50'], ['link', 'maps.example.com/route/heathrow-to-baker-street', 'Safari', '2 min ago'], ['photo', 'Screenshot 9.41.png · 1440 × 900', 'Screenshot', '9:41'], ['text.alignleft', 'Meeting moved to 3 pm, room 4B. Bring the printed brief.', 'Slack', '9:30'], ['#3B5BDB', '#3B5BDB', 'Design', '9:12'], ['chevron.left.forwardslash.chevron.right', 'npm run build && npm test', 'Terminal', '8:40']];
+const PINNED0 = ['text.alignleft', 'sam@studio.example', 'Contacts'];
 function clipPanel(pinned) {
-  const items = [['221B Baker Street, London', 'doc'], ['Meeting at 3:30 in Room 4B', 'doc'], ['https://example.com/track/1Z999', 'safari'], ['npm install --save-dev vitest', 'doc']];
-  const pin = pinned ? [items[0], items[1]] : [items[1]];
-  const rest = pinned ? items.slice(2) : [items[0], ...items.slice(2)];
-  const row = (r, hot) => `<div class="p-row" ${hot ? 'data-c="pRow"' : ''}><span class="ico">${ic(r[1], 13)}</span><span style="flex:1;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">${r[0]}</span><span class="m-copy1" ${hot ? 'data-c="copyBtn"' : ''}>${ic('doc.on.doc', 10)}Copy</span><span class="m-ibtn" ${hot ? `data-c="iconBtn" ${!pinned ? 'data-hot' : ''}` : ''} style="width:22px;height:20px;${pin.includes(r) ? 'color:var(--m-accent)' : ''}">${ic('pin', 11)}</span></div>`;
-  return `<div class="desk">${menubar()}${awin('left:40px;top:44px;width:600px;height:440px', 'Notes', lines(9))}<div class="panel" data-c="panel" style="top:70px"><div class="m-row2"><div class="m-search" data-c="search" style="flex:1">${ic('magnifyingglass', 15)}<span>Search clipboard history</span></div><span class="m-ibtn" style="margin-right:6px" ${pinned ? 'data-hot' : ''}>${ic('gearshape', 13)}</span></div><div class="p-lbl">Pinned</div>${pin.map((r) => row(r, pinned && r === items[0])).join('')}<div class="p-lbl">Recent</div>${rest.map((r) => row(r, !pinned && r === items[0])).join('')}</div></div>`;
+  const addr = CLIPS[0];
+  const pins = pinned ? [addr, PINNED0] : [PINNED0];
+  const today = pinned ? CLIPS.slice(1) : CLIPS;
+  const ico = (r) => r[0][0] === '#' ? `<span class="ico" style="background:${r[0]}"></span>` : `<span class="ico">${ic(r[0], 13)}</span>`;
+  const row = (r, i, isPin) => {
+    const sel = r === addr, hot = sel;
+    return `<div class="m-ci${sel ? ' sel' : ''}" ${hot ? 'data-c="clipRow"' : ''}>${ico(r)}<span class="tx"><b>${r[1]}</b><small>${r[2]}${isPin ? '' : ` · ${r[3]}`}</small></span>${sel ? `<span class="m-copy1" ${!pinned ? 'data-c="copyBtn"' : ''}>${ic('doc.on.doc', 10)}Copy</span><span class="m-ibtn" data-c="iconBtn" ${!pinned ? 'data-hot' : ''} style="width:22px;height:20px;${pinned ? 'color:var(--m-accent)' : ''}">${ic('pin', 11)}</span>` : `<span class="k">${isPin ? ic('pin', 11) : `⌘${i + 1}`}</span>`}</div>`;
+  };
+  return `<div class="desk">${menubar()}${awin('left:40px;top:44px;width:600px;height:440px', 'Notes', lines(9))}<div class="panel" data-c="panel" style="top:56px;width:470px;padding:0"><div class="m-row2" style="padding:4px 6px 0"><div class="m-search" data-c="search" style="flex:1">${ic('magnifyingglass', 15)}<span>Search what you copied</span></div><span class="m-ibtn" style="margin-right:4px" ${pinned ? 'data-hot' : ''}>${ic('gearshape', 13)}</span></div>
+  <div style="padding:4px 6px"><div class="p-lbl">${ic('pin', 10)} Pinned</div>${pins.map((r) => row(r, 0, true)).join('')}<div class="p-lbl">Today</div>${today.map((r, i) => row(r, i, false)).join('')}</div>
+  <div class="m-cfoot"><span><b>↩</b> Paste</span><span><b>⌥↩</b> Paste as plain text</span><span><b>⌘P</b> Pin</span><span class="ml">${ic('lock', 10)} Passwords never saved</span></div></div></div>`;
 }
 function shotEditor(blurred) {
   return `<div class="desk">${menubar()}<div class="awin" style="left:70px;top:44px;width:600px;height:430px"><div class="bar"><i></i><i></i><i></i><span>Screenshot — MacSprint</span><span style="margin-left:auto;display:flex;gap:6px"><div class="m-seg" data-c="toolPalette"><span>${ic('arrow.up.right', 12)}</span><span>${ic('textformat', 12)}</span><span class="${blurred ? 'on' : ''}" ${blurred ? '' : 'data-hot'}>${ic('eye.slash', 12)}</span><span>${ic('crop', 12)}</span><span>${ic('text.viewfinder', 12)}</span></div><span class="m-btn pri" ${blurred ? 'data-c="primary" data-hot' : ''}>Copy</span><span class="m-btn">Save</span></span></div><div class="body" style="place-items:center;background:var(--m-alt)"><div style="background:#fff;color:#1d1d1f;border-radius:10px;padding:16px 20px;display:grid;gap:4px;font-size:13px;box-shadow:0 0 0 2px var(--m-accent)"><b>Order confirmed</b><span>Payment successful — $48.20</span><span style="${blurred ? 'filter:blur(5px)' : ''}">Card •••• 4242 · jane.doe@example.com</span></div><span class="m-ibtn" data-c="iconBtn" style="justify-self:start">${ic('info.circle', 13)}</span></div></div></div>`;

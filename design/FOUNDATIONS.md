@@ -116,3 +116,10 @@ From the [Downloaded From options](downloaded-from-options.html) page: option 1,
 the left (app icon, name, size, file count; most files first). Beside it, the chosen source's files grouped by day, each
 with its origin under the name (sender · email subject, or the website), the time and the size. Picking a source adds a
 "From: Mail" token to the search field. The inspector shows From, Subject and when it arrived.
+
+## Clipboard (decided 2026-10-29)
+
+From the [Clipboard options](clipboard-options.html) page: option 1, **Search panel**. ⇧⌘V opens a centred floating panel
+over any app: search field and settings gear on top, Pinned, then Today. Each row: kind icon (text, link, image, colour
+swatch, code), the item, and the app it came from with the time. The selected row shows Copy and Pin; the others show
+⌘1–⌘9. Footer: ↩ Paste, ⌥↩ Paste as plain text, ⌘P Pin, and "Passwords never saved".
