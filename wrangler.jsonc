@@ -1,6 +1,6 @@
 {
   // MacSprint website + waitlist API. See docs/DEPLOY.md.
-  "name": "macsprint",
+  "name": "mac-sprint",
   "main": "worker/index.js",
   "compatibility_date": "2026-10-01",
   "build": { "command": "node tools/build-site.mjs" },
