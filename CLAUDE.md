@@ -164,7 +164,7 @@ Do not refactor the repository during an audit unless explicitly asked.
   buttons `#2f4bc4` / `#4a63e0`; radii window 14, card 16, button 9, field 9; SF Pro; soft shadows; search centred; filled buttons.
 - No hover motion or fans (the owner found them glitchy). Motion is allowed only when it answers an action (listening,
   thinking, opening a panel) and it stops with Reduce Motion. The feature flows page stays static. Light and dark must both work.
-- Keep the sidebar short: Discover (Home, Recents, Library, Downloaded From, Clipboard) and Clean up (Free Up Space, Duplicates, Organizer). The row was called Clean Up; the designs renamed it so it does not repeat the section name (the website still says Clean Up until it is updated).
+- Keep the sidebar short: Discover (Home, Recents, Library, Downloaded From, Clipboard) and Clean up (Free Up Space, Duplicates, Organizer). The row was called Clean Up; the designs renamed it so it does not repeat the section name (the website says Free Up Space too since 2026-11-17).
   New features live inside an existing place; they do not add sidebar rows. Quick Search, Command Panel, Menu Bar, Finder Tools,
   Screenshot Toolkit, Window Manager and Paste Clean were removed on purpose.
 - Removed design experiments are kept in `design/lab/` (see its README). Do not delete them.

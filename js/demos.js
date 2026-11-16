@@ -3,6 +3,7 @@
 // All file names and numbers are fictional sample data.
 
 import { homeMarkup, bindHome } from './home.js';
+import { ringsSvg } from './rings.js';
 
 const reduceMotion = () => matchMedia('(prefers-reduced-motion: reduce)').matches;
 const ph = (h, extra = '') => `<span class="ph" style="--h:${h}" ${extra}></span>`;
@@ -251,7 +252,7 @@ function cleanup(el) {
     const [title, , items] = CLEAN_CARDS[ci];
     el.innerHTML = `
       <div class="d-clean">
-        <div class="d-row-head"><p class="d-label">${esc(title)}</p><button type="button" class="btn btn-small btn-ghost d-back">‹ Clean Up</button></div>
+        <div class="d-row-head"><p class="d-label">${esc(title)}</p><button type="button" class="btn btn-small btn-ghost d-back">‹ Free Up Space</button></div>
         <ul class="d-checks">${items.map(([n, g, why]) => `<li><label><input type="checkbox" data-g="${g}" checked> <span>${esc(n)}<small>${esc(why)}</small></span><em>${GB(g)}</em></label></li>`).join('')}</ul>
         <div class="d-clean-foot"><span class="d-total" aria-live="polite"></span><button type="button" class="btn btn-small d-trash">Move to Trash…</button></div>
         <div class="d-confirm" hidden role="alertdialog" aria-label="Confirm move to Trash">
@@ -282,7 +283,7 @@ function cleanup(el) {
           <p><b>${n} item${n === 1 ? '' : 's'} moved to Trash.</b></p>
           <p>Added to cleanup history. Nothing was permanently deleted, and ⌘Z puts it back.</p>
           <p class="d-offer">Want this to happen on its own? <b>Automatic clean up</b> can tidy old installers and screenshots. It is off until you turn it on.</p>
-          <button type="button" class="btn btn-small btn-ghost d-again">Back to Clean Up</button>
+          <button type="button" class="btn btn-small btn-ghost d-again">Back to Free Up Space</button>
         </div>`;
       el.querySelector('.d-again').addEventListener('click', overview);
     });
@@ -588,32 +589,45 @@ function ask(el) {
   show(0, false);
 }
 
-/* ---------------- Space Map (a view inside Clean Up) ---------------- */
+/* ---------------- Space Map (a view inside Free Up Space) ---------------- */
 function spacemap(el) {
-  const TOP = [['Movies', 61, 275, '1/7', '1/7'], ['Photos', 38, 215, '7/11', '1/4'], ['Apps', 34, 195, '11/13', '1/4'], ['Documents', 22, 35, '7/10', '4/7'], ['Caches', 19, 345, '10/12', '4/7'], ['Other', 17, 150, '12/13', '4/7']];
-  const MOVIES = [['Conference-talk.mov', 3.1, 275, '1/8', '1/5', 'not opened for 14 months'], ['Trip 2025.mov', 2.4, 290, '8/13', '1/5', 'opened last year'], ['Screen recording.mov', 1.8, 260, '1/5', '5/7', 'not opened for 9 months'], ['Wedding.mov', 1.6, 305, '5/9', '5/7', 'opened last month'], ['Other 34 files', 52, 245, '9/13', '5/7', '']];
+  const TOP = [
+    { name: 'Movies', gb: 61, h: 275, kids: [{ gb: 4.9, free: true }, { gb: 56.1 }] },
+    { name: 'Photos', gb: 38, h: 215, kids: [{ gb: 30 }, { gb: 8 }] },
+    { name: 'Apps', gb: 34, h: 195, kids: [{ gb: 22 }, { gb: 9 }, { gb: 3, free: true }] },
+    { name: 'Documents', gb: 22, h: 35, kids: [{ gb: 14 }, { gb: 8, free: true }] },
+    { name: 'Caches', gb: 19, h: 345, kids: [{ gb: 11, free: true }, { gb: 8 }] },
+    { name: 'Other', gb: 17, h: 150, kids: [{ gb: 17 }] },
+  ];
+  const MOVIES = [['Conference-talk.mov', 3.1, 'not opened for 14 months'], ['Trip 2025.mov', 2.4, ''], ['Screen recording.mov', 1.8, 'not opened for 9 months'], ['Wedding.mov', 1.6, ''], ['Other 34 files', 52, '']];
   let sel = null;
+  const row = (name, gb, h, extra = '', note = '') => `<button type="button" class="d-rrow" ${extra}><i style="background:${note ? 'hsl(28 92% 56%)' : `hsl(${h} 62% 54%)`}"></i><b>${esc(name)}</b><small>${gb} GB</small></button>`;
   const root = () => {
     sel = null;
-    el.innerHTML = `<div class="d-map"><p class="d-label">Macintosh HD · 341 GB used · click a block</p>
-      <div class="d-tree">${TOP.map(([n, g, h, c, r]) => `<button type="button" class="d-tile" data-n="${n}" style="--h:${h};grid-column:${c};grid-row:${r}" aria-label="${n}, ${g} GB${n === 'Movies' ? ', open' : ''}"><b>${n}</b><small>${g} GB</small></button>`).join('')}</div>
-      <p class="d-foot">Bigger block, bigger folder. Only Movies opens in this demo.</p></div>`;
+    el.innerHTML = `<div class="d-map"><p class="d-label">Macintosh HD · 341 GB used · orange could be freed</p>
+      <div class="d-rings">${ringsSvg(TOP, { center: '341 GB', label: 'Disk map: Movies 61 GB, Photos 38 GB, Apps 34 GB, Documents 22 GB, Caches 19 GB, Other 17 GB' })}
+        <div class="d-rlist">${TOP.map((t) => row(t.name, t.gb, t.h, `data-n="${t.name}"${t.name === 'Movies' ? ' aria-label="Movies, 61 GB, open"' : ''}`)).join('')}</div></div>
+      <p class="d-foot">Inner ring: folders. Outer ring: what is inside. Only Movies opens in this demo.</p></div>`;
     el.querySelector('[data-n="Movies"]').addEventListener('click', inside);
   };
   const inside = () => {
+    const draw = () => ringsSvg(MOVIES.map(([n, gb, why]) => ({ name: n, gb, h: 275, free: !!why, on: sel && sel[0] === n })), { label: 'Movies folder map' });
     el.innerHTML = `<div class="d-map"><p class="d-label"><button type="button" class="d-crumb">Macintosh HD</button> › Movies · 61 GB</p>
-      <div class="d-tree d-tree-in">${MOVIES.map(([n, g, h, c, r], i) => `<button type="button" class="d-tile" data-i="${i}" style="--h:${h};grid-column:${c};grid-row:${r}" aria-pressed="false"><b>${n}</b><small>${g} GB</small></button>`).join('')}</div>
-      <div class="d-clean-foot"><span class="d-total" aria-live="polite">Select a file to see why it is suggested.</span><button type="button" class="btn btn-small d-go" disabled>Move to Trash…</button></div></div>`;
+      <div class="d-rings"><div class="d-rsvg">${draw()}</div>
+        <div class="d-rlist">${MOVIES.map(([n, gb, why], i) => row(n, gb, 275, `data-i="${i}" aria-pressed="false"`, why)).join('')}</div></div>
+      <div class="d-clean-foot"><span class="d-total" aria-live="polite">Select an orange file to see why it is suggested.</span><button type="button" class="btn btn-small d-go" disabled>Move to Trash…</button></div></div>`;
     el.querySelector('.d-crumb').addEventListener('click', root);
     const total = el.querySelector('.d-total'), go = el.querySelector('.d-go');
-    bindAll(el, '.d-tile', 'click', (e) => {
-      const b = e.currentTarget, i = +b.dataset.i; if (!MOVIES[i][5]) return;
-      el.querySelectorAll('.d-tile').forEach((t) => t.setAttribute('aria-pressed', String(t === b)));
-      sel = MOVIES[i]; total.textContent = `${sel[0]} · ${sel[1]} GB · ${sel[5]}`; go.disabled = false;
+    bindAll(el, '.d-rrow', 'click', (e) => {
+      const b = e.currentTarget, m = MOVIES[+b.dataset.i];
+      el.querySelectorAll('.d-rrow').forEach((t) => t.setAttribute('aria-pressed', String(t === b)));
+      sel = m; el.querySelector('.d-rsvg').innerHTML = draw();
+      total.textContent = m[2] ? `${m[0]} · ${m[1]} GB · ${m[2]}` : `${m[0]} · ${m[1]} GB · not suggested`;
+      go.disabled = !m[2];
     });
     go.addEventListener('click', () => {
       el.innerHTML = `<div class="d-map"><div class="d-report" role="status"><span class="d-report-icon">${svg(ICON.check, 22)}</span><p><b>${esc(sel[0])} moved to the Trash.</b></p><span class="d-sub">${sel[1]} GB · saved to Cleanup History</span><button type="button" class="btn btn-small btn-quiet d-undo">Undo</button></div></div>`;
-      el.querySelector('.d-undo').addEventListener('click', inside);
+      el.querySelector('.d-undo').addEventListener('click', () => { sel = null; inside(); });
     });
   };
   root();

@@ -29,7 +29,7 @@ export const FEATURES = [
     headline: 'Your Mac at a glance — measured, never guessed.',
     points: [
       'Real disk capacity, free space and a category breakdown.',
-      'Large-file, old-file and duplicate suggestions you can open in one click.',
+      'A “Needs a look” list, biggest first, and one line for what is fine.',
       'Live indexing status and on-device AI availability.',
       'Shows “loading”, “unavailable” or “permission needed” instead of fake numbers.',
     ],
@@ -52,8 +52,9 @@ export const FEATURES = [
     points: [
       'Browse images, videos, music, documents, apps and screenshots as large, clear thumbnails.',
       'Covers every folder you choose — not just one window at a time.',
+      'Collections gather trips, receipts and screenshots, and a card brings back photos from a year ago.',
+      'Right-click to convert or shrink a photo, HEIC, video or PDF. It saves a copy; the original never changes.',
       'Pin any folder to the sidebar under Locations.',
-      'Works alongside Finder, not instead of it.',
     ],
   },
   {
@@ -73,7 +74,7 @@ export const FEATURES = [
     headline: 'One search field. It reads your screenshots too.',
     points: [
       'Plain English becomes precise filters you can edit: type, date, size, folder and text.',
-      'Finds words inside screenshots and photos with on-device text recognition.',
+      'Finds words inside screenshots and photos, and photos by what they show, even faces and smiles.',
       'Every result says why it matched: by name, by meaning, or by text in the image.',
       'Copy recognized text in one click. Without Apple Intelligence, name and text search still work.',
     ],
@@ -96,7 +97,7 @@ export const FEATURES = [
     points: [
       'Every download grouped by source: Safari, Mail, Slack, WhatsApp, AirDrop, ChatGPT and any website.',
       'Biggest sources first, with file counts and sizes.',
-      'Opening a source is a search with a “From” token, so you can narrow it down by typing.',
+      'Clear Names suggests a better name beside each unclear download. Edit it, switch it on, rename, undo.',
       'The inspector shows where any file came from and when. Opens with ⌥⌘L.',
     ],
   },
@@ -105,7 +106,7 @@ export const FEATURES = [
     title: 'Clipboard History', short: 'Never lose a copied item',
     headline: 'Everything you copied, searchable.',
     points: [
-      'Text and image history with pinned snippets.',
+      'Text, links, pictures and files with large previews, plus pinned snippets.',
       'A quick-paste panel with ⇧⌘V, and a Copy button on every item.',
       'Pause anytime, exclude apps and set how long history is kept.',
       'Stored only on your Mac. Password fields are never recorded.',
@@ -114,24 +115,25 @@ export const FEATURES = [
   // ---------- Clean up ----------
   {
     id: 'cleanup', group: 'Clean up', icon: I.cleanup, meta: { text: '14.1 GB', tone: 'good', label: 'up to 14.1 GB to review' },
-    title: 'Clean Up', short: 'Where space went, and getting it back',
+    title: 'Free Up Space', short: 'Where space went, and getting it back',
     headline: 'See where your space went. Get it back safely.',
     points: [
       'The disk bar by category, then cards for old files, old installers, big old videos, old screenshots, apps you do not open and large files.',
       'Every card opens a review with honest labels such as “Not modified for 18 months”.',
       'Preview, confirm, and files go to the macOS Trash, never deleted outright. Undo anything.',
+      'Remove an app with what it left behind, and see what starts when you log in, with a switch for each.',
       'Optional automatic clean up for old installers and screenshots, off until you turn it on.',
     ],
   },
   {
     id: 'spacemap', group: 'Clean up', icon: I.spacemap,
     title: 'Space Map', short: 'See where the space went',
-    headline: 'The biggest folders, as the biggest blocks.',
+    headline: 'Your disk as rings. The biggest folders stand out.',
     points: [
-      'Every folder is a block sized by the space it takes.',
-      'Click a block to go inside, and back with the path at the top.',
+      'The inner ring is this level’s folders, the outer ring what is inside each.',
+      'Click a folder to go inside, and back with the path at the top. A list beside gives exact sizes.',
       'Select a file to see why it is suggested, then move it to the Trash.',
-      'Uses the same preview, Trash and Undo as the rest of Clean Up.',
+      'Orange marks what Free Up Space suggests. Same preview, Trash and Undo.',
     ],
   },
   {
@@ -212,7 +214,7 @@ export const iconSvg = (inner, size = 18) =>
   `<svg viewBox="0 0 24 24" width="${size}" height="${size}" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">${inner}</svg>`;
 
 export const SHORTCUTS = [
-  { group: 'Go', items: [['Home', ['⇧', '⌘', 'H']], ['Recents', ['⇧', '⌘', 'R']], ['Library', ['⇧', '⌘', 'L']], ['Downloaded From', ['⌥', '⌘', 'L']], ['Clipboard', ['⇧', '⌘', 'V']], ['Clean Up', ['⇧', '⌘', 'K']], ['Space Map', ['⇧', '⌘', 'M']], ['Duplicates', ['⇧', '⌘', 'D']], ['Organizer', ['⇧', '⌘', 'O']], ['Screenshot Inbox', ['⇧', '⌘', 'I']]] },
+  { group: 'Go', items: [['Home', ['⇧', '⌘', 'H']], ['Recents', ['⇧', '⌘', 'R']], ['Library', ['⇧', '⌘', 'L']], ['Downloaded From', ['⌥', '⌘', 'L']], ['Clipboard', ['⇧', '⌘', 'V']], ['Free Up Space', ['⇧', '⌘', 'K']], ['Space Map', ['⇧', '⌘', 'M']], ['Duplicates', ['⇧', '⌘', 'D']], ['Organizer', ['⇧', '⌘', 'O']], ['Screenshot Inbox', ['⇧', '⌘', 'I']]] },
   { group: 'Find and view', items: [['Search', ['⌘', 'F']], ['Ask Your Files', ['⇧', '⌘', 'A']], ['Copy text from images', ['⇧', '⌘', 'C']], ['Save search', ['⌘', 'S']], ['Quick Look', ['Space']], ['Grid / List', ['⌘', '1', '⌘', '2']], ['Inspector', ['⌘', 'I']], ['Back / Forward', ['⌘', '[', '⌘', ']']]] },
   { group: 'Act', items: [['Open', ['⌘', 'O']], ['Show in Finder', ['⌥', '⌘', 'R']], ['Copy path', ['⌥', '⌘', 'C']], ['What’s this?', ['⌥', '⌘', '/']], ['Move to Trash', ['⌘', '⌫']], ['Undo', ['⌘', 'Z']]] },
 ];
@@ -223,7 +225,7 @@ export const STORIES = [
   { id: 'search', label: 'Search', keys: ['⌘', 'F'], title: 'Type it the way you’d say it.',
     problem: 'You remember what’s in a file, not what it’s called.',
     use: 'Type “pdfs from last week” and get exactly those files.',
-    points: ['Shows how it read you, as filters you can remove', 'Finds photos by what they show', 'Says why each result matched'] },
+    points: ['Shows how it read you, as filters you can remove', 'Finds photos by what they show, even smiles', 'Says why each result matched'] },
   { id: 'ask', label: 'Ask Your Files', keys: ['⇧', '⌘', 'A'], title: 'Ask. Don’t dig.',
     problem: 'You need one fact, and it’s buried in a document.',
     use: 'Ask “When does my lease end?” and get the answer with its page.',
@@ -235,15 +237,15 @@ export const STORIES = [
   { id: 'downloaded', label: 'Downloaded From', keys: ['⌥', '⌘', 'L'], title: 'Remember where it came from.',
     problem: 'You know who sent the file, not its name.',
     use: 'Click Mail and see every file you saved from email.',
-    points: ['Safari, Mail, Slack, WhatsApp, AirDrop and more', 'Biggest sources first', 'Each file shows who sent it and when'] },
-  { id: 'cleanup', label: 'Clean Up', keys: ['⇧', '⌘', 'K'], title: 'Gigabytes back, safely.',
+    points: ['Safari, Mail, Slack, WhatsApp, AirDrop and more', 'Biggest sources first', 'Clear names for unclear downloads'] },
+  { id: 'cleanup', label: 'Free Up Space', keys: ['⇧', '⌘', 'K'], title: 'Gigabytes back, safely.',
     problem: 'Your Mac says the disk is full, and you don’t know why.',
     use: 'Review old installers and big videos, then move them to the Trash.',
-    points: ['See where the space went', 'Review before anything moves', 'Everything goes to the Trash, so you can undo'] },
+    points: ['Review before anything moves', 'Remove apps with what they left behind', 'Everything goes to the Trash, so you can undo'] },
   { id: 'spacemap', label: 'Space Map', keys: ['⇧', '⌘', 'M'], title: 'See where the space went.',
     problem: 'A list of sizes doesn’t show what’s really big.',
     use: 'Open the map, spot the biggest block, and go inside it.',
-    points: ['Block size matches folder size', 'Click to go in, click the path to go back', 'Move to the Trash with Undo'] },
+    points: ['Ring size matches folder size', 'Click to go in, click the path to go back', 'Orange marks what you could free'] },
   { id: 'explain', label: 'What’s This?', keys: ['⌥', '⌘', '/'], title: 'Know before you delete.',
     problem: '“System Data” is 150 GB and nobody says what’s in it.',
     use: 'See it split into parts, each marked safe to clear, check first or leave it.',
@@ -255,11 +257,11 @@ export const STORIES = [
   { id: 'home', label: 'Home', keys: ['⇧', '⌘', 'H'], title: 'Your Mac at a glance.',
     problem: 'You can’t tell what’s on your Mac or what’s using the space.',
     use: 'Open MacSprint and see every kind of file, its size and what you could free.',
-    points: ['A shelf for each kind of file', 'Clean Up cards with real sizes', 'Recent downloads by source'] },
+    points: ['A shelf for each kind of file', 'What needs a look, biggest first', 'Recent downloads by source'] },
   { id: 'library', label: 'Library', keys: ['⇧', '⌘', 'L'], title: 'Everything, sorted by what it is.',
     problem: 'Your files are spread across dozens of folders.',
     use: 'Pick Videos and see every video on your Mac in one place.',
-    points: ['Big, clear thumbnails', 'Filter by kind or by folder', 'Pin the folders you use most'] },
+    points: ['Big, clear thumbnails', 'Collections and a year-ago card', 'Convert or shrink a copy'] },
   { id: 'images', label: 'Image Viewer', keys: ['←', '→'], title: 'Open one photo. Press → for the next.',
     problem: 'Preview shows only the photo you opened.',
     use: 'Open any photo and step through the whole folder with the arrow keys.',

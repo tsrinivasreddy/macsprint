@@ -2,6 +2,7 @@
 // Every tile opens its feature in the explorer.
 import { FEATURES, STORIES, iconSvg } from './features.js';
 import { selectFeature } from './explorer.js';
+import { ringsSvg } from './rings.js';
 
 const byId = new Map(FEATURES.map((f) => [f.id, f]));
 const story = new Map(STORIES.map((s) => [s.id, s]));
@@ -32,7 +33,7 @@ const TILES = [
   { id: 'ask', size: 'hl-half', art: `
       <div class="hl-answer"><span><i></i>When does my lease end?</span><b>31 August 2027</b><em>Lease agreement 2026.pdf · page 3</em></div>` },
   { id: 'spacemap', size: 'hl-half', art: `
-      <div class="hl-map"><i style="--h:275;grid-area:1/1/4/3"><b>Movies</b>61 GB</i><i style="--h:215;grid-area:1/3/3/5"><b>Photos</b></i><i style="--h:195;grid-area:1/5/3/6"></i><i style="--h:35;grid-area:3/3/4/5"><b>Docs</b></i><i style="--h:345;grid-area:3/5/4/6"></i></div>` },
+      <div class="hl-map">${ringsSvg([{ gb: 61, h: 275, kids: [{ gb: 5, free: true }, { gb: 56 }] }, { gb: 38, h: 215, kids: [{ gb: 38 }] }, { gb: 34, h: 195, kids: [{ gb: 31 }, { gb: 3, free: true }] }, { gb: 22, h: 35, kids: [{ gb: 14 }, { gb: 8, free: true }] }, { gb: 36, h: 345, kids: [{ gb: 36 }] }], { center: '341 GB', label: 'Disk shown as rings' })}<ul><li><i style="--c:hsl(275 62% 54%)"></i>Movies <b>61 GB</b></li><li><i style="--c:hsl(215 62% 54%)"></i>Photos <b>38 GB</b></li><li><i style="--c:hsl(28 92% 56%)"></i>Could be freed <b>16 GB</b></li></ul></div>` },
   { id: 'rename', size: 'hl-wide', art: `
       <ul class="hl-names">
         <li><s>document (2).pdf</s><b>Lease agreement 2026.pdf</b></li>

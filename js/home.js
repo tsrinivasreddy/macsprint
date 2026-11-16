@@ -76,7 +76,7 @@ export function homeMarkup({ compact = false } = {}) {
         </button>`).join('')}
       </div>
 
-      <div class="hm-head"><h4>Clean Up</h4><span class="hm-pill">Free up to 14.1 GB</span></div>
+      <div class="hm-head"><h4>Free Up Space</h4><span class="hm-pill">Free up to 14.1 GB</span></div>
       <div class="hm-cleans">${CLEAN.map((c) => `
         <button type="button" class="hm-clean" data-go="${c.go}" aria-label="${c.label}: ${c.big}, ${c.sub}">
           <span class="hm-clean-top"><span class="hm-clean-icon">${svg(G[c.icon], 16)}</span><span class="hm-dots">${c.dots}</span></span>
@@ -109,7 +109,7 @@ export function bindHome(el, go) {
 // Static, non-interactive copy of the app window for the hero.
 export function heroWindowMarkup() {
   const side = [['Home', '', true], ['Recents', ''], ['Library', '2,880'], ['Downloaded From', '913'], ['Clipboard', '']];
-  const tools = [['Clean Up', '14.1 GB', 'good'], ['Duplicates', '44.8 MB', 'good'], ['Organizer', '']];
+  const tools = [['Free Up Space', '14.1 GB', 'good'], ['Duplicates', '44.8 MB', 'good'], ['Organizer', '']];
   const row = ([n, m, tone]) => `<li${tone === true ? ' class="on"' : ''}><span>${n}</span>${m ? `<em class="${typeof tone === 'string' ? 'is-' + tone : ''}">${m}</em>` : ''}</li>`;
   return `
     <aside class="hw-side">

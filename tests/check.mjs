@@ -398,7 +398,7 @@ check('homeCleanupCardsOpenFeatures', async (b) => {
   await p.evaluate(() => { location.hash = '#feature-home'; });
   await p.waitForTimeout(100);
   await p.locator('#explorer .hm-clean', { hasText: 'Large Files' }).click();
-  assert((await paneTitle(p)).trim() === 'Clean Up', 'large files card wrong target');
+  assert((await paneTitle(p)).trim() === 'Free Up Space', 'large files card wrong target');
 });
 
 check('sidebarLocationsAndMetrics', async (b) => {
