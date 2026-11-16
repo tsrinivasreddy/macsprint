@@ -856,6 +856,7 @@ mark { background: var(--mark); color: var(--text); border-radius: 3px; padding:
 .spot-wide .spot-shot::after { display: none; }
 .spot-text { padding: 22px 26px 26px; display: grid; gap: 10px; align-content: start; }
 .spot-wide .spot-text { padding: 34px 34px 30px; align-content: center; }
+.spot-photo { display: block; width: 100%; height: auto; aspect-ratio: 12 / 5; object-fit: cover; border-radius: 12px; background: var(--bg-alt); box-shadow: 0 0 0 1px var(--line); }
 .spot-label { display: flex; align-items: center; gap: 8px; font-size: 14px; color: var(--text-2); }
 .spot-icon { color: var(--accent); display: inline-flex; }
 .spot-keys { margin-left: auto; display: inline-flex; gap: 4px; }

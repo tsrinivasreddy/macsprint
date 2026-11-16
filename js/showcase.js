@@ -13,6 +13,7 @@ export function initSpotlight(grid, demos) {
       <article class="spot-card reveal${i === 0 ? ' spot-wide' : ''}">
         <div class="spot-shot" aria-hidden="true"><div class="mac-window" inert><div class="spot-bar"><i></i><i></i><i></i></div><div class="spot-demo ex-demo demo-${s.id}" data-demo="${s.id}"></div></div></div>
         <div class="spot-text">
+          <img class="spot-photo" src="assets/stories/${s.id}.webp" alt="" width="800" height="449" loading="lazy" decoding="async">
           <p class="spot-label"><span class="spot-icon">${iconSvg(f.icon, 16)}</span>${esc(s.label)}<span class="spot-keys">${s.keys.map((k) => `<kbd>${esc(k)}</kbd>`).join('')}</span></p>
           <h3>${esc(s.title)}</h3>
           <p class="spot-problem"><b>The problem.</b> ${esc(s.problem)}</p>
