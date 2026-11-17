@@ -10,7 +10,7 @@
     { "pattern": "www.macsprint.com", "custom_domain": true }
   ],
   "d1_databases": [
-    { "binding": "DB", "database_name": "macsprint-waitlist", "database_id": "fd342aa8-4aec-48f9-9927-77b9fa2bccc9" }
+    { "binding": "DB", "database_name": "macsprint-waitlist", "database_id": "4c9f2854-adb0-4937-95d6-b7104c528faa" }
   ],
   "send_email": [{ "name": "EMAIL" }],
   // NOTIFY_TO (your own inbox, verified in Email Routing) is set in the dashboard: Settings → Variables and secrets.
