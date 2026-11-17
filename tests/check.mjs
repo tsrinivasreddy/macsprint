@@ -54,8 +54,8 @@ check('heroHasTaglineAndCta', async (b) => {
   assert(h1 && h1.includes('MacSprint AI'), 'h1 missing MacSprint AI: ' + h1);
   const body = await p.textContent('body');
   assert(body.includes('Your Mac. Smarter, faster, cleaner.'), 'tagline missing');
-  assert(await p.locator('#overview a[href="#waitlist"]').count() > 0, 'hero CTA to #waitlist missing');
-  for (const id of ['overview', 'problems', 'spotlight', 'explore', 'compare', 'shortcuts', 'privacy', 'trust', 'faq', 'waitlist']) {
+  assert(await p.locator('#overview form.waitlist-form input[type=email]').count() === 1, 'hero waitlist form missing');
+  for (const id of ['overview', 'spotlight', 'explore', 'compare', 'shortcuts', 'privacy', 'trust', 'faq', 'waitlist']) {
     assert(await p.locator('#' + id).count() === 1, 'missing section #' + id);
   }
 });
@@ -195,17 +195,6 @@ check('demoCleanUpHonestLabels', async (b) => {
 });
 
 /* ---------- Task 4: content sections ---------- */
-check('problemCardsOpenFeatures', async (b) => {
-  const p = await open(b);
-  const cards = p.locator('#problems .problem-card');
-  assert(await cards.count() === 16, 'expected 16 problem cards, got ' + await cards.count());
-  await p.locator('#problems .problem-card', { hasText: 'Copying one thing erases the last' }).click();
-  await p.waitForTimeout(200);
-  assert((await paneTitle(p)).trim() === 'Clipboard History', 'card I did not open clipboard');
-  const top = await p.evaluate(() => document.getElementById('explore').getBoundingClientRect().top);
-  assert(Math.abs(top) < 120, 'did not scroll to explorer, top=' + top);
-});
-
 check('trustPipelineHasEightSteps', async (b) => {
   const p = await open(b);
   assert(await p.locator('#trust .pipeline > li').count() === 8, 'pipeline should have 8 steps');
@@ -555,10 +544,12 @@ check('libraryUsesStorageCards', async (b) => {
   assert(await p.locator('#explorer .hm-folder .hk-meter').count() === 6, 'Library should use the six storage cards from the foundations');
 });
 
-check('brandIsNameOnly', async (b) => {
+check('brandIsLensAndName', async (b) => {
   const p = await open(b);
-  assert(await p.locator('.brand-mark').count() === 0, 'logo mark should be gone');
-  assert((await p.textContent('.globalnav .brand')).replace(/\s+/g, ' ').trim() === 'Mac SPRINT', 'nav should show the Mac SPRINT name');
+  assert(await p.locator('.globalnav .brand .lens-mark').count() === 1, 'nav should show the Layered lens mark');
+  assert((await p.textContent('.globalnav .brand')).replace(/\s+/g, ' ').trim() === 'MacSprint', 'nav should show the MacSprint name');
+  assert(await p.locator('#overview .hero-logo .lens-mark').count() === 1, 'hero should show the logo');
+  assert(await p.locator('form.waitlist-form[data-endpoint]').count() === 2, 'hero and closing panel both need a waitlist form');
 });
 
 /* ---------- runner ---------- */

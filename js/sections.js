@@ -44,6 +44,8 @@ export function initWaitlist(form, status) {
     }
     const btn = form.querySelector('button');
     btn.disabled = true;
+    const label = btn.textContent;
+    btn.textContent = 'Joining…';
     try {
       const res = await fetch(endpoint, {
         method: 'POST',
@@ -55,11 +57,14 @@ export function initWaitlist(form, status) {
       status.textContent = data.already ? "You're already on the list. We'll email you once, when MacSprint AI is ready." : "You're on the list. We'll email you once, when MacSprint AI is ready.";
       status.classList.add('is-ok');
       form.reset();
+      // The logo answers the sign-up with one ripple (CSS skips it with Reduce Motion)
+      document.querySelectorAll('.lens-wl, .lens-anim').forEach((l) => { l.classList.remove('lens-ripple'); void l.getBoundingClientRect(); l.classList.add('lens-ripple'); });
     } catch (err) {
       status.textContent = err.message || 'Something went wrong. Please try again in a moment.';
       status.classList.add('is-error');
     } finally {
       btn.disabled = false;
+      btn.textContent = label;
     }
   });
 }

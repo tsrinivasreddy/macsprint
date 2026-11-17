@@ -1,5 +1,6 @@
 // Feature Explorer: a Mac-style window whose sidebar navigates every feature,
 // plus a ⌘K command palette. Selection is mirrored to #feature-<id>.
+import { lensSvg, wordmark } from './lens.js';
 import { FEATURES, iconSvg } from './features.js';
 
 const HASH_PREFIX = '#feature-';
@@ -33,7 +34,7 @@ function render(root) {
     <div class="mac-window ex-window">
       <aside class="ex-side">
         <div class="ex-lights" aria-hidden="true"><i></i><i></i><i></i></div>
-        <div class="ex-brand"><span class="wm" style="font-size:19px"><span class="wm-m">Mac</span> <span class="wm-s">SPRINT</span></span>
+        <div class="ex-brand">${lensSvg(26)}${wordmark(19)}
           <span class="ex-side-icon" aria-hidden="true">${iconSvg('<rect x="3" y="4.5" width="18" height="15" rx="2.5"/><path d="M9 4.5v15"/>', 17)}</span>
         </div>
         <label class="ex-filter">

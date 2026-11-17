@@ -1079,3 +1079,39 @@ mark { background: var(--mark); color: var(--text); border-radius: 3px; padding:
 @media (max-width: 520px) { .hl-map { grid-template-columns: 112px minmax(0, 1fr); gap: 14px; } .hl-map .rings { width: 112px; height: 112px; } }
 @media (max-width: 980px) { .hl-half { grid-column: span 1; } }
 @media (max-width: 620px) { .hl-half { grid-column: 1 / -1; } }
+
+/* ============ Brand: Layered lens + "MacSprint" (quiet Mac, bold Sprint), foundations 2026-11-09 ============ */
+.wm { color: var(--text); letter-spacing: -0.035em; font-weight: 400; }
+.wm-m { color: var(--text-2); font-weight: 400; letter-spacing: inherit; }
+.wm-s { font-weight: 800; letter-spacing: inherit; }
+.lens-mark { --l1: #dfe4ff; --l2: #aab7ff; --l3: #6f87ff; --l4: #2f4bc4; flex: none; display: inline-block; vertical-align: middle; overflow: visible; }
+@media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) .lens-mark { --l1: #2f3773; --l2: #4453b9; --l3: #6680f5; --l4: #9fb0ff; } }
+:root[data-theme="dark"] .lens-mark, .section-dark .lens-mark, .section-black .lens-mark { --l1: #2f3773; --l2: #4453b9; --l3: #6680f5; --l4: #9fb0ff; }
+.brand, .footer-brand { display: inline-flex; align-items: center; gap: 8px; }
+
+/* ============ Hero: the logo, the promise, and the waitlist right away ============ */
+.hero { position: relative; padding: 64px 0 40px; background: radial-gradient(70% 46% at 50% 14%, color-mix(in oklab, var(--accent) 15%, var(--bg)), var(--bg) 72%); }
+.hero-logo { position: relative; display: grid; place-items: center; margin: 0 auto 10px; }
+.hero-logo::before { content: ""; position: absolute; width: 300px; height: 300px; border-radius: 50%; background: radial-gradient(closest-side, color-mix(in oklab, var(--accent) 24%, transparent), transparent); }
+.hero-logo svg { position: relative; filter: drop-shadow(0 22px 34px color-mix(in oklab, var(--accent) 38%, transparent)); }
+.hero h1 { display: grid; justify-items: center; gap: 16px; margin-top: 8px; }
+.h1-brand { display: inline-flex; align-items: center; gap: 12px; }
+.ai-badge { font-size: 15px; font-weight: 700; letter-spacing: .04em; padding: 4px 10px; border-radius: 9px; color: #fff; background: linear-gradient(135deg, #6f87ff, #2f4bc4); box-shadow: 0 8px 18px -10px #2f4bc4; }
+.hero-form { margin: 34px auto 0; max-width: 540px; padding: 6px; border-radius: 980px; background: var(--bg-elev); box-shadow: 0 0 0 1px var(--line), 0 18px 40px -26px color-mix(in oklab, var(--accent) 60%, transparent); }
+.hero-form input { border: 0; background: transparent; border-radius: 980px; padding: 12px 20px; color: var(--text); }
+.hero-form input:focus-visible { outline-offset: -3px; }
+.hero .waitlist-status { margin-top: 12px; min-height: 22px; }
+.hero-more { font-size: 15px; }
+@media (max-width: 480px) { .hero-form { border-radius: 20px; } .hero-form .btn { width: 100%; justify-content: center; } .hero-logo svg { width: 104px; height: 104px; } .h1-brand .wm { font-size: 36px !important; } }
+
+/* Closing panel: the logo beside the name */
+.waitlist-wm { display: inline-flex; align-items: center; gap: 14px; }
+.waitlist-form button[disabled] { opacity: .7; cursor: progress; }
+
+/* Logo motion: once as the page opens, once when someone joins. Still with Reduce Motion. */
+@media (prefers-reduced-motion: no-preference) {
+  .lens-anim .lr { transform-box: fill-box; transform-origin: center; animation: lens-in .9s cubic-bezier(.2, .8, .2, 1) both; animation-delay: calc(var(--i) * 110ms + 120ms); }
+  .lens-ripple .lr { transform-box: fill-box; transform-origin: center; animation: lens-ripple .8s ease-out both; animation-delay: calc(var(--i) * 90ms); }
+}
+@keyframes lens-in { from { transform: scale(.25); opacity: 0; } to { transform: none; opacity: 1; } }
+@keyframes lens-ripple { 0%, 100% { transform: none; } 40% { transform: scale(1.14); } }

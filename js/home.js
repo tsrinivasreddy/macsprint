@@ -1,6 +1,7 @@
 // Home screen: greeting, Library storage cards, Clean Up cards and
 // Downloaded From sources. Used by the Explorer's Home demo and the hero window.
 // All figures are sample data.
+import { lensSvg, wordmark } from './lens.js';
 
 const svg = (inner, size = 16) => `<svg viewBox="0 0 24 24" width="${size}" height="${size}" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">${inner}</svg>`;
 const G = {
@@ -114,7 +115,7 @@ export function heroWindowMarkup() {
   return `
     <aside class="hw-side">
       <div class="hw-lights"><i></i><i></i><i></i></div>
-      <div class="ex-brand"><span class="wm" style="font-size:17px"><span class="wm-m">Mac</span> <span class="wm-s">SPRINT</span></span></div>
+      <div class="ex-brand">${lensSvg(24)}${wordmark(17)}</div>
       <p class="hw-label hw-label-top">Discover</p>
       <ul>${side.map(row).join('')}</ul>
       <p class="hw-label">Clean up</p>
