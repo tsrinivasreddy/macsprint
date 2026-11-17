@@ -840,42 +840,40 @@ mark { background: var(--mark); color: var(--text); border-radius: 3px; padding:
 .d-moves-list small { display: block; font-size: 11px; color: var(--text-2); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
 
 /* ============ Feature spotlight ============ */
-.spot-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 20px; }
-.spot-card { display: grid; grid-template-rows: auto 1fr; min-width: 0; overflow: hidden; border-radius: var(--radius-lg); background: var(--bg-elev); box-shadow: 0 0 0 1px var(--line), var(--shadow-1); }
-.spot-wide { grid-column: 1 / -1; grid-template-rows: none; grid-template-columns: minmax(0, 1.15fr) minmax(0, 1fr); }
-.spot-shot { position: relative; padding: 26px 26px 0; background: linear-gradient(180deg, var(--bg-alt), color-mix(in oklab, var(--accent) 7%, var(--bg-alt))); overflow: hidden; height: 300px; }
-.spot-wide .spot-shot { height: auto; min-height: 340px; padding-bottom: 26px; }
+.spot-grid { display: grid; gap: 28px; }
+.spot-card { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1.08fr); min-width: 0; overflow: hidden; border-radius: var(--radius-lg); background: var(--bg-elev); box-shadow: 0 0 0 1px var(--line), var(--shadow-1); }
+.spot-card.flip .story-problem { order: 2; }
+.story-problem { position: relative; margin: 0; min-height: 100%; background: var(--bg-alt); }
+.spot-photo { display: block; width: 100%; height: 100%; min-height: 420px; object-fit: cover; }
+/* Dark scrim in both themes so the white caption always reads */
+.story-problem figcaption { position: absolute; inset: auto 0 0; padding: 72px 30px 28px; background: linear-gradient(transparent, rgba(8,10,20,.82)); color: #fff; display: grid; gap: 10px; }
+.story-problem .spot-problem { font-size: clamp(20px, 2.1vw, 25px); font-weight: 600; line-height: 1.25; letter-spacing: -0.02em; color: #fff; text-wrap: balance; }
+.story-tag { justify-self: start; display: inline-flex; align-items: center; font-size: 12px; font-weight: 600; letter-spacing: .06em; text-transform: uppercase; padding: 4px 10px; border-radius: 980px; background: rgba(255,255,255,.16); color: #fff; box-shadow: inset 0 0 0 1px rgba(255,255,255,.28); }
+.story-tag.fix { background: var(--accent-soft); color: var(--accent-text); box-shadow: none; margin-right: 6px; vertical-align: 1px; }
+.story-fix { padding: 34px 34px 32px; display: grid; gap: 14px; align-content: start; min-width: 0; }
+.story-fix h3 { font-size: clamp(26px, 3vw, 34px); letter-spacing: -0.035em; line-height: 1.1; text-wrap: balance; }
+.spot-shot { position: relative; height: 270px; padding: 18px 18px 0; border-radius: 14px; background: linear-gradient(180deg, var(--bg-alt), color-mix(in oklab, var(--accent) 8%, var(--bg-alt))); overflow: hidden; }
 .spot-shot .mac-window { height: 100%; border-radius: 12px 12px 0 0; box-shadow: 0 0 0 1px var(--win-line), 0 18px 40px -22px rgba(10,16,48,.45); pointer-events: none; user-select: none; }
-.spot-wide .spot-shot .mac-window { border-radius: 12px; max-height: 420px; }
+.spot-shot::after { content: ""; position: absolute; left: 0; right: 0; bottom: 0; height: 44px; background: linear-gradient(transparent, color-mix(in oklab, var(--accent) 8%, var(--bg-alt))); pointer-events: none; }
 .spot-bar { display: flex; gap: 7px; padding: 10px 12px; border-bottom: 1px solid var(--win-line); background: var(--win-bar); }
 .spot-bar i { width: 11px; height: 11px; border-radius: 50%; background: #ff5f57; } .spot-bar i:nth-child(2) { background: #febc2e; } .spot-bar i:nth-child(3) { background: #28c840; }
-.spot-demo { zoom: .72; padding: 18px; overflow: hidden; }
+.spot-demo { zoom: .7; padding: 18px; overflow: hidden; }
 .spot-demo .d-cycle, .spot-demo .d-foot, .spot-demo .d-status { display: none; }
-.spot-shot::after { content: ""; position: absolute; left: 0; right: 0; bottom: 0; height: 56px; background: linear-gradient(transparent, var(--bg-elev)); pointer-events: none; }
-.spot-wide .spot-shot::after { display: none; }
-.spot-text { padding: 22px 26px 26px; display: grid; gap: 10px; align-content: start; }
-.spot-wide .spot-text { padding: 34px 34px 30px; align-content: center; }
-.spot-photo { display: block; width: 100%; height: auto; aspect-ratio: 12 / 5; object-fit: cover; border-radius: 12px; background: var(--bg-alt); box-shadow: 0 0 0 1px var(--line); }
-.spot-label { display: flex; align-items: center; gap: 8px; font-size: 14px; color: var(--text-2); }
+.spot-label { display: flex; align-items: center; gap: 8px; font-size: 14px; font-weight: 600; color: var(--text-2); }
 .spot-icon { color: var(--accent); display: inline-flex; }
 .spot-keys { margin-left: auto; display: inline-flex; gap: 4px; }
 .spot-keys kbd { font: 600 11px/1 var(--font); min-width: 22px; height: 22px; padding: 0 6px; display: inline-grid; place-items: center; border-radius: 6px; border: 1px solid var(--line-2); background: var(--bg); color: var(--text-2); box-shadow: 0 1px 0 var(--line-2); }
-.spot-text h3 { font-size: clamp(22px, 2.4vw, 28px); letter-spacing: -0.03em; line-height: 1.12; }
-.spot-wide .spot-text h3 { font-size: clamp(26px, 3vw, 34px); }
-.spot-problem, .spot-use { font-size: 15px; color: var(--text-2); line-height: 1.5; }
-.spot-problem b, .spot-use b { color: var(--text); font-weight: 600; }
-.spot-text ul { list-style: none; margin: 2px 0 0; padding: 0; display: grid; gap: 6px; font-size: 14.5px; }
-.spot-text li { display: flex; gap: 9px; }
-.spot-text li::before { content: ""; flex: none; width: 6px; height: 6px; margin-top: 8px; border-radius: 50%; background: var(--accent); }
-.spot-try { justify-self: start; margin-top: 4px; font-size: 14.5px; font-weight: 600; color: var(--accent-text); }
-@media (max-width: 900px) {
-  .spot-grid { grid-template-columns: 1fr; }
-  .spot-wide { grid-template-columns: 1fr; grid-template-rows: auto 1fr; }
-  .spot-wide .spot-shot { min-height: 0; height: 320px; padding-bottom: 0; }
-  .spot-wide .spot-shot::after { display: block; }
-  .spot-wide .spot-shot .mac-window { border-radius: 12px 12px 0 0; }
+.spot-use { font-size: 16px; color: var(--text); line-height: 1.5; }
+.story-fix ul { list-style: none; margin: 0; padding: 0; display: grid; gap: 7px; font-size: 14.5px; color: var(--text-2); }
+.story-fix li { display: flex; gap: 9px; }
+.story-fix li::before { content: ""; flex: none; width: 6px; height: 6px; margin-top: 8px; border-radius: 50%; background: var(--accent); }
+.spot-try { justify-self: start; font-size: 15px; font-weight: 600; color: var(--accent-text); }
+@media (max-width: 860px) {
+  .spot-card { grid-template-columns: 1fr; }
+  .spot-card.flip .story-problem { order: 0; }
+  .spot-photo { height: auto; min-height: 0; aspect-ratio: 3 / 2; }
 }
-@media (max-width: 520px) { .spot-shot { padding: 18px 16px 0; height: 250px; } .spot-text { padding: 18px 18px 22px; } .spot-demo { zoom: .62; } }
+@media (max-width: 520px) { .story-problem figcaption { padding: 56px 18px 18px; } .story-fix { padding: 22px 18px 24px; } .spot-shot { height: 230px; padding: 14px 12px 0; } .spot-demo { zoom: .6; } }
 
 /* real photos (see js/photos.js) */
 .ph[data-photo] { background-size: cover; background-position: center; }
@@ -900,7 +898,6 @@ mark { background: var(--mark); color: var(--text); border-radius: 3px; padding:
 
 /* Feature cards: a glass edge that catches light at the top. */
 .spot-card { box-shadow: inset 0 1px 0 rgba(255,255,255,.7), 0 0 0 1px var(--line), var(--shadow-1); }
-.spot-card:hover { box-shadow: inset 0 1px 0 rgba(255,255,255,.7), 0 0 0 1px color-mix(in oklab, var(--accent) 40%, var(--line)), 0 24px 50px -28px rgba(30,40,90,.35); }
 
 /* ============ Highlights (bento) ============ */
 .section-black { background: #000; color: #f5f5f7; --text: #f5f5f7; --text-2: #a1a1a6; --line: rgba(255,255,255,.1); }
