@@ -15,5 +15,6 @@ const html = readFileSync(join(root, 'index.html'), 'utf8').replaceAll('data-end
 if (!html.includes('data-endpoint="/api/waitlist"')) throw new Error('waitlist form not found in index.html');
 if (!html.includes('data-request-endpoint="/api/requests"')) throw new Error('feature request form not found in index.html');
 writeFileSync(join(out, 'index.html'), html);
-writeFileSync(join(out, 'robots.txt'), 'User-agent: *\nAllow: /\nDisallow: /api/\n');
+writeFileSync(join(out, 'robots.txt'), 'User-agent: *\nAllow: /\nDisallow: /api/\n\nSitemap: https://macsprint.com/sitemap.xml\n');
+writeFileSync(join(out, 'sitemap.xml'), `<?xml version="1.0" encoding="UTF-8"?>\n<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"><url><loc>https://macsprint.com/</loc><lastmod>${new Date().toISOString().slice(0, 10)}</lastmod></url></urlset>\n`);
 console.log('built site/');

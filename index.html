@@ -3,8 +3,23 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>MacSprint AI</title>
-  <meta name="description" content="MacSprint AI — one private, native Mac app to find, view, organize and clean up your files. Smarter search, a better image viewer, safe storage cleanup and everyday tools, with on-device AI.">
+  <title>MacSprint AI: Private File Search and Cleanup for Mac</title>
+  <meta name="description" content="Find any file by describing it, free up space safely and tidy your Downloads. MacSprint AI works on your Mac with no account. Join the waitlist.">
+  <link rel="canonical" href="https://macsprint.com/">
+  <meta property="og:type" content="website">
+  <meta property="og:site_name" content="MacSprint AI">
+  <meta property="og:url" content="https://macsprint.com/">
+  <meta property="og:title" content="MacSprint AI: Private File Search and Cleanup for Mac">
+  <meta property="og:description" content="Find any file by describing it, free up space safely and tidy your Downloads. MacSprint AI works on your Mac with no account. Join the waitlist.">
+  <meta property="og:image" content="https://macsprint.com/assets/og.jpg">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="630">
+  <meta property="og:image:alt" content="MacSprint AI. Your Mac. Smarter, faster, cleaner.">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="MacSprint AI: Private File Search and Cleanup for Mac">
+  <meta name="twitter:description" content="Find any file by describing it, free up space safely and tidy your Downloads. MacSprint AI works on your Mac with no account. Join the waitlist.">
+  <meta name="twitter:image" content="https://macsprint.com/assets/og.jpg">
+  <script type="application/ld+json">{"@context": "https://schema.org", "@graph": [{"@type": "WebSite", "@id": "https://macsprint.com/#site", "url": "https://macsprint.com/", "name": "MacSprint AI", "inLanguage": "en"}, {"@type": "SoftwareApplication", "name": "MacSprint AI", "url": "https://macsprint.com/", "image": "https://macsprint.com/assets/og.jpg", "applicationCategory": "UtilitiesApplication", "operatingSystem": "macOS", "description": "Find any file by describing it, free up space safely and tidy your Downloads. MacSprint AI works on your Mac with no account. Join the waitlist.", "featureList": ["Search files by describing them, including text in screenshots", "Ask your files a question and see the source page", "Free up space with review, Trash and Undo", "Find duplicate files and look-alike photos", "Organize Downloads with a preview", "Clear names for unclear downloads", "Clipboard history", "Image viewer for whole folders"]}, {"@type": "FAQPage", "mainEntity": [{"@type": "Question", "name": "Do I need Apple Intelligence?", "acceptedAnswer": {"@type": "Answer", "text": "No. AI in Search uses Apple’s on-device models when your Mac supports them. Everything else — the image viewer, storage analysis, cleanup, duplicates, search by name and by text inside images — works on any supported Mac."}}, {"@type": "Question", "name": "Are my files uploaded anywhere?", "acceptedAnswer": {"@type": "Answer", "text": "No. Indexing, text recognition and AI all run on your Mac. MacSprint has no cloud processing and needs no account. If a future feature ever needs the internet, it will be clearly labeled and optional."}}, {"@type": "Question", "name": "What can MacSprint see on my Mac?", "acceptedAnswer": {"@type": "Answer", "text": "The files in your home folder, so it can measure, sort and search them. They never leave your Mac. On first open, MacSprint asks for Full Disk Access so macOS doesn’t ask for each folder. It’s optional, and you can turn it off in System Settings."}}, {"@type": "Question", "name": "Will it delete my files?", "acceptedAnswer": {"@type": "Answer", "text": "Never without your OK. Free Up Space always shows a preview, asks for confirmation and moves files to the macOS Trash so you can restore them. Optional automatic rules are off until you turn them on, and they use the Trash too. AI suggestions are only suggestions until you approve."}}, {"@type": "Question", "name": "Does it replace Finder?", "acceptedAnswer": {"@type": "Answer", "text": "No. MacSprint works alongside Finder — a visual library, smarter search and handy shortcuts, without changing how Finder works."}}, {"@type": "Question", "name": "Which Macs are supported?", "acceptedAnswer": {"@type": "Answer", "text": "Apple silicon and Intel Macs. AI in Search requires a Mac with Apple Intelligence; all core features work without it. Exact macOS requirements will be announced before launch."}}, {"@type": "Question", "name": "When can I get it?", "acceptedAnswer": {"@type": "Answer", "text": "MacSprint AI is in development. Join the waitlist and we’ll email you once — when it’s ready."}}]}]}</script>
   <meta name="theme-color" content="#ffffff" media="(prefers-color-scheme: light)">
   <meta name="theme-color" content="#000000" media="(prefers-color-scheme: dark)">
   <link rel="icon" href="assets/lens.svg" type="image/svg+xml">
@@ -64,7 +79,7 @@
     <section id="highlights" class="section section-black">
       <div class="container">
         <header class="section-head reveal">
-          <h2>Get the highlights.</h2>
+          <h2>Get the <span class="grad">highlights.</span></h2>
           <p class="section-sub">Nine things MacSprint does for you every day. Click any of them to try it.</p>
         </header>
         <div class="hl-grid" id="hl-grid"></div>
@@ -76,7 +91,7 @@
       <div class="container">
         <header class="section-head reveal">
           <p class="eyebrow">Problem, then fix</p>
-          <h2>You know these moments.<br>Here’s the way out.</h2>
+          <h2>You know these moments.<br><span class="grad">Here’s the way out.</span></h2>
           <p class="section-sub">A name you can’t remember, a download from somewhere, a disk that’s somehow full. Each one has a fix in MacSprint, and a shortcut to get there.</p>
         </header>
         <div class="spot-grid" id="spot-grid"></div>
@@ -87,8 +102,8 @@
       <div class="container">
         <header class="section-head reveal">
           <p class="eyebrow">Feature Explorer</p>
-          <h2>Every feature. One window.</h2>
-          <p class="section-sub">Pick anything in the sidebar, use <kbd>↑</kbd> <kbd>↓</kbd>, or press <kbd>⌘</kbd><kbd>K</kbd> to jump to a feature.</p>
+          <h2>Every feature. <span class="grad">One window.</span></h2>
+          <p class="section-sub">It works like the app. Click anything, with sample files.</p>
         </header>
         <div id="explorer" class="explorer reveal"></div>
       </div>
@@ -100,7 +115,7 @@
       <div class="container">
         <header class="section-head reveal">
           <p class="eyebrow">Shortcuts</p>
-          <h2>A shortcut for everything.</h2>
+          <h2>A shortcut for <span class="grad">everything.</span></h2>
           <p class="section-sub">Quick with a mouse. Quicker without one.</p>
         </header>
         <div class="keys" id="keys-grid"></div>
@@ -113,16 +128,16 @@
       <div class="container">
         <header class="section-head reveal">
           <p class="eyebrow">Privacy</p>
-          <h2>Your files stay yours.</h2>
+          <h2>Your files <span class="grad">stay yours.</span></h2>
           <p class="section-sub">MacSprint does its work on your Mac. No account, no cloud processing, no peeking.</p>
         </header>
         <div class="privacy-grid">
-          <article class="p-card reveal"><span class="p-icon" aria-hidden="true">⌂</span><h3>On-device by design</h3><p>Search, text recognition and AI run locally using Apple frameworks. File contents are never uploaded.</p></article>
-          <article class="p-card reveal"><span class="p-icon" aria-hidden="true">✓</span><h3>No account. Ever.</h3><p>Download, open, use. There is nothing to sign up for.</p></article>
-          <article class="p-card reveal"><span class="p-icon" aria-hidden="true">⌘</span><h3>Your files, not the system’s</h3><p>MacSprint looks at the files in your home folder. System folders and app data stay off-limits.</p></article>
-          <article class="p-card reveal"><span class="p-icon" aria-hidden="true">◎</span><h3>No snooping analytics</h3><p>No telemetry collects your file names, paths or contents.</p></article>
-          <article class="p-card reveal"><span class="p-icon" aria-hidden="true">↯</span><h3>Works offline</h3><p>Every core feature works without an internet connection.</p></article>
-          <article class="p-card reveal"><span class="p-icon" aria-hidden="true">⟲</span><h3>Undo every change</h3><p>Moves, renames and clean ups are kept in a history, and one Undo puts them back.</p></article>
+          <article class="p-card reveal"><span class="p-icon" aria-hidden="true"><svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="12" rx="2"/><path d="M8 20h8M12 16v4"/></svg></span><h3>On-device by design</h3><p>Search, text recognition and AI run locally using Apple frameworks. File contents are never uploaded.</p></article>
+          <article class="p-card reveal"><span class="p-icon" aria-hidden="true"><svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="8" r="4"/><path d="M4 21c1.5-4 4.5-6 8-6s6.5 2 8 6"/><path d="m3 3 18 18"/></svg></span><h3>No account. Ever.</h3><p>Download, open, use. There is nothing to sign up for.</p></article>
+          <article class="p-card reveal"><span class="p-icon" aria-hidden="true"><svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M3 7.5V18a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V9.5a2 2 0 0 0-2-2h-7L10 5H5a2 2 0 0 0-2 2.5Z"/></svg></span><h3>Your files, not the system’s</h3><p>MacSprint looks at the files in your home folder. System folders and app data stay off-limits.</p></article>
+          <article class="p-card reveal"><span class="p-icon" aria-hidden="true"><svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M4 19V5M4 19h16"/><path d="m8 15 3-4 3 2 4-6"/><path d="m3 3 18 18"/></svg></span><h3>No snooping analytics</h3><p>No telemetry collects your file names, paths or contents.</p></article>
+          <article class="p-card reveal"><span class="p-icon" aria-hidden="true"><svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12.5a10 10 0 0 1 14 0M8.5 16a5 5 0 0 1 7 0"/><circle cx="12" cy="19.5" r=".6" fill="currentColor"/><path d="m3 3 18 18"/></svg></span><h3>Works offline</h3><p>Every core feature works without an internet connection.</p></article>
+          <article class="p-card reveal"><span class="p-icon" aria-hidden="true"><svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M9 14 4 9l5-5"/><path d="M4 9h10.5a5.5 5.5 0 0 1 0 11H11"/></svg></span><h3>Undo every change</h3><p>Moves, renames and clean ups are kept in a history, and one Undo puts them back.</p></article>
         </div>
       </div>
     </section>
@@ -132,7 +147,7 @@
       <div class="container">
         <header class="section-head reveal">
           <p class="eyebrow">AI you can trust</p>
-          <h2>Smart suggestions.<br>Your final say.</h2>
+          <h2>Smart suggestions.<br><span class="grad">Your final say.</span></h2>
           <p class="section-sub">AI never deletes, moves or renames files on its own. You see every change first, and nothing happens until you click.</p>
         </header>
         <ol class="pipeline reveal">
@@ -152,10 +167,15 @@
     <!-- Feature requests -->
     <section id="request" class="section">
       <div class="container request-wrap">
-        <header class="section-head reveal">
+        <header class="section-head rq-head reveal">
           <p class="eyebrow">Request a feature</p>
-          <h2>What should MacSprint do next?</h2>
+          <h2>What should MacSprint <span class="grad">do next?</span></h2>
           <p class="section-sub">Tell us what would save you time. We read every request.</p>
+          <ol class="rq-steps">
+            <li><b>You send an idea</b><span>A sentence is enough.</span></li>
+            <li><b>We read every one</b><span>They shape what we build next.</span></li>
+            <li><b>We can reply</b><span>If you leave your email.</span></li>
+          </ol>
         </header>
         <form class="request-form reveal" data-request-endpoint="" novalidate>
           <label class="rq-field"><span>Your idea</span>
@@ -178,7 +198,7 @@
       <div class="container">
         <header class="section-head reveal">
           <p class="eyebrow">FAQ</p>
-          <h2>Questions, answered.</h2>
+          <h2>Questions, <span class="grad">answered.</span></h2>
         </header>
         <div class="faq-list reveal">
           <details>

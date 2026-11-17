@@ -1188,3 +1188,66 @@ mark { background: var(--mark); color: var(--text); border-radius: 3px; padding:
 .rq-foot { display: flex; align-items: center; gap: 16px; flex-wrap: wrap; }
 .rq-foot .waitlist-status { margin: 0; flex: 1; min-width: 200px; }
 @media (max-width: 620px) { .rq-row { grid-template-columns: 1fr; } }
+
+/* ============ Rhythm: every section lands whole under the header ============ */
+:root { --hdr: 52px; --pad: clamp(56px, 8vh, 96px); }
+html { scroll-padding-top: 0; }
+.section { padding: var(--pad) 0; position: relative; }
+/* A nav jump puts the section's eyebrow just under the header, not its padding */
+section[id] { scroll-margin-top: calc(var(--hdr) + 12px - var(--pad)); }
+#overview { scroll-margin-top: 0; }
+.section-head { margin-bottom: clamp(28px, 4vh, 44px); }
+.section-head h2 { font-size: clamp(32px, 4.6vw, 52px); }
+.section-sub { margin-top: 12px; font-size: clamp(17px, 1.9vw, 20px); }
+
+/* Accent: the second half of each heading */
+.grad { background: linear-gradient(95deg, #3b5bdb 10%, #7c4dff 90%); -webkit-background-clip: text; background-clip: text; color: transparent; }
+@media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) .grad { background-image: linear-gradient(95deg, #8399ff 10%, #c3a6ff 90%); } }
+:root[data-theme="dark"] .grad { background-image: linear-gradient(95deg, #8399ff 10%, #c3a6ff 90%); }
+.section-dark .grad, .section-black .grad { background-image: linear-gradient(95deg, #8399ff 10%, #c3a6ff 90%); }
+@media (forced-colors: active) { .grad { color: CanvasText; background: none; } }
+
+/* Eyebrow as a small chip */
+.section-head .eyebrow { display: inline-block; padding: 5px 12px; border-radius: 980px; background: var(--accent-soft); letter-spacing: .05em; font-size: 12px; }
+.section-dark .section-head .eyebrow, .section-black .section-head .eyebrow { background: rgba(131,153,255,.14); }
+
+/* Soft colour behind plain sections, so the page is not one flat sheet */
+#explore, #request, #trust { background: radial-gradient(60% 40% at 50% 0%, color-mix(in oklab, var(--accent) 10%, var(--bg)), var(--bg) 70%); }
+#shortcuts { background: var(--bg-alt); }
+
+/* Try it: the window fits the screen under its heading */
+@media (min-width: 861px) {
+  #explore .ex-window { height: clamp(560px, calc(100svh - var(--hdr) - 220px), 800px); }
+}
+
+/* Privacy icons */
+.p-icon svg { display: block; }
+
+/* Request: the pitch beside the form */
+.request-wrap { max-width: 1080px; display: grid; grid-template-columns: minmax(0, 5fr) minmax(0, 6fr); gap: clamp(28px, 5vw, 64px); align-items: center; }
+.rq-head { text-align: left; margin: 0; }
+.rq-steps { list-style: none; margin: 24px 0 0; padding: 0; display: grid; gap: 14px; counter-reset: rq; }
+.rq-steps li { counter-increment: rq; display: grid; grid-template-columns: 32px 1fr; column-gap: 12px; font-size: 15px; }
+.rq-steps li::before { content: counter(rq); grid-row: span 2; width: 32px; height: 32px; border-radius: 50%; display: grid; place-items: center; font-weight: 700; font-size: 14px; color: #fff; background: linear-gradient(160deg, #6f86ff, #3b5bdb); }
+.rq-steps span { color: var(--text-2); }
+@media (max-width: 860px) { .request-wrap { grid-template-columns: 1fr; } .rq-head { text-align: center; } .rq-steps { justify-items: start; max-width: 340px; margin-inline: auto; text-align: left; } }
+
+/* FAQ: two columns on wide screens, so it fits one screen */
+@media (min-width: 980px) {
+  .faq-list { max-width: 1080px; display: grid; grid-template-columns: 1fr 1fr; column-gap: 48px; border-top: 0; align-items: start; }
+  .faq-list details { border-top: 1px solid var(--line); border-bottom: 0; }
+  .faq-list summary { font-size: 17px; padding: 18px 36px 18px 0; }
+}
+
+/* Phones: the links become a second row you can swipe, instead of disappearing */
+@media (max-width: 760px) {
+  :root { --hdr: 95px; }
+  .globalnav { height: auto !important; }
+  .globalnav-inner { flex-wrap: wrap; row-gap: 0; padding-top: 6px; }
+  .globalnav-inner .brand { height: 40px; }
+  .nav-links { display: flex !important; order: 3; flex: 0 0 100%; overflow-x: auto; gap: 6px; margin: 0 -22px; padding: 4px 22px 8px; scrollbar-width: none; -webkit-mask-image: linear-gradient(90deg, transparent, #000 16px, #000 calc(100% - 16px), transparent); }
+  .nav-links::-webkit-scrollbar { display: none; }
+  .nav-links a { display: inline-flex; align-items: center; min-height: 36px; padding: 0 14px; border-radius: 980px; background: var(--bg-alt); color: var(--text); font-size: 13px; white-space: nowrap; }
+}
+.nav-links a[aria-current] { color: var(--text); font-weight: 600; }
+@media (max-width: 760px) { .nav-links a[aria-current] { background: var(--accent-btn); color: #fff; } }

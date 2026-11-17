@@ -530,6 +530,27 @@ check('featureRequestFormIsHonestInPreview', async (b) => {
   assert(p.errors.length === 0, 'errors: ' + p.errors.join(' | '));
 });
 
+check('navJumpsLandSectionsWhole', async (b) => {
+  const p = await open(b, { width: 1440, height: 900 });
+  for (const id of ['explore', 'shortcuts', 'privacy', 'request', 'faq']) {
+    await p.click(`.nav-links a[href="#${id}"]`);
+    await p.waitForTimeout(300);
+    const [top, hdr] = await p.evaluate((i) => [document.querySelector(`#${i} .eyebrow`).getBoundingClientRect().top, document.querySelector('.globalnav').getBoundingClientRect().bottom], id);
+    assert(top >= hdr && top - hdr < 40, `#${id}: heading at ${Math.round(top)}, header ends at ${Math.round(hdr)}`);
+  }
+  const bottom = await p.evaluate(() => { document.querySelector('.nav-links a[href="#explore"]').click(); return new Promise((r) => setTimeout(() => r(document.querySelector('#explorer .ex-window').getBoundingClientRect().bottom), 300)); });
+  assert(bottom <= 900, 'the Try it window should fit the screen, bottom at ' + Math.round(bottom));
+});
+
+check('seoTagsPresent', async (b) => {
+  const p = await open(b);
+  const t = await p.title();
+  assert(t.length >= 30 && t.length <= 60 && t.includes('MacSprint'), 'title length/brand: ' + t);
+  for (const sel of ['link[rel=canonical]', 'meta[property="og:image"]', 'meta[name="twitter:card"]', 'meta[name=description]']) assert(await p.locator(sel).count() === 1, 'missing ' + sel);
+  const ld = JSON.parse(await p.textContent('script[type="application/ld+json"]'));
+  assert(ld['@graph'].some((x) => x['@type'] === 'SoftwareApplication'), 'SoftwareApplication schema missing');
+});
+
 check('brandIsLensAndName', async (b) => {
   const p = await open(b);
   assert(await p.locator('.globalnav .brand .lens-mark').count() === 1, 'nav should show the Layered lens mark');

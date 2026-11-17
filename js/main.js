@@ -49,3 +49,17 @@ if (PHOTOS.length) {
   scan(document);
   new MutationObserver((ms) => ms.forEach((m) => m.addedNodes.forEach((n) => { if (n.nodeType === 1) { if (n.classList.contains('ph')) paint(n); scan(n); } }))).observe(document.body, { childList: true, subtree: true });
 }
+
+// The nav marks the section on screen (aria-current), and on phones keeps that chip in view.
+{
+  const links = new Map([...document.querySelectorAll('.nav-links a[href^="#"]')].map((a) => [a.getAttribute('href').slice(1), a]));
+  const mark = (id) => links.forEach((a, k) => {
+    if (k !== id) { a.removeAttribute('aria-current'); return; }
+    if (a.getAttribute('aria-current')) return;
+    a.setAttribute('aria-current', 'location');
+    const row = a.closest('.nav-links');
+    if (row.scrollWidth > row.clientWidth) row.scrollTo({ left: a.offsetLeft - row.clientWidth / 2 + a.offsetWidth / 2 });
+  });
+  const io = new IntersectionObserver((es) => es.forEach((e) => e.isIntersecting && mark(e.target.id)), { rootMargin: '-45% 0px -50% 0px' });
+  links.forEach((_, id) => { const s = document.getElementById(id); if (s) io.observe(s); });
+}
