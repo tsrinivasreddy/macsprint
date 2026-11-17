@@ -402,10 +402,8 @@ function rename(el) {
     bindAll(el, 'input', 'change', count);
     btn.addEventListener('click', () => {
       const picked = [...el.querySelectorAll('input:checked')].map((x) => rows[+x.dataset.i]);
-      el.innerHTML = `<div class="d-ren"><div class="d-report" role="status"><span class="d-report-icon">${svg(ICON.check, 22)}</span><p><b>Renamed ${picked.length} file${picked.length === 1 ? '' : 's'}.</b></p><ul class="d-renamed">${picked.map(([, n]) => `<li>${esc(n)}</li>`).join('')}</ul><button type="button" class="btn btn-small btn-ghost d-undo">Undo</button></div>
-        <label class="d-auto"><span>Name new downloads automatically<small>Only unclear names. Every rename can be undone.</small></span><button type="button" class="d-switch" aria-pressed="false" aria-label="Name new downloads automatically"></button></label></div>`;
+      el.innerHTML = `<div class="d-ren"><div class="d-report" role="status"><span class="d-report-icon">${svg(ICON.check, 22)}</span><p><b>Renamed ${picked.length} file${picked.length === 1 ? '' : 's'}.</b></p><ul class="d-renamed">${picked.map(([, n]) => `<li>${esc(n)}</li>`).join('')}</ul><button type="button" class="btn btn-small btn-ghost d-undo">Undo</button></div></div>`;
       el.querySelector('.d-undo').addEventListener('click', review);
-      el.querySelector('.d-switch').addEventListener('click', (e) => e.currentTarget.setAttribute('aria-pressed', String(e.currentTarget.getAttribute('aria-pressed') !== 'true')));
     });
   };
   review();
@@ -422,7 +420,7 @@ function duplicates(el) {
   const keep = groups.map(() => 0);   // the first copy is the suggested keep
   const mb = (n) => (n >= 10 ? Math.round(n) : n.toFixed(1)) + ' MB';
   el.innerHTML = `
-    <div class="d-seg" role="group" aria-label="Duplicate type"><button type="button" aria-pressed="true" data-v="exact">Exact copies · 27</button><button type="button" aria-pressed="false" data-v="similar">Similar photos · 14</button></div>
+    <div class="d-seg" role="group" aria-label="Duplicate type"><button type="button" aria-pressed="true" data-v="exact">Exact copies · 27</button><button type="button" aria-pressed="false" data-v="similar">Look alike · 14</button></div>
     <div class="d-similar" hidden></div>
     <div class="d-dupes">
       <ol class="d-steps">
@@ -580,14 +578,14 @@ function similar(el) {
           <div class="d-sim-row">${[0, 1, 2, 3].map((k) => `<button type="button" class="ph${k === 1 ? ' best' : ''}" style="--h:${h};filter:brightness(${1 - k * 0.06})" aria-label="${n} shot ${k + 1}${k === 1 ? ', suggested best' : ''}" data-g="${gi}" data-k="${k}">${k === 1 ? `<em>${svg(ICON.star, 12)} Best</em>` : ''}</button>`).join('')}</div>
         </div>`).join('')}
       <div class="d-compare" hidden><span class="ph"></span><span class="ph"></span><p>Side-by-side compare</p></div>
-      <p class="d-foot">Similar is not identical, so nothing is selected for you: compare, then keep the best.</p>
+      <p class="d-foot">Look-alike is not identical, so nothing is selected for you: compare, then keep the one you want.</p>
     </div>`;
   bindAll(el, '.d-sim-row .ph', 'click', (e) => {
     const g = +e.currentTarget.dataset.g, k = +e.currentTarget.dataset.k, h = sets[g][0];
     const cmp = el.querySelector('.d-compare');
     const [l, r] = cmp.querySelectorAll('.ph');
     l.style.setProperty('--h', h); r.style.setProperty('--h', h); r.style.filter = `brightness(${1 - k * 0.06})`;
-    cmp.querySelector('p').textContent = `Comparing best shot with shot ${k + 1}`;
+    cmp.querySelector('p').textContent = `Comparing shot 2 with shot ${k + 1}`;
     cmp.hidden = false;
   });
 }
@@ -671,7 +669,6 @@ function explain(el) {
   const ROWS = [
     ['App caches', '22 GB', 'ok', 'Safe to clear', 'Apps keep temporary copies of things they use often, like thumbnails and web pages. Clear them and apps rebuild them. The first launch afterwards can be a little slower. Largest: Xcode 8.2 GB, Chrome 6.1 GB, Spotify 2.9 GB.'],
     ['iOS device backups', '31 GB', 'ask', 'Check first', 'Full copies of your iPhone or iPad. If the device has a newer backup in iCloud you can remove old ones, but if this is your only copy, keep it.'],
-    ['Local snapshots', '9 GB', 'keep', 'macOS manages this', 'Time Machine keeps short-term copies so you can go back a few hours. macOS frees them by itself when space is needed.'],
     ['Mail and Messages data', '34 GB', 'keep', 'Leave it', 'Your messages and attachments. Remove them inside Mail or Messages, not here.'],
     ['Other (cannot be read)', '52 GB', 'keep', 'Not available', 'macOS does not let any app see inside this part. It is shown so the total adds up.'],
   ];

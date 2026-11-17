@@ -30,8 +30,7 @@ export const FEATURES = [
     points: [
       'Real disk capacity, free space and a category breakdown.',
       'A “Needs a look” list, biggest first, and one line for what is fine.',
-      'Live indexing status and on-device AI availability.',
-      'Shows “loading”, “unavailable” or “permission needed” instead of fake numbers.',
+      'While it is still looking, it shows placeholders, never made-up numbers.',
     ],
   },
   {
@@ -51,10 +50,9 @@ export const FEATURES = [
     headline: 'Everything on your Mac, sorted by what it is.',
     points: [
       'Browse images, videos, music, documents, apps and screenshots as large, clear thumbnails.',
-      'Covers every folder you choose — not just one window at a time.',
+      'Covers your whole home folder, not one window at a time.',
       'Collections gather trips, receipts and screenshots, and a card brings back photos from a year ago.',
       'Right-click to convert or shrink a photo, HEIC, video or PDF. It saves a copy; the original never changes.',
-      'Pin any folder to the sidebar under Locations.',
     ],
   },
   {
@@ -95,7 +93,7 @@ export const FEATURES = [
     title: 'Downloaded From', short: 'Files grouped by where they came from',
     headline: 'Remember who sent it, not what it was called.',
     points: [
-      'Every download grouped by source: Safari, Mail, Slack, WhatsApp, AirDrop, ChatGPT and any website.',
+      'Every download grouped by source: Safari, Mail, Slack, WhatsApp, AirDrop, ChatGPT and any other app. Each file shows the website or sender too.',
       'Biggest sources first, with file counts and sizes.',
       'Clear Names suggests a better name beside each unclear download. Edit it, switch it on, rename, undo.',
       'The inspector shows where any file came from and when. Opens with ⌥⌘L.',
@@ -141,7 +139,7 @@ export const FEATURES = [
     title: 'What’s This?', short: 'What is it, and is it safe?',
     headline: '150 GB of “System Data”, finally explained.',
     points: [
-      'Splits System Data into caches, backups, snapshots and more.',
+      'Splits System Data into caches, device backups, mail and more.',
       'Each part is labelled safe to clear, check first or leave it.',
       'Right-click any file and choose What’s this?',
       'Says plainly what you will notice, so nothing is a surprise.',
@@ -153,8 +151,8 @@ export const FEATURES = [
     headline: 'Same file, saved three times? Keep one.',
     points: [
       'Finds exact copies by size, then a partial check, then a full fingerprint.',
-      'Groups copies with previews, locations and dates; protected files are never pre-selected.',
-      'Similar photos (bursts, small edits) get their own tab: compare side by side and keep the best.',
+      'Groups copies with previews, locations and dates, and suggests keeping the one you filed away.',
+      'Look-alike photos (bursts, small edits) get their own tab: compare side by side and keep the one you want.',
     ],
   },
   {
@@ -162,7 +160,7 @@ export const FEATURES = [
     title: 'Organizer', short: 'Tidy Downloads with a preview',
     headline: 'A tidy Downloads folder, on your approval.',
     points: [
-      'Suggests folders such as Documents, Images, Archives and Installers, plus screenshots sorted by month.',
+      'Suggests folders such as Documents, Images, Archives and Installers, plus a pile of screenshots sorted by what they show.',
       'Shows every move before anything happens. Untick any file to leave it where it is.',
       'Never overwrites a file: if a name is taken, a number is added. Every move is logged and can be undone.',
     ],
@@ -186,7 +184,6 @@ export const FEATURES = [
       'Reads what is inside a download and suggests a clear name, on your Mac.',
       'Only unclear names are suggested; names you typed yourself are never touched.',
       'Review every suggestion before it applies, and undo any rename.',
-      'Optionally name new downloads automatically. Off until you turn it on.',
     ],
   },
 ];
@@ -252,7 +249,7 @@ export const STORIES = [
     points: ['Plain words, no jargon', 'Right-click any file to ask about it', 'Says what you will notice afterwards'] },
   { id: 'duplicates', label: 'Duplicates', keys: ['⇧', '⌘', 'D'], title: 'One copy is plenty.',
     problem: 'The same file is saved three times, in three places.',
-    use: 'Keep the best copy with one click and trash the rest.',
+    use: 'Keep one copy with one click and move the rest to the Trash.',
     points: ['Exact copies matched by content', 'Similar photos side by side', 'See the space you’ll get back'] },
   { id: 'home', label: 'Home', keys: ['⇧', '⌘', 'H'], title: 'Your Mac at a glance.',
     problem: 'You can’t tell what’s on your Mac or what’s using the space.',
@@ -273,7 +270,7 @@ export const STORIES = [
   { id: 'organizer', label: 'Organizer', keys: ['⇧', '⌘', 'O'], title: 'A tidy Downloads folder.',
     problem: 'Downloads is a pile of everything.',
     use: 'See where each file would go, untick what should stay, then approve.',
-    points: ['Folders by kind, screenshots by month', 'Nothing moves until you approve', 'Warns before moving files that sync with iCloud', 'Every move can be undone'] },
+    points: ['Folders by kind, screenshots by what they show', 'Nothing moves until you approve', 'Warns before moving files that sync with iCloud', 'Every move can be undone'] },
   { id: 'shots', label: 'Screenshot Inbox', keys: ['⇧', '⌘', 'I'], title: 'Screenshots, filed.',
     problem: 'The Desktop is full of “Screenshot 2026-…” and the receipt is in there somewhere.',
     use: 'Sort them into Receipts, Tickets, Errors and Chats in one go.',

@@ -120,8 +120,6 @@ export function heroWindowMarkup() {
       <ul>${side.map(row).join('')}</ul>
       <p class="hw-label">Clean up</p>
       <ul>${tools.map(row).join('')}</ul>
-      <p class="hw-label">Locations</p>
-      <ul class="hw-locs">${['Desktop', 'Documents', 'Downloads', 'Pictures'].map((l) => `<li><span>${l}</span></li>`).join('')}</ul>
     </aside>
     <div class="hw-main">
       <div class="ex-toolbar"><span class="ex-search hw-search"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="10.5" cy="10.5" r="6.5"/><path d="m20 20-4.8-4.8"/></svg><span class="hw-q">Ask anything, e.g. “pdfs from last week”</span><kbd>⌘</kbd><kbd>F</kbd><span class="ex-ai">AI</span></span><span class="ex-libsize">Library size <b>30.19 GB</b></span></div>

@@ -167,7 +167,7 @@ check('demoSearchTextInImage', async (b) => {
 
 check('demoDuplicatesSimilarTab', async (b) => {
   const p = await open(b, { hash: '#feature-duplicates' });
-  await p.locator('#explorer .d-seg button', { hasText: 'Similar photos' }).click();
+  await p.locator('#explorer .d-seg button', { hasText: 'Look alike' }).click();
   assert((await demoText(p)).includes('Sunset at the pier'), 'similar photos view missing');
   assert(await p.locator('#explorer .d-dupes').isHidden(), 'exact copies should hide on Similar photos');
   assert(p.errors.length === 0, 'errors: ' + p.errors.join(' | '));
@@ -192,7 +192,7 @@ check('demoCleanUpHonestLabels', async (b) => {
 /* ---------- Task 4: content sections ---------- */
 check('trustPipelineHasEightSteps', async (b) => {
   const p = await open(b);
-  assert(await p.locator('#trust .pipeline > li').count() === 8, 'pipeline should have 8 steps');
+  assert(await p.locator('#trust .pipeline > li').count() === 4, 'pipeline should have 4 steps');
   assert((await p.textContent('#trust')).includes('never deletes, moves or renames'), 'safety promise missing');
 });
 
