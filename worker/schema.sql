@@ -4,3 +4,14 @@ CREATE TABLE IF NOT EXISTS signups (
   created_at TEXT NOT NULL,
   country TEXT
 );
+
+-- Feature requests from the website form (POST /api/requests).
+CREATE TABLE IF NOT EXISTS feature_requests (
+  id INTEGER PRIMARY KEY AUTOINCREMENT,
+  created_at TEXT NOT NULL,
+  idea TEXT NOT NULL,
+  details TEXT,
+  area TEXT,
+  email TEXT,
+  country TEXT
+);

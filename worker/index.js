@@ -3,6 +3,8 @@
 //   POST /api/waitlist          { "email": "…" }  → saves to D1, emails the owner (and the subscriber, if enabled)
 //   GET  /api/waitlist/export   ?key=EXPORT_KEY   → CSV of every sign-up, opens in Excel
 //   GET  /api/waitlist/test-email ?key=EXPORT_KEY → sends one test email to NOTIFY_TO and shows the result
+//   POST /api/requests          { idea, details?, area?, email? } → saves a feature request to D1 and alerts the owner
+//   GET  /api/requests/export   ?key=EXPORT_KEY   → CSV of every feature request
 //
 // Bindings (wrangler.jsonc): ASSETS (static site), DB (D1), EMAIL (send_email, free via Email Routing).
 // Variables: MAIL_FROM (an address on your domain), NOTIFY_TO (your inbox, verified in Email Routing). Secrets: EXPORT_KEY; optional phone alerts: DISCORD_WEBHOOK, or TELEGRAM_BOT_TOKEN + TELEGRAM_CHAT_ID.
@@ -19,6 +21,8 @@ export default {
     if (url.pathname === '/api/waitlist' && request.method === 'POST') return join(request, env, ctx);
     if (url.pathname === '/api/waitlist/export' && request.method === 'GET') return exportCsv(url, request, env);
     if (url.pathname === '/api/waitlist/test-email' && request.method === 'GET') return testEmail(url, request, env);
+    if (url.pathname === '/api/requests' && request.method === 'POST') return requestFeature(request, env, ctx);
+    if (url.pathname === '/api/requests/export' && request.method === 'GET') return exportRequests(url, request, env);
     if (url.pathname.startsWith('/api/')) return json({ error: 'Not found' }, 404);
     return env.ASSETS.fetch(request);
   },
@@ -46,6 +50,38 @@ async function join(request, env, ctx) {
   // Emails go out after the response, so a slow mail server never delays the visitor.
   if (isNew) ctx.waitUntil(notify(env, email, now, country));
   return json({ ok: true, already: !isNew });
+}
+
+// A feature request: a short idea (required), optional details, the part of the app it fits, and an optional email for a reply.
+async function requestFeature(request, env, ctx) {
+  const origin = request.headers.get('Origin');
+  if (origin && new URL(origin).host !== new URL(request.url).host) return json({ error: 'Forbidden' }, 403);
+  let body;
+  try { body = await request.json(); } catch { return json({ error: 'Bad request' }, 400); }
+  if (body.website) return json({ ok: true }); // Hidden field only bots fill in: pretend it worked, save nothing.
+  const clean = (v, max) => String(v ?? '').replace(/[\u0000-\u0008\u000b-\u001f]/g, '').trim().slice(0, max);
+  const idea = clean(body.idea, 140), details = clean(body.details, 2000), area = clean(body.area, 40);
+  const email = clean(body.email, 254).toLowerCase();
+  if (idea.length < 3) return json({ error: 'Please describe the feature in a few words.' }, 400);
+  if (email && !EMAIL_RE.test(email)) return json({ error: 'That email doesn’t look right. Leave it empty if you prefer.' }, 400);
+  const now = new Date().toISOString(), country = request.cf?.country || '';
+  await env.DB.prepare('INSERT INTO feature_requests (created_at, idea, details, area, email, country) VALUES (?, ?, ?, ?, ?, ?)')
+    .bind(now, idea, details || null, area || null, email || null, country).run();
+  const line = `New feature request${area ? ` (${area})` : ''}: ${idea}${email ? ` · from ${email}` : ''}`;
+  ctx.waitUntil(Promise.allSettled([
+    sendTelegram(env, line),
+    sendDiscord(env, line.replace(/[*_`~|>\\]/g, '\\$&')),
+    env.NOTIFY_TO ? sendMail(env, { to: env.NOTIFY_TO, subject: `Feature request: ${idea}`, text: `${idea}\n\n${details || '(no details)'}\n\nFits: ${area || 'not said'}\nEmail: ${email || 'not given'}\nCountry: ${country || 'unknown'}\nWhen: ${now}` }) : null,
+  ]).then((rs) => rs.forEach((r) => r.status === 'rejected' && console.error('request alert failed', r.reason?.message || r.reason))));
+  return json({ ok: true });
+}
+
+async function exportRequests(url, request, env) {
+  if (!authorized(url, request, env)) return json({ error: 'Unauthorized' }, 401);
+  const { results } = await env.DB.prepare('SELECT created_at, idea, details, area, email, country FROM feature_requests ORDER BY created_at').all();
+  const cell = (v) => `"${String(v ?? '').replace(/"/g, '""')}"`;
+  const csv = '\ufeff' + ['When (UTC),Idea,Details,Fits,Email,Country', ...results.map((r) => [r.created_at, r.idea, r.details, r.area, r.email, r.country].map(cell).join(','))].join('\r\n');
+  return new Response(csv, { headers: { 'Content-Type': 'text/csv; charset=utf-8', 'Content-Disposition': `attachment; filename="macsprint-requests-${new Date().toISOString().slice(0, 10)}.csv"`, 'Cache-Control': 'no-store' } });
 }
 
 // Email Routing's send_email binding takes a raw message; plain text only, so the MIME is built by hand.

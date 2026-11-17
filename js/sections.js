@@ -69,6 +69,33 @@ export function initWaitlist(form, status) {
   });
 }
 
+// Feature request form: a required idea, optional details, the place in the app it fits, an optional email.
+export function initRequestForm(form) {
+  const status = form.querySelector('.waitlist-status');
+  form.elements.area.insertAdjacentHTML('beforeend', [...FEATURES.map((f) => f.title), 'Something new'].map((t) => `<option>${t}</option>`).join(''));
+  const say = (text, kind) => { status.textContent = text; status.className = 'waitlist-status is-' + kind; };
+  form.addEventListener('submit', async (e) => {
+    e.preventDefault();
+    const { idea, email } = form.elements;
+    if (!idea.checkValidity()) { say('Please describe the feature in a few words.', 'error'); idea.focus(); return; }
+    if (!email.checkValidity()) { say('That email doesn’t look right. Leave it empty if you prefer.', 'error'); email.focus(); return; }
+    const endpoint = form.dataset.requestEndpoint?.trim();
+    if (!endpoint) { say("This preview doesn't send requests anywhere. On macsprint.com it does.", 'info'); return; }
+    const btn = form.querySelector('button');
+    btn.disabled = true; btn.textContent = 'Sending…';
+    try {
+      const res = await fetch(endpoint, { method: 'POST', headers: { 'Content-Type': 'application/json', Accept: 'application/json' },
+        body: JSON.stringify(Object.fromEntries(new FormData(form))) });
+      const data = await res.json().catch(() => ({}));
+      if (!res.ok) throw new Error(data.error || '');
+      say('Thank you. Your request reached us.', 'ok');
+      form.reset();
+    } catch (err) {
+      say(err.message || 'Something went wrong. Please try again in a moment.', 'error');
+    } finally { btn.disabled = false; btn.textContent = 'Send request'; }
+  });
+}
+
 export function initShortcuts(grid) {
   grid.innerHTML = SHORTCUTS.map((g) => `
     <article class="keygroup reveal">

@@ -518,6 +518,18 @@ check('libraryUsesStorageCards', async (b) => {
   assert(await p.locator('#explorer .hm-folder .hk-meter').count() === 6, 'Library should use the six storage cards from the foundations');
 });
 
+check('featureRequestFormIsHonestInPreview', async (b) => {
+  const p = await open(b);
+  const f = '#request .request-form';
+  assert(await p.locator(`${f} select[name=area] option`).count() === 17, 'area list should hold every feature, Not sure and Something new');
+  await p.locator(`${f} button[type=submit]`).click();
+  assert((await p.textContent(`${f} .waitlist-status`)).includes('few words'), 'an empty idea should be refused');
+  await p.fill(`${f} input[name=idea]`, 'Find big files on external drives');
+  await p.locator(`${f} button[type=submit]`).click();
+  assert((await p.textContent(`${f} .waitlist-status`)).includes('preview'), 'preview must say it sends nothing');
+  assert(p.errors.length === 0, 'errors: ' + p.errors.join(' | '));
+});
+
 check('brandIsLensAndName', async (b) => {
   const p = await open(b);
   assert(await p.locator('.globalnav .brand .lens-mark').count() === 1, 'nav should show the Layered lens mark');

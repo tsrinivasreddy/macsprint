@@ -1,7 +1,7 @@
 // Page bootstrap: scroll-reveal and section wiring.
 import { initExplorer } from './explorer.js';
 import { DEMOS } from './demos.js';
-import { initWaitlist, initShortcuts } from './sections.js';
+import { initWaitlist, initShortcuts, initRequestForm } from './sections.js';
 import { heroWindowMarkup, heroTryMarkup, bindHeroTry } from './home.js';
 import { initSpotlight } from './showcase.js';
 import { initHighlights } from './highlights.js';
@@ -33,6 +33,7 @@ initHighlights(document.getElementById('hl-grid'));
 initSpotlight(document.getElementById('spot-grid'), DEMOS);
 initShortcuts(document.getElementById('keys-grid'));
 document.querySelectorAll('.waitlist-form').forEach((f) => initWaitlist(f, f.nextElementSibling));
+document.querySelectorAll('.request-form').forEach(initRequestForm);
 initReveal();
 
 // Real photos in every thumbnail: each .ph gets the photo for its colour value (--h),

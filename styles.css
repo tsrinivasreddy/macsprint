@@ -1174,3 +1174,17 @@ mark { background: var(--mark); color: var(--text); border-radius: 3px; padding:
 @media (max-width: 900px) { .d-piles { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
 .d-pile-ic { position: absolute; top: 0; width: 46px; height: 46px; border-radius: 9px; display: grid; place-items: center; color: var(--accent); background: linear-gradient(180deg, var(--bg-elev), var(--bg-alt)); box-shadow: 0 0 0 1px var(--win-line), 0 6px 12px -8px rgba(0,0,0,.3); }
 .d-pile-ic:nth-child(2) { left: 20px; top: 4px; } .d-pile-ic:nth-child(3) { left: 40px; top: 8px; }
+
+/* ============ Feature requests ============ */
+.request-wrap { max-width: 720px; }
+.request-form { display: grid; gap: 16px; padding: clamp(18px, 3vw, 28px); border-radius: 16px; background: var(--bg-elev); border: 1px solid var(--line); box-shadow: var(--shadow-sm, 0 10px 30px -18px rgba(0,0,0,.25)); }
+.rq-field { display: grid; gap: 6px; min-width: 0; font-size: 14px; font-weight: 600; }
+.rq-field small { font-weight: 400; color: var(--text-2); }
+.rq-field input, .rq-field textarea, .rq-field select { width: 100%; font: 400 16px var(--font); color: var(--text); background: var(--bg); border: 1px solid var(--line); border-radius: 9px; padding: 11px 13px; }
+.rq-field textarea { resize: vertical; min-height: 96px; }
+.rq-field :is(input, textarea, select):focus-visible { outline: 2px solid var(--accent); outline-offset: 1px; }
+.rq-row { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+.rq-hp { position: absolute; left: -9999px; width: 1px; height: 1px; overflow: hidden; }
+.rq-foot { display: flex; align-items: center; gap: 16px; flex-wrap: wrap; }
+.rq-foot .waitlist-status { margin: 0; flex: 1; min-width: 200px; }
+@media (max-width: 620px) { .rq-row { grid-template-columns: 1fr; } }
