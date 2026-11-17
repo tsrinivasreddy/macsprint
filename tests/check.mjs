@@ -55,7 +55,7 @@ check('heroHasTaglineAndCta', async (b) => {
   const body = await p.textContent('body');
   assert(body.includes('Your Mac. Smarter, faster, cleaner.'), 'tagline missing');
   assert(await p.locator('#overview form.waitlist-form input[type=email]').count() === 1, 'hero waitlist form missing');
-  for (const id of ['overview', 'spotlight', 'explore', 'compare', 'shortcuts', 'privacy', 'trust', 'faq', 'waitlist']) {
+  for (const id of ['overview', 'spotlight', 'explore', 'shortcuts', 'privacy', 'trust', 'faq', 'waitlist']) {
     assert(await p.locator('#' + id).count() === 1, 'missing section #' + id);
   }
 });
@@ -68,14 +68,23 @@ check('explorerTabsSelectEachFeature', async (b) => {
   const p = await open(b);
   const features = await getFeatures(p);
   assert(features.length === 15, 'expected 15 features, got ' + features.length);
+  // The sidebar has the app's nine places; the other six are reached through switches, as in the app
   const tabs = p.locator('#explorer [role=tab]');
-  assert(await tabs.count() === 15, 'expected 15 tabs, got ' + await tabs.count());
-  for (let i = 0; i < 15; i++) {
-    await tabs.nth(i).click();
-    assert(await tabs.nth(i).getAttribute('aria-selected') === 'true', 'tab not selected: ' + i);
+  assert(await tabs.count() === 9, 'expected the app\'s 9 sidebar places, got ' + await tabs.count());
+  for (const f of features) {
+    await p.evaluate((h) => { location.hash = h; }, '#feature-' + f.id);
+    await p.waitForTimeout(60);
     const t = await paneTitle(p);
-    assert(t.trim() === features[i].title, `pane title "${t}" != "${features[i].title}"`);
+    assert(t.trim() === f.title, `pane title "${t}" != "${f.title}"`);
   }
+  await p.locator('#explorer .ex-search').click();
+  assert((await paneTitle(p)).trim() === 'Search', 'toolbar field should open Search');
+  await p.locator('#explorer .ex-switch button', { hasText: 'Ask' }).click();
+  assert((await paneTitle(p)).trim() === 'Ask Your Files', 'Ask switch failed');
+  await p.locator('#tab-cleanup').click();
+  await p.locator('#explorer .ex-switch button', { hasText: 'Map' }).click();
+  assert((await paneTitle(p)).trim() === 'Space Map', 'Map switch failed');
+  assert(await p.locator('#tab-cleanup').getAttribute('aria-selected') === 'true', 'Free Up Space should stay selected for its Map');
   assert(p.errors.length === 0, 'errors: ' + p.errors.join(' | '));
 });
 
@@ -91,11 +100,11 @@ check('explorerArrowKeys', async (b) => {
 
 check('explorerHashDeepLinks', async (b) => {
   let p = await open(b, { hash: '#feature-duplicates' });
-  assert((await paneTitle(p)).trim() === 'Duplicate Finder', 'deep link to duplicates failed');
+  assert((await paneTitle(p)).trim() === 'Duplicates', 'deep link to duplicates failed');
   p = await open(b, { hash: '#feature-nope' });
-  assert((await paneTitle(p)).trim() === 'Home Dashboard', 'unknown hash did not fall back to home');
+  assert((await paneTitle(p)).trim() === 'Home', 'unknown hash did not fall back to home');
   assert(p.errors.length === 0, 'errors: ' + p.errors.join(' | '));
-  await p.locator('#explorer [role=tab]', { hasText: 'Clipboard History' }).click();
+  await p.locator('#explorer [role=tab]', { hasText: 'Clipboard' }).click();
   assert(await p.evaluate(() => location.hash) === '#feature-clipboard', 'hash not mirrored');
 });
 
@@ -107,21 +116,14 @@ check('explorerCommandPalette', async (b) => {
   await p.keyboard.type('clip');
   await p.keyboard.press('Enter');
   assert(!(await dlg.isVisible()), 'palette did not close on Enter');
-  assert((await paneTitle(p)).trim() === 'Clipboard History', 'palette did not select clipboard');
+  assert((await paneTitle(p)).trim() === 'Clipboard', 'palette did not select clipboard');
   await p.keyboard.press('Control+k');
   await p.keyboard.type('zzzz');
   assert((await dlg.textContent()).includes('No features match'), 'empty state missing');
   await p.keyboard.press('Enter');
-  assert((await paneTitle(p)).trim() === 'Clipboard History', 'Enter with no match changed selection');
+  assert((await paneTitle(p)).trim() === 'Clipboard', 'Enter with no match changed selection');
   await p.keyboard.press('Escape');
   assert(!(await dlg.isVisible()), 'Esc did not close palette');
-});
-
-check('explorerSidebarFilter', async (b) => {
-  const p = await open(b);
-  await p.fill('#explorer .ex-filter input', 'duplicate f');
-  const visible = await p.locator('#explorer [role=tab]:visible').count();
-  assert(visible === 1, 'filter should leave 1 visible tab, got ' + visible);
 });
 
 /* ---------- Task 3: demos ---------- */
@@ -135,10 +137,10 @@ check('demosCoverEveryFeature', async (b) => {
     return FEATURES.filter((f) => typeof DEMOS[f.id] !== 'function').map((f) => f.id);
   });
   assert(missing.length === 0, 'features without demo: ' + missing.join(','));
-  const tabs = p.locator('#explorer [role=tab]');
-  for (let i = 0; i < 15; i++) {
-    await tabs.nth(i).click();
-    assert((await demoText(p)).trim().length > 0, 'empty demo at tab ' + i);
+  for (const id of await p.evaluate(async () => (await import('/js/features.js')).FEATURES.map((f) => f.id))) {
+    await p.evaluate((h) => { location.hash = h; }, '#feature-' + id);
+    await p.waitForTimeout(60);
+    assert((await demoText(p)).trim().length > 0, 'empty demo for ' + id);
   }
   assert(p.errors.length === 0, 'errors: ' + p.errors.join(' | '));
 });
@@ -146,11 +148,6 @@ check('demosCoverEveryFeature', async (b) => {
 check('demoImageViewerArrows', async (b) => {
   const p = await open(b, { hash: '#feature-images' });
   assert((await demoText(p)).includes('15 of 120'), 'counter should start at 15 of 120');
-  await p.fill('#explorer .ex-filter input', 'x');
-  await p.focus('#explorer .ex-filter input');
-  await p.keyboard.press('ArrowRight');
-  assert((await demoText(p)).includes('15 of 120'), 'ArrowRight in filter input moved the viewer');
-  await p.fill('#explorer .ex-filter input', '');
   await p.focus('#explorer .demo-images .iv-stage');
   await p.keyboard.press('ArrowRight');
   assert((await demoText(p)).includes('16 of 120'), 'ArrowRight on viewer did not advance');
@@ -178,13 +175,11 @@ check('demoDuplicatesSimilarTab', async (b) => {
 
 check('demoOrganizerNeedsReview', async (b) => {
   const p = await open(b, { hash: '#feature-organizer' });
-  assert((await demoText(p)).includes('182 proposed moves'), '182 proposed moves missing');
-  const approve = p.locator('#explorer .ex-demo button', { hasText: 'Approve' });
-  assert(await approve.isDisabled(), 'Approve should be disabled before review');
-  await p.locator('#explorer .ex-demo button', { hasText: 'Review' }).click();
-  assert(!(await approve.isDisabled()), 'Approve should enable after review');
+  assert((await p.textContent('#explorer .d-approve')).trim() === 'Move 21 files', 'Move button should count the switched-on piles');
+  await p.locator('#explorer .d-pile .d-sw').nth(1).click();
+  assert((await p.textContent('#explorer .d-approve')).trim() === 'Move 16 files', 'switching a pile off should lower the count');
+  assert((await demoText(p)).includes('Nothing moves until you click'), 'approval promise missing');
 });
-
 check('demoCleanUpHonestLabels', async (b) => {
   const p = await open(b, { hash: '#feature-cleanup' });
   assert((await demoText(p)).includes('Macintosh HD'), 'storage overview missing from Clean Up');
@@ -251,10 +246,10 @@ check('darkModeBackground', async (b) => {
 
 check('controlsHaveAccessibleNames', async (b) => {
   const p = await open(b);
-  const tabs = p.locator('#explorer [role=tab]');
   const unnamed = [];
-  for (let i = 0; i < 15; i++) {
-    await tabs.nth(i).click();
+  for (const id of await p.evaluate(async () => (await import('/js/features.js')).FEATURES.map((f) => f.id))) {
+    await p.evaluate((h) => { location.hash = h; }, '#feature-' + id);
+    await p.waitForTimeout(60);
     const bad = await p.evaluate(() => [...document.querySelectorAll('button, input, [role=tab], a[href]')]
       .filter((el) => el.offsetParent !== null)
       .filter((el) => {
@@ -269,15 +264,6 @@ check('controlsHaveAccessibleNames', async (b) => {
 });
 
 /* ---------- Final review fixes ---------- */
-check('filterKeepsKeyboardPath', async (b) => {
-  const p = await open(b);
-  await p.fill('#explorer .ex-filter input', 'clip');
-  await p.focus('#explorer .ex-filter input');
-  await p.keyboard.press('Tab');
-  const id = await p.evaluate(() => document.activeElement.id);
-  assert(id === 'tab-clipboard', 'Tab from filter should reach first visible match, got #' + id);
-});
-
 check('paneNotLiveAndSearchCyclePausable', async (b) => {
   const p = await open(b, { hash: '#feature-search' });
   assert(await p.getAttribute('#ex-pane', 'aria-live') === null, '#ex-pane must not be a live region');
@@ -309,7 +295,7 @@ check('textContrastAA', async (b) => {
         const [l1, l2] = [lum(f), lum(bg)].sort((x, y) => y - x);
         return (l1 + 0.05) / (l2 + 0.05);
       };
-      const sels = ['.ex-demo-note', '.ex-group-label', '.d-label', '.btn', '[role=tab][aria-selected=true]', '.d-results mark'];
+      const sels = ['.ex-demo-note', '.ex-group-label', '.d-label', '.btn', '.ex-switch [aria-pressed=true]', '.d-results mark'];
       const fails = [];
       for (const s of sels) {
         const el = document.querySelector(s);
@@ -373,7 +359,7 @@ check('homeGreetingAndSections', async (b) => {
 check('homeFolderOpensLibraryFiltered', async (b) => {
   const p = await open(b, { hash: '#feature-home' });
   await p.locator('#explorer .hm-folder', { hasText: 'Videos' }).click();
-  assert((await paneTitle(p)).trim() === 'Visual Library', 'folder did not open Visual Library');
+  assert((await paneTitle(p)).trim() === 'Library', 'folder did not open Library');
   assert((await seg(p)).trim() === 'Videos', 'library not filtered to Videos');
   const shown = await p.locator('#explorer .d-lib figure:visible').count();
   const vids = await p.locator('#explorer .d-lib figure[data-k="Videos"]:visible').count();
@@ -383,29 +369,25 @@ check('homeFolderOpensLibraryFiltered', async (b) => {
 check('homeCleanupCardsOpenFeatures', async (b) => {
   const p = await open(b, { hash: '#feature-home' });
   await p.locator('#explorer .hm-clean', { hasText: 'Duplicates' }).click();
-  assert((await paneTitle(p)).trim() === 'Duplicate Finder', 'duplicates card wrong target');
+  assert((await paneTitle(p)).trim() === 'Duplicates', 'duplicates card wrong target');
   await p.evaluate(() => { location.hash = '#feature-home'; });
   await p.waitForTimeout(100);
   await p.locator('#explorer .hm-clean', { hasText: 'Large Files' }).click();
   assert((await paneTitle(p)).trim() === 'Free Up Space', 'large files card wrong target');
 });
 
-check('sidebarLocationsAndMetrics', async (b) => {
+check('sidebarMetricsLikeTheApp', async (b) => {
   const p = await open(b);
   assert((await p.textContent('#tab-cleanup .ex-tab-meta')).trim() === '14.1 GB', 'cleanup metric missing');
   assert((await p.textContent('#tab-downloaded .ex-tab-meta')).trim() === '913', 'Downloaded From count missing');
-  await p.locator('#explorer .ex-loc', { hasText: 'Downloads' }).click();
-  assert((await paneTitle(p)).trim() === 'Visual Library', 'location did not open library');
-  assert((await p.textContent('#explorer .demo-library')).includes('In Downloads'), 'location filter chip missing');
+  assert(await p.locator('#explorer .ex-filter, #explorer .ex-loc').count() === 0, 'the app has no filter box or Locations list');
 });
-
-check('toolbarSearchOpensPalette', async (b) => {
+check('toolbarSearchOpensSearch', async (b) => {
   const p = await open(b);
+  assert((await p.textContent('#explorer .ex-search')).includes('Search or ask'), 'toolbar should say Search or ask, as in the app');
   await p.locator('#explorer .ex-search').click();
-  assert(await p.locator('#palette').isVisible(), 'toolbar search did not open palette');
+  assert((await paneTitle(p)).trim() === 'Search', 'toolbar field did not open Search');
 });
-
-/* ---------- MacSprint: Graphite & Glass ---------- */
 check('noOldBrandName', async (b) => {
   const p = await open(b);
   const t = await p.evaluate(() => document.body.innerText + document.title);
@@ -417,12 +399,6 @@ check('heroTrustStrip', async (b) => {
   const p = await open(b);
   const t = await p.textContent('#overview .trust');
   for (const s of ['No account', 'iCloud-only files never downloaded', 'Trash']) assert(t.includes(s), 'trust strip missing ' + s);
-});
-
-check('compareTableRows', async (b) => {
-  const p = await open(b);
-  assert(await p.locator('#compare .vrow-item').count() >= 6, 'expected at least 6 comparison rows');
-  assert((await p.textContent('#compare')).includes('Finder'), 'compare must mention Finder');
 });
 
 check('shortcutsSection', async (b) => {
@@ -505,13 +481,11 @@ check('clipboardCopyEachItem', async (b) => {
   assert(await p.locator('#explorer .d-copyitem').count() === n, 'every clipboard item needs a Copy button');
 });
 
-check('organizerPickEachMove', async (b) => {
+check('organizerPilesOpenTheirFeatures', async (b) => {
   const p = await open(b, { hash: '#feature-organizer' });
-  await p.locator('#explorer .d-review').click();
-  await p.locator('#explorer .d-moves-list input').first().uncheck();
-  assert((await p.textContent('#explorer .d-approve')).includes('Approve 181 moves'), 'unticking a move should lower the count');
+  await p.locator('#explorer .d-org-names').click();
+  assert((await paneTitle(p)).trim() === 'Smart Rename', 'clearer-names banner should open Smart Rename');
 });
-
 check('highlightsOpenTheirFeature', async (b) => {
   const p = await open(b);
   const tiles = p.locator('#highlights .hl-tile');

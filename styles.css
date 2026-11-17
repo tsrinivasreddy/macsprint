@@ -1115,3 +1115,62 @@ mark { background: var(--mark); color: var(--text); border-radius: 3px; padding:
 }
 @keyframes lens-in { from { transform: scale(.25); opacity: 0; } to { transform: none; opacity: 1; } }
 @keyframes lens-ripple { 0%, 100% { transform: none; } 40% { transform: scale(1.14); } }
+
+/* ============ Explorer: the app's window (nine places, a switch for what lives inside them) ============ */
+.ex-pane-head { flex-wrap: wrap; }
+.ex-switch { margin-left: auto; display: inline-flex; padding: 3px; gap: 2px; border-radius: 10px; background: var(--bg-alt); box-shadow: inset 0 0 0 1px var(--line); }
+.ex-switch button { font: 600 13px var(--font); padding: 6px 14px; border: 0; border-radius: 8px; background: transparent; color: var(--text-2); cursor: pointer; white-space: nowrap; }
+.ex-switch button[aria-pressed="true"] { background: var(--accent-btn); color: #fff; box-shadow: 0 4px 10px -6px var(--accent-btn); }
+.ex-search.on { box-shadow: 0 0 0 2px var(--accent); }
+.ex-demo-note { font-size: 12.5px; color: var(--text-3); }
+@media (max-width: 620px) { .ex-switch { margin-left: 0; width: 100%; } .ex-switch button { flex: 1; padding: 6px 8px; } }
+
+/* Shared app bits: a switch, a short list of rules */
+.d-sw { flex: none; width: 38px; height: 22px; border-radius: 99px; border: 0; padding: 0; position: relative; cursor: pointer; background: var(--line-2); transition: background .2s; }
+.d-sw::after { content: ""; position: absolute; top: 2px; left: 2px; width: 18px; height: 18px; border-radius: 50%; background: #fff; box-shadow: 0 1px 3px rgba(0,0,0,.25); transition: transform .2s; }
+.d-sw[aria-checked="true"] { background: var(--accent-btn); }
+.d-sw[aria-checked="true"]::after { transform: translateX(16px); }
+@media (prefers-reduced-motion: reduce) { .d-sw, .d-sw::after { transition: none; } }
+.d-rules { list-style: none; margin: 10px 0 0; padding: 0; display: grid; gap: 8px; }
+.d-rules li { display: flex; align-items: center; gap: 12px; padding: 11px 14px; border-radius: 12px; background: var(--win-bg); border: 1px solid var(--win-line); }
+.d-rules span { flex: 1; min-width: 0; display: grid; gap: 2px; font-size: 13.5px; }
+.d-rules small { color: var(--text-2); font-size: 12px; }
+
+/* Free Up Space, as in the app */
+.d-fus, .d-org { display: grid; gap: 12px; }
+.d-fus-vol { font-size: 12.5px; color: var(--text-2); }
+.d-fus-lead { font-size: clamp(17px, 2vw, 20px); font-weight: 700; letter-spacing: -0.02em; }
+.d-fus-list { list-style: none; margin: 0; padding: 0; display: grid; }
+.d-fus-list li { display: flex; align-items: center; gap: 12px; padding: 11px 4px; border-bottom: 1px solid var(--win-line); }
+.d-fus-txt { flex: 1; min-width: 0; display: grid; gap: 2px; font-size: 14px; }
+.d-fus-txt small { font-size: 12px; color: var(--text-2); }
+.d-fus-th { display: inline-flex; }
+.d-fus-th .ph { width: 30px; height: 30px; border-radius: 7px; margin-left: -8px; box-shadow: 0 0 0 2px var(--win-bg); }
+.d-fus-list em { font-style: normal; font-weight: 700; font-size: 14px; min-width: 64px; text-align: right; font-variant-numeric: tabular-nums; }
+.d-fus-sys { border-bottom: 0 !important; }
+.d-fus-sys .btn svg { color: var(--accent); vertical-align: -2px; }
+.d-fus-note { font-size: 12.5px; color: var(--text-2); }
+.d-fus-more { display: flex; flex-wrap: wrap; gap: 8px; }
+@media (max-width: 620px) { .d-fus-th { display: none; } .d-fus-list em { min-width: 0; } }
+
+/* Organizer, as in the app */
+.d-org-names { display: flex; align-items: center; gap: 12px; width: 100%; text-align: left; font: inherit; color: var(--text); cursor: pointer; padding: 12px 14px; border-radius: 14px; border: 1px solid color-mix(in oklab, var(--accent) 35%, var(--win-line)); background: color-mix(in oklab, var(--accent) 7%, var(--win-bg)); }
+.d-org-names > span:nth-child(2) { flex: 1; min-width: 0; display: grid; gap: 2px; font-size: 14px; }
+.d-org-names small { font-size: 12px; color: var(--text-2); overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.d-org-spark { width: 36px; height: 36px; border-radius: 10px; display: grid; place-items: center; color: var(--accent); background: var(--accent-soft); flex: none; }
+.d-piles { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 10px; }
+.d-pile { position: relative; display: grid; gap: 3px; align-content: start; padding: 10px 10px 12px; border-radius: 14px; background: var(--win-bg); border: 1px solid var(--win-line); min-width: 0; }
+.d-pile b { font-size: 13.5px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; padding-right: 40px; }
+.d-pile small { padding-right: 44px; font-size: 11.5px; color: var(--text-2); overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.d-pile small svg { vertical-align: -1px; color: var(--accent); }
+.d-pile .d-sw { position: absolute; right: 10px; bottom: 12px; }
+.d-pile-open { position: relative; display: block; height: 58px; margin-bottom: 4px; border: 0; padding: 0; background: none; cursor: pointer; text-align: left; }
+.d-pile-th .ph { position: absolute; top: 0; width: 46px; height: 46px; border-radius: 9px; box-shadow: 0 6px 12px -8px rgba(0,0,0,.4); }
+.d-pile-th .ph:nth-child(1) { left: 0; } .d-pile-th .ph:nth-child(2) { left: 20px; top: 4px; } .d-pile-th .ph:nth-child(3) { left: 40px; top: 8px; }
+.d-pile-n { position: absolute; right: 0; bottom: 4px; min-width: 22px; height: 22px; padding: 0 6px; border-radius: 99px; display: grid; place-items: center; font-size: 12px; font-weight: 700; color: #fff; background: var(--accent-btn); }
+.d-pile-stay { place-content: center; text-align: center; border-style: dashed; }
+.d-pile-stay b { font-size: 24px; padding: 0; }
+.d-org-foot { display: flex; align-items: center; justify-content: space-between; gap: 12px; flex-wrap: wrap; padding: 10px 12px; border-radius: 12px; background: var(--bg-alt); font-size: 13px; color: var(--text-2); }
+@media (max-width: 900px) { .d-piles { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
+.d-pile-ic { position: absolute; top: 0; width: 46px; height: 46px; border-radius: 9px; display: grid; place-items: center; color: var(--accent); background: linear-gradient(180deg, var(--bg-elev), var(--bg-alt)); box-shadow: 0 0 0 1px var(--win-line), 0 6px 12px -8px rgba(0,0,0,.3); }
+.d-pile-ic:nth-child(2) { left: 20px; top: 4px; } .d-pile-ic:nth-child(3) { left: 40px; top: 8px; }

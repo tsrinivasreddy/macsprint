@@ -20,7 +20,6 @@ export function initSpotlight(grid, demos) {
           <h3>${esc(s.title)}</h3>
           <div class="spot-shot" aria-hidden="true"><div class="mac-window" inert><div class="spot-bar"><i></i><i></i><i></i></div><div class="spot-demo ex-demo demo-${s.id}" data-demo="${s.id}"></div></div></div>
           <p class="spot-use"><span class="story-tag fix">With MacSprint</span> ${esc(s.use)}</p>
-          <ul>${s.points.map((p) => `<li>${esc(p)}</li>`).join('')}</ul>
           <a class="spot-try" href="#feature-${s.id}" data-id="${s.id}">Try it ›</a>
         </div>
       </article>`;

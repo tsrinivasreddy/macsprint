@@ -36,7 +36,7 @@ function home(el, _param, { go }) {
   bindHome(el, go);
 }
 
-/* ---------------- Visual Library ---------------- */
+/* ---------------- Library ---------------- */
 const LIB = [
   ['Images', 'Beach-sunset.heic', 'Pictures', 200], ['Videos', 'Birthday-party.mov', 'Movies', 330], ['Documents', 'Lease-agreement.pdf', 'Documents'],
   ['Screenshots', 'Screenshot 2026-03-14.png', 'Desktop', 220], ['Music', 'Morning-playlist.m4a', 'Music'], ['Apps', 'Pages.app', 'Downloads'],
@@ -76,7 +76,7 @@ function library(el, param) {
   draw();
 }
 
-/* ---------------- Smart Image Viewer ---------------- */
+/* ---------------- Image Viewer ---------------- */
 function images(el) {
   const TOTAL = 120;
   let i = 15, rot = 0, actual = false;
@@ -235,18 +235,37 @@ const CLEAN_CARDS = [
   ['Apps you don’t open', 'Not opened in 6 months', [['GarageBand.app', 1.6, 'Last opened 9 months ago'], ['Keynote.app', 0.8, 'Last opened 7 months ago']]],
   ['Large files', 'Single files over 500 MB', [['Photos-library-export.zip', 1.4, 'Over 1 GB'], ['Keynote-deck-final.key', 0.82, 'Over 500 MB']]],
 ];
-function cleanup(el) {
-  const cats = [['Images', 'img', 98], ['Videos', 'vid', 74], ['Audio', 'aud', 12], ['Documents', 'doc', 41], ['Archives', 'arc', 33], ['Installers', 'dmg', 29], ['Developer', 'dev', 22], ['Other', 'oth', 32]];
+function cleanup(el, _param, { go } = {}) {
+  const size = (items) => items.reduce((t, x) => t + x[1], 0);
+  const order = CLEAN_CARDS.map((c, i) => i).sort((x, y) => size(CLEAN_CARDS[y][2]) - size(CLEAN_CARDS[x][2]));
+  const hues = [210, 28, 280, 160, 340, 120];
+  const sheet = (title, body) => {
+    el.innerHTML = `<div class="d-fus"><div class="d-row-head"><p class="d-label">${title}</p><button type="button" class="btn btn-small btn-ghost d-back">Done</button></div>${body}</div>`;
+    el.querySelector('.d-back').addEventListener('click', overview);
+    bindAll(el, '.d-sw', 'click', (e) => { const b = e.currentTarget; b.setAttribute('aria-checked', String(b.getAttribute('aria-checked') !== 'true')); });
+  };
+  const sw = (on, label) => `<button type="button" class="d-sw" role="switch" aria-checked="${on}" aria-label="${esc(label)}"></button>`;
   const overview = () => {
     el.innerHTML = `
-      <div class="d-storage">
-        <div class="d-vol"><b>Macintosh HD</b><span>341 GB used · 171 GB available · 512 GB</span></div>
-        <div class="d-bar" role="img" aria-label="Storage by category">${cats.map(([n, c, g]) => `<span title="${n} ${g} GB" style="flex:${g};background:var(--c-${c})"></span>`).join('')}<span style="flex:171" class="d-free"></span></div>
-        <ul class="d-legend d-legend-row">${cats.map(([n, c, g]) => `<li><i style="background:var(--c-${c})"></i>${n}<span>${g} GB</span></li>`).join('')}</ul>
-        <div class="d-ccats">${CLEAN_CARDS.map(([t, sub, items], i) => `<div class="d-ccat"><span>${esc(t)}</span><b>${GB(items.reduce((a, x) => a + x[1], 0))}</b><small>${esc(sub)}</small><button type="button" class="btn btn-small btn-ghost" data-review="${i}">Review</button></div>`).join('')}</div>
-        <p class="d-foot">Files that only live in iCloud are skipped, so nothing gets downloaded.</p>
+      <div class="d-fus">
+        <p class="d-fus-vol">Macintosh HD · 171 GB free of 512 GB · checked just now</p>
+        <p class="d-fus-lead">What you probably don’t need, biggest first.</p>
+        <ul class="d-fus-list">${order.map((i) => { const [t, sub, items] = CLEAN_CARDS[i]; return `
+          <li><span class="d-fus-txt"><b>${esc(t)}</b><small>${esc(sub)}</small></span>
+            <span class="d-fus-th">${items.slice(0, 3).map((_, k) => ph(hues[i] + k * 14)).join('')}</span>
+            <em>${GB(size(items))}</em><button type="button" class="btn btn-small btn-quiet" data-review="${i}">Review</button></li>`; }).join('')}
+          <li class="d-fus-sys"><span class="d-fus-txt"><b>System Data · 148 GB</b><small>Most of it is macOS’s to manage. Some can be cleared.</small></span><button type="button" class="btn btn-small btn-quiet d-what">${svg(ICON.sparkle, 14)} What’s this?</button></li>
+        </ul>
+        <p class="d-fus-note">You review every group first. Files go to the Trash, and Undo puts them back.</p>
+        <div class="d-fus-more"><button type="button" class="btn btn-small btn-quiet" data-sheet="auto">Automatic clean up…</button><button type="button" class="btn btn-small btn-quiet" data-sheet="history">Cleanup History…</button><button type="button" class="btn btn-small btn-quiet" data-sheet="startup">Startup Items…</button></div>
       </div>`;
     bindAll(el, '[data-review]', 'click', (e) => review(+e.currentTarget.dataset.review));
+    el.querySelector('.d-what').addEventListener('click', () => go?.('explain'));
+    bindAll(el, '[data-sheet]', 'click', (e) => ({
+      auto: () => sheet('Automatic clean up', `<p class="d-sub">Off until you turn a rule on. Runs once a day, skips open files.</p><ul class="d-rules">${[['Old installers in Downloads', 'Older than 30 days'], ['Screenshots on the Desktop', 'Older than 90 days'], ['Downloads you never opened', 'Older than 6 months']].map(([n, w]) => `<li><span><b>${n}</b><small>${w}</small></span>${sw(false, n)}</li>`).join('')}</ul>`),
+      history: () => sheet('Cleanup History', `<ul class="d-rules">${[['Yesterday', '12 old installers', '3.1 GB'], ['Oct 30', 'Wedding-raw.mov', '3.2 GB'], ['Oct 12', '96 screenshots', '210 MB']].map(([d, w, g]) => `<li><span><b>${w}</b><small>${d} · ${g} · in the Trash</small></span><button type="button" class="btn btn-small btn-quiet">Put back</button></li>`).join('')}</ul>`),
+      startup: () => sheet('Startup Items', `<p class="d-sub">What opens when you log in. Turn off what you don’t need.</p><ul class="d-rules">${[['Zoom', 'Opens at login', true], ['Spotify', 'Opens at login', true], ['Updater for an app you removed', 'The app is gone', false]].map(([n, w, on]) => `<li><span><b>${n}</b><small>${w}</small></span>${sw(on, n)}</li>`).join('')}</ul>`),
+    }[e.currentTarget.dataset.sheet])());
   };
   const review = (ci) => {
     const [title, , items] = CLEAN_CARDS[ci];
@@ -450,45 +469,59 @@ function duplicates(el) {
 }
 
 /* ---------------- Organizer ---------------- */
-function organizer(el) {
-  const groups = [['Documents', 64, 'doc'], ['Images', 48, 'img'], ['Archives', 31, 'arc'], ['Installers', 22, 'dmg'], ['Screenshots', 17, 'vid']];
-  const moves = [
-    ['Q3-report-final.pdf', 'Documents'], ['IMG_4471.jpeg', 'Images'], ['Screenshot 2026-10-02.png', 'Screenshots/2026-10'],
-    ['fonts-pack.zip', 'Archives'], ['Figma-installer.dmg', 'Installers'], ['scan0012.pdf', 'Documents, renamed “Electricity-bill-Sep-2026.pdf”'],
-  ];
-  const TOTAL = 182, shown = moves.length;
-  el.innerHTML = `
-    <div class="d-org">
-      <p class="d-org-sum"><b>Downloads</b>: 210 files found · <b>${TOTAL} proposed moves</b> · 28 left unchanged</p>
-      <div class="d-org-bars">${groups.map(([n, c, k]) => `<div><span>${n}</span><i style="--w:${(c / 64) * 100}%;background:var(--c-${k})"></i><b>${c}</b></div>`).join('')}</div>
-      <div class="d-moves-wrap" hidden>
-        <div class="d-row-head"><p class="d-label">Choose what moves</p><span><button type="button" class="btn btn-small btn-ghost" data-all="1">Select all</button> <button type="button" class="btn btn-small btn-ghost" data-all="0">Select none</button></span></div>
-        <ul class="d-checks d-moves-list">${moves.map(([f, d], i) => `<li><label><input type="checkbox" data-i="${i}" checked> <span>${esc(f)}<small>→ ${esc(d)}</small></span></label></li>`).join('')}<li class="d-muted">…and ${TOTAL - shown} more, all selected</li></ul>
-      </div>
-      <div class="d-clean-foot">
-        <span class="d-total" role="status">Nothing moves until you approve.</span>
-        <span><button type="button" class="btn btn-small btn-ghost d-review">Review moves</button> <button type="button" class="btn btn-small d-approve" disabled>Approve ${TOTAL} moves</button></span>
-      </div>
-    </div>`;
-  const approve = el.querySelector('.d-approve');
-  const picked = () => TOTAL - shown + el.querySelectorAll('.d-moves-list input:checked').length;
-  const count = () => {
-    const n = picked();
-    approve.textContent = `Approve ${n} move${n === 1 ? '' : 's'}`;
-    approve.disabled = n === 0;
-    el.querySelector('.d-total').textContent = `${n} of ${TOTAL} selected. Untick any file to leave it where it is.`;
+const PILES = [
+  ['Screenshots', 5, 'Pictures › Screenshots', 210, 'shots'], ['Documents', 5, 'Documents', 'doc'], ['Invoices and receipts', 4, 'Documents › Finance', 'doc'],
+  ['Archives', 3, 'Downloads › Archives', 'zip'], ['Installers', 2, 'Downloads › Installers', 'dmg'], ['Music', 1, 'Music', 'music'], ['Videos', 1, 'Movies', 5],
+];
+const PILE_FILES = ['Q3-report-final.pdf', 'Lease agreement.pdf', 'Notes from call.docx', 'Offer letter.pdf', 'Brochure.pdf'];
+function organizer(el, _param, { go } = {}) {
+  const STAY = 4;
+  const draw = () => {
+    el.innerHTML = `
+      <div class="d-org">
+        <p class="d-fus-vol">Downloads · 25 files · checked just now</p>
+        <p class="d-fus-lead">These files can go to their own folders.</p>
+        <button type="button" class="d-org-names"><span class="d-org-spark">${svg(ICON.sparkle, 18)}</span><span><b>5 files can have clearer names</b><small>receipt.pdf → 2026-09-30 Receipt Cafe Lumen.pdf</small></span><span class="btn btn-small">Review Names</span></button>
+        <div class="d-piles">${PILES.map(([n, c, dest, h], i) => `
+          <div class="d-pile">
+            <button type="button" class="d-pile-open" data-pile="${i}" aria-label="Open ${n}"><span class="d-pile-th">${[0, 1, 2].slice(0, Math.min(c, 3)).map((k) => typeof h === 'number' ? ph(h + k * 12) : `<span class="d-pile-ic">${svg(ICON[h], 20)}</span>`).join('')}</span><span class="d-pile-n">${c}</span></button>
+            <b>${n}</b><small>${svg(ICON.folder, 12)} ${dest}</small>
+            <button type="button" class="d-sw" role="switch" aria-checked="true" data-c="${c}" aria-label="Move ${n}"></button>
+          </div>`).join('')}
+          <div class="d-pile d-pile-stay"><b>${STAY}</b><small>stay in Downloads</small></div>
+        </div>
+        <div class="d-org-foot"><span class="d-total" role="status"></span><button type="button" class="btn btn-small d-approve"></button></div>
+      </div>`;
+    const approve = el.querySelector('.d-approve');
+    const count = () => {
+      const on = [...el.querySelectorAll('.d-sw')].filter((x) => x.getAttribute('aria-checked') === 'true');
+      const n = on.reduce((t, x) => t + +x.dataset.c, 0), stay = 25 - n;
+      approve.textContent = `Move ${n} file${n === 1 ? '' : 's'}`;
+      approve.disabled = n === 0;
+      el.querySelector('.d-total').textContent = `${stay} stay in Downloads. Nothing moves until you click.`;
+    };
+    bindAll(el, '.d-sw', 'click', (e) => { const b = e.currentTarget; b.setAttribute('aria-checked', String(b.getAttribute('aria-checked') !== 'true')); count(); });
+    el.querySelector('.d-org-names').addEventListener('click', () => go?.('rename'));
+    bindAll(el, '.d-pile-open', 'click', (e) => {
+      const i = +e.currentTarget.dataset.pile;
+      if (PILES[i][4]) { go?.(PILES[i][4]); return; }
+      const [n, c, dest] = PILES[i];
+      el.innerHTML = `<div class="d-org"><div class="d-row-head"><p class="d-label">${n} → ${dest}</p><button type="button" class="btn btn-small btn-ghost d-back">‹ Organizer</button></div>
+        <ul class="d-checks">${PILE_FILES.slice(0, c).map((f) => `<li><label><input type="checkbox" checked> <span>${esc(f)}<small>→ ${dest}</small></span></label></li>`).join('')}</ul>
+        <p class="d-sub">Untick a file to leave it in Downloads.</p></div>`;
+      el.querySelector('.d-back').addEventListener('click', draw);
+    });
+    approve.addEventListener('click', () => {
+      const n = approve.textContent.match(/\d+/)[0];
+      el.querySelector('.d-org').innerHTML = `<div class="d-report" role="status"><span class="d-report-icon">${svg(ICON.check, 22)}</span><p><b>${n} files moved to their folders.</b></p><p>Downloads is tidy. One Undo puts everything back.</p><button type="button" class="btn btn-small btn-quiet d-undo">Undo</button></div>`;
+      el.querySelector('.d-undo').addEventListener('click', draw);
+    });
+    count();
   };
-  el.querySelector('.d-review').addEventListener('click', () => { el.querySelector('.d-moves-wrap').hidden = false; count(); });
-  bindAll(el, '.d-moves-list input', 'change', count);
-  bindAll(el, '[data-all]', 'click', (e) => { el.querySelectorAll('.d-moves-list input').forEach((x) => { x.checked = e.currentTarget.dataset.all === '1'; }); count(); });
-  approve.addEventListener('click', () => {
-    const n = picked();
-    approve.disabled = true;
-    el.querySelector('.d-total').textContent = `Done: ${n} files moved. Undo any of it from File Action History.`;
-  });
+  draw();
 }
 
-/* ---------------- Clipboard History ---------------- */
+/* ---------------- Clipboard ---------------- */
 function clipboard(el) {
   let paused = false;
   let items = [

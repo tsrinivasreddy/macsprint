@@ -1,22 +1,29 @@
-// Feature Explorer: a Mac-style window whose sidebar navigates every feature,
-// plus a ⌘K command palette. Selection is mirrored to #feature-<id>.
+// Feature Explorer: a copy of the MacSprint window. The sidebar has the app's nine places; features that
+// live inside a place (Map, What's this?, Screenshots, Names) or behind the toolbar field (Search, Ask)
+// are reached the same way as in the app, through a switch at the top. ⌘K jumps anywhere.
+// Selection is mirrored to #feature-<id>.
 import { lensSvg, wordmark } from './lens.js';
 import { FEATURES, iconSvg } from './features.js';
 
 const HASH_PREFIX = '#feature-';
 const DEFAULT_ID = 'home';
 const byId = new Map(FEATURES.map((f) => [f.id, f]));
+const FAMILY = { cleanup: ['cleanup', 'spacemap', 'explain'], organizer: ['organizer', 'shots', 'rename'], search: ['search', 'ask'] };
+const SWITCH = { cleanup: 'Files', spacemap: 'Map', explain: 'What’s this?', organizer: 'Piles', shots: 'Screenshots', rename: 'Names', search: 'Search', ask: 'Ask' };
+const familyOf = (id) => Object.keys(FAMILY).find((k) => FAMILY[k].includes(id));
+const SIDEBAR = FEATURES.filter((f) => !familyOf(f.id) || (familyOf(f.id) === f.id && f.id !== 'search'));
+const tabIdFor = (id) => { const fam = familyOf(id); return fam === 'search' ? null : fam || id; };
 
 let state = { root: null, demos: {}, current: null, cleanup: null, tabs: [] };
 
 const esc = (s) => s.replace(/[&<>"]/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]));
 
 function sidebarHtml() {
-  const groups = [...new Set(FEATURES.map((f) => f.group))];
+  const groups = [...new Set(SIDEBAR.map((f) => f.group))];
   return groups.map((g) => `
     <div class="ex-group" role="presentation">
       <p class="ex-group-label" role="presentation">${g}</p>
-      ${FEATURES.filter((f) => f.group === g).map((f) => `
+      ${SIDEBAR.filter((f) => f.group === g).map((f) => `
         <button type="button" role="tab" id="tab-${f.id}" data-id="${f.id}" aria-selected="false" aria-controls="ex-pane" tabindex="-1">
           <span class="ex-tab-icon">${iconSvg(f.icon)}</span>
           <span class="ex-tab-text">${esc(f.title)}</span>
@@ -25,9 +32,7 @@ function sidebarHtml() {
     </div>`).join('');
 }
 
-const LOCATIONS = ['Desktop', 'Documents', 'Downloads', 'Pictures', 'Movies', 'Music'];
 const SEARCH_ICON = '<circle cx="10.5" cy="10.5" r="6.5"/><path d="m20 20-4.8-4.8"/>';
-const FOLDER_ICON = '<path d="M3 7.5V18a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V9.5a2 2 0 0 0-2-2h-7L10 5H5a2 2 0 0 0-2 2.5Z"/>';
 
 function render(root) {
   root.innerHTML = `
@@ -37,21 +42,12 @@ function render(root) {
         <div class="ex-brand">${lensSvg(26)}${wordmark(19)}
           <span class="ex-side-icon" aria-hidden="true">${iconSvg('<rect x="3" y="4.5" width="18" height="15" rx="2.5"/><path d="M9 4.5v15"/>', 17)}</span>
         </div>
-        <label class="ex-filter">
-          <span class="visually-hidden">Filter features</span>
-          <input type="search" placeholder="Filter features" autocomplete="off">
-        </label>
         <div class="ex-tablist" role="tablist" aria-label="MacSprint features" aria-orientation="vertical"><span class="ex-indicator" aria-hidden="true"></span>${sidebarHtml()}</div>
-        <p class="ex-nomatch" hidden>No features match</p>
-        <div class="ex-locs">
-          <p class="ex-group-label">Locations</p>
-          ${LOCATIONS.map((l) => `<button type="button" class="ex-loc" data-loc="${l}"><span class="ex-loc-icon">${iconSvg(FOLDER_ICON, 17)}</span>${l}</button>`).join('')}
-        </div>
       </aside>
       <div class="ex-main">
         <div class="ex-toolbar">
-          <button type="button" class="ex-search" data-open-palette aria-label="Jump to a feature (Command K)">
-            ${iconSvg(SEARCH_ICON, 16)}<span>Jump to a feature, or try “duplicates”…</span><kbd>⌘</kbd><kbd>K</kbd>
+          <button type="button" class="ex-search" data-search aria-label="Search or ask">
+            ${iconSvg(SEARCH_ICON, 16)}<span>Search or ask</span><kbd>⌘</kbd><kbd>F</kbd>
           </button>
           <span class="ex-libsize">Library size <b>30.19 GB</b></span>
           <span class="ex-inspector" aria-hidden="true">${iconSvg('<rect x="3" y="4.5" width="18" height="15" rx="2.5"/><path d="M15 4.5v15"/>', 17)}</span>
@@ -61,13 +57,10 @@ function render(root) {
           <header class="ex-pane-head">
             <span class="ex-pane-icon"></span>
             <div class="ex-pane-titles"><h3></h3><p class="ex-pane-short"></p></div>
+            <div class="ex-switch" role="group" aria-label="Views" hidden></div>
           </header>
           <div class="ex-demo"></div>
-          <p class="ex-demo-note">Interactive preview with sample files — not your data.</p>
-          <div class="ex-info">
-            <p class="ex-headline"></p>
-            <ul class="ex-points"></ul>
-          </div>
+          <p class="ex-demo-note">Sample files. Click around, nothing here touches your Mac.</p>
           <footer class="ex-pane-foot">
             <button type="button" class="ex-nav" data-step="-1" aria-label="Previous feature">‹ <span></span></button>
             <button type="button" class="ex-nav" data-step="1" aria-label="Next feature"><span></span> ›</button>
@@ -81,19 +74,15 @@ export function selectFeature(id, { focus = false, updateHash = true, param = nu
   const f = byId.get(id) || byId.get(DEFAULT_ID);
   const { root } = state;
   if (!root) return;
-  const target = root.querySelector('#tab-' + f.id);
-  if (target.hidden) {
-    const input = root.querySelector('.ex-filter input');
-    input.value = '';
-    input.dispatchEvent(new Event('input'));
-  }
+  const tabId = tabIdFor(f.id);
+  const target = tabId && root.querySelector('#tab-' + tabId);
   if (state.current !== f.id || param) {
     if (typeof state.cleanup === 'function') state.cleanup();
     state.cleanup = null;
     state.current = f.id;
 
     for (const t of state.tabs) {
-      const on = t.dataset.id === f.id;
+      const on = t.dataset.id === tabId;
       t.setAttribute('aria-selected', String(on));
       t.tabIndex = on ? 0 : -1;
     }
@@ -106,8 +95,11 @@ export function selectFeature(id, { focus = false, updateHash = true, param = nu
     pane.querySelector('.ex-pane-icon').innerHTML = iconSvg(f.icon, 26);
     pane.querySelector('h3').textContent = f.title;
     pane.querySelector('.ex-pane-short').textContent = f.short;
-    pane.querySelector('.ex-headline').textContent = f.headline;
-    pane.querySelector('.ex-points').innerHTML = f.points.map((p) => `<li>${esc(p)}</li>`).join('');
+    const fam = familyOf(f.id);
+    const sw = pane.querySelector('.ex-switch');
+    sw.hidden = !fam;
+    sw.innerHTML = fam ? FAMILY[fam].map((id) => `<button type="button" data-to="${id}" aria-pressed="${id === f.id}">${SWITCH[id]}</button>`).join('') : '';
+    root.querySelector('.ex-search').classList.toggle('on', fam === 'search');
 
     const i = FEATURES.indexOf(f);
     const prev = FEATURES[(i - 1 + FEATURES.length) % FEATURES.length];
@@ -119,7 +111,7 @@ export function selectFeature(id, { focus = false, updateHash = true, param = nu
     nb.dataset.target = next.id;
 
     root.querySelector('#ex-status').textContent = 'Showing ' + f.title;
-    revealTab(root.querySelector('#tab-' + f.id));
+    if (target) revealTab(target);
 
     const demoEl = pane.querySelector('.ex-demo');
     demoEl.innerHTML = '';
@@ -130,10 +122,10 @@ export function selectFeature(id, { focus = false, updateHash = true, param = nu
   if (updateHash && location.hash !== HASH_PREFIX + f.id) history.replaceState(null, '', HASH_PREFIX + f.id);
   syncTabStops();
   placeIndicator();
-  if (focus) target.focus();
+  if (focus) (target || root.querySelector('.ex-pane')).focus();
 }
 
-function visibleTabs() { return state.tabs.filter((t) => !t.hidden); }
+function visibleTabs() { return state.tabs; }
 
 // Keep exactly one reachable tab: the selected one if visible, else the first visible match.
 function syncTabStops() {
@@ -174,32 +166,6 @@ function onTabKey(e) {
   e.preventDefault();
   selectFeature(target.dataset.id, { focus: true });
   target.scrollIntoView({ block: 'nearest', inline: 'nearest' });
-}
-
-function initFilter(root) {
-  const input = root.querySelector('.ex-filter input');
-  const none = root.querySelector('.ex-nomatch');
-  input.addEventListener('input', () => {
-    const q = input.value.trim().toLowerCase();
-    let shown = 0;
-    for (const t of state.tabs) {
-      const f = byId.get(t.dataset.id);
-      const hit = !q || (f.title + ' ' + f.short + ' ' + f.group).toLowerCase().includes(q);
-      t.hidden = !hit;
-      if (hit) shown++;
-    }
-    root.querySelectorAll('.ex-group').forEach((g) => { g.hidden = !g.querySelector('[role=tab]:not([hidden])'); });
-    none.hidden = shown > 0;
-    syncTabStops();
-    placeIndicator();
-  });
-  input.addEventListener('keydown', (e) => {
-    if (e.key !== 'Enter' && e.key !== 'ArrowDown') return;
-    const first = visibleTabs()[0];
-    if (!first) return;
-    e.preventDefault();
-    selectFeature(first.dataset.id, { focus: true });
-  });
 }
 
 /* ---------- ⌘K palette ---------- */
@@ -299,9 +265,9 @@ export function initExplorer(root, demos = {}) {
     t.addEventListener('click', () => selectFeature(t.dataset.id));
     t.addEventListener('keydown', onTabKey);
   }
-  root.querySelectorAll('.ex-loc').forEach((b) => b.addEventListener('click', () => selectFeature('library', { param: { loc: b.dataset.loc } })));
+  root.querySelector('[data-search]').addEventListener('click', () => selectFeature('search'));
+  root.querySelector('.ex-switch').addEventListener('click', (e) => { const b = e.target.closest('[data-to]'); if (b) selectFeature(b.dataset.to); });
   root.querySelectorAll('.ex-nav').forEach((b) => b.addEventListener('click', () => selectFeature(b.dataset.target, { focus: true })));
-  initFilter(root);
   if ('ResizeObserver' in window) new ResizeObserver(placeIndicator).observe(root.querySelector('.ex-tablist'));
   initPalette();
 

@@ -25,7 +25,7 @@ export const FEATURES = [
   // ---------- Discover ----------
   {
     id: 'home', group: 'Discover', icon: I.home,
-    title: 'Home Dashboard', short: 'Storage, scans and quick actions',
+    title: 'Home', short: 'Storage, scans and quick actions',
     headline: 'Your Mac at a glance — measured, never guessed.',
     points: [
       'Real disk capacity, free space and a category breakdown.',
@@ -47,7 +47,7 @@ export const FEATURES = [
   },
   {
     id: 'library', group: 'Discover', icon: I.library, meta: { text: '2,880' },
-    title: 'Visual Library', short: 'Your whole Mac as big thumbnails',
+    title: 'Library', short: 'Your whole Mac as big thumbnails',
     headline: 'Everything on your Mac, sorted by what it is.',
     points: [
       'Browse images, videos, music, documents, apps and screenshots as large, clear thumbnails.',
@@ -59,7 +59,7 @@ export const FEATURES = [
   },
   {
     id: 'images', group: 'Discover', icon: I.images, meta: { text: '2,280' },
-    title: 'Smart Image Viewer', short: 'Open one image, browse the folder',
+    title: 'Image Viewer', short: 'Open one image, browse the folder',
     headline: 'Open one photo. Press → for the next.',
     points: [
       'Opening a single image loads every supported image in its folder.',
@@ -103,7 +103,7 @@ export const FEATURES = [
   },
   {
     id: 'clipboard', group: 'Discover', icon: I.clipboard,
-    title: 'Clipboard History', short: 'Never lose a copied item',
+    title: 'Clipboard', short: 'Never lose a copied item',
     headline: 'Everything you copied, searchable.',
     points: [
       'Text, links, pictures and files with large previews, plus pinned snippets.',
@@ -149,7 +149,7 @@ export const FEATURES = [
   },
   {
     id: 'duplicates', group: 'Clean up', icon: I.duplicates,
-    title: 'Duplicate Finder', short: 'Exact copies and similar photos',
+    title: 'Duplicates', short: 'Exact copies and similar photos',
     headline: 'Same file, saved three times? Keep one.',
     points: [
       'Finds exact copies by size, then a partial check, then a full fingerprint.',
@@ -159,7 +159,7 @@ export const FEATURES = [
   },
   {
     id: 'organizer', group: 'Clean up', icon: I.organizer,
-    title: 'Smart File Organizer', short: 'Tidy Downloads with a preview',
+    title: 'Organizer', short: 'Tidy Downloads with a preview',
     headline: 'A tidy Downloads folder, on your approval.',
     points: [
       'Suggests folders such as Documents, Images, Archives and Installers, plus screenshots sorted by month.',
